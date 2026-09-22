@@ -258,6 +258,15 @@ export function AppPage() {
               <div className="rail-meta">
                 <h4>{t("workbench.whyHard")}</h4>
                 <p className="why-hard">{active.why_hard}</p>
+                {es && (
+                  // The chrome is translated and the corpus is not, on purpose. Translating a
+                  // statement would show text that is not the text the models were given, and the
+                  // measurement is about that exact text. Saying so beats looking unfinished.
+                  <p className="why-hard" style={{ marginTop: "0.5rem", fontSize: "0.76rem", color: "var(--color-fg-faint)" }}>
+                    Los enunciados y sus notas se muestran en ingles: es el texto exacto que se les
+                    dio a los modelos, y traducirlo mostraria algo distinto de lo que se midio.
+                  </p>
+                )}
               </div>
 
               {active.open_questions.length > 0 && (

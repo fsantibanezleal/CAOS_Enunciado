@@ -346,6 +346,84 @@ for (const theme of ["dark", "light"]) {
   await context.close();
 }
 
+// The Spanish pass.
+//
+// ADR-0016 asks for bilingual by construction and ADR-0017 makes it a gate item, and every check
+// above ran in English: the theme is a mode the gate exercised and the language is a mode it did
+// not. An untranslated page and a translated one look equally fine to a check that never switches.
+{
+  const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const page = await context.newPage();
+  await page.goto(`http://localhost:${PORT}/`, { waitUntil: "networkidle" });
+  await page.waitForTimeout(700);
+
+  // Through the real control, for the same reason the theme is.
+  const langButton = page.getByRole("button", { name: /language|idioma|^en$|^es$/i }).first();
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const current = await page.evaluate(() => document.documentElement.lang || "");
+    const shown = ((await langButton.textContent()) ?? "").trim().toLowerCase();
+    if (current === "es" || shown === "es") break;
+    await langButton.click();
+    await page.waitForTimeout(350);
+  }
+
+  for (const [route, label] of [
+    ["/introduction", "Introduction"],
+    ["/methodology", "Methodology"],
+    ["/implementation", "Implementation"],
+    ["/experiments", "Experiments"],
+    ["/benchmark", "Benchmark"],
+    ["/", "Workbench"],
+  ]) {
+    await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: "networkidle" });
+    await page.waitForTimeout(1200);
+    const text = (await page.textContent("#root")) ?? "";
+
+    // Positive evidence that this is Spanish: several function words that no English sentence on
+    // these pages contains. Counting them beats testing for one, which a stray proper noun passes.
+    const markers = [" que ", " del ", " para ", " con ", " una ", " los ", " sin "].filter((w) =>
+      text.includes(w),
+    );
+    check(
+      markers.length >= 4 && text.length > 400,
+      `[es] ${label} renders in Spanish`,
+      `${markers.length}/7 markers, ${text.length} chars`,
+    );
+
+    // The mirror of the English check: no untranslated equation on the Spanish page.
+    const math = await page.evaluate(() =>
+      [...document.querySelectorAll(".katex-html")].map((e) => e.textContent ?? "").join(" | "),
+    );
+    const english = ["against", "when", "with", "determined", "marginal cost", "failures"].filter(
+      (word) => math.toLowerCase().includes(word),
+    );
+    check(
+      english.length === 0,
+      `[es] ${label}: equations are in the page's language`,
+      english.length ? `English in the typeset math: ${english.join(", ")}` : "clean",
+    );
+
+    // The CHROME, not just the prose. The app had two sources of truth for the language: the shell
+    // store, which the prose followed, and an i18next instance fixed at "en" that nothing told.
+    // Half the workbench furniture stayed English beside Spanish paragraphs, and every
+    // "does this page render in Spanish" check passed because the prose was the bulk of the text.
+    if (label === "Workbench") {
+      const leaks = ["WHAT MAKES THIS HARD", "Tier ", "control case", "Statement", ">Case<"].filter(
+        (phrase) => text.includes(phrase.replace(/[<>]/g, "")),
+      );
+      check(
+        leaks.length === 0,
+        `[es] the workbench chrome is translated`,
+        leaks.length ? `English chrome: ${leaks.join(", ")}` : "clean",
+      );
+    }
+
+    await page.screenshot({ path: join(SHOTS, `es-${label.toLowerCase()}.png`) });
+  }
+
+  await context.close();
+}
+
 // Deep links must answer 200, not merely render.
 //
 // A static host serving 404.html gives the SPA body with an HTTP 404 STATUS. A human sees the right
