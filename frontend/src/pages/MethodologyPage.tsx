@@ -128,7 +128,7 @@ function Representation({ lang }: { lang: "en" | "es" }) {
       />
 
       <Equation
-        tex={String.raw`\dim\!\Bigl(\sum_{i} t_{i}\Bigr) = \dim(t_{1}) \;\text{ si } \dim(t_{i}) = \dim(t_{1})\;\forall i, \qquad \dim\!\Bigl(\prod_{i} f_{i}\Bigr) = \sum_{i} \dim(f_{i})`}
+        tex={String.raw`\dim\!\Bigl(\sum_{i} t_{i}\Bigr) = \dim(t_{1}) \;\text{ ${es ? "si" : "when"} } \dim(t_{i}) = \dim(t_{1})\;\forall i, \qquad \dim\!\Bigl(\prod_{i} f_{i}\Bigr) = \sum_{i} \dim(f_{i})`}
         caption={
           es
             ? "Las dos reglas de propagacion. Una suma exige acuerdo; un producto suma los vectores. Un termino que rompe la primera regla es el fallo mas frecuente que esta medicion encontro."
@@ -328,7 +328,7 @@ function Metamorphic({ lang }: { lang: "en" | "es" }) {
       />
 
       <Equation
-        tex={String.raw`F' = F \cap \{x : a^{\!\top} x \leq b\} \;\text{ con } F \subseteq \{x : a^{\!\top} x \leq b\} \;\Longrightarrow\; F' = F \;\wedge\; z^{\star}(F') = z^{\star}(F)`}
+        tex={String.raw`F' = F \cap \{x : a^{\!\top} x \leq b\} \;\text{ ${es ? "con" : "with"} } F \subseteq \{x : a^{\!\top} x \leq b\} \;\Longrightarrow\; F' = F \;\wedge\; z^{\star}(F') = z^{\star}(F)`}
         caption={
           es
             ? "Restriccion redundante. Si la fila anadida ya se cumple en todo F, el conjunto factible no se mueve. La fila se construye a partir de una cota que la propia variable ya tiene."
@@ -583,7 +583,7 @@ function Judge({ lang }: { lang: "en" | "es" }) {
       >
 
         <Equation
-          tex={String.raw`\Pr\bigl[\, \mathrm{judge}(c) = \mathrm{human}(c) \,\bigr] \approx 0.897 \quad \text{(IC 95\%: } 0.821,\ 0.943)`}
+          tex={String.raw`\Pr\bigl[\, \mathrm{judge}(c) = \mathrm{human}(c) \,\bigr] \approx 0.897 \quad \text{(${es ? "IC" : "CI"} 95\%: } 0.821,\ 0.943)`}
           caption={
             es
               ? "El acuerdo publicado. Una cifra util, y no una identidad: el 10% restante no se distribuye al azar, se concentra donde el caso es dificil."

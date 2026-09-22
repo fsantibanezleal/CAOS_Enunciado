@@ -177,6 +177,40 @@ for (const theme of ["dark", "light"]) {
       `doc ${scrolls.docHeight}px, viewport ${scrolls.viewport}px, scrollTo reached ${scrolls.moved}`,
     );
 
+    // Two failure modes that render as plausible-looking mathematics.
+    //
+    // A `	ext{...}` inside a PLAIN template literal loses its backslash, because `	` is a tab
+    // and `\D` is just `D`: the equation then typesets as a tab followed by "ext{ran}". It looks
+    // like a spacing quirk, not like a bug. `String.raw` is required for every tex string, and this
+    // check is what makes forgetting it visible.
+    //
+    // The second is an equation with a hard-coded Spanish word on the English page, which no
+    // bilingual check catches because the surrounding prose IS branched.
+    // `.katex-html` is the VISIBLE typeset output. `.katex` also contains a hidden MathML
+    // annotation carrying the original LaTeX source, so reading it finds "ext{" and a tab in every
+    // correct equation: a check that fires on everything is a check that will be turned off.
+    const math = await page.evaluate(() =>
+      [...document.querySelectorAll(".katex-html")].map((e) => e.textContent ?? "").join(" | "),
+    );
+    const swallowed = math.includes("ext{") || math.includes(String.fromCharCode(9));
+    check(
+      !swallowed,
+      `[${theme}] ${label}: no equation lost a backslash`,
+      swallowed
+        ? `found ${math.includes("ext{") ? '"ext{"' : "a tab"} near: ${
+            math.slice(Math.max(0, math.indexOf(math.includes("ext{") ? "ext{" : String.fromCharCode(9))) - 20, 60)
+          }`
+        : `${math.length} chars of typeset math`,
+    );
+    const leaks = ["frente a", "si mismo", "coste", "determinado", "indefinido", "fallos"].filter(
+      (word) => math.toLowerCase().includes(word),
+    );
+    check(
+      leaks.length === 0,
+      `[${theme}] ${label}: equations are in the page's language`,
+      leaks.length ? `Spanish in the typeset math: ${leaks.join(", ")}` : "clean",
+    );
+
     await page.screenshot({ path: join(SHOTS, `${theme}-${label.toLowerCase()}.png`) });
     // A doc route is taller than the viewport, and reviewing only its first screen is how a broken
     // figure halfway down ships. The full capture is what a reviewer actually reads.

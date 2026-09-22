@@ -432,7 +432,7 @@ function BrowserLane({ lang }: { lang: "en" | "es" }) {
       </p>
 
       <Equation
-        tex={String.raw`\text{linear}(e) \iff e = c_{0} + \sum_{j} c_{j} x_{j}, \qquad c_{j} \in \mathbb{R} \ \text{determinado}`}
+        tex={String.raw`\text{linear}(e) \iff e = c_{0} + \sum_{j} c_{j} x_{j}, \qquad c_{j} \in \mathbb{R} \ \text{${es ? "determinado" : "determined"}}`}
         caption={
           es
             ? "La forma que esta via acepta. Todo lo que no reduce a ella se rechaza por nombre en lugar de aproximarse."
@@ -576,7 +576,7 @@ function Artifact({ lang }: { lang: "en" | "es" }) {
       </div>
 
       <Equation
-        tex={String.raw`|\text{artifact}| = 221\,\text{KB} \quad \text{para } |C| = 20, \qquad \text{coste marginal} \approx 11\,\text{KB / caso}`}
+        tex={String.raw`|\text{artifact}| = 221\,\text{KB} \quad \text{${es ? "para" : "for"} } |C| = 20, \qquad \text{${es ? "coste marginal" : "marginal cost"}} \approx 11\,\text{${es ? "KB / caso" : "KB / case"}}`}
         caption={
           es
             ? "El tamano medido y su pendiente. Es lo que permite servir esto desde un CDN estatico sin paginar ni indexar nada."
