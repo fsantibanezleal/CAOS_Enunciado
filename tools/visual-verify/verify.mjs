@@ -156,7 +156,35 @@ for (const theme of ["dark", "light"]) {
       () => document.documentElement.scrollWidth - window.innerWidth,
     );
     check(overflow <= 1, `[${theme}] ${label} does not scroll horizontally`, `${overflow}px`);
+    // A doc route must actually scroll. The shell sets html and body to 100% height and, separately,
+    // overflow-x: hidden, which turns both into 100%-tall scroll containers and leaves the document
+    // unable to scroll: anchors and scrollTo do nothing and a full-page capture is one screen of
+    // content followed by blank. The wheel still works, so nothing looks wrong.
+    const scrolls = await page.evaluate(() => {
+      const before = window.scrollY;
+      window.scrollTo(0, 1200);
+      const moved = window.scrollY;
+      window.scrollTo(0, before);
+      return {
+        moved,
+        docHeight: document.documentElement.scrollHeight,
+        viewport: window.innerHeight,
+      };
+    });
+    check(
+      scrolls.docHeight <= scrolls.viewport + 2 || scrolls.moved > 0,
+      `[${theme}] ${label} scrolls the document`,
+      `doc ${scrolls.docHeight}px, viewport ${scrolls.viewport}px, scrollTo reached ${scrolls.moved}`,
+    );
+
     await page.screenshot({ path: join(SHOTS, `${theme}-${label.toLowerCase()}.png`) });
+    // A doc route is taller than the viewport, and reviewing only its first screen is how a broken
+    // figure halfway down ships. The full capture is what a reviewer actually reads.
+    await page.screenshot({
+      path: join(SHOTS, `${theme}-${label.toLowerCase()}-full.png`),
+      fullPage: true,
+    });
+    await page.evaluate(() => window.scrollTo(0, 0));
   }
 
   // Back to the workbench, and exercise its controls rather than only looking at them.
