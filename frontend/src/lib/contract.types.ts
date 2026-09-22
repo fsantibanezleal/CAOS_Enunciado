@@ -1,0 +1,208 @@
+/**
+ * The artifact contract, mirrored in TypeScript.
+ *
+ * The bake writes `cases.json` and `manifest.json`; this file is the other half of that contract.
+ * When the Python side changes shape and this does not, the build fails, which is the point: a web
+ * surface reading yesterday's shape renders blanks and nothing in a green build says so.
+ *
+ * Kept in lockstep with `data-pipeline/bake.py` and `planteo`'s document schema.
+ */
+
+export const SCHEMA = "enunciado-corpus/1.0";
+
+/** SI base axes plus the two this representation adds. Exponents are strings, exact rationals. */
+export interface Dimension {
+  symbol: string;
+  exponents: Record<string, string>;
+}
+
+/** Offsets AND the covered text, so a stored span can be checked rather than trusted. */
+export interface Span {
+  start?: number;
+  end?: number;
+  text?: string;
+  /** Present instead of offsets when the element was not read from the narrative. */
+  inferred_reason?: string;
+}
+
+export type Role = "parameter" | "variable" | "derived" | "observed" | "set";
+export type Domain = "real" | "integer" | "boolean" | "set";
+
+export interface Quantity {
+  name: string;
+  role: Role;
+  dimension: Dimension;
+  domain: Domain;
+  description: string;
+  lower?: number;
+  upper?: number;
+  value?: number;
+  span?: Span;
+}
+
+export interface ExpressionNode {
+  tag: "const" | "ref" | "sum" | "product" | "power" | "bigsum" | "conditional";
+  value?: number;
+  unit?: Dimension;
+  name?: string;
+  terms?: ExpressionNode[];
+  factors?: ExpressionNode[];
+  base?: ExpressionNode;
+  exponent?: string;
+  index?: string;
+  index_set?: string;
+  body?: ExpressionNode;
+}
+
+export interface RelationNode {
+  tag: "compare" | "logical" | "forall";
+  name?: string;
+  span?: Span;
+  left?: ExpressionNode;
+  right?: ExpressionNode;
+  comparator?: "==" | "<=" | ">=" | "<" | ">" | "!=";
+  connective?: string;
+  operands?: RelationNode[];
+  index?: string;
+  index_set?: string;
+  body?: RelationNode;
+}
+
+export interface Objective {
+  sense: "minimise" | "maximise";
+  expression: ExpressionNode;
+  name: string;
+  span?: Span;
+}
+
+/** What the narrative did not determine, and what was done about it. */
+export interface OpenQuestion {
+  question: string;
+  resolution: string;
+  affects: string[];
+  span_text: string;
+  is_open: boolean;
+}
+
+export interface Problem {
+  schema_version: string;
+  family: string;
+  narrative: { text: string; source: string; language: string; digest: string };
+  quantities: Quantity[];
+  relations: RelationNode[];
+  objectives: Objective[];
+  assumptions: { statement: string; span: Span }[];
+  open_questions: { question: string; resolution: string; affects: string[]; span: Span }[];
+  metadata: { problem_id: string; title: string; formalizer: string; created: string; notes: string };
+  feasibility_only: boolean;
+}
+
+export interface Solution {
+  feasible: boolean;
+  objective: number | null;
+  values: Record<string, number>;
+  detail: string;
+}
+
+export type Outcome = "pass" | "fail" | "not-applicable" | "undecided";
+
+export interface PropertyCheck {
+  outcome: Outcome;
+  detail: string;
+  relations: { relation: string; outcome: Outcome; detail: string }[];
+}
+
+export interface CaseRecord {
+  case_id: string;
+  title: string;
+  tier: 1 | 2 | 3 | 4 | 5;
+  traps: string[];
+  narrative: string;
+  why_hard: string;
+  provenance: string;
+  notes: string;
+  open_questions: OpenQuestion[];
+  reference: Problem;
+  solution: Solution;
+  claimed_optimum: number | null;
+  property_check: PropertyCheck;
+  emitted_pyomo: string;
+}
+
+export interface Manifest {
+  schema: string;
+  family: string;
+  case_count: number;
+  coverage: { tier: Record<string, number>; trap: Record<string, number> };
+  coverage_gaps: string[];
+  tolerance: number;
+}
+
+/** Tier names, used wherever a tier number is shown. The numbers alone mean nothing to a reader. */
+export const TIER_NAME: Record<number, { en: string; es: string }> = {
+  1: { en: "Direct", es: "Directo" },
+  2: { en: "Composed", es: "Compuesto" },
+  3: { en: "Structured", es: "Estructurado" },
+  4: { en: "Discrete", es: "Discreto" },
+  5: { en: "Underspecified", es: "Subespecificado" },
+};
+
+/** What each trap catches, in one line, so a reader is never shown a bare slug. */
+export const TRAP_NAME: Record<string, { en: string; es: string }> = {
+  "unit-mismatch": {
+    en: "Units differ across terms",
+    es: "Las unidades diferen entre terminos",
+  },
+  "implicit-quantity": {
+    en: "A quantity the text implies but never names",
+    es: "Una cantidad que el texto implica y nunca nombra",
+  },
+  "objective-sense": {
+    en: "The objective is easy to state with the wrong sense",
+    es: "El objetivo se plantea facilmente con el sentido equivocado",
+  },
+  "droppable-constraint": {
+    en: "A constraint that is easy to drop entirely",
+    es: "Una restriccion facil de omitir por completo",
+  },
+  integrality: {
+    en: "The natural reading needs integers; the relaxation looks fine",
+    es: "La lectura natural requiere enteros; la relajacion parece correcta",
+  },
+  ambiguity: {
+    en: "The text does not determine something material",
+    es: "El texto no determina algo esencial",
+  },
+  "red-herring": {
+    en: "A distractor number that belongs to no constraint",
+    es: "Un numero distractor que no pertenece a ninguna restriccion",
+  },
+  "derived-bound": {
+    en: "The bound is on a derived quantity, not a decision variable",
+    es: "La cota esta sobre una cantidad derivada, no sobre una variable",
+  },
+  none: {
+    en: "No trap: a control case",
+    es: "Sin trampa: un caso de control",
+  },
+};
+
+/** Render a dimension the way a reader checks it: the written unit, then its SI signature. */
+export function describeDimension(dimension: Dimension): string {
+  const axes: Record<string, string> = {
+    length: "m",
+    mass: "kg",
+    time: "s",
+    current: "A",
+    temperature: "K",
+    amount: "mol",
+    luminosity: "cd",
+    currency: "¤",
+    count: "#",
+  };
+  const parts = Object.entries(dimension.exponents ?? {})
+    .filter(([, e]) => e !== "0")
+    .map(([axis, e]) => (e === "1" ? axes[axis] : `${axes[axis]}^${e}`));
+  const si = parts.length ? parts.join("·") : "1";
+  return dimension.symbol && dimension.symbol !== si ? `${dimension.symbol}  (${si})` : si;
+}

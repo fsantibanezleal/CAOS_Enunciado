@@ -15,3 +15,8 @@ data/runs/
 build/
 tools/portability/node_modules/
 tools/portability/site/
+frontend/node_modules/
+frontend/dist/
+frontend/public/data/
+tools/visual-verify/node_modules/
+tools/visual-verify/screenshots/

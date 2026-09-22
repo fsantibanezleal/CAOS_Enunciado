@@ -1,0 +1,434 @@
+/*
+ * Product styles, on top of the shared design system.
+ *
+ * Only what the shell does not provide: the workbench layout, the narrative highlighting, and the
+ * chips. Colours come from the shell's tokens rather than literals, so both themes work without a
+ * second stylesheet, and every ancestor of a scrollable row carries `min-width: 0`, because a flex
+ * item defaults to `min-width: auto` and one nowrap row silently widens the whole page.
+ */
+
+/* ---------- the workbench ---------- */
+
+.workbench {
+  display: grid;
+  grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+  gap: 1rem;
+  /* The page IS the viewport on this route: the shell sizes it and this grid distributes the
+     height, so scrolling happens inside the one container that owns long content. */
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+}
+
+.case-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+  border-right: 1px solid var(--border);
+}
+
+.case-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.rail-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.case-rail select {
+  width: 100%;
+  padding: 0.5rem;
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font: inherit;
+}
+
+.rail-meta h4 {
+  margin: 1rem 0 0.35rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.why-hard {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.readout {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0.5rem 0.65rem;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+}
+
+.readout-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.readout-value {
+  font: 600 1.1rem ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--text);
+}
+
+.claim-check {
+  margin: 0.4rem 0 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.values {
+  margin: 0.5rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.value-row {
+  display: flex;
+  justify-content: space-between;
+  font: 0.85rem ui-monospace, SFMono-Regular, Menlo, monospace;
+  padding: 0.15rem 0;
+  border-bottom: 1px dotted var(--border);
+}
+
+.value-row dt,
+.value-row dd {
+  margin: 0;
+}
+
+.infeasible-note {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.6rem;
+  border: 1px solid var(--warn, #d8973c);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+/* ---------- the split: statement beside model ---------- */
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: 1rem;
+  min-height: 0;
+  min-width: 0;
+  flex: 1;
+}
+
+.split-pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.split-pane h3 {
+  margin: 0 0 0.25rem;
+  font-size: 0.95rem;
+}
+
+.hint {
+  margin: 0 0 0.6rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.pane-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+/* ---------- the narrative, with provenance ---------- */
+
+.narrative {
+  margin: 0;
+  font-size: 1.02rem;
+  line-height: 1.75;
+  /* Prose is the one thing that gets a reading measure, even on a workbench route. */
+  max-width: 62ch;
+}
+
+.narrative-span {
+  border-bottom: 2px solid transparent;
+  border-radius: 2px;
+  padding: 0 1px;
+  cursor: help;
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+
+.narrative-quantity { border-bottom-color: var(--accent); }
+.narrative-relation { border-bottom-color: var(--ok, #4fb477); }
+.narrative-objective { border-bottom-color: var(--warn, #d8973c); }
+
+.narrative-span:hover,
+.narrative-span.is-active {
+  background: var(--accent-soft);
+  border-bottom-color: var(--accent);
+}
+
+/* ---------- the formalization ---------- */
+
+.formalization h4 {
+  margin: 0 0 0.4rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+.qty-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.qty-table th {
+  text-align: left;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  padding: 0.25rem 0.4rem;
+}
+
+.qty-table td {
+  padding: 0.3rem 0.4rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.qty-table tr.is-active { background: var(--accent-soft); }
+
+.qty-desc {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.qty-table .dim,
+.qty-table .num {
+  font: 0.82rem ui-monospace, SFMono-Regular, Menlo, monospace;
+  white-space: nowrap;
+}
+
+.bound { color: var(--text-muted); }
+
+.relation-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.relation-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.3rem 0.4rem;
+  border-radius: 4px;
+  /* min-width: 0 so a long formula scrolls inside its row rather than widening the page. */
+  min-width: 0;
+}
+
+.relation-list li.is-active { background: var(--accent-soft); }
+
+.relation-list code {
+  font-size: 0.85rem;
+  overflow-x: auto;
+  min-width: 0;
+}
+
+/* ---------- chips ---------- */
+
+.chip {
+  display: inline-block;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.chip-variable,
+.chip-objective { border-color: var(--accent); color: var(--accent); }
+.chip-relation { border-color: var(--ok, #4fb477); color: var(--ok, #4fb477); }
+.chip-trap { border-color: var(--warn, #d8973c); color: var(--warn, #d8973c); }
+.chip-control { border-color: var(--ok, #4fb477); color: var(--ok, #4fb477); }
+.chip-tier { background: var(--surface-2); }
+.chip-domain { margin-left: 0.25rem; }
+
+/* ---------- open questions and properties ---------- */
+
+.questions,
+.properties {
+  list-style: none;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.questions li {
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--ok, #4fb477);
+  border-radius: 4px;
+}
+
+.questions li.is-open { border-left-color: var(--warn, #d8973c); }
+
+.q-text { margin: 0 0 0.4rem; font-weight: 600; }
+.q-span,
+.q-res,
+.q-affects { margin: 0.2rem 0; font-size: 0.85rem; color: var(--text-muted); }
+.q-open { margin: 0.2rem 0; font-size: 0.85rem; color: var(--warn, #d8973c); font-weight: 600; }
+
+.q-label {
+  display: inline-block;
+  min-width: 8.5rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.prop {
+  display: grid;
+  grid-template-columns: 11rem 7rem minmax(0, 1fr);
+  gap: 0.5rem;
+  align-items: baseline;
+  padding: 0.4rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  border: 1px solid var(--border);
+}
+
+.prop-name { font: 600 0.82rem ui-monospace, SFMono-Regular, Menlo, monospace; }
+.prop-detail { color: var(--text-muted); min-width: 0; }
+.prop-pass .prop-outcome { color: var(--ok, #4fb477); }
+.prop-fail .prop-outcome { color: var(--danger, #e05260); font-weight: 700; }
+.prop-not-applicable .prop-outcome { color: var(--text-muted); }
+
+/* ---------- emitted model ---------- */
+
+.emitted {
+  margin: 0;
+  padding: 0.75rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font: 0.8rem/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+  overflow-x: auto;
+  min-width: 0;
+}
+
+/* ---------- states and prose pages ---------- */
+
+.state-panel {
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.state-error {
+  border: 1px solid var(--danger, #e05260);
+  border-radius: 6px;
+  text-align: left;
+  color: var(--text);
+}
+
+.muted { color: var(--text-muted); }
+
+.prose-page h2 { margin-top: 2rem; }
+.prose-page .measure { max-width: 72ch; }
+
+.finding-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+.finding-table th,
+.finding-table td {
+  text-align: left;
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.finding-table th {
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.coverage-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.6rem;
+  margin: 1rem 0;
+}
+
+.coverage-cell {
+  padding: 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.coverage-cell strong {
+  display: block;
+  font-size: 1.5rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.coverage-cell span {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+@media (max-width: 900px) {
+  .workbench { grid-template-columns: minmax(0, 1fr); }
+  .case-rail { border-right: none; border-bottom: 1px solid var(--border); }
+  .split { grid-template-columns: minmax(0, 1fr); }
+  .prop { grid-template-columns: minmax(0, 1fr); }
+}
