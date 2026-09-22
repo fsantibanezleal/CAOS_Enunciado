@@ -365,6 +365,7 @@ function TierCurve({
           }))}
           xLabel={es ? "nivel de dificultad" : "difficulty tier"}
           yLabel={es ? "tasa de fidelidad" : "faithfulness rate"}
+          xTicks={tiers}
           height={300}
         />
       </div>

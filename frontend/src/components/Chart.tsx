@@ -46,6 +46,8 @@ export interface ChartProps {
   /** Height in pixels. Omit to fill the parent, which is the workbench default. */
   height?: number;
   className?: string;
+  /** Exact x ticks. A categorical axis like a difficulty tier has no meaning at 1.2. */
+  xTicks?: number[];
   /**
    * Called as the pointer moves, with the nearest sample, and with null when it leaves.
    *
@@ -87,6 +89,7 @@ export function Chart({
   marks,
   height,
   className,
+  xTicks,
   onCursor,
 }: ChartProps) {
   const hostRef = useRef<HTMLDivElement>(null);
@@ -98,6 +101,7 @@ export function Chart({
   // settle, and the page repaints a canvas it did not need to. Depend on their VALUE instead.
   const seriesKey = useMemo(() => JSON.stringify(series), [series]);
   const marksKey = useMemo(() => JSON.stringify(marks ?? null), [marks]);
+  const ticksKey = useMemo(() => JSON.stringify(xTicks ?? null), [xTicks]);
 
   useEffect(() => {
     const host = hostRef.current;
@@ -138,6 +142,7 @@ export function Chart({
         {
           label: xLabel,
           labelSize: 24,
+          ...(xTicks ? { splits: () => xTicks, incr: [1] } : {}),
           stroke: colours.axis,
           grid: { stroke: colours.grid, width: 1 },
           ticks: { stroke: colours.grid },
@@ -215,7 +220,7 @@ export function Chart({
     // options at construction. Rebuilding is cheap at these sizes and it is the only way the axes
     // and grid actually follow the theme.
     // eslint-disable-next-line react-hooks/exhaustive-deps -- seriesKey/marksKey ARE series/marks
-  }, [data, seriesKey, marksKey, xLabel, yLabel, height, theme, onCursor]);
+  }, [data, seriesKey, marksKey, xLabel, yLabel, height, theme, onCursor, ticksKey]);
 
   return <div ref={hostRef} className={className ?? "uplot-host"} />;
 }

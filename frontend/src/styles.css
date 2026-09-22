@@ -799,3 +799,28 @@
 }
 
 .viz-legend select:hover { border-color: var(--color-accent); }
+
+/* ---------- the document scroll ---------- */
+
+/*
+ * The shared shell sets `html, body, #root { height: 100% }` and, separately, `html, body {
+ * overflow-x: hidden }`. A box cannot be visible on one axis and hidden on the other, so the
+ * computed `overflow-y` becomes `auto` and BOTH html and body turn into 100%-tall scroll
+ * containers. The document then cannot scroll at all: `document.documentElement.scrollHeight`
+ * reads exactly `innerHeight` on a 5245px page, `window.scrollTo` does nothing, in-page anchors
+ * do nothing, and a full-page screenshot captures one screen of content followed by four
+ * thousand pixels of blank. The wheel still works, which is why this shipped unnoticed.
+ *
+ * The fix is to let the document be as tall as its content. The App route is unaffected: it sizes
+ * itself with `.app-shell.fixed { height: 100dvh }`, which is a viewport unit and does not depend
+ * on a percentage chain through `html`.
+ *
+ * This is a defect in @fasl-work/caos-app-shell 0.6.8 and belongs upstream; the override stays
+ * here until a shell release carries it.
+ */
+html,
+body,
+#root {
+  height: auto;
+  min-height: 100%;
+}

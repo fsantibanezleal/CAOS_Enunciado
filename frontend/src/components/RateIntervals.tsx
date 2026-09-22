@@ -31,10 +31,12 @@ export interface RateCell {
   unmeasured: number;
 }
 
-const WIDTH = 720;
-const LEFT = 132;
-const RIGHT = 28;
-const ROW = 58;
+// The viewBox is sized near the width this actually renders at, because an SVG stretched from 720
+// to 1400 scales its text by the same factor: 12px labels rendered at 23px and ran into each other.
+const WIDTH = 1100;
+const LEFT = 212;
+const RIGHT = 30;
+const ROW = 62;
 const TOP = 26;
 
 export function RateIntervals({ cells, lang }: { cells: RateCell[]; lang: "en" | "es" }) {
@@ -48,8 +50,8 @@ export function RateIntervals({ cells, lang }: { cells: RateCell[]; lang: "en" |
   const rows = cells.flatMap((cell, index) => {
     const y = TOP + index * ROW;
     return [
-      { cell, y: y + 14, key: "ran" as const, colour: "var(--color-fg-subtle)" },
-      { cell, y: y + 34, key: "faithful" as const, colour: "var(--color-accent)" },
+      { cell, y: y + 16, key: "ran" as const, colour: "var(--color-fg-subtle)" },
+      { cell, y: y + 38, key: "faithful" as const, colour: "var(--color-accent)" },
     ];
   });
 
@@ -94,23 +96,27 @@ export function RateIntervals({ cells, lang }: { cells: RateCell[]; lang: "en" |
           const y = TOP + index * ROW;
           return (
             <g key={cell.model_id}>
-              <text x={0} y={y + 26} fontSize="12" fontWeight="600" fill="var(--color-fg)">
+              <text x={0} y={y + 28} fontSize="13" fontWeight="600" fill="var(--color-fg)">
                 {cell.model_id}
+              </text>
+              <text x={0} y={y + 44} fontSize="10.5" fill="var(--color-fg-faint)">
+                {cell.ran.total} {es ? "casos" : "cases"}
+                {cell.unmeasured > 0 && ` · ${cell.unmeasured} ${es ? "no medidos" : "unmeasured"}`}
               </text>
               {/* The gap, drawn as the distance it is. */}
               {cell.gap_is_defined && (
                 <>
                   <rect
                     x={Math.min(x(cell.faithful.value), x(cell.ran.value))}
-                    y={y + 14}
+                    y={y + 16}
                     width={Math.abs(x(cell.ran.value) - x(cell.faithful.value))}
-                    height={20}
+                    height={22}
                     fill="var(--color-warn)"
-                    opacity="0.18"
+                    opacity="0.3"
                   />
                   <text
                     x={(x(cell.ran.value) + x(cell.faithful.value)) / 2}
-                    y={y + 50}
+                    y={y + 56}
                     textAnchor="middle"
                     fontSize="11"
                     fontWeight="600"
@@ -169,7 +175,7 @@ export function RateIntervals({ cells, lang }: { cells: RateCell[]; lang: "en" |
               />
               <circle cx={x(rate.value)} cy={y} r="5" fill={colour} />
               <text
-                x={LEFT - 8}
+                x={LEFT - 10}
                 y={y + 4}
                 textAnchor="end"
                 fontSize="11"
