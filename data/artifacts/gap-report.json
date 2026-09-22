@@ -1,0 +1,31 @@
+{
+  "cells": [
+    {
+      "provider": "ollama",
+      "model_id": "qwen3.5:4b",
+      "family": "optimization",
+      "ran": {
+        "passed": 0,
+        "total": 10,
+        "value": 0.0,
+        "interval_low": 0.0,
+        "interval_high": 0.2775327998628892,
+        "confidence": 0.95
+      },
+      "faithful": {
+        "passed": 0,
+        "total": 10,
+        "value": 0.0,
+        "interval_low": 0.0,
+        "interval_high": 0.2775327998628892,
+        "confidence": 0.95
+      },
+      "gap": null,
+      "gap_is_defined": false
+    }
+  ],
+  "judge": [],
+  "note": "The layers are reported separately by design. There is no combined score: a single number would let a high 'it ran' rate conceal a low 'it was right' rate, which is the distance this report exists to show. Rates are over repeats with a Wilson interval; hosted inference is not deterministic at temperature zero, so a single run is not a result.",
+  "measured_on": "2026-09-22",
+  "stopped_by": "the kill criterion: ten consecutive failures. A sweep that is failing every call is buying nothing, so it stops rather than running to the ceiling."
+}

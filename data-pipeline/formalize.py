@@ -55,7 +55,7 @@ SCHEMA_SKETCH = """{
   "open_questions": [
     {
       "question": "what the statement does not determine",
-      "span": {"start": 0, "end": 4, "text": "..."},
+      "span": {"start": 61, "end": 78, "text": "Minimise the cost"},
       "resolution": "the reading you took, and why",
       "affects": ["total_cost"]
     }
@@ -79,9 +79,10 @@ RULES = """Rules that the document is checked against:
 4. A quantity is exactly one of: a parameter with a value, a decision variable, or derived by
    exactly one equality that has it alone on one side.
 
-5. A span's "text" must be the EXACT substring of the narrative at [start, end). Copy the narrative
-   verbatim. If you cannot locate something in the text, use {"inferred_reason": "why"} instead of
-   guessing offsets.
+5. A span's "text" must be an EXACT substring of THIS problem statement, copied from it character
+   for character. The example above shows the SHAPE of a span; never copy its contents. If a thing
+   you want to point at is not in the statement, use {"inferred_reason": "why"} instead. Offsets are
+   recomputed from your text, so approximate numbers are fine; the text itself is not.
 
 6. Expression nodes are only: const, ref, sum, product, power, bigsum, conditional. Relation nodes
    are only: compare, logical, forall. Comparators are ==, <=, >=, <, >, !=.
@@ -181,6 +182,48 @@ def parse_response(text: str) -> Problem:
     return Problem.from_json(payload)
 
 
+def repair_spans(payload: dict, narrative: str) -> dict:
+    """Recompute span offsets from the text they claim to cover.
+
+    Models write the right phrase and the wrong offsets. Counting a character index as a
+    formalization error would measure arithmetic, not modelling, so an offset that disagrees with a
+    phrase **that genuinely occurs in the narrative** is repaired.
+
+    A phrase that does NOT occur is a different thing entirely: it is fabricated provenance, a claim
+    that the narrative says something it does not. That stays a hard failure, because it is exactly
+    the class of error this product exists to detect.
+
+    Both repairs are stated in the report. The measurement is about formalization, and every thumb
+    on the scale is named.
+    """
+
+    def fix(span: object) -> object:
+        if not isinstance(span, dict) or "inferred_reason" in span:
+            return span
+        text = span.get("text")
+        if not isinstance(text, str) or not text:
+            return {"inferred_reason": "the model recorded a span with no text"}
+        position = narrative.find(text)
+        if position == -1:
+            raise ValueError(
+                f"fabricated provenance: a span claims the narrative contains {text!r}, "
+                "and it does not"
+            )
+        return {"start": position, "end": position + len(text), "text": text}
+
+    def walk(node: object) -> object:
+        if isinstance(node, dict):
+            return {
+                key: (fix(value) if key == "span" else walk(value))
+                for key, value in node.items()
+            }
+        if isinstance(node, list):
+            return [walk(item) for item in node]
+        return node
+
+    return walk(payload)  # type: ignore[return-value]
+
+
 def repair_narrative(text: str, case) -> str:
     """Substitute the true narrative before parsing.
 
@@ -193,12 +236,12 @@ def repair_narrative(text: str, case) -> str:
     measurement is about the model, not about its transcription accuracy.
     """
     payload = json.loads(extract_json(text))
-    if isinstance(payload.get("narrative"), dict):
-        payload["narrative"] = {
-            "text": case.narrative,
-            "source": "inline",
-            "language": "en",
-        }
+    payload["narrative"] = {
+        "text": case.narrative,
+        "source": "inline",
+        "language": "en",
+    }
+    payload = repair_spans(payload, case.narrative)
     return json.dumps(payload)
 
 

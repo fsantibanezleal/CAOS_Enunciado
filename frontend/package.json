@@ -1,0 +1,32 @@
+{
+  "name": "enunciado-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5904 --strictPort",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --port 4904 --strictPort",
+    "typecheck": "tsc -b --noEmit",
+    "copy-data": "node copy-data.mjs"
+  },
+  "dependencies": {
+    "@fasl-work/caos-app-shell": "^0.6.8",
+    "i18next": "^23.16.4",
+    "katex": "^0.16.21",
+    "lucide-react": "^0.460.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-i18next": "^15.1.1",
+    "react-router": "^8.4.0",
+    "uplot": "^1.6.31",
+    "zustand": "^5.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.3"
+  }
+}

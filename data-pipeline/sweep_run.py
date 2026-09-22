@@ -24,6 +24,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 from copela import Budget, Case, Ledger, Sweep, Target, build
+from copela.ledger import LedgerBusy
 from copela.providers import ProviderError, get
 from copela.solvers.highs import make_solver
 from corpus import cases
@@ -70,21 +71,41 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--limit-cases", type=int, default=None, help="for a smoke run")
     parser.add_argument("--ledger", default=str(LEDGER))
     parser.add_argument("--report-only", action="store_true")
+    parser.add_argument(
+        "--think",
+        choices=["on", "off", "default"],
+        default="off",
+        help=(
+            "reasoning on a local reasoning model. Default off: a small reasoning model spends its "
+            "whole output budget thinking and returns nothing, which reads as a formalization "
+            "failure and is a truncation"
+        ),
+    )
+    parser.add_argument("--max-tokens", type=int, default=8192)
     args = parser.parse_args(argv)
 
-    ledger = Ledger(args.ledger)
-
     if args.report_only:
+        ledger = Ledger(args.ledger)
         report = build(ledger)
         print(report.to_text())
         print(f"\nledger: {len(ledger.records())} call(s), {ledger.total_cost_usd:.4f} USD")
         return 0
 
+    think = {"on": True, "off": False, "default": None}[args.think]
     try:
-        provider = get(args.provider)
+        provider = get(args.provider, think=think) if args.provider == "ollama" else get(args.provider)
     except ProviderError as error:
         print(f"provider unavailable: {error}", file=sys.stderr)
         return 2
+
+    # Exclusive for a writing run. Two sweeps sharing one ledger interleave records from whatever
+    # code each happened to start with, and the file stops meaning one thing. Taken after the
+    # provider check so an unavailable provider does not leave a lock behind.
+    try:
+        ledger = Ledger(args.ledger, exclusive=True)
+    except LedgerBusy as error:
+        print(error, file=sys.stderr)
+        return 3
 
     pricing = provider.models().get(args.model)
     free = pricing is None or (pricing.input_per_mtok == 0 and pricing.output_per_mtok == 0)
@@ -118,6 +139,7 @@ def main(argv: list[str] | None = None) -> int:
         repeats=args.repeats,
         temperature=0.0,
         seed=20260922,
+        max_tokens=args.max_tokens,
     )
 
     targets = [Target(args.provider, args.model)]
@@ -126,8 +148,15 @@ def main(argv: list[str] | None = None) -> int:
         f"= {len(corpus) * args.repeats} call(s) at most"
     )
     print(f"  budget: {'no per-token cost (local)' if free else budget.describe()}")
+    if args.provider == "ollama":
+        print(f"  reasoning: {args.think}, max_tokens {args.max_tokens}")
 
-    made = sweep.run(corpus, targets)
+    try:
+        made = sweep.run(corpus, targets)
+    finally:
+        # Released even on an interrupt. A stopped run that left the ledger locked would make the
+        # next one fail for a reason that has nothing to do with it.
+        ledger.release()
 
     print(f"\n{made} call(s) made this run. {budget.describe()}")
     print()
