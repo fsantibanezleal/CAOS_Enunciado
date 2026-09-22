@@ -58,7 +58,7 @@ function Question({ lang }: { lang: "en" | "es" }) {
       </p>
 
       <Equation
-        tex={String.raw`H_{1}: \Delta = R_{\text{ran}} - R_{\text{faithful}} > 0 \qquad\text{frente a}\qquad H_{0}: \Delta = 0`}
+        tex={String.raw`H_{1}: \Delta = R_{\text{ran}} - R_{\text{faithful}} > 0 \qquad\text{${es ? "frente a" : "against"}}\qquad H_{0}: \Delta = 0`}
         caption={
           es
             ? "La hipotesis y su nula. Una brecha nula significaria que ejecutarse basta, y que la comprobacion cara no anade nada sobre la barata."
@@ -423,7 +423,7 @@ function Metrics({ lang }: { lang: "en" | "es" }) {
       </p>
 
       <Equation
-        tex={String.raw`u \;=\; \#\bigl\{\, c : \mathrm{exec}(c) = \textsf{NOT\_APPLICABLE} \,\bigr\}, \qquad \Delta \text{ indefinido si } N - u = 0`}
+        tex={String.raw`u \;=\; \#\bigl\{\, c : \mathrm{exec}(c) = \textsf{NOT\_APPLICABLE} \,\bigr\}, \qquad \Delta \text{ ${es ? "indefinido si" : "undefined when"} } N - u = 0`}
         caption={
           es
             ? "Los casos no medidos. Un modelo que el solucionador no expresa es un limite del instrumento y se excluye de ambas tasas; si no queda nada medido, la brecha es indefinida y se imprime como tal, no como cero."
@@ -590,7 +590,7 @@ function Taxonomy({ lang }: { lang: "en" | "es" }) {
       </p>
 
       <Equation
-        tex={String.raw`\#\{\text{invisible}\} \,/\, \#\{\text{fallos}\} \quad\text{es en si mismo un resultado}`}
+        tex={String.raw`\#\{\text{${es ? "invisibles" : "invisible"}}\} \,/\, \#\{\text{${es ? "fallos" : "failures"}}\} \quad\text{${es ? "es en si mismo un resultado" : "is itself a finding"}}`}
         caption={
           es
             ? "La proporcion de fallos que un solucionador no habria notado. En esta corrida son 2 de cada distribucion, y a este tamano de muestra es una pista, no un resultado."
