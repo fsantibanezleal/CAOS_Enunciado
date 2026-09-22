@@ -21,6 +21,7 @@ import { FeasibleRegion } from "../components/FeasibleRegion";
 import { FormalizationView } from "../components/FormalizationView";
 import { collectHighlights, NarrativeView } from "../components/NarrativeView";
 import { ObjectiveSweep } from "../components/ObjectiveSweep";
+import { PropertyLab } from "../components/PropertyLab";
 import { TIER_NAME, TRAP_NAME, type CaseRecord } from "../lib/contract.types";
 import { orderedCases, useData } from "../lib/data";
 import { solveLive, tunableParameters, type LiveSolution } from "../lib/live-solver";
@@ -173,7 +174,7 @@ export function AppPage() {
     {
       id: "properties",
       label: es ? "Propiedades" : "Properties",
-      content: <PropertyPanel record={active} lang={lang} />,
+      content: <PropertyLab record={active} overrides={overrides} lang={lang} />,
     },
     {
       id: "coverage",
@@ -459,36 +460,3 @@ function LiveReadout({
   );
 }
 
-/** The metamorphic relations for this case, each with the verdict the bake recorded. */
-function PropertyPanel({ record, lang }: { record: CaseRecord; lang: "en" | "es" }) {
-  const es = lang === "es";
-  const check = record.property_check;
-
-  return (
-    <div className="viz">
-      <div className="pane-scroll" style={{ flex: 1 }}>
-        <p className="pane-hint" style={{ maxWidth: "72ch" }}>
-          {es
-            ? "Una relacion metamorfica no necesita conocer la respuesta correcta: transforma el problema de una manera cuyo efecto sobre la respuesta esta determinado de antemano, y comprueba que ese efecto ocurrio. Escalar el objetivo no puede mover el argumento optimo; anadir una restriccion redundante no puede cambiar el conjunto factible; apretar una restriccion no puede mejorar el optimo."
-            : "A metamorphic relation does not need to know the right answer: it transforms the problem in a way whose effect on the answer is fixed in advance, then checks that the effect happened. Scaling the objective cannot move the argmin; adding a redundant row cannot change the feasible set; tightening a constraint cannot improve the optimum."}
-        </p>
-        <ul className="properties">
-          {check.relations.map((relation) => (
-            <li key={relation.relation} className={`prop prop-${relation.outcome}`}>
-              <span className="prop-name">{relation.relation}</span>
-              <span className="prop-outcome">{relation.outcome}</span>
-              <span className="prop-detail">{relation.detail}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="viz-readout">
-        <span>
-          {check.relations.filter((r) => r.outcome === "pass").length}/{check.relations.length}{" "}
-          {es ? "relaciones se mantienen" : "relations hold"}
-        </span>
-        <span className={check.outcome === "pass" ? "ok" : "bad"}>{check.detail}</span>
-      </div>
-    </div>
-  );
-}
