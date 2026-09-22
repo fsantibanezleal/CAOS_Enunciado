@@ -34,6 +34,26 @@ jobs:
       - name: Lint
         run: python -m ruff check data-pipeline tests
 
+      - name: A file with a shebang is executable
+        # Windows commits a tracked file as mode 100644 whatever its content says, so a script with
+        # a shebang arrives on Linux unexecutable and the command a README prints fails with
+        # "Permission denied". This repo is authored on Windows, so the check is not optional.
+        run: |
+          set -euo pipefail
+          bad=""
+          for f in $(git ls-files '*.py' '*.sh' '*.mjs'); do
+            if head -1 "$f" | grep -q '^#!'; then
+              mode=$(git ls-files -s "$f" | cut -d' ' -f1)
+              [ "$mode" = "100755" ] || bad="$bad $f"
+            fi
+          done
+          if [ -n "$bad" ]; then
+            echo "these carry a shebang and are not executable:$bad"
+            echo "fix with: git update-index --chmod=+x$bad"
+            exit 1
+          fi
+          echo "every shebang file is executable"
+
       - name: The SDD gate, every requirement names its verification
         run: python scripts/check_sdd.py
 
