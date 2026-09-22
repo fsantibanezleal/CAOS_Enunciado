@@ -112,12 +112,12 @@ def build_prompt(case) -> str:
     return PROMPT.format(schema=SCHEMA_SKETCH, rules=RULES, narrative=case.narrative)
 
 
-_FENCE = re.compile(r"```(?:json)?\s*(.*?)```", re.S)
+_FENCE = re.compile(r"```(?:json)?\s*(.*?)```", re.DOTALL)
 
 #: Reasoning models emit their thinking before the answer, in tags or in prose. The thinking often
 #: contains JSON fragments of its own, so it has to go before the document is located, or the
 #: extractor picks up a draft the model then abandoned.
-_THINKING = re.compile(r"<(think|thinking|reasoning)>.*?</\1>", re.S | re.I)
+_THINKING = re.compile(r"<(think|thinking|reasoning)>.*?</\1>", re.DOTALL | re.IGNORECASE)
 
 
 def extract_json(text: str) -> str:
