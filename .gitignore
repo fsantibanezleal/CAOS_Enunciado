@@ -11,3 +11,7 @@ dist/
 .idea/
 .DS_Store
 Thumbs.db
+data/runs/
+build/
+tools/portability/node_modules/
+tools/portability/site/

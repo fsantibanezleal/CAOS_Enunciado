@@ -1,0 +1,104 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>portability probe</title></head>
+<body><pre id="out">running</pre>
+<script type="module">
+const results = [];
+const log = (m) => { document.getElementById('out').textContent += "\n" + m; };
+function record(engine, klass, ok, detail, bytes) {
+  results.push({ engine, class: klass, portable: ok, detail, bytes });
+  log(`${ok ? "PORTABLE" : "NOT     "}  ${engine} [${klass}] ${detail}`);
+}
+
+// HiGHS, LP and MILP
+try {
+  const t0 = performance.now();
+  const mod = await import('./highs/build/highs.mjs');
+  const highs = await mod.default({ locateFile: (f) => './highs/build/' + f });
+  const load = performance.now() - t0;
+  const s1 = highs.solve(`Minimize
+ obj: 12 x_a + 9 x_b
+Subject To
+ demand: x_a + x_b >= 100
+Bounds
+ x_a >= 0
+ x_b >= 0
+End`);
+  record('highs', 'LP', Math.abs(s1.ObjectiveValue - 900) < 1e-6,
+    `objective ${s1.ObjectiveValue}, load ${load.toFixed(0)} ms`);
+  const s2 = highs.solve(`Minimize
+ obj: 340 d
+Subject To
+ need: 55 d >= 900
+Bounds
+ d >= 0
+Generals
+ d
+End`);
+  record('highs', 'MILP', Math.abs(s2.ObjectiveValue - 5780) < 1e-6, `objective ${s2.ObjectiveValue}`);
+} catch (e) { record('highs', 'LP/MILP', false, 'failed: ' + e.message); }
+
+// GLPK, LP (needs a Worker, which exists in a browser)
+try {
+  const GLPK = (await import('./glpkjs/dist/index.js')).default;
+  const glpk = await GLPK();
+  const res = await glpk.solve({
+    name: 'blend',
+    objective: { direction: glpk.GLP_MIN, name: 'cost',
+      vars: [{name:'x_a',coef:12},{name:'x_b',coef:9}] },
+    subjectTo: [{ name:'demand', vars:[{name:'x_a',coef:1},{name:'x_b',coef:1}],
+      bnds:{type:glpk.GLP_LO, lb:100, ub:0} }],
+  }, { msglev: glpk.GLP_MSG_OFF });
+  record('glpk.js', 'LP', Math.abs(res.result.z - 900) < 1e-6, `objective ${res.result.z}`);
+} catch (e) { record('glpk.js', 'LP', false, 'failed: ' + e.message); }
+
+// MiniZinc WASM, CP
+try {
+  const t0 = performance.now();
+  const mz = await import('./minizinc.mjs');
+  await mz.init({ workerURL: new URL('./minizinc-worker.js', location.href).href,
+                  wasmURL:   new URL('./minizinc.wasm',       location.href).href,
+                  dataURL:   new URL('./minizinc.data',       location.href).href });
+  const load = performance.now() - t0;
+  const model = new mz.Model();
+  model.addString(`var 0..1000: x_a; var 0..1000: x_b;
+    constraint x_a + x_b >= 100;
+    var int: cost = 12*x_a + 9*x_b;
+    solve minimize cost;`);
+  const out = await model.solve({ options: { solver: 'gecode' } });
+  // Read the objective from wherever this API puts it, and SAY which shape was found, so a
+  // future version that moves it produces a readable failure instead of a silent false negative.
+  const sol = out.solution ?? {};
+  // Walk the solution object for the objective rather than guessing one path. The API nests it
+  // under output/sections and the exact key has moved between versions.
+  function findNumber(node, key, depth = 0) {
+    if (depth > 6 || node == null) return undefined;
+    if (typeof node === 'object') {
+      if (typeof node[key] === 'number') return node[key];
+      for (const v of Object.values(node)) {
+        const hit = findNumber(v, key, depth + 1);
+        if (hit !== undefined) return hit;
+      }
+    }
+    if (typeof node === 'string') {
+      const m = node.match(new RegExp(key + '\s*[=:]\s*(-?[0-9.]+)'));
+      if (m) return Number(m[1]);
+    }
+    return undefined;
+  }
+  window.__MZN_SOLUTION__ = JSON.parse(JSON.stringify(sol));
+  // The API returns the ASSIGNMENT, not the derived objective: a `var int: cost = ...` is not an
+  // output variable. So the objective is recomputed from the assignment, which is a stronger check
+  // anyway, since it verifies the values rather than a number the solver reported about itself.
+  const assign = sol.output?.json ?? {};
+  const cost = (typeof assign.x_a === 'number' && typeof assign.x_b === 'number')
+    ? 12 * assign.x_a + 9 * assign.x_b : undefined;
+  const solved = String(out.status).includes('OPTIMAL');
+  record('minizinc(wasm)', 'CP', solved && cost !== undefined && Math.abs(cost - 900) < 1e-6,
+    cost === undefined
+      ? `status ${out.status} but the assignment was not readable: ${JSON.stringify(assign)}`
+      : `objective ${cost} recomputed from the assignment ${JSON.stringify(assign)}, status ${out.status}, load ${load.toFixed(0)} ms`);
+} catch (e) { record('minizinc(wasm)', 'CP', false, 'failed: ' + e.message); }
+
+window.__RESULTS__ = results;
+log('\nDONE');
+</script></body></html>
