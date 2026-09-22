@@ -45,14 +45,28 @@ const server = createServer(async (req, res) => {
   const url = decodeURIComponent(req.url.split("?")[0]);
   const path = join(DIST, url === "/" ? "index.html" : url);
   try {
-    const body = await readFile(path);
-    res.writeHead(200, { "Content-Type": TYPES[extname(path)] || "application/octet-stream" });
+    // Directory-index resolution, which every static host performs: /methodology serves
+    // /methodology/index.html. Without it the prerendered documents are invisible to this gate and
+    // it reports a failure the real host does not have.
+    let body;
+    let served = path;
+    try {
+      body = await readFile(path);
+    } catch {
+      served = extname(path) ? path : join(path, "index.html");
+      body = await readFile(served);
+    }
+    res.writeHead(200, { "Content-Type": TYPES[extname(served)] || "application/octet-stream" });
     res.end(body);
   } catch {
-    // SPA fallback, which is what a static host with a 404 rewrite does.
+    // Mimic the real host: serve 404.html with a 404 STATUS.
+    //
+    // An earlier version served the fallback with 200, which made the "an unknown path still
+    // answers 404" check fail against a server that no longer resembled production. A gate whose
+    // model of the host is wrong measures the gate, not the site.
     try {
-      res.writeHead(200, { "Content-Type": "text/html" });
-      res.end(await readFile(join(DIST, "index.html")));
+      res.writeHead(404, { "Content-Type": "text/html" });
+      res.end(await readFile(join(DIST, "404.html")));
     } catch {
       res.writeHead(404);
       res.end("not found");
@@ -205,6 +219,23 @@ for (const theme of ["dark", "light"]) {
 
   await context.close();
 }
+
+// Deep links must answer 200, not merely render.
+//
+// A static host serving 404.html gives the SPA body with an HTTP 404 STATUS. A human sees the right
+// page; every machine that asks is told it does not exist. A check that only looks at the rendered
+// body calls that working, which is why this asserts the status directly.
+//
+// Against the built site this proves the per-route documents exist. Set VERIFY_BASE to the live
+// origin to assert the same thing about what is actually published.
+const origin = process.env.VERIFY_BASE ?? `http://localhost:${PORT}`;
+for (const route of ["introduction", "methodology", "implementation", "experiments", "benchmark"]) {
+  const response = await fetch(`${origin}/${route}`, { redirect: "follow" });
+  check(response.status === 200, `deep link /${route} answers 200`, `status ${response.status}`);
+}
+// And a path that genuinely does not exist must still say so.
+const missing = await fetch(`${origin}/not-a-route-here`, { redirect: "follow" });
+check(missing.status === 404, `an unknown path still answers 404`, `status ${missing.status}`);
 
 await browser.close();
 server.close();

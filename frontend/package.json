@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port 5904 --strictPort",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && node prerender-routes.mjs",
     "preview": "vite preview --port 4904 --strictPort",
     "typecheck": "tsc -b --noEmit",
     "copy-data": "node copy-data.mjs"

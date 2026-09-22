@@ -53,11 +53,6 @@ jobs:
           VITE_BASE: ${{ vars.VITE_BASE }}
         run: npm run build
 
-      - name: SPA deep links
-        # A static host answers an unknown path with 404.html. Copying index.html there is what
-        # makes /methodology work on a refresh instead of returning a 404 that the SPA never sees.
-        run: cp frontend/dist/index.html frontend/dist/404.html
-
       - uses: actions/upload-pages-artifact@v3
         with:
           path: frontend/dist
