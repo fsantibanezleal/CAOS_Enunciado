@@ -1,0 +1,27 @@
+{
+  "case_count": 20,
+  "coverage": {
+    "tier": {
+      "1": 4,
+      "2": 4,
+      "3": 4,
+      "4": 4,
+      "5": 4
+    },
+    "trap": {
+      "ambiguity": 4,
+      "derived-bound": 2,
+      "droppable-constraint": 5,
+      "implicit-quantity": 3,
+      "integrality": 4,
+      "none": 4,
+      "objective-sense": 2,
+      "red-herring": 1,
+      "unit-mismatch": 2
+    }
+  },
+  "coverage_gaps": [],
+  "family": "optimization",
+  "schema": "enunciado-corpus/1.0",
+  "tolerance": 1e-06
+}
