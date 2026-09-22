@@ -1,0 +1,42 @@
+name: ci
+
+# Triggers are trunk plus manual only. No pull_request trigger, no schedule, no feature branches:
+# the Actions quota on this account was exhausted once by workflows that ran on everything.
+on:
+  push:
+    branches: [develop, main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install the cheap checks only
+        # This is a PRODUCT. Its test suite needs a solver and its bake solves twenty models, so
+        # neither runs here: both run locally and their output is committed. CI installs a linter
+        # and nothing else.
+        run: python -m pip install --upgrade pip ruff
+
+      - name: Lint
+        run: python -m ruff check data-pipeline tests
+
+      - name: The SDD gate, every requirement names its verification
+        run: python scripts/check_sdd.py
+
+      - name: The committed artifacts are present and readable
+        # Stdlib only. It checks that the bake was run and committed; it does NOT re-run the bake.
+        run: python scripts/check_artifacts.py
