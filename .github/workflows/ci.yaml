@@ -32,7 +32,9 @@ jobs:
         run: python -m pip install --upgrade pip ruff
 
       - name: Lint
-        run: python -m ruff check data-pipeline tests
+        # `scripts/` runs in this very workflow and was not linted: two real findings sat
+        # there for as long as it has existed.
+        run: python -m ruff check data-pipeline scripts tests
 
       - name: A file with a shebang is executable
         # Windows commits a tracked file as mode 100644 whatever its content says, so a script with

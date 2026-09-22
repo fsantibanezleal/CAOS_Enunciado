@@ -31,7 +31,6 @@ from pathlib import Path
 from copela.ledger import Ledger
 from copela.report import build
 from copela.verdicts import Layer, Outcome, Rate
-
 from corpus import cases as corpus_cases
 
 REPO = Path(__file__).resolve().parent.parent
@@ -44,25 +43,39 @@ DEV_COPY = REPO / "frontend" / "public" / "data" / "gap-report.json"
 
 #: What the measurement does not support. Each one is a fact about this run, not a disclaimer.
 CAVEATS = [
-    "Twenty cases at ONE repeat gives a wide interval. It is enough to see that a gap exists and "
-    "not enough to rank these two models against each other: their intervals overlap almost "
-    "entirely.",
-    "Run-to-run variation is real and visible here. An earlier run of the identical corpus put "
-    "claude-haiku-4-5 at ran 0.350; this one puts it at 0.250. Nothing changed but the sampling. "
-    "That is what the interval is for.",
-    "The true statement is substituted before parsing and provenance offsets are recomputed from "
-    "the quoted text. Both favour the model, and both are stated because the measurement is about "
-    "formalization rather than transcription.",
-    "Current Claude models accept no temperature and no seed, so those controls are recorded as "
-    "absent rather than as pinned values.",
-    "The structural layer can only REFUTE. A matching optimum never proves equivalence, because "
-    "compensating errors reach the right number.",
-    "A candidate the configured solver cannot express is counted as unmeasured and excluded from "
-    "both rates. Charging a limit of the instrument to the subject is the error this product "
-    "exists to expose.",
-    "The per-tier and per-trap rates below are re-groupings of the same forty records, so their "
-    "denominators are four and smaller. They indicate where to look next; they do not support a "
-    "claim about any single tier.",
+    (
+        "Twenty cases at ONE repeat gives a wide interval. It is enough to see that a gap exists "
+        "and not enough to rank these two models against each other: their intervals overlap "
+        "almost entirely."
+    ),
+    (
+        "Run-to-run variation is real and visible here. An earlier run of the identical corpus put "
+        "claude-haiku-4-5 at ran 0.350; this one puts it at 0.250. Nothing changed but the "
+        "sampling. That is what the interval is for."
+    ),
+    (
+        "The true statement is substituted before parsing and provenance offsets are recomputed "
+        "from the quoted text. Both favour the model, and both are stated because the measurement "
+        "is about formalization rather than transcription."
+    ),
+    (
+        "Current Claude models accept no temperature and no seed, so those controls are recorded "
+        "as absent rather than as pinned values."
+    ),
+    (
+        "The structural layer can only REFUTE. A matching optimum never proves equivalence, "
+        "because compensating errors reach the right number."
+    ),
+    (
+        "A candidate the configured solver cannot express is counted as unmeasured and excluded "
+        "from both rates. Charging a limit of the instrument to the subject is the error this "
+        "product exists to expose."
+    ),
+    (
+        "The per-tier and per-trap rates below are re-groupings of the same forty records, so "
+        "their denominators are four and smaller. They indicate where to look next; they do not "
+        "support a claim about any single tier."
+    ),
 ]
 
 
