@@ -23,11 +23,11 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
-from copela import Budget, Case, Ledger, Sweep, Target, build  # noqa: E402
-from copela.providers import ProviderError, get  # noqa: E402
-from copela.solvers.highs import make_solver  # noqa: E402
-from corpus import cases  # noqa: E402
-from formalize import build_prompt, parse_response, repair_narrative  # noqa: E402
+from copela import Budget, Case, Ledger, Sweep, Target, build
+from copela.providers import ProviderError, get
+from copela.solvers.highs import make_solver
+from corpus import cases
+from formalize import build_prompt, parse_response, repair_narrative
 
 LEDGER = HERE.parent / "data" / "runs" / "optimization.jsonl"
 
