@@ -47,6 +47,10 @@ jobs:
 
       - name: Build
         working-directory: frontend
+        # VITE_BASE comes from the repository variable, so moving between the default Pages URL and
+        # a custom domain is a setting rather than a code change. Unset means the domain root.
+        env:
+          VITE_BASE: ${{ vars.VITE_BASE }}
         run: npm run build
 
       - name: SPA deep links
