@@ -1,31 +1,85 @@
 {
   "cells": [
     {
-      "provider": "ollama",
-      "model_id": "qwen3.5:4b",
+      "provider": "anthropic",
+      "model_id": "claude-haiku-4-5",
       "family": "optimization",
       "ran": {
-        "passed": 0,
-        "total": 10,
-        "value": 0.0,
-        "interval_low": 0.0,
-        "interval_high": 0.2775327998628892,
+        "passed": 5,
+        "total": 20,
+        "value": 0.25,
+        "interval_low": 0.11186170140766569,
+        "interval_high": 0.468700877618744,
         "confidence": 0.95
       },
       "faithful": {
-        "passed": 0,
-        "total": 10,
-        "value": 0.0,
-        "interval_low": 0.0,
-        "interval_high": 0.2775327998628892,
+        "passed": 4,
+        "total": 20,
+        "value": 0.2,
+        "interval_low": 0.08065766257979809,
+        "interval_high": 0.4160174322518936,
         "confidence": 0.95
       },
-      "gap": null,
-      "gap_is_defined": false
+      "gap": 0.04999999999999999,
+      "gap_is_defined": true,
+      "unmeasured": 0
+    },
+    {
+      "provider": "anthropic",
+      "model_id": "claude-sonnet-5",
+      "family": "optimization",
+      "ran": {
+        "passed": 11,
+        "total": 20,
+        "value": 0.55,
+        "interval_low": 0.34208534245034233,
+        "interval_high": 0.7418021417443759,
+        "confidence": 0.95
+      },
+      "faithful": {
+        "passed": 10,
+        "total": 20,
+        "value": 0.5,
+        "interval_low": 0.2992980081982123,
+        "interval_high": 0.7007019918017877,
+        "confidence": 0.95
+      },
+      "gap": 0.050000000000000044,
+      "gap_is_defined": true,
+      "unmeasured": 0
     }
   ],
   "judge": [],
-  "note": "The layers are reported separately by design. There is no combined score: a single number would let a high 'it ran' rate conceal a low 'it was right' rate, which is the distance this report exists to show. Rates are over repeats with a Wilson interval; hosted inference is not deterministic at temperature zero, so a single run is not a result.",
+  "note": "The layers are reported separately by design. There is no combined score: a single number would let a high 'it ran' rate conceal a low 'it was right' rate, which is the distance this report exists to show. Rates are over repeats with a Wilson interval, because pinning whatever controls a provider exposes does not make hosted inference deterministic, so a single run is not a result.",
   "measured_on": "2026-09-22",
-  "stopped_by": "the kill criterion: ten consecutive failures. A sweep that is failing every call is buying nothing, so it stops rather than running to the ceiling."
+  "corpus": "20 authored optimization cases across 5 complexity tiers, 1 repeat each",
+  "cost_usd": 1.2263,
+  "failure_breakdown": {
+    "claude-sonnet-5": {
+      "ran and survived every check": 10,
+      "a constant with no unit": 4,
+      "truncated output": 3,
+      "ran, then REFUTED: solves to a different optimum": 1,
+      "the model it produced is infeasible": 1,
+      "unparseable output": 1
+    },
+    "claude-haiku-4-5": {
+      "a constant with no unit": 5,
+      "a quantity declared derived and never defined": 4,
+      "ran and survived every check": 4,
+      "unparseable output": 3,
+      "fabricated provenance: words not in the statement": 1,
+      "ran, then REFUTED: solves to a different optimum": 1,
+      "the model it produced is infeasible": 1,
+      "dimensional mismatch": 1
+    }
+  },
+  "caveats": [
+    "Twenty cases at ONE repeat gives a wide interval. It is enough to see that a gap exists and not enough to rank these two models against each other: their intervals overlap almost entirely.",
+    "Run-to-run variation is real and visible here. An earlier run of the identical corpus put claude-haiku-4-5 at ran 0.350; this one puts it at 0.250. Nothing changed but the sampling. That is what the interval is for.",
+    "The true statement is substituted before parsing and provenance offsets are recomputed from the quoted text. Both favour the model, and both are stated because the measurement is about formalization rather than transcription.",
+    "Current Claude models accept no temperature and no seed, so those controls are recorded as absent rather than as pinned values.",
+    "The structural layer can only REFUTE. A matching optimum never proves equivalence, because compensating errors reach the right number.",
+    "A candidate the configured solver cannot express is excluded from both rates and counted as unmeasured, because a limitation of the instrument is not a failure of the subject."
+  ]
 }

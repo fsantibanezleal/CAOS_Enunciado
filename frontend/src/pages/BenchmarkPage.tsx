@@ -34,6 +34,10 @@ interface ReportJson {
   note: string;
   measured_on?: string;
   stopped_by?: string;
+  corpus?: string;
+  cost_usd?: number;
+  caveats?: string[];
+  failure_breakdown?: Record<string, Record<string, number>>;
 }
 
 function formatRate(rate: RateJson): string {
@@ -140,7 +144,50 @@ export function BenchmarkPage() {
           {report.measured_on ? (
             <p className="measure muted">
               {es ? "Medido el" : "Measured on"} {report.measured_on}
+              {report.corpus ? ` · ${report.corpus}` : ""}
+              {report.cost_usd !== undefined
+                ? ` · ${es ? "costo" : "cost"} $${report.cost_usd.toFixed(2)}`
+                : ""}
             </p>
+          ) : null}
+
+          {report.caveats && report.caveats.length > 0 ? (
+            <>
+              <h2>{es ? "Lo que este numero NO dice" : "What this number does NOT say"}</h2>
+              <ul className="measure">
+                {report.caveats.map((caveat) => (
+                  <li key={caveat.slice(0, 40)}>{caveat}</li>
+                ))}
+              </ul>
+            </>
+          ) : null}
+
+          {report.failure_breakdown ? (
+            <>
+              <h2>{es ? "En que falla cada modelo" : "How each model fails"}</h2>
+              <p className="measure">
+                {es
+                  ? "La distribucion importa mas que la tasa. Un modelo que falla al emitir un documento valido falla de un modo distinto al que produce un modelo que se resuelve al optimo equivocado, y solo el segundo es invisible para un solver."
+                  : "The distribution matters more than the rate. A model that fails to emit a valid document fails differently from one that produces a model solving to the wrong optimum, and only the second is invisible to a solver."}
+              </p>
+              {Object.entries(report.failure_breakdown).map(([model, counts]) => (
+                <div key={model}>
+                  <h3><code>{model}</code></h3>
+                  <table className="finding-table">
+                    <tbody>
+                      {Object.entries(counts)
+                        .sort((a, b) => b[1] - a[1])
+                        .map(([reason, count]) => (
+                          <tr key={reason}>
+                            <td className="num">{count}</td>
+                            <td>{reason}</td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+              ))}
+            </>
           ) : null}
         </>
       )}
