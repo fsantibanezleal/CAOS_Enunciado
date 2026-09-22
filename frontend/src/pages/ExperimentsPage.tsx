@@ -1,163 +1,670 @@
 /**
- * Experiments: the design, and the coverage matrix across all cases.
+ * Experiments: the question, the corpus, the protocol, the metrics, the taxonomy, the threats.
  *
- * Cross-case content belongs here rather than on the workbench, which answers "what happened in
- * this case".
+ * Six tabs of prose, not a grid of cards. The datasets table states each set's licence and whether
+ * it can be redistributed inside a public artifact, because two of the field's benchmarks cannot,
+ * and that fact is what forced the corpus to be authored rather than scraped.
  */
 
-import { useShellLang } from "@fasl-work/caos-app-shell";
+import { Callout, Cite, Equation, Refs, SubTabs, useShellLang } from "@fasl-work/caos-app-shell";
+
+import { FigureRow } from "../components/layout";
 import { useMemo } from "react";
 
+import { HoldoutDiagram, SamplingDiagram } from "../components/diagrams";
 import { TIER_NAME, TRAP_NAME } from "../lib/contract.types";
-import { orderedCases, useData } from "../lib/data";
+import { useData } from "../lib/data";
 
 export function ExperimentsPage() {
   const lang = (useShellLang() ?? "en") as "en" | "es";
   const es = lang === "es";
-  const { status, cases, manifest } = useData();
 
-  const ordered = useMemo(() => orderedCases(cases), [cases]);
-
-  if (status !== "ready" || !manifest) {
-    return <div className="state-panel">{es ? "Cargando" : "Loading"}</div>;
-  }
-
-  const tiers = [1, 2, 3, 4, 5] as const;
+  const tabs = [
+    { id: "question", label: es ? "La pregunta" : "The question", content: <Question lang={lang} /> },
+    { id: "corpus", label: es ? "El corpus" : "The corpus", content: <Corpus lang={lang} /> },
+    { id: "protocol", label: es ? "El protocolo" : "The protocol", content: <Protocol lang={lang} /> },
+    { id: "metrics", label: es ? "Las metricas" : "The metrics", content: <Metrics lang={lang} /> },
+    { id: "taxonomy", label: es ? "Taxonomia de fallos" : "Failure taxonomy", content: <Taxonomy lang={lang} /> },
+    { id: "threats", label: es ? "Amenazas a la validez" : "Threats to validity", content: <Threats lang={lang} /> },
+  ];
 
   return (
-    <article className="prose-page">
-      <h1>{es ? "Experimentos" : "Experiments"}</h1>
-
-      <h2>{es ? "El diseno" : "The design"}</h2>
-      <p className="measure">
-        {es
-          ? "Veinte casos escritos, cuatro por nivel de complejidad. Los niveles tratan de lo que la FORMALIZACION debe hacer, no de la aritmetica: un problema con numeros grandes no es mas dificil de formalizar que uno con numeros pequenos, y uno cuyo objetivo se expresa en una unidad distinta de la de sus datos si lo es."
-          : "Twenty authored cases, four per complexity tier. Tiers are about what the FORMALIZATION must do, not the arithmetic: a problem with large numbers is not harder to formalize than one with small numbers, and one whose objective is stated in a different unit from its data is."}
-      </p>
-
-      <div className="coverage-grid">
-        {tiers.map((tier) => (
-          <div key={tier} className="coverage-cell">
-            <strong>{manifest.coverage.tier[String(tier)] ?? 0}</strong>
-            <span>
-              {es ? "Nivel" : "Tier"} {tier} {"·"} {TIER_NAME[tier][lang]}
-            </span>
-          </div>
-        ))}
+    <div className="page-body wide prose">
+      <div className="page-head">
+        <h1>{es ? "Experimentos" : "Experiments"}</h1>
+        <p className="lede">
+          {es
+            ? "Un experimento, disenado para una sola pregunta: existe una brecha entre lo que se ejecuta y lo que es fiel, sobre casos cuya verdad de referencia esta escrita y verificada en vez de heredada de un banco publico. Lo que sigue es como se escribio el corpus, como se corrio el barrido, que se midio exactamente y que no puede concluirse de ello."
+            : "One experiment, designed for one question: is there a gap between what executes and what is faithful, over cases whose reference truth is authored and verified rather than inherited from a public benchmark. What follows is how the corpus was written, how the sweep was run, exactly what was measured, and what cannot be concluded from it."}
+        </p>
       </div>
+      <SubTabs tabs={tabs} orientation="vertical" ariaLabel={es ? "Secciones" : "Sections"} />
+    </div>
+  );
+}
 
-      <h2>{es ? "Por que los casos son escritos y no importados" : "Why the cases are authored, not imported"}</h2>
-      <p className="measure">
-        {es ? "Tres razones medidas:" : "Three measured reasons:"}
-      </p>
-      <ol className="measure">
-        <li>
-          {es
-            ? "Los siete bancos de pruebas que audito el estudio de referencia tienen tasas de error entre 8,13 y 54,0 por ciento. Una puntuacion contra ellos tal como se publicaron es una puntuacion contra ruido."
-            : "The seven benchmarks the anchor survey audited carry error rates from 8.13 to 54.0 per cent. A score against them as published is a score against noise."}
-        </li>
-        <li>
-          {es
-            ? "NLP4LP es CC BY-NC, de modo que no puede redistribuirse en un artefacto publico, y ComplexOR esta parcialmente sin publicar y sin licencia declarada."
-            : "NLP4LP is CC BY-NC, so it cannot be redistributed in a public artifact, and ComplexOR is partly unreleased with no stated licence."}
-        </li>
-        <li>
-          {es
-            ? "En la familia adyacente de aprendizaje automatico, la contaminacion implica que una puntuacion sobre datos publicos no puede separar memoria de capacidad."
-            : "In the adjacent machine-learning family, contamination means a public-dataset score cannot separate recall from capability."}
-        </li>
-      </ol>
+/* --------------------------------------------------------------------- 1 */
 
-      <h2>{es ? "Cobertura de trampas" : "Trap coverage"}</h2>
+function Question({ lang }: { lang: "en" | "es" }) {
+  const es = lang === "es";
+  return (
+    <section>
+      <h2>{es ? "La pregunta, y que la refutaria" : "The question, and what would refute it"}</h2>
+
       <p className="measure">
         {es
-          ? "Cada caso declara la trampa que esta disenado para atrapar. Cuatro casos no llevan trampa a proposito: un corpus hecho solo de trampas no puede distinguir un caso dificil de un modelo debil."
-          : "Each case declares the trap it is designed to catch. Four cases carry no trap on purpose: a corpus made entirely of traps cannot tell a hard case from a weak model."}
+          ? "La hipotesis es concreta y falsable: sobre casos de optimizacion escritos a mano con referencia verificada, una fraccion no despreciable de las formalizaciones que se ejecutan limpiamente no son el modelo que el enunciado describio. Formalmente, la brecha entre las dos tasas es estrictamente positiva."
+          : "The hypothesis is concrete and falsifiable: over authored optimization cases with a verified reference, a non-negligible fraction of the formalizations that execute cleanly are not the model the statement described. Formally, the gap between the two rates is strictly positive."}
+      </p>
+
+      <Equation
+        tex={String.raw`H_{1}: \Delta = R_{\text{ran}} - R_{\text{faithful}} > 0 \qquad\text{frente a}\qquad H_{0}: \Delta = 0`}
+        caption={
+          es
+            ? "La hipotesis y su nula. Una brecha nula significaria que ejecutarse basta, y que la comprobacion cara no anade nada sobre la barata."
+            : "The hypothesis and its null. A zero gap would mean executing is enough, and the expensive check adds nothing over the cheap one."
+        }
+      />
+
+      <p className="measure">
+        {es
+          ? "Que refutaria la hipotesis: un corpus donde toda formalizacion que se ejecuta pasa tambien las capas estructural y de propiedades. Eso es exactamente lo que la primera version de esta medicion informo, y resulto ser un defecto del instrumento en lugar de un resultado: la capa estructural devolvia INDECISO en todos los casos, asi que la brecha era cero por construccion y no por evidencia. Una hipotesis que solo puede confirmarse no es una hipotesis, y una capa que no puede fallar no la pone a prueba."
+          : "What would refute the hypothesis: a corpus where every formalization that executes also passes the structural and property layers. That is exactly what the first version of this measurement reported, and it turned out to be an instrument defect rather than a result: the structural layer returned UNDECIDED in every case, so the gap was zero by construction rather than by evidence. A hypothesis that can only be confirmed is not a hypothesis, and a layer that cannot fail does not test it."}
+      </p>
+
+      <p className="measure">
+        {es ? (
+          <>
+            La pregunta no es original; lo que falta en el campo es medirla del mismo modo en varias
+            familias. La encuesta ancla <Cite id="survey2025" paren /> establece que la correccion del
+            objetivo no garantiza un modelo correcto; el trabajo sobre Lean{" "}
+            <Cite id="lean2026" paren /> la cuantifica en 3,0 a 29,0 puntos; SCOPE{" "}
+            <Cite id="scope2026" paren /> la encuentra concentrada en la configuracion de bajo nivel;
+            BEAMS <Cite id="beams2026" paren /> la encuentra entre lo cualitativo y lo cuantitativo.
+            Ninguno de los cuatro informa la cifra con el mismo instrumento.
+          </>
+        ) : (
+          <>
+            The question is not original; what the field lacks is measuring it the same way across
+            several families. The anchor survey <Cite id="survey2025" paren /> establishes that
+            objective correctness does not guarantee a correct model; the Lean work{" "}
+            <Cite id="lean2026" paren /> quantifies it at 3.0 to 29.0 points; SCOPE{" "}
+            <Cite id="scope2026" paren /> finds it concentrated in low-level configuration; BEAMS{" "}
+            <Cite id="beams2026" paren /> finds it between the qualitative and the quantitative. None
+            of the four reports the figure with the same instrument.
+          </>
+        )}
+      </p>
+
+      <Callout variant="honest" title={es ? "Lo que este experimento no pregunta" : "What this experiment does not ask"}>
+        {es
+          ? "No pregunta que modelo es mejor. No pregunta si un sistema multi-agente supera a un prompt directo. No pregunta si el rendimiento mejora con mas contexto o con herramientas. Cada una de esas preguntas necesita su propio diseno, y responderlas con estos datos seria leer en ellos lo que no contienen."
+          : "It does not ask which model is better. It does not ask whether a multi-agent system beats a direct prompt. It does not ask whether performance improves with more context or with tools. Each of those questions needs its own design, and answering them from this data would be reading into it what it does not contain."}
+      </Callout>
+
+      <Refs ids={["survey2025", "lean2026", "scope2026", "beams2026"]} label={es ? "Referencias" : "Refs"} />
+    </section>
+  );
+}
+
+/* --------------------------------------------------------------------- 2 */
+
+function Corpus({ lang }: { lang: "en" | "es" }) {
+  const es = lang === "es";
+  const { cases, manifest } = useData();
+
+  const byTier = useMemo(() => {
+    const counts: Record<number, number> = {};
+    for (const record of cases) counts[record.tier] = (counts[record.tier] ?? 0) + 1;
+    return counts;
+  }, [cases]);
+
+  const byTrap = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const record of cases) {
+      for (const trap of record.traps.length ? record.traps : ["none"]) {
+        counts[trap] = (counts[trap] ?? 0) + 1;
+      }
+    }
+    return counts;
+  }, [cases]);
+
+  return (
+    <section>
+      <h2>{es ? "El corpus, y por que esta escrito a mano" : "The corpus, and why it is authored"}</h2>
+
+      <p className="measure">
+        {es ? (
+          <>
+            La opcion obvia habria sido puntuar contra los bancos publicos del campo. La encuesta
+            ancla <Cite id="survey2025" paren /> los audito y encontro tasas de error minimas de
+            entre 8 y 54 por ciento: NL4Opt al menos 26,4% sobre 289 items, IndustryOR al menos 54,0%
+            sobre 100, EasyLP al menos 8,13% sobre 652, ComplexLP al menos 23,7% sobre 211, ReSocratic
+            al menos 16,0% sobre 605, NLP4LP al menos 21,7% sobre 269, ComplexOR al menos 24,3% sobre
+            37. Una puntuacion contra esos conjuntos tal como se publican es una puntuacion contra
+            ruido.
+          </>
+        ) : (
+          <>
+            The obvious option would have been scoring against the field's public benchmarks. The
+            anchor survey <Cite id="survey2025" paren /> audited them and found minimum error rates
+            between 8 and 54 percent: NL4Opt at least 26.4% over 289 items, IndustryOR at least 54.0%
+            over 100, EasyLP at least 8.13% over 652, ComplexLP at least 23.7% over 211, ReSocratic at
+            least 16.0% over 605, NLP4LP at least 21.7% over 269, ComplexOR at least 24.3% over 37. A
+            score against those sets as published is a score against noise.
+          </>
+        )}
+      </p>
+
+      <h3>{es ? "Los conjuntos del campo, y que se puede hacer con cada uno" : "The field's sets, and what can be done with each"}</h3>
+      <table className="finding-table">
+        <thead>
+          <tr>
+            <th>{es ? "Conjunto" : "Set"}</th>
+            <th className="num">{es ? "Tamano" : "Size"}</th>
+            <th className="num">{es ? "Error minimo" : "Min. error"}</th>
+            <th>{es ? "Licencia" : "Licence"}</th>
+            <th>{es ? "Redistribuible aqui" : "Redistributable here"}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>NL4Opt</td>
+            <td className="num">289</td>
+            <td className="num">&ge; 26.4%</td>
+            <td>{es ? "ver repositorio" : "see repository"}</td>
+            <td>{es ? "no se incluye" : "not included"}</td>
+          </tr>
+          <tr>
+            <td>IndustryOR</td>
+            <td className="num">100</td>
+            <td className="num">&ge; 54.0%</td>
+            <td>{es ? "ver repositorio" : "see repository"}</td>
+            <td>{es ? "no se incluye" : "not included"}</td>
+          </tr>
+          <tr>
+            <td>EasyLP (MAMO)</td>
+            <td className="num">652</td>
+            <td className="num">&ge; 8.13%</td>
+            <td>{es ? "ver repositorio" : "see repository"}</td>
+            <td>{es ? "no se incluye" : "not included"}</td>
+          </tr>
+          <tr>
+            <td>ComplexLP (MAMO)</td>
+            <td className="num">211</td>
+            <td className="num">&ge; 23.7%</td>
+            <td>{es ? "ver repositorio" : "see repository"}</td>
+            <td>{es ? "no se incluye" : "not included"}</td>
+          </tr>
+          <tr>
+            <td>ReSocratic</td>
+            <td className="num">605</td>
+            <td className="num">&ge; 16.0%</td>
+            <td>{es ? "ver repositorio" : "see repository"}</td>
+            <td>{es ? "no se incluye" : "not included"}</td>
+          </tr>
+          <tr>
+            <td>NLP4LP</td>
+            <td className="num">269</td>
+            <td className="num">&ge; 21.7%</td>
+            <td>CC BY-NC 4.0</td>
+            <td>
+              <strong>{es ? "no: solo uso no comercial" : "no: non-commercial only"}</strong>
+            </td>
+          </tr>
+          <tr>
+            <td>ComplexOR</td>
+            <td className="num">37</td>
+            <td className="num">&ge; 24.3%</td>
+            <td>{es ? "no declarada" : "not stated"}</td>
+            <td>
+              <strong>{es ? "no: en revision, sin licencia" : "no: in review, no licence"}</strong>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <strong>{es ? "Este corpus" : "This corpus"}</strong>
+            </td>
+            <td className="num">
+              <strong>{manifest?.case_count ?? cases.length ?? 20}</strong>
+            </td>
+            <td className="num">
+              <strong>{es ? "verificado" : "verified"}</strong>
+            </td>
+            <td>MIT</td>
+            <td>
+              <strong>{es ? "si: escrito para este producto" : "yes: authored for this product"}</strong>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p className="figure-caption">
+        {es
+          ? "Tabla 1. Cada fila salvo la ultima es un conjunto publico del campo. Las dos ultimas filas publicas no pueden entrar en un artefacto publico, una por licencia no comercial y otra por no declarar ninguna."
+          : "Table 1. Every row but the last is a public set from the field. The last two public rows cannot enter a public artifact, one because of a non-commercial licence and one because it declares none."}
+      </p>
+
+      <p className="measure">
+        {es
+          ? "La conclusion es directa: el corpus tiene que escribirse con verdad de referencia por construccion. Cada caso se escribe con su formalizacion de referencia al lado, y esa referencia se ejecuta antes de que el caso entre en el artefacto. Es mas trabajo por caso y muchos menos casos, y compra la unica propiedad que hace que la medicion signifique algo."
+          : "The conclusion is direct: the corpus must be authored with ground truth by construction. Every case is written with its reference formalization beside it, and that reference is executed before the case enters the artifact. It is more work per case and far fewer cases, and it buys the one property that makes the measurement mean anything."}
+      </p>
+
+      <h3>{es ? "La escalera de dificultad" : "The difficulty ladder"}</h3>
+      <table className="finding-table">
+        <thead>
+          <tr>
+            <th className="num">{es ? "Nivel" : "Tier"}</th>
+            <th>{es ? "Nombre" : "Name"}</th>
+            <th>{es ? "Que anade" : "What it adds"}</th>
+            <th className="num">{es ? "Casos" : "Cases"}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {[1, 2, 3, 4, 5].map((tier) => (
+            <tr key={tier}>
+              <td className="num">{tier}</td>
+              <td>{TIER_NAME[tier][lang]}</td>
+              <td>
+                {
+                  (
+                    {
+                      1: es
+                        ? "Cada cantidad esta dicha, cada restriccion es explicita."
+                        : "Every quantity is stated, every constraint explicit.",
+                      2: es
+                        ? "Una cantidad se obtiene combinando otras dos del texto."
+                        : "A quantity comes from combining two others in the text.",
+                      3: es
+                        ? "Indices, conjuntos y restricciones repetidas por elemento."
+                        : "Indices, sets, and constraints repeated per element.",
+                      4: es
+                        ? "La lectura natural exige enteros; la relajacion parece correcta."
+                        : "The natural reading needs integers; the relaxation looks fine.",
+                      5: es
+                        ? "El texto no determina algo esencial y hay que declararlo."
+                        : "The text does not determine something material, and it must be declared.",
+                    } as Record<number, string>
+                  )[tier]
+                }
+              </td>
+              <td className="num">{byTier[tier] ?? 0}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <h3>{es ? "Las trampas" : "The traps"}</h3>
+      <p className="measure">
+        {es
+          ? "Cada caso se escribe alrededor de una trampa concreta: no una dificultad general, sino una manera especifica de leer mal el enunciado que produce un modelo que se ejecuta. Una trampa nombrada es lo que permite leer la distribucion de fallos como algo mas que una lista."
+          : "Each case is written around one concrete trap: not a general difficulty but a specific way of misreading the statement that still produces a model that executes. A named trap is what lets the failure distribution read as more than a list."}
       </p>
       <table className="finding-table">
         <thead>
           <tr>
             <th>{es ? "Trampa" : "Trap"}</th>
             <th>{es ? "Que atrapa" : "What it catches"}</th>
-            <th>{es ? "Casos" : "Cases"}</th>
+            <th className="num">{es ? "Casos" : "Cases"}</th>
           </tr>
         </thead>
         <tbody>
-          {Object.entries(manifest.coverage.trap)
-            .filter(([, count]) => count > 0)
-            .sort((a, b) => b[1] - a[1])
-            .map(([trap, count]) => (
-              <tr key={trap}>
-                <td><code>{trap}</code></td>
-                <td>{TRAP_NAME[trap]?.[lang] ?? trap}</td>
-                <td>{count}</td>
-              </tr>
-            ))}
-        </tbody>
-      </table>
-
-      {manifest.coverage_gaps.length > 0 ? (
-        <p className="measure">
-          <strong>{es ? "Huecos de cobertura:" : "Coverage gaps:"}</strong>{" "}
-          {manifest.coverage_gaps.join("; ")}
-        </p>
-      ) : (
-        <p className="measure muted">
-          {es
-            ? "Sin huecos: cada nivel y cada trampa tienen al menos un caso. Los huecos se reportan aqui en vez de ocultarse tras un total."
-            : "No gaps: every tier and every trap has at least one case. Gaps are reported here rather than hidden behind a total."}
-        </p>
-      )}
-
-      <h2>{es ? "Los veinte casos" : "The twenty cases"}</h2>
-      <table className="finding-table">
-        <thead>
-          <tr>
-            <th>{es ? "Caso" : "Case"}</th>
-            <th>{es ? "Nivel" : "Tier"}</th>
-            <th>{es ? "Que lo hace dificil" : "What makes it hard"}</th>
-            <th>{es ? "Optimo" : "Optimum"}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {ordered.map((c) => (
-            <tr key={c.case_id}>
-              <td>
-                <code>{c.case_id}</code>
-                <span className="qty-desc">{c.title}</span>
-              </td>
-              <td>{c.tier}</td>
-              <td>{c.why_hard}</td>
-              <td className="num">
-                {c.solution.feasible
-                  ? c.solution.objective?.toLocaleString(undefined, { maximumFractionDigits: 2 })
-                  : es
-                    ? "infactible, correctamente"
-                    : "infeasible, correctly"}
-              </td>
+          {Object.keys(TRAP_NAME).map((trap) => (
+            <tr key={trap}>
+              <td className="mono">{trap}</td>
+              <td>{TRAP_NAME[trap][lang]}</td>
+              <td className="num">{byTrap[trap] ?? 0}</td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      <h2>{es ? "Lo que el protocolo no puede hacer" : "What the protocol cannot do"}</h2>
-      <ul className="measure">
-        <li>
+      <Callout variant="honest" title={es ? "Veinte casos es poco" : "Twenty cases is few"}>
+        {es
+          ? "Veinte casos escritos a mano son menos que cualquiera de los conjuntos de la tabla, y esa es la contrapartida que se acepto: verdad verificada en pocos casos por encima de verdad heredada en muchos. La consecuencia esta en los intervalos, y se publica con ellos en vez de disimularse."
+          : "Twenty authored cases are fewer than any set in the table, and that is the tradeoff that was taken: verified truth over few cases rather than inherited truth over many. The consequence is in the intervals, and it is published with them rather than hidden."}
+      </Callout>
+
+      <Refs ids={["survey2025", "nl4opt2023", "orgeval2025"]} label={es ? "Referencias" : "Refs"} />
+    </section>
+  );
+}
+
+/* --------------------------------------------------------------------- 3 */
+
+function Protocol({ lang }: { lang: "en" | "es" }) {
+  const es = lang === "es";
+  return (
+    <section>
+      <h2>{es ? "El protocolo, y el atajo que lo arruina" : "The protocol, and the shortcut that ruins it"}</h2>
+
+      <p className="measure">
+        {es
+          ? "En este experimento la fuga no es un reparto entrenamiento-prueba mal hecho. Es la referencia. Si la referencia se escribe despues de leer la respuesta de un modelo, o si el prompt se ajusta contra los mismos casos sobre los que luego se informan las tasas, el numero resultante mide el acuerdo del autor con el modelo y no el acuerdo del modelo con el enunciado. Es la misma fuga de siempre con otra forma, y es mas facil de cometer porque no hay ningun reparto que la haga visible."
+          : "In this experiment the leakage is not a badly made train-test split. It is the reference. If the reference is written after reading a model's answer, or if the prompt is tuned against the same cases the rates are later reported over, the resulting number measures the author's agreement with the model rather than the model's agreement with the statement. It is the same leakage in a different shape, and it is easier to commit because there is no split to make it visible."}
+      </p>
+
+      <FigureRow
+        figure={<HoldoutDiagram lang={lang} />}
+        caption={
+          es
+            ? "Figura 1. El orden obligatorio, con las dos aristas prohibidas tachadas. El paso 4 es el que hace comprobable a los otros: despues de versionar, el caso no se edita."
+            : "Figure 1. The mandatory order, with the two forbidden edges struck out. Step 4 is what makes the others checkable: after committing, the case is not edited."
+        }
+        reverse
+      >
+        <p className="measure">
           {es
-            ? "Veinte casos por cinco repeticiones son cien observaciones por modelo, cerca de mas o menos 10 puntos de intervalo a una tasa de 0,7. Alcanza para ver una brecha grande, no para ordenar modelos parecidos."
-            : "Twenty cases times five repeats is one hundred observations per model, roughly plus or minus 10 points of interval at a 0.7 rate. Enough to see a large gap, not enough to rank close models."}
-        </li>
-        <li>
-          {es
-            ? "El enunciado verdadero se sustituye antes de analizar la respuesta, y los desplazamientos de procedencia se recalculan a partir del texto citado. Ambas cosas favorecen al modelo, y se declaran porque la medicion es sobre formalizacion y no sobre transcripcion."
-            : "The true statement is substituted before the response is parsed, and provenance offsets are recomputed from the quoted text. Both favour the model, and both are stated because the measurement is about formalization and not transcription."}
-        </li>
-        <li>
-          {es
-            ? "La temperatura cero no da determinismo. Cada cifra es una tasa sobre repeticiones con intervalo, nunca una corrida presentada como resultado."
-            : "Temperature zero does not give determinism. Every figure is a rate over repeats with an interval, never a single run presented as the result."}
-        </li>
-      </ul>
-    </article>
+            ? "Los parametros exactos de la corrida publicada son estos. Veinte casos, dos modelos alojados, una repeticion por par, tope de 8192 tokens por llamada, sin temperatura porque el proveedor ya no la acepta, con esfuerzo de razonamiento donde el modelo lo admite y sin el donde no, presupuesto comprobado antes de cada llamada y costo total de 1,23 dolares. El libro mayor registra las 40 llamadas, incluidas las que fallaron."
+            : "The published run's exact parameters are these. Twenty cases, two hosted models, one repeat per pair, an 8192 token cap per call, no temperature because the provider no longer accepts it, reasoning effort where the model admits it and none where it does not, the budget checked before each call, and a total cost of 1.23 dollars. The ledger records all 40 calls, including the ones that failed."}
+        </p>
+      </FigureRow>
+
+      <Equation
+        tex={String.raw`|\text{calls}| = |C| \times |M| \times n_{\text{repeats}} = 20 \times 2 \times 1 = 40`}
+        caption={
+          es
+            ? "El tamano del barrido publicado. Una repeticion es el minimo defendible y no el deseable: con n = 1 la variacion entre corridas no se puede separar de la diferencia entre modelos."
+            : "The published sweep's size. One repeat is the defensible minimum and not the desirable one: at n = 1 run-to-run variation cannot be separated from the difference between models."
+        }
+      />
+
+      <p className="measure">
+        {es
+          ? "Una repeticion es poco por una razon concreta y medida: dos pasadas sobre el corpus identico, sin cambiar nada salvo el muestreo, situaron al mismo modelo en 0,350 y luego en 0,250. La inferencia alojada no es determinista ni con temperatura cero, y la causa dominante no es la coma flotante sino la dependencia del tamano de lote en los nucleos de reduccion, que es una propiedad del servicio y no del modelo."
+          : "One repeat is few for a concrete and measured reason: two passes over the identical corpus, changing nothing but the sampling, put the same model at 0.350 and then at 0.250. Hosted inference is not deterministic even at temperature zero, and the dominant cause is not floating point but the batch-size dependence of reduction kernels, which is a property of the service rather than of the model."}
+      </p>
+
+      <SamplingDiagram lang={lang} />
+      <p className="figure-caption">
+        {es
+          ? "Figura 2. Las dos pasadas y sus intervalos. La diferencia entre ambas tasas puntuales cabe entera dentro del solape."
+          : "Figure 2. The two passes and their intervals. The difference between the two point rates fits entirely inside the overlap."}
+      </p>
+
+      <Callout variant="honest" title={es ? "Lo que el protocolo deja fuera" : "What the protocol leaves out"}>
+        {es
+          ? "Un solo prompt, sin herramientas, sin reintentos y sin reflexion. Esta es una linea base de formalizacion directa. No es el estado del arte, que construye la formalizacion en etapas con retroalimentacion de ejecucion, y comparar esta cifra con la de esos sistemas seria comparar dos protocolos distintos y llamarlo un ranking."
+          : "One prompt, no tools, no retries, no reflection. This is a direct-formalization baseline. It is not the state of the art, which builds the formalization in stages with execution feedback, and comparing this figure against those systems would be comparing two protocols and calling it a ranking."}
+      </Callout>
+
+      <Refs ids={["beams2026", "survey2025", "wilson1927"]} label={es ? "Referencias" : "Refs"} />
+    </section>
+  );
+}
+
+/* --------------------------------------------------------------------- 4 */
+
+function Metrics({ lang }: { lang: "en" | "es" }) {
+  const es = lang === "es";
+  return (
+    <section>
+      <h2>{es ? "Las metricas, con sus constantes" : "The metrics, with their constants"}</h2>
+
+      <p className="measure">
+        {es
+          ? "Dos tasas, una brecha y un intervalo. La aritmetica es deliberadamente elemental, porque la parte dificil de esta medicion no es el calculo sino decidir que cuenta como acierto, y una formula complicada esconderia esa decision en vez de exponerla."
+          : "Two rates, one gap and an interval. The arithmetic is deliberately elementary, because the hard part of this measurement is not the computation but deciding what counts as a pass, and a complicated formula would hide that decision rather than expose it."}
+      </p>
+
+      <Equation
+        tex={String.raw`R_{\text{ran}} = \frac{\#\{\mathrm{exec} = \textsf{PASS}\}}{N - u}, \qquad R_{\text{faithful}} = \frac{\#\{\mathrm{exec} = \textsf{PASS} \wedge \mathrm{struct} \neq \textsf{FAIL} \wedge \mathrm{prop} \neq \textsf{FAIL}\}}{N - u}`}
+        caption={
+          es
+            ? "Las dos tasas, sobre el mismo denominador. N = 20 por modelo; u es el numero de casos no medidos."
+            : "The two rates, over the same denominator. N = 20 per model; u is the number of unmeasured cases."
+        }
+      />
+
+      <p className="measure">
+        {es
+          ? "Notese la forma exacta del numerador de la segunda: exige que ninguna de las dos capas FALLE, no que ambas PASEN. La diferencia no es cosmetica. Una capa estructural que devuelve INDECISO no ha encontrado nada en contra, y tratar eso como un fallo penalizaria al modelo por una limitacion del oraculo. Tratarlo como un aprobado, en cambio, es lo que convierte la tasa en un sello de goma, y por eso la capa de propiedades y la refutacion por respuesta tienen que poder fallar de verdad."
+          : "Note the exact shape of the second numerator: it requires that neither layer FAILS, not that both PASS. The difference is not cosmetic. A structural layer returning UNDECIDED has found nothing against, and treating that as a failure would penalise the model for a limit of the oracle. Treating it as a pass, on the other hand, is what turns the rate into a rubber stamp, which is why the property layer and answer refutation have to be able to genuinely fail."}
+      </p>
+
+      <Equation
+        tex={String.raw`u \;=\; \#\bigl\{\, c : \mathrm{exec}(c) = \textsf{NOT\_APPLICABLE} \,\bigr\}, \qquad \Delta \text{ indefinido si } N - u = 0`}
+        caption={
+          es
+            ? "Los casos no medidos. Un modelo que el solucionador no expresa es un limite del instrumento y se excluye de ambas tasas; si no queda nada medido, la brecha es indefinida y se imprime como tal, no como cero."
+            : "The unmeasured cases. A model the solver cannot express is a limit of the instrument and is excluded from both rates; if nothing measured remains, the gap is undefined and printed as such, never as zero."
+        }
+      />
+
+      <p className="measure">
+        {es
+          ? "Esa ultima clausula existe porque una version anterior imprimia brecha +0,000 cuando nada se habia medido, y un cero es la afirmacion mas fuerte que esta pagina puede hacer: dice que la comprobacion cara no anade nada sobre la barata. Imprimir esa afirmacion cuando no hubo medicion alguna es la peor clase de error que un instrumento puede cometer, porque es indistinguible de un buen resultado."
+          : "That last clause exists because an earlier version printed a gap of +0.000 when nothing had been measured, and a zero is the strongest claim this page can make: it says the expensive check adds nothing over the cheap one. Printing that claim when no measurement happened is the worst kind of error an instrument can make, because it is indistinguishable from a good result."}
+      </p>
+
+      <Equation
+        tex={String.raw`\mathrm{CI}_{95}(\hat{p}) = \frac{\hat{p} + \dfrac{z^{2}}{2n} \pm z\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n} + \dfrac{z^{2}}{4n^{2}}}}{1 + \dfrac{z^{2}}{n}}, \qquad z = 1.96,\ n = N - u`}
+        caption={
+          es
+            ? "El intervalo de Wilson con sus constantes reales. A n = 20 y p = 0,5 mide unos 0,40 de ancho, que es la razon por la que esta pagina no ordena modelos."
+            : "The Wilson interval with its real constants. At n = 20 and p = 0.5 it is about 0.40 wide, which is why this page does not rank models."
+        }
+      />
+
+      <p className="measure">
+        {es ? (
+          <>
+            Se usa el intervalo de Wilson <Cite id="wilson1927" paren /> y no el normal por una razon
+            que importa aqui: las tasas de este corpus son pequenas y el intervalo normal se sale de
+            [0, 1] y colapsa a cero cuando la proporcion toca un extremo, que es justo donde caen{" "}
+            <Cite id="agresti1998" paren />.
+          </>
+        ) : (
+          <>
+            The Wilson interval <Cite id="wilson1927" paren /> is used rather than the normal one for
+            a reason that matters here: this corpus's rates are small, and the normal interval leaves
+            [0, 1] and collapses to zero when the proportion touches an endpoint, which is exactly
+            where they fall <Cite id="agresti1998" paren />.
+          </>
+        )}
+      </p>
+
+      <Callout variant="honest" title={es ? "Lo que el intervalo no cubre" : "What the interval does not cover"}>
+        {es
+          ? "Un intervalo de Wilson describe la incertidumbre por muestreo binomial sobre estos veinte casos. No cubre la incertidumbre de que estos veinte casos representen la clase, ni la variacion entre corridas del proveedor, ni el error de la referencia escrita a mano. Ninguna de esas tres tiene un numero aqui, y decirlo es preferible a fingir que el intervalo las incluye."
+          : "A Wilson interval describes binomial sampling uncertainty over these twenty cases. It does not cover the uncertainty that these twenty cases represent the class, nor the provider's run-to-run variation, nor error in the authored reference. None of those three carries a number here, and saying so is better than pretending the interval includes them."}
+      </Callout>
+
+      <Refs ids={["wilson1927", "agresti1998", "lean2026"]} label={es ? "Referencias" : "Refs"} />
+    </section>
+  );
+}
+
+/* --------------------------------------------------------------------- 5 */
+
+function Taxonomy({ lang }: { lang: "en" | "es" }) {
+  const es = lang === "es";
+  return (
+    <section>
+      <h2>{es ? "Como se clasifica un fallo" : "How a failure is classified"}</h2>
+
+      <p className="measure">
+        {es
+          ? "Una tasa dice con que frecuencia algo salio mal. La taxonomia dice que salio mal, y es la mitad mas util: un modelo que trunca su salida y un modelo que escribe una constante sin unidad puntuan igual y necesitan arreglos completamente distintos. La clasificacion se deriva del veredicto registrado, no se asigna a mano."
+          : "A rate says how often something went wrong. The taxonomy says what went wrong, and it is the more useful half: a model that truncates its output and a model that writes a constant with no unit score the same and need completely different fixes. The classification is derived from the recorded verdict, never assigned by hand."}
+      </p>
+
+      <table className="finding-table">
+        <thead>
+          <tr>
+            <th>{es ? "Clase" : "Class"}</th>
+            <th>{es ? "Regla exacta" : "Exact rule"}</th>
+            <th>{es ? "Capa" : "Layer"}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{es ? "salida no parseable" : "unparseable output"}</td>
+            <td>
+              {es
+                ? "El texto devuelto no contiene un objeto JSON completo, o el objeto no carga como documento."
+                : "The returned text contains no complete JSON object, or the object does not load as a document."}
+            </td>
+            <td className="mono">executable</td>
+          </tr>
+          <tr>
+            <td>{es ? "salida truncada" : "truncated output"}</td>
+            <td>
+              {es
+                ? "El JSON empieza y no termina: el tope de tokens se alcanzo a mitad del documento."
+                : "The JSON starts and does not end: the token cap was reached mid-document."}
+            </td>
+            <td className="mono">executable</td>
+          </tr>
+          <tr>
+            <td>{es ? "constante sin unidad" : "a constant with no unit"}</td>
+            <td>
+              {es
+                ? "Un nodo const sin campo unit aparece sumado a un termino con dimension."
+                : "A const node with no unit field appears summed with a dimensioned term."}
+            </td>
+            <td className="mono">executable</td>
+          </tr>
+          <tr>
+            <td>{es ? "cantidad derivada sin definir" : "derived quantity never defined"}</td>
+            <td>
+              {es
+                ? "Una cantidad se declara con papel derived y ninguna relacion la define."
+                : "A quantity is declared with role derived and no relation defines it."}
+            </td>
+            <td className="mono">executable</td>
+          </tr>
+          <tr>
+            <td>{es ? "desajuste dimensional" : "dimensional mismatch"}</td>
+            <td>
+              {es
+                ? "Dos lados de una comparacion tienen vectores de exponentes distintos."
+                : "The two sides of a comparison carry different exponent vectors."}
+            </td>
+            <td className="mono">executable</td>
+          </tr>
+          <tr>
+            <td>{es ? "procedencia fabricada" : "fabricated provenance"}</td>
+            <td>
+              {es
+                ? "El texto guardado en un span no aparece en el enunciado en esos desplazamientos."
+                : "The text stored in a span does not appear in the statement at those offsets."}
+            </td>
+            <td className="mono">executable</td>
+          </tr>
+          <tr>
+            <td>{es ? "modelo infactible" : "the model is infeasible"}</td>
+            <td>
+              {es
+                ? "El documento valida y su modelo no tiene punto factible, sobre un caso que si lo tiene."
+                : "The document validates and its model has no feasible point, on a case that has one."}
+            </td>
+            <td className="mono">executable</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>{es ? "REFUTADO: otro optimo" : "REFUTED: a different optimum"}</strong>
+            </td>
+            <td>
+              {es
+                ? "Corre limpio y resuelve a un valor que difiere del de la referencia mas alla de 1e-6 relativo."
+                : "It runs cleanly and solves to a value differing from the reference's beyond 1e-6 relative."}
+            </td>
+            <td className="mono">structural</td>
+          </tr>
+          <tr>
+            <td>{es ? "no medido" : "unmeasured"}</td>
+            <td>
+              {es
+                ? "El solucionador configurado no expresa el modelo. Limite del instrumento, excluido de ambas tasas."
+                : "The configured solver cannot express the model. A limit of the instrument, excluded from both rates."}
+            </td>
+            <td className="mono">n/a</td>
+          </tr>
+        </tbody>
+      </table>
+      <p className="figure-caption">
+        {es
+          ? "Tabla 1. Las nueve clases y su regla. Solo una es invisible para un solucionador: la refutacion. Todo lo demas falla ruidosamente."
+          : "Table 1. The nine classes and their rule. Only one is invisible to a solver: the refutation. Everything else fails loudly."}
+      </p>
+
+      <Equation
+        tex={String.raw`\#\{\text{invisible}\} \,/\, \#\{\text{fallos}\} \quad\text{es en si mismo un resultado}`}
+        caption={
+          es
+            ? "La proporcion de fallos que un solucionador no habria notado. En esta corrida son 2 de cada distribucion, y a este tamano de muestra es una pista, no un resultado."
+            : "The share of failures a solver would not have noticed. In this run it is 2 in each distribution, and at this sample size that is a hint rather than a result."
+        }
+      />
+
+      <Callout variant="honest" title={es ? "Una clase por veredicto, no por juicio" : "One class per verdict, not per judgment"}>
+        {es
+          ? "Cada clase corresponde a una comprobacion concreta que produjo un mensaje concreto. Ninguna proviene de leer una respuesta y decidir que le pasaba. Esa disciplina cuesta expresividad, porque un fallo interesante que ninguna comprobacion detecta no aparece en la tabla, y esa ausencia es el hueco honesto de esta taxonomia."
+          : "Every class corresponds to one concrete check that produced one concrete message. None comes from reading a response and deciding what was wrong with it. That discipline costs expressiveness, because an interesting failure that no check detects does not appear in the table, and that absence is this taxonomy's honest gap."}
+      </Callout>
+
+      <Refs ids={["survey2025", "segura2016"]} label={es ? "Referencias" : "Refs"} />
+    </section>
+  );
+}
+
+/* --------------------------------------------------------------------- 6 */
+
+function Threats({ lang }: { lang: "en" | "es" }) {
+  const es = lang === "es";
+  return (
+    <section>
+      <h2>{es ? "Amenazas a la validez" : "Threats to validity"}</h2>
+
+      <p className="measure">
+        {es
+          ? "Esta seccion lista lo que puede estar mal en la medicion publicada, no lo que podria mejorarse en el futuro. Cada punto nombra el efecto concreto sobre la cifra y, donde existe, lo que haria falta para cerrarlo."
+          : "This section lists what may be wrong with the published measurement, not what could be improved later. Each item names the concrete effect on the figure and, where one exists, what it would take to close it."}
+      </p>
+
+      <h3>{es ? "Validez interna" : "Internal validity"}</h3>
+      <p className="measure">
+        {es
+          ? "La referencia la escribio la misma persona que escribio el enunciado y las comprobaciones. Un enunciado y una referencia escritos por la misma mano comparten su lectura, de modo que un caso puede ser ambiguo para un lector externo y no parecerlo aqui. El horneado verifica que la referencia sea coherente y resoluble; no verifica que sea la lectura correcta, porque ese es exactamente el juicio sin procedimiento de decision. Cerrarlo pide una segunda persona formalizando a ciegas los mismos veinte casos y midiendo el acuerdo entre ambas."
+          : "The reference was written by the same person who wrote the statement and the checks. A statement and a reference from the same hand share their reading, so a case can be ambiguous to an outside reader and not look it here. The bake verifies that the reference is coherent and solvable; it does not verify that it is the correct reading, because that is exactly the judgment with no decision procedure. Closing it takes a second person formalizing the same twenty cases blind and measuring the agreement between them."}
+      </p>
+
+      <h3>{es ? "Validez de conclusion" : "Conclusion validity"}</h3>
+      <p className="measure">
+        {es
+          ? "N = 20 con una repeticion. Los intervalos de Wilson al 95% ocupan alrededor de 0,40 de ancho, y los de los dos modelos medidos se solapan casi por completo. La consecuencia esta dicha en todas partes de este sitio: esta medicion puede ver que existe una brecha y no puede ordenar dos modelos. Una segunda pasada sobre el corpus identico movio una tasa de 0,350 a 0,250 sin que cambiara nada salvo el muestreo."
+          : "N = 20 with one repeat. The 95% Wilson intervals span about 0.40, and those of the two models measured overlap almost entirely. The consequence is stated everywhere on this site: this measurement can see that a gap exists and cannot rank two models. A second pass over the identical corpus moved one rate from 0.350 to 0.250 with nothing changed but the sampling."}
+      </p>
+
+      <h3>{es ? "Validez externa" : "External validity"}</h3>
+      <p className="measure">
+        {es
+          ? "Una sola familia (optimizacion lineal y entera mixta), un solo proveedor alojado, un solo prompt, un solo idioma de enunciado. Las otras tres familias del plan (formulacion matematica, diseno experimental, encuadre de aprendizaje automatico) estan disenadas y no medidas, y nada de lo que esta pagina publica se extiende a ellas. La via local de modelos abiertos esta implementada y no corrida en la medicion publicada."
+          : "One family (linear and mixed-integer optimization), one hosted provider, one prompt, one statement language. The plan's other three families (mathematical formulation, experiment design, machine-learning framing) are designed and not measured, and nothing this page publishes extends to them. The local open-model lane is implemented and was not run in the published measurement."}
+      </p>
+
+      <h3>{es ? "Validez de constructo" : "Construct validity"}</h3>
+      <p className="measure">
+        {es
+          ? "La fidelidad se operacionaliza como no ser refutado por las capas estructural y de propiedades. Eso es mas debil que lo que la palabra sugiere: una formalizacion que sobrevive a ambas capas no es correcta, es no refutada. La capa estructural implementada compara formas canonicas y no isomorfismo de grafos, de modo que reconoce menos equivalencias de las que existen. Y la unica direccion conclusiva disponible entre optimos es la negativa; un optimo que coincide nunca asciende un veredicto."
+          : "Faithfulness is operationalised as not being refuted by the structural and property layers. That is weaker than the word suggests: a formalization surviving both layers is not correct, it is unrefuted. The structural layer as implemented compares canonical forms rather than graph isomorphism, so it recognises fewer equivalences than exist. And the only conclusive direction available between optima is the negative one; a matching optimum never promotes a verdict."}
+      </p>
+
+      <h3>{es ? "Contaminacion" : "Contamination"}</h3>
+      <p className="measure">
+        {es
+          ? "Los veinte casos se escribieron para este producto y no aparecen en ningun conjunto publico, asi que la contaminacion por memorizacion no aplica a este corpus. Aplica, y de forma severa, a cualquier cifra que este producto publicara alguna vez contra los conjuntos de la tabla de la pestana del corpus, y por eso no publica ninguna."
+          : "The twenty cases were written for this product and appear in no public set, so memorisation contamination does not apply to this corpus. It applies, severely, to any figure this product might ever publish against the sets in the corpus tab's table, which is why it publishes none."}
+      </p>
+
+      <Callout variant="honest" title={es ? "El resumen honesto" : "The honest summary"}>
+        {es
+          ? "Lo que esta medicion sostiene: sobre veinte casos escritos y verificados, dos modelos alojados produjeron formalizaciones que se ejecutan y no son el modelo descrito, con una brecha de +0,050 en ambos. Lo que no sostiene: cualquier orden entre esos modelos, cualquier extension a las otras tres familias, y cualquier afirmacion de que una formalizacion no refutada sea correcta."
+          : "What this measurement supports: over twenty authored and verified cases, two hosted models produced formalizations that execute and are not the model described, with a gap of +0.050 in both. What it does not support: any ranking between those models, any extension to the other three families, and any claim that an unrefuted formalization is correct."}
+      </Callout>
+
+      <Refs ids={["lean2026", "scope2026", "beams2026", "orgeval2025"]} label={es ? "Referencias" : "Refs"} />
+    </section>
   );
 }

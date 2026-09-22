@@ -74,4 +74,46 @@ export const CITATIONS: Citation[] = [
       "Bynum, M. L., Hackebeil, G. A., Hart, W. E., Laird, C. D., Nicholson, B. L., Siirola, J. D., Watson, J.-P., Woodruff, D. L. Pyomo, Optimization Modeling in Python. Third edition, Springer, 2021.",
     doi: "10.1007/978-3-030-68928-5",
   },
+  {
+    id: "nl4opt2023",
+    label: "Ramamonjison et al. 2023",
+    citation:
+      "Ramamonjison, R., Yu, T. T., Li, R., Li, H., Carenini, G., Ghaddar, B., He, S., Mostajabdaveh, M., Banitalebi-Dehkordi, A., Zhou, Z., Zhang, Y. NL4Opt Competition: Formulating Optimization Problems Based on Their Natural Language Descriptions. arXiv:2303.08233, 2023.",
+    url: "https://arxiv.org/abs/2303.08233",
+  },
+  {
+    id: "barr2015",
+    label: "Barr et al. 2015",
+    citation:
+      "Barr, E. T., Harman, M., McMinn, P., Shahbaz, M., Yoo, S. The Oracle Problem in Software Testing: A Survey. IEEE Transactions on Software Engineering 41(5), 507-525, 2015.",
+    doi: "10.1109/TSE.2014.2372785",
+  },
+  {
+    id: "segura2016",
+    label: "Segura et al. 2016",
+    citation:
+      "Segura, S., Fraser, G., Sanchez, A. B., Ruiz-Cortes, A. A Survey on Metamorphic Testing. IEEE Transactions on Software Engineering 42(9), 805-824, 2016.",
+    doi: "10.1109/TSE.2016.2532875",
+  },
+  {
+    id: "wilson1927",
+    label: "Wilson 1927",
+    citation:
+      "Wilson, E. B. Probable Inference, the Law of Succession, and Statistical Inference. Journal of the American Statistical Association 22(158), 209-212, 1927.",
+    doi: "10.1080/01621459.1927.10502953",
+  },
+  {
+    id: "agresti1998",
+    label: "Agresti and Coull 1998",
+    citation:
+      "Agresti, A., Coull, B. A. Approximate is Better than 'Exact' for Interval Estimation of Binomial Proportions. The American Statistician 52(2), 119-126, 1998.",
+    doi: "10.1080/00031305.1998.10480550",
+  },
+  {
+    id: "minizinc2007",
+    label: "Nethercote et al. 2007",
+    citation:
+      "Nethercote, N., Stuckey, P. J., Becket, R., Brand, S., Duck, G. J., Tack, G. MiniZinc: Towards a Standard CP Modelling Language. Principles and Practice of Constraint Programming (CP 2007), LNCS 4741, 529-543, 2007.",
+    doi: "10.1007/978-3-540-74970-7_38",
+  },
 ];

@@ -1,18 +1,23 @@
 /*
  * Product styles, on top of the shared design system.
  *
- * Only what the shell does not provide: the workbench layout, the narrative highlighting, and the
- * chips. Colours come from the shell's tokens rather than literals, so both themes work without a
- * second stylesheet, and every ancestor of a scrollable row carries `min-width: 0`, because a flex
- * item defaults to `min-width: auto` and one nowrap row silently widens the whole page.
+ * Only what the shell does not provide: the workbench grid, the instruments, the narrative
+ * highlighting and the chips. It redefines no shell primitive and sets no page width, because the
+ * width budget belongs to `.page-body` alone (ADR-0017 section 1.2).
+ *
+ * Every colour comes from a shell token. The first version of this file invented its own names
+ * (`--border`, `--text-muted`, `--accent-soft`) and the shell defines none of them, so every border
+ * fell back to `currentColor`, every panel rendered transparent and nothing was ever muted. An
+ * undefined custom property does not warn; it simply drops the declaration, which is why a build
+ * that looked green looked wrong. The names below are the shell's, and there are no others.
  */
 
-/* ---------- the workbench ---------- */
+/* ---------- the workbench: a control aside plus the instrument ---------- */
 
-.workbench {
+.enunciado-layout {
   display: grid;
-  grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
-  gap: 1rem;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 1.1rem;
   /* The page IS the viewport on this route: the shell sizes it and this grid distributes the
      height, so scrolling happens inside the one container that owns long content. */
   height: 100%;
@@ -20,119 +25,394 @@
   min-width: 0;
 }
 
-.case-rail {
+.enunciado-side {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.6rem;
   min-width: 0;
   min-height: 0;
-  overflow-y: auto;
-  padding-right: 0.5rem;
-  border-right: 1px solid var(--border);
+  padding: 0.85rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
 }
 
-.case-main {
+.enunciado-main {
   display: flex;
   flex-direction: column;
   min-width: 0;
   min-height: 0;
+  gap: 0.6rem;
+}
+
+/* The tab container inside THIS layout must distribute height, so the panel that holds the
+   instrument is sized by the viewport rather than by its own content. These are scoped to
+   `.enunciado-main`: they size the shell's containers where this product places them and do not
+   redefine the primitives for anyone else (ADR-0017 section 1.2). */
+.enunciado-main .tabs {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.enunciado-main .tablist {
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.45rem;
+  flex: 0 0 auto;
+}
+
+/* `:not([hidden])` is load-bearing. The shell renders every panel and hides the inactive ones with
+   the `hidden` attribute, whose `display: none` comes from the user-agent sheet and loses to any
+   author `display`. Without the guard all six panels stayed in the flex flow and split the height
+   six ways: the instrument measured 112px in a 684px column, 21% of the viewport against the 50%
+   floor, and the panel looked merely "short" rather than broken. */
+.enunciado-main .tabpanel:not([hidden]) {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The aside is a sized container: its sections are switched, never scrolled past (ADR-0071 rule 6). */
+.side-sections {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.2rem;
+  background: var(--color-surface-2);
+  border-radius: 8px;
+}
+
+.side-sections button {
+  flex: 1;
+  padding: 0.3rem 0.4rem;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-fg-subtle);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.side-sections button.on {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+.side-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding-right: 0.2rem;
 }
 
 .rail-label {
-  font-size: 0.78rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-muted);
+  letter-spacing: 0.07em;
+  color: var(--color-fg-faint);
+  font-weight: 700;
 }
 
-.case-rail select {
+.enunciado-side select,
+.enunciado-side input[type="text"] {
   width: 100%;
-  padding: 0.5rem;
-  background: var(--surface-2);
-  color: var(--text);
-  border: 1px solid var(--border);
+  padding: 0.45rem 0.5rem;
+  background: var(--color-surface-2);
+  color: var(--color-fg);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   font: inherit;
+  font-size: 0.88rem;
 }
 
 .rail-meta h4 {
-  margin: 1rem 0 0.35rem;
-  font-size: 0.8rem;
+  margin: 0.7rem 0 0.3rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-muted);
+  letter-spacing: 0.07em;
+  color: var(--color-fg-faint);
 }
 
 .why-hard {
   margin: 0;
-  font-size: 0.9rem;
-  line-height: 1.5;
-  color: var(--text);
+  font-size: 0.86rem;
+  line-height: 1.55;
+  color: var(--color-fg-subtle);
 }
 
+/* ---------- the live read-out: what the engine says right now ---------- */
+
 .readout {
+  padding: 0.6rem 0.7rem;
+  background: var(--color-accent-soft);
+  border: 1px solid var(--color-accent);
+  border-radius: 8px;
+}
+
+.readout-head {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  padding: 0.5rem 0.65rem;
-  background: var(--accent-soft);
-  border: 1px solid var(--accent);
-  border-radius: 6px;
+  gap: 0.5rem;
 }
 
 .readout-label {
-  font-size: 0.78rem;
-  color: var(--text-muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-fg-subtle);
 }
 
 .readout-value {
-  font: 600 1.1rem ui-monospace, SFMono-Regular, Menlo, monospace;
-  color: var(--text);
+  font: 650 1.25rem/1.1 var(--font-mono);
+  color: var(--color-fg);
 }
 
-.claim-check {
-  margin: 0.4rem 0 0;
-  font-size: 0.8rem;
-  color: var(--text-muted);
+.readout-value.is-bad {
+  color: var(--color-bad);
+  font-size: 0.95rem;
 }
 
-.values {
-  margin: 0.5rem 0 0;
+.readout-note {
+  margin: 0.35rem 0 0;
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: var(--color-fg-subtle);
+}
+
+.readout-delta {
+  font: 600 0.8rem var(--font-mono);
+}
+
+.readout-delta.up { color: var(--color-good); }
+.readout-delta.down { color: var(--color-bad); }
+.readout-delta.same { color: var(--color-fg-faint); }
+
+/* ---------- parameter sliders: the continuous parametrization ---------- */
+
+.knobs {
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
-}
-
-.value-row {
-  display: flex;
-  justify-content: space-between;
-  font: 0.85rem ui-monospace, SFMono-Regular, Menlo, monospace;
-  padding: 0.15rem 0;
-  border-bottom: 1px dotted var(--border);
-}
-
-.value-row dt,
-.value-row dd {
+  gap: 0.55rem;
   margin: 0;
 }
 
-.infeasible-note {
+.knob {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.15rem 0.5rem;
+  align-items: baseline;
+}
+
+.knob-name {
+  font: 600 0.79rem var(--font-mono);
+  color: var(--color-fg);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.knob-value {
+  font: 600 0.79rem var(--font-mono);
+  color: var(--color-accent);
+  white-space: nowrap;
+}
+
+.knob-unit {
+  grid-column: 1 / -1;
+  font-size: 0.7rem;
+  color: var(--color-fg-faint);
+  margin-top: -0.1rem;
+}
+
+.knob input[type="range"] {
+  grid-column: 1 / -1;
+  width: 100%;
+  accent-color: var(--color-accent);
+  margin: 0.1rem 0 0;
+}
+
+.knob.is-moved .knob-name::after {
+  content: " *";
+  color: var(--color-warn);
+}
+
+.knob-reset {
+  align-self: flex-start;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-surface-2);
+  color: var(--color-fg-subtle);
+  font-size: 0.76rem;
+}
+
+.knob-reset:hover:not(:disabled) {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.knob-reset:disabled { opacity: 0.45; cursor: default; }
+
+/* ---------- instruments ---------- */
+
+.viz {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  padding: 0.6rem;
-  border: 1px solid var(--warn, #d8973c);
+  min-height: 0;
+  min-width: 0;
+  flex: 1;
+  gap: 0.4rem;
+}
+
+.viz-canvas {
+  flex: 1;
+  min-height: 260px;
+  width: 100%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  cursor: crosshair;
+  display: block;
+}
+
+.viz-readout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  align-items: baseline;
+  padding: 0.35rem 0.6rem;
+  min-height: 2rem;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
-  font-size: 0.85rem;
-  line-height: 1.45;
+  font: 0.82rem var(--font-mono);
+  color: var(--color-fg-subtle);
+}
+
+.viz-readout strong { color: var(--color-fg); }
+.viz-readout code { color: var(--color-fg-faint); font-size: 0.78rem; }
+.viz-readout .ok { color: var(--color-good); }
+.viz-readout .bad { color: var(--color-bad); }
+
+.viz-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.9rem;
+  font-size: 0.76rem;
+  color: var(--color-fg-subtle);
+}
+
+.viz-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.viz-swatch {
+  width: 0.85rem;
+  height: 0.2rem;
+  border-radius: 1px;
+  background: var(--color-accent);
+  display: inline-block;
+}
+
+.viz-swatch.dashed {
+  height: 0;
+  border-top: 2px dashed var(--color-fg-subtle);
+  background: none;
+}
+
+.viz-swatch.fill {
+  height: 0.7rem;
+  width: 0.7rem;
+  border-radius: 2px;
+  opacity: 0.22;
+}
+
+.viz-swatch.dot {
+  height: 0.6rem;
+  width: 0.6rem;
+  border-radius: 50%;
+}
+
+/* uPlot, themed. The library ships a light-only stylesheet, so the parts that carry colour are
+   re-pointed at shell tokens rather than left at their defaults. */
+.uplot,
+.u-wrap { font-family: var(--font-sans); }
+.u-legend { font-size: 0.8rem; color: var(--color-fg-subtle); }
+.u-legend .u-marker { border-width: 2px; }
+.u-legend th { font-weight: 600; color: var(--color-fg); }
+.u-legend .u-value { font-family: var(--font-mono); color: var(--color-fg); }
+.u-cursor-x, .u-cursor-y { border-color: var(--color-fg-faint); }
+.u-select { background: var(--color-accent-soft); }
+
+.uplot-host {
+  flex: 1;
+  min-height: 260px;
+  min-width: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 0.4rem 0.5rem 0.2rem;
+  overflow: hidden;
+}
+
+/* ---------- the heatmap grid ---------- */
+
+.heat {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.heat-cell {
+  position: relative;
+  aspect-ratio: 1.9;
+  min-height: 34px;
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-2);
+  display: grid;
+  place-items: center;
+  font: 600 0.82rem var(--font-mono);
+  color: var(--color-fg);
+  cursor: pointer;
+}
+
+.heat-cell.on { outline: 2px solid var(--color-accent); outline-offset: 1px; }
+.heat-cell.empty { color: var(--color-fg-faint); font-weight: 400; }
+
+.heat-head {
+  display: grid;
+  place-items: center;
+  font-size: 0.7rem;
+  color: var(--color-fg-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: center;
+  padding: 0.15rem;
+  line-height: 1.25;
+}
+
+.heat-head.row {
+  place-items: center end;
+  text-align: right;
+  padding-right: 0.4rem;
 }
 
 /* ---------- the split: statement beside model ---------- */
 
 .split {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 0.9rem;
   min-height: 0;
   min-width: 0;
   flex: 1;
@@ -143,33 +423,37 @@
   flex-direction: column;
   min-width: 0;
   min-height: 0;
-  overflow-y: auto;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 0.7rem 0.8rem;
 }
 
 .split-pane h3 {
-  margin: 0 0 0.25rem;
-  font-size: 0.95rem;
+  margin: 0 0 0.2rem;
+  font-size: 0.9rem;
 }
 
-.hint {
-  margin: 0 0 0.6rem;
-  font-size: 0.78rem;
-  color: var(--text-muted);
+.pane-hint {
+  margin: 0 0 0.55rem;
+  font-size: 0.76rem;
+  line-height: 1.45;
+  color: var(--color-fg-subtle);
 }
 
 .pane-scroll {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding-right: 0.5rem;
+  padding-right: 0.4rem;
 }
 
 /* ---------- the narrative, with provenance ---------- */
 
 .narrative {
   margin: 0;
-  font-size: 1.02rem;
-  line-height: 1.75;
+  font-size: 0.98rem;
+  line-height: 1.8;
   /* Prose is the one thing that gets a reading measure, even on a workbench route. */
   max-width: 62ch;
 }
@@ -182,64 +466,64 @@
   transition: background-color 120ms ease, border-color 120ms ease;
 }
 
-.narrative-quantity { border-bottom-color: var(--accent); }
-.narrative-relation { border-bottom-color: var(--ok, #4fb477); }
-.narrative-objective { border-bottom-color: var(--warn, #d8973c); }
+.narrative-quantity { border-bottom-color: var(--color-accent); }
+.narrative-relation { border-bottom-color: var(--color-good); }
+.narrative-objective { border-bottom-color: var(--color-warn); }
 
 .narrative-span:hover,
 .narrative-span.is-active {
-  background: var(--accent-soft);
-  border-bottom-color: var(--accent);
+  background: var(--color-accent-soft);
+  border-bottom-color: var(--color-accent);
 }
 
 /* ---------- the formalization ---------- */
 
 .formalization h4 {
   margin: 0 0 0.4rem;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-muted);
+  letter-spacing: 0.07em;
+  color: var(--color-fg-faint);
 }
 
 .qty-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.85rem;
+  font-size: 0.84rem;
   margin-bottom: 1rem;
 }
 
 .qty-table th {
   text-align: left;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
-  border-bottom: 1px solid var(--border);
+  letter-spacing: 0.06em;
+  color: var(--color-fg-faint);
+  border-bottom: 1px solid var(--color-border);
   padding: 0.25rem 0.4rem;
 }
 
 .qty-table td {
   padding: 0.3rem 0.4rem;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--color-border);
   vertical-align: top;
 }
 
-.qty-table tr.is-active { background: var(--accent-soft); }
+.qty-table tr.is-active { background: var(--color-accent-soft); }
 
 .qty-desc {
   display: block;
-  font-size: 0.75rem;
-  color: var(--text-muted);
+  font-size: 0.74rem;
+  color: var(--color-fg-subtle);
 }
 
 .qty-table .dim,
 .qty-table .num {
-  font: 0.82rem ui-monospace, SFMono-Regular, Menlo, monospace;
+  font: 0.8rem var(--font-mono);
   white-space: nowrap;
 }
 
-.bound { color: var(--text-muted); }
+.bound { color: var(--color-fg-faint); }
 
 .relation-list {
   list-style: none;
@@ -247,7 +531,7 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.3rem;
 }
 
 .relation-list li {
@@ -260,24 +544,25 @@
   min-width: 0;
 }
 
-.relation-list li.is-active { background: var(--accent-soft); }
+.relation-list li.is-active { background: var(--color-accent-soft); }
 
 .relation-list code {
-  font-size: 0.85rem;
+  font-size: 0.83rem;
   overflow-x: auto;
   min-width: 0;
+  color: var(--color-fg);
 }
 
 /* ---------- chips ---------- */
 
 .chip {
   display: inline-block;
-  padding: 0.1rem 0.45rem;
+  padding: 0.08rem 0.45rem;
   border-radius: 999px;
-  font-size: 0.72rem;
-  line-height: 1.5;
-  border: 1px solid var(--border);
-  color: var(--text-muted);
+  font-size: 0.71rem;
+  line-height: 1.55;
+  border: 1px solid var(--color-border);
+  color: var(--color-fg-subtle);
   white-space: nowrap;
 }
 
@@ -288,11 +573,11 @@
 }
 
 .chip-variable,
-.chip-objective { border-color: var(--accent); color: var(--accent); }
-.chip-relation { border-color: var(--ok, #4fb477); color: var(--ok, #4fb477); }
-.chip-trap { border-color: var(--warn, #d8973c); color: var(--warn, #d8973c); }
-.chip-control { border-color: var(--ok, #4fb477); color: var(--ok, #4fb477); }
-.chip-tier { background: var(--surface-2); }
+.chip-objective { border-color: var(--color-accent); color: var(--color-accent); }
+.chip-relation { border-color: var(--color-good); color: var(--color-good); }
+.chip-trap { border-color: var(--color-warn); color: var(--color-warn); }
+.chip-control { border-color: var(--color-good); color: var(--color-good); }
+.chip-tier { background: var(--color-surface-2); }
 .chip-domain { margin-left: 0.25rem; }
 
 /* ---------- open questions and properties ---------- */
@@ -300,34 +585,36 @@
 .questions,
 .properties {
   list-style: none;
-  margin: 0 0 1.25rem;
+  margin: 0 0 1.1rem;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.5rem;
 }
 
 .questions li {
-  padding: 0.6rem 0.75rem;
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--ok, #4fb477);
+  padding: 0.55rem 0.7rem;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-good);
   border-radius: 4px;
 }
 
-.questions li.is-open { border-left-color: var(--warn, #d8973c); }
+.questions li.is-open { border-left-color: var(--color-warn); }
 
-.q-text { margin: 0 0 0.4rem; font-weight: 600; }
+.q-text { margin: 0 0 0.35rem; font-weight: 600; font-size: 0.88rem; }
 .q-span,
 .q-res,
-.q-affects { margin: 0.2rem 0; font-size: 0.85rem; color: var(--text-muted); }
-.q-open { margin: 0.2rem 0; font-size: 0.85rem; color: var(--warn, #d8973c); font-weight: 600; }
+.q-affects { margin: 0.18rem 0; font-size: 0.82rem; color: var(--color-fg-subtle); }
+.q-open { margin: 0.18rem 0; font-size: 0.82rem; color: var(--color-warn); font-weight: 600; }
 
 .q-label {
   display: inline-block;
   min-width: 8.5rem;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
+  color: var(--color-fg-faint);
 }
 
 .prop {
@@ -337,70 +624,75 @@
   align-items: baseline;
   padding: 0.4rem 0.5rem;
   border-radius: 4px;
-  font-size: 0.85rem;
-  border: 1px solid var(--border);
+  font-size: 0.84rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-2);
 }
 
-.prop-name { font: 600 0.82rem ui-monospace, SFMono-Regular, Menlo, monospace; }
-.prop-detail { color: var(--text-muted); min-width: 0; }
-.prop-pass .prop-outcome { color: var(--ok, #4fb477); }
-.prop-fail .prop-outcome { color: var(--danger, #e05260); font-weight: 700; }
-.prop-not-applicable .prop-outcome { color: var(--text-muted); }
+.prop-name { font: 600 0.8rem var(--font-mono); }
+.prop-detail { color: var(--color-fg-subtle); min-width: 0; }
+.prop-outcome { font-weight: 600; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.prop-pass .prop-outcome { color: var(--color-good); }
+.prop-fail .prop-outcome { color: var(--color-bad); }
+.prop-not-applicable .prop-outcome { color: var(--color-fg-faint); }
+.prop-undecided .prop-outcome { color: var(--color-warn); }
 
 /* ---------- emitted model ---------- */
 
 .emitted {
   margin: 0;
-  padding: 0.75rem;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
+  padding: 0.7rem;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
-  font: 0.8rem/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+  font: 0.79rem/1.55 var(--font-mono);
+  color: var(--color-fg);
   overflow-x: auto;
   min-width: 0;
 }
 
-/* ---------- states and prose pages ---------- */
+/* ---------- states ---------- */
 
 .state-panel {
-  padding: 2rem;
+  padding: 2.5rem;
   text-align: center;
-  color: var(--text-muted);
+  color: var(--color-fg-subtle);
 }
 
 .state-error {
-  border: 1px solid var(--danger, #e05260);
-  border-radius: 6px;
+  border: 1px solid var(--color-bad);
+  border-radius: 8px;
   text-align: left;
-  color: var(--text);
+  color: var(--color-fg);
+  background: var(--color-surface);
 }
 
-.muted { color: var(--text-muted); }
-
-.prose-page h2 { margin-top: 2rem; }
-.prose-page .measure { max-width: 72ch; }
+/* ---------- doc-page tables and grids ---------- */
 
 .finding-table {
   width: 100%;
   border-collapse: collapse;
   margin: 1rem 0;
-  font-size: 0.9rem;
+  font-size: 0.89rem;
 }
 
 .finding-table th,
 .finding-table td {
   text-align: left;
   padding: 0.45rem 0.6rem;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--color-border);
   vertical-align: top;
 }
 
 .finding-table th {
-  font-size: 0.74rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  color: var(--color-fg-faint);
 }
+
+.finding-table td.num { font-family: var(--font-mono); white-space: nowrap; }
+.finding-table tbody tr:hover { background: var(--color-surface-2); }
 
 .coverage-grid {
   display: grid;
@@ -410,25 +702,77 @@
 }
 
 .coverage-cell {
-  padding: 0.7rem;
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  padding: 0.7rem 0.8rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
 }
 
 .coverage-cell strong {
   display: block;
-  font-size: 1.5rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 1.6rem;
+  font-family: var(--font-mono);
+  line-height: 1.2;
 }
 
 .coverage-cell span {
   font-size: 0.78rem;
-  color: var(--text-muted);
+  color: var(--color-fg-subtle);
+}
+
+/* A symbol glossary: the definition list every equation block is checked against. */
+.symbols {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 0.3rem 1.2rem;
+  font-size: 0.87rem;
+}
+
+.symbols li {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: 0.5rem;
+  align-items: baseline;
+  padding: 0.12rem 0;
+}
+
+.symbols .sym { font-family: var(--font-mono); color: var(--color-accent); }
+
+@media (max-width: 1100px) {
+  .split { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (max-width: 900px) {
-  .workbench { grid-template-columns: minmax(0, 1fr); }
-  .case-rail { border-right: none; border-bottom: 1px solid var(--border); }
-  .split { grid-template-columns: minmax(0, 1fr); }
+  .enunciado-layout { grid-template-columns: minmax(0, 1fr); height: auto; }
+  .enunciado-side { max-height: none; }
   .prop { grid-template-columns: minmax(0, 1fr); }
+  .symbols li { grid-template-columns: 3.5rem minmax(0, 1fr); }
 }
+
+/* ---------- doc-page composition ---------- */
+
+/*
+ * A `fig-row` half must be allowed to shrink, or a wide SVG inside it sets the column's minimum and
+ * the grid stops being 1.1fr/1fr. `min-width: 0` on both halves is what keeps the split honest.
+ */
+.fig-col { min-width: 0; }
+
+/* Inside a paired row the prose IS the column, so it does not narrow itself a second time: a 70ch
+   cap on a 560px half leaves the half half-empty, which is the gutter this pairing exists to close. */
+.fig-row .measure { max-width: none; }
+
+/* A figure paired with prose fills its half rather than keeping the standalone 560/760px cap. */
+.fig-row .fig-svg { max-width: 100%; }
+.fig-row .figure { margin-block: 0; }
+
+/* Long-form sections carry their own vertical rhythm; the shell's default is tuned for shorter
+   pages and runs the headings into the text above them at this density. */
+.prose section > h2:first-child { margin-top: 0; }
+.prose h3 { margin-top: 1.6rem; margin-bottom: 0.4rem; font-size: 1.02rem; }
+.prose h4 { margin-top: 1.1rem; margin-bottom: 0.3rem; font-size: 0.92rem; }
+
+/* The subtab rail is a navigation column and should not sit level with the pane's first heading. */
+.subtabs-vertical .subtablist { position: sticky; top: 4.5rem; }
