@@ -1,0 +1,13 @@
+{
+  "name": "enunciado-portability-probe",
+  "private": true,
+  "type": "module",
+  "description": "Measures which solver engines actually run in a browser, by solving corpus cases in one.",
+  "scripts": { "stage": "node stage.mjs", "probe": "node stage.mjs && node run.mjs" },
+  "dependencies": {
+    "highs": "1.15.3",
+    "glpk.js": "5.0.0",
+    "minizinc": "4.5.2"
+  },
+  "devDependencies": { "playwright": "^1.50.0" }
+}
