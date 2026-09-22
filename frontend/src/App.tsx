@@ -6,7 +6,12 @@
  * lands once.
  */
 
-import { AppShell, CitationsProvider, type ShellConfig } from "@fasl-work/caos-app-shell";
+import {
+  AppShell,
+  CitationsProvider,
+  useShellLang,
+  type ShellConfig,
+} from "@fasl-work/caos-app-shell";
 import { ScanText } from "lucide-react";
 import { useEffect } from "react";
 import { Outlet } from "react-router";
@@ -14,15 +19,25 @@ import { Outlet } from "react-router";
 import { ArchitectureTabs } from "./components/ArchitectureTabs";
 import { CITATIONS } from "./data/citations";
 import { useData } from "./lib/data";
+import i18n from "./lib/i18n";
 
 const VERSION = "0.01.000";
 
 export function Layout() {
   const load = useData((state) => state.load);
+  const lang = useShellLang() ?? "en";
 
   useEffect(() => {
     void load();
   }, [load]);
+
+  // The shell owns the language; i18next had its own, fixed at "en" and never told. Half the
+  // workbench chrome (the case label, the tier word, the control-case chip, the section headings)
+  // stayed English on the Spanish page, next to prose that had switched correctly. Two sources of
+  // truth for one setting is the defect; this makes the shell's the only one.
+  useEffect(() => {
+    if (i18n.language !== lang) void i18n.changeLanguage(lang);
+  }, [lang]);
 
   const config: ShellConfig = {
     product: { name: "Enunciado", mark: <ScanText size={20} /> },
