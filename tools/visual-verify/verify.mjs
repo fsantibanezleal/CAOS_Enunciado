@@ -188,6 +188,49 @@ for (const theme of ["dark", "light"]) {
   await page.getByRole("tab", { name: /sensitivity|sensibilidad/i }).click();
   await page.waitForTimeout(700);
 
+  // ADR-0017 section 3.4: a value read-out at the cursor. uPlot's own live legend renders below the
+  // plot and this host clips it, so the chart shipped with no read-out and nothing said so. The
+  // check moves a real pointer onto the curve and asserts the readout bar changed.
+  const readoutBefore = (await page.locator(".viz-readout").first().textContent()) ?? "";
+  const plot = page.locator(".uplot-host canvas").first();
+  if (await plot.count()) {
+    const box = await plot.boundingBox();
+    if (box) {
+      await page.mouse.move(box.x + box.width * 0.6, box.y + box.height * 0.5);
+      await page.waitForTimeout(250);
+    }
+  }
+  const readoutAfter = (await page.locator(".viz-readout").first().textContent()) ?? "";
+  check(
+    readoutAfter !== readoutBefore && /\d/.test(readoutAfter),
+    `[${theme}] the chart reads out a value at the cursor`,
+    readoutAfter.slice(0, 54).replace(/\s+/g, " "),
+  );
+
+  // EVERY tab is opened, screenshotted and checked for content, in both themes. Counting tabs is
+  // not verifying them: a panel that throws, renders empty, or renders the previous tab's content
+  // still leaves the tab strip looking correct.
+  const tabIds = await page.locator('.tablist [role="tab"]').count();
+  for (let index = 0; index < tabIds; index += 1) {
+    const tab = page.locator('.tablist [role="tab"]').nth(index);
+    const name = ((await tab.textContent()) ?? `tab-${index}`).trim();
+    await tab.click();
+    await page.waitForTimeout(900);
+    const panel = page.locator('[role="tabpanel"]:not([hidden])');
+    const text = ((await panel.textContent()) ?? "").trim();
+    const drawn = await panel.locator("canvas, svg, table, .heat-cell, .narrative-span").count();
+    check(
+      text.length > 80 && drawn > 0,
+      `[${theme}] the "${name}" panel drew something`,
+      `${text.length} chars, ${drawn} drawn element(s)`,
+    );
+    await page.screenshot({
+      path: join(SHOTS, `${theme}-tab-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.png`),
+    });
+  }
+  await page.getByRole("tab", { name: /sensitivity|sensibilidad/i }).click();
+  await page.waitForTimeout(600);
+
   // ADR-0071 rule 8, as written: the primary VISUALIZATION takes at least half the VIEWPORT AREA.
   //
   // An earlier version of this check divided the main column's width by the grid's width, which is
@@ -211,7 +254,7 @@ for (const theme of ["dark", "light"]) {
   check(
     share >= 0.5,
     `[${theme}] the instrument takes at least half the App route`,
-    `${(share * 100).toFixed(0)}%`,
+    `${(share * 100).toFixed(1)}%`,
   );
 
   await page.screenshot({ path: join(SHOTS, `${theme}-workbench.png`) });

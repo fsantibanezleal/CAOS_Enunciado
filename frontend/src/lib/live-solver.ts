@@ -116,7 +116,7 @@ function linearise(
 }
 
 /** The numeric value of a node when it is fully determined, else null. */
-function knownValue(node: ExpressionNode, values: Record<string, number>): number | null {
+export function knownValue(node: ExpressionNode, values: Record<string, number>): number | null {
   if (node.tag === "const") return node.value ?? 0;
   if (node.tag === "ref" && node.name! in values) return values[node.name!];
   if (node.tag === "product") {

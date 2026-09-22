@@ -31,14 +31,26 @@ interface Model {
   sense: "minimise" | "maximise";
 }
 
-/** Collapse an expression into coefficients over the decision variables, plus a constant. */
+/**
+ * Collapse an expression into coefficients over the decision variables, plus a constant.
+ *
+ * `defined` carries the defining expression of each derived quantity. A derived quantity is not a
+ * third unknown: it is a name for something the model already determines, so it is substituted
+ * rather than refused. Without this, every case that names an intermediate (a total cost, a moved
+ * tonnage) was undrawable, which was most of the corpus.
+ */
 function coefficients(
   node: ExpressionNode | undefined,
   variables: string[],
   known: Record<string, number>,
+  defined: Map<string, ExpressionNode>,
   scale = 1,
   out?: { a: number[]; c: number },
+  depth = 0,
 ): { a: number[]; c: number } | null {
+  // A definition chain is finite in any well-formed document; the cap is a guard against a
+  // malformed one defining a quantity through itself.
+  if (depth > 16) return null;
   const acc = out ?? { a: new Array(variables.length).fill(0), c: 0 };
   if (!node) return null;
 
@@ -51,12 +63,16 @@ function coefficients(
       const index = variables.indexOf(name);
       if (index >= 0) acc.a[index] += scale;
       else if (name in known) acc.c += scale * known[name];
-      else return null;
+      else if (defined.has(name)) {
+        return coefficients(defined.get(name), variables, known, defined, scale, acc, depth + 1);
+      } else return null;
       return acc;
     }
     case "sum":
       for (const term of node.terms ?? []) {
-        if (coefficients(term, variables, known, scale, acc) === null) return null;
+        if (coefficients(term, variables, known, defined, scale, acc, depth + 1) === null) {
+          return null;
+        }
       }
       return acc;
     case "product": {
@@ -72,7 +88,7 @@ function coefficients(
         acc.c += factor;
         return acc;
       }
-      return coefficients(variable, variables, known, factor, acc);
+      return coefficients(variable, variables, known, defined, factor, acc, depth + 1);
     }
     default:
       return null;
@@ -98,14 +114,36 @@ export function twoVariableModel(
     }
   }
 
+  // A relation of the form `derived == expression` is a definition, not a constraint. It is
+  // collected for substitution and then left out of the rows, because drawing it as a line would
+  // draw a tautology.
+  const derivedNames = new Set(
+    record.reference.quantities.filter((q) => q.role === "derived").map((q) => q.name),
+  );
+  const defined = new Map<string, ExpressionNode>();
+  const definitionRows = new Set<number>();
+  for (const [index, relation] of record.reference.relations.entries()) {
+    if (relation.tag !== "compare" || relation.comparator !== "==") continue;
+    const left = relation.left;
+    const right = relation.right;
+    if (left?.tag === "ref" && derivedNames.has(left.name!) && right) {
+      defined.set(left.name!, right);
+      definitionRows.add(index);
+    } else if (right?.tag === "ref" && derivedNames.has(right.name!) && left) {
+      defined.set(right.name!, left);
+      definitionRows.add(index);
+    }
+  }
+
   const objective = record.reference.objectives[0];
   if (!objective) return null;
-  const obj = coefficients(objective.expression, variables, known);
+  const obj = coefficients(objective.expression, variables, known, defined);
   if (obj === null) return null;
 
   const rows: Row[] = [];
   for (const [index, relation] of record.reference.relations.entries()) {
-    const row = toRow(relation, variables, known, index);
+    if (definitionRows.has(index)) continue;
+    const row = toRow(relation, variables, known, defined, index);
     if (row === null) return null;
     rows.push(row);
   }
@@ -127,14 +165,15 @@ function toRow(
   relation: RelationNode,
   variables: string[],
   known: Record<string, number>,
+  defined: Map<string, ExpressionNode>,
   index: number,
 ): Row | null {
   if (relation.tag !== "compare") return null;
   const op = relation.comparator;
   if (op !== "<=" && op !== ">=" && op !== "==") return null;
 
-  const left = coefficients(relation.left, variables, known);
-  const right = coefficients(relation.right, variables, known);
+  const left = coefficients(relation.left, variables, known, defined);
+  const right = coefficients(relation.right, variables, known, defined);
   if (left === null || right === null) return null;
 
   return {
@@ -213,18 +252,27 @@ export function FeasibleRegion({
     const border = style.getPropertyValue("--color-border").trim() || "#39414f";
     const text = style.getPropertyValue("--color-fg-subtle").trim() || "#97a0af";
 
-    const pad = 34;
-    const toPixelX = (x: number) => pad + (x / window.max) * (width - pad - 12);
-    const toPixelY = (y: number) => height - pad - (y / window.max) * (height - pad - 12);
-    const toDataX = (px: number) => ((px - pad) / (width - pad - 12)) * window.max;
-    const toDataY = (py: number) => ((height - pad - py) / (height - pad - 12)) * window.max;
+    // Room for tick labels on both axes, measured rather than guessed: a y tick like "12,500"
+    // needs more than the 34px the first version reserved, and the axis name was drawn on top of
+    // the top tick because both were placed at the same corner.
+    const padLeft = 58;
+    const padBottom = 42;
+    const padTop = 22;
+    const padRight = 16;
+    const plotW = width - padLeft - padRight;
+    const plotH = height - padTop - padBottom;
+
+    const toPixelX = (x: number) => padLeft + (x / window.max) * plotW;
+    const toPixelY = (y: number) => height - padBottom - (y / window.max) * plotH;
+    const toDataX = (px: number) => ((px - padLeft) / plotW) * window.max;
+    const toDataY = (py: number) => ((height - padBottom - py) / plotH) * window.max;
 
     // The feasible set, sampled. Exact under any number of constraints, and it costs one pass.
     const step = 2;
     context.fillStyle = accent;
-    context.globalAlpha = 0.17;
-    for (let px = pad; px < width - 12; px += step) {
-      for (let py = 12; py < height - pad; py += step) {
+    context.globalAlpha = 0.2;
+    for (let px = padLeft; px < width - padRight; px += step) {
+      for (let py = padTop; py < height - padBottom; py += step) {
         if (satisfies(model, toDataX(px), toDataY(py))) {
           context.fillRect(px, py, step, step);
         }
@@ -232,27 +280,48 @@ export function FeasibleRegion({
     }
     context.globalAlpha = 1;
 
-    // Axes.
-    context.strokeStyle = border;
-    context.lineWidth = 1;
-    context.beginPath();
-    context.moveTo(pad, 12);
-    context.lineTo(pad, height - pad);
-    context.lineTo(width - 12, height - pad);
-    context.stroke();
+    // Ticks, on a round step, so a reader can place a point without hovering it.
+    const rawStep = window.max / 5;
+    const magnitude = Math.pow(10, Math.floor(Math.log10(rawStep)));
+    const tickStep = [1, 2, 2.5, 5, 10].map((m) => m * magnitude).find((v) => v >= rawStep) ?? rawStep;
+
+    context.font = "11px ui-monospace, SFMono-Regular, Menlo, monospace";
+    context.fillStyle = text;
+    for (let value = 0; value <= window.max + 1e-9; value += tickStep) {
+      const px = toPixelX(value);
+      const py = toPixelY(value);
+      // The page's language, not the machine's: a US reader on a Spanish-locale machine was being
+      // shown "12,5" on an English page.
+      const label = Number(value.toPrecision(4)).toLocaleString(es ? "es-CL" : "en-US");
+
+      context.strokeStyle = border;
+      context.lineWidth = 1;
+      context.globalAlpha = value === 0 ? 1 : 0.45;
+      context.beginPath();
+      context.moveTo(px, padTop);
+      context.lineTo(px, height - padBottom);
+      context.moveTo(padLeft, py);
+      context.lineTo(width - padRight, py);
+      context.stroke();
+      context.globalAlpha = 1;
+
+      context.textAlign = "center";
+      context.fillText(label, px, height - padBottom + 15);
+      context.textAlign = "right";
+      context.fillText(label, padLeft - 6, py + 4);
+    }
+    context.textAlign = "left";
 
     // Each constraint as a line, so a reader can see WHICH one binds.
-    context.lineWidth = 1.6;
-    for (const [index, row] of model.rows.entries()) {
+    context.lineWidth = 1.7;
+    for (const row of model.rows) {
       const [a1, a2] = row.a;
-      context.strokeStyle = border;
-      context.setLineDash(row.op === "=" ? [] : [5, 3]);
+      context.strokeStyle = text;
+      context.setLineDash(row.op === "=" ? [] : [6, 4]);
       context.beginPath();
       if (Math.abs(a2) > 1e-9) {
-        const y0 = (row.b - a1 * 0) / a2;
-        const y1 = (row.b - a1 * window.max) / a2;
-        context.moveTo(toPixelX(0), toPixelY(y0));
-        context.lineTo(toPixelX(window.max), toPixelY(y1));
+        context.moveTo(toPixelX(0), toPixelY((row.b - a1 * 0) / a2));
+        context.lineTo(toPixelX(window.max), toPixelY((row.b - a1 * window.max) / a2));
       } else if (Math.abs(a1) > 1e-9) {
         const x = row.b / a1;
         context.moveTo(toPixelX(x), toPixelY(0));
@@ -260,7 +329,6 @@ export function FeasibleRegion({
       }
       context.stroke();
       context.setLineDash([]);
-      void index;
     }
 
     // The objective contour through the optimum. This is the line that makes a linear programme
@@ -272,8 +340,7 @@ export function FeasibleRegion({
       const [c1, c2] = model.objective;
       const level = c1 * ox + c2 * oy;
       context.strokeStyle = accent;
-      context.lineWidth = 2;
-      context.setLineDash([]);
+      context.lineWidth = 2.2;
       context.beginPath();
       if (Math.abs(c2) > 1e-9) {
         context.moveTo(toPixelX(0), toPixelY(level / c2));
@@ -283,36 +350,41 @@ export function FeasibleRegion({
         context.lineTo(toPixelX(level / c1), toPixelY(window.max));
       }
       context.stroke();
-    }
 
-    // The optimum, labelled. Marking what the engine found is the difference between a picture and
-    // an instrument.
-    if (optimum) {
-      const ox = optimum[model.variables[0]] ?? 0;
-      const oy = optimum[model.variables[1]] ?? 0;
       context.fillStyle = accent;
-      context.strokeStyle = accent;
       context.beginPath();
       context.arc(toPixelX(ox), toPixelY(oy), 5.5, 0, Math.PI * 2);
       context.fill();
-      context.font = "600 11px ui-monospace, monospace";
+      context.font = "600 11px ui-monospace, SFMono-Regular, Menlo, monospace";
+      const label = `(${Number(ox.toPrecision(5))}, ${Number(oy.toPrecision(5))})`;
+      const at = toPixelX(ox) + 9;
+      context.textAlign = at + context.measureText(label).width > width - padRight ? "right" : "left";
       context.fillText(
-        `(${ox.toFixed(2)}, ${oy.toFixed(2)})`,
-        Math.min(toPixelX(ox) + 9, width - 96),
-        Math.max(toPixelY(oy) - 8, 20),
+        label,
+        context.textAlign === "right" ? toPixelX(ox) - 9 : at,
+        Math.max(toPixelY(oy) - 9, padTop + 11),
       );
+      context.textAlign = "left";
     }
 
-    // Axis labels in the variables' own names.
+    // The frame, drawn last so nothing overlaps it.
+    context.strokeStyle = border;
+    context.lineWidth = 1.2;
+    context.strokeRect(padLeft, padTop, plotW, plotH);
+
+    // Axis names, placed where no tick label goes.
     context.fillStyle = text;
-    context.font = "11px ui-sans-serif, system-ui, sans-serif";
-    context.fillText(model.variables[0], width - 12 - context.measureText(model.variables[0]).width, height - pad + 16);
+    context.font = "600 11px ui-sans-serif, system-ui, sans-serif";
+    context.textAlign = "right";
+    context.fillText(model.variables[0], width - padRight, height - 8);
+    context.textAlign = "left";
     context.save();
-    context.translate(10, 18);
+    context.translate(12, padTop + 4);
+    context.rotate(-Math.PI / 2);
+    context.textAlign = "right";
     context.fillText(model.variables[1], 0, 0);
     context.restore();
-    context.fillText("0", pad - 10, height - pad + 14);
-    context.fillText(window.max.toPrecision(3), pad - 8, 16);
+    context.textAlign = "left";
   }, [model, window, optimum, theme]);
 
   if (!model || !window) {
@@ -334,11 +406,16 @@ export function FeasibleRegion({
           const canvas = canvasRef.current;
           if (!canvas) return;
           const box = canvas.getBoundingClientRect();
-          const pad = 34;
+          // The same four paddings the draw uses. Two copies of a geometry drift, and a read-out
+          // that disagrees with the picture is worse than none.
+          const padLeft = 58;
+          const padBottom = 42;
+          const padTop = 22;
+          const padRight = 16;
           const px = event.clientX - box.left;
           const py = event.clientY - box.top;
-          const x = ((px - pad) / (box.width - pad - 12)) * window.max;
-          const y = ((box.height - pad - py) / (box.height - pad - 12)) * window.max;
+          const x = ((px - padLeft) / (box.width - padLeft - padRight)) * window.max;
+          const y = ((box.height - padBottom - py) / (box.height - padTop - padBottom)) * window.max;
           if (x < 0 || y < 0) {
             setCursor(null);
             return;
@@ -367,7 +444,7 @@ export function FeasibleRegion({
         </span>
         <span>
           <i className="viz-swatch dot" />
-          {es ? "optimo de referencia" : "reference optimum"}
+          {es ? "optimo actual" : "current optimum"}
         </span>
       </div>
       <div className="viz-readout">

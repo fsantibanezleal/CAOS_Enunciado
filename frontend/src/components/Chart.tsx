@@ -12,7 +12,7 @@
  */
 
 import { useThemeStore } from "@fasl-work/caos-app-shell";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import uPlot from "uplot";
 import "uplot/dist/uPlot.min.css";
 
@@ -29,6 +29,13 @@ export interface Series {
   value?: (self: uPlot, raw: number) => string;
 }
 
+/** What the cursor is over, reported to the consumer so the read-out lives in ITS readout bar. */
+export interface CursorReading {
+  index: number;
+  x: number;
+  values: (number | null)[];
+}
+
 export interface ChartProps {
   data: uPlot.AlignedData;
   series: Series[];
@@ -39,6 +46,15 @@ export interface ChartProps {
   /** Height in pixels. Omit to fill the parent, which is the workbench default. */
   height?: number;
   className?: string;
+  /**
+   * Called as the pointer moves, with the nearest sample, and with null when it leaves.
+   *
+   * uPlot's own live legend renders BELOW the plot, inside the root it was given. This host sizes
+   * that root to the available height and clips it, so the legend was drawn off the bottom edge and
+   * the chart shipped with no value read-out at all. Reporting the reading upward puts it in the
+   * same readout bar every other instrument here uses, which is also more consistent.
+   */
+  onCursor?: (reading: CursorReading | null) => void;
 }
 
 const TOKEN: Record<NonNullable<Series["colour"]>, string> = {
@@ -63,10 +79,25 @@ function palette(element: HTMLElement) {
   };
 }
 
-export function Chart({ data, series, xLabel, yLabel, marks, height, className }: ChartProps) {
+export function Chart({
+  data,
+  series,
+  xLabel,
+  yLabel,
+  marks,
+  height,
+  className,
+  onCursor,
+}: ChartProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const plotRef = useRef<uPlot | null>(null);
   const theme = useThemeStore((state) => state.theme);
+
+  // `series` and `marks` arrive as fresh array literals on every render, so depending on their
+  // identity destroys and rebuilds the plot continuously: the cursor resets before a read-out can
+  // settle, and the page repaints a canvas it did not need to. Depend on their VALUE instead.
+  const seriesKey = useMemo(() => JSON.stringify(series), [series]);
+  const marksKey = useMemo(() => JSON.stringify(marks ?? null), [marks]);
 
   useEffect(() => {
     const host = hostRef.current;
@@ -101,7 +132,7 @@ export function Chart({ data, series, xLabel, yLabel, marks, height, className }
       height: height ?? Math.max(220, host.clientHeight),
       padding: [12, 14, 0, 0],
       cursor: { drag: { x: true, y: false, setScale: false }, focus: { prox: 24 } },
-      legend: { live: true },
+      legend: { show: false },
       scales: { x: { time: false } },
       axes: [
         {
@@ -142,7 +173,26 @@ export function Chart({ data, series, xLabel, yLabel, marks, height, className }
           };
         }),
       ],
-      hooks: { draw: [drawMarks] },
+      hooks: {
+        draw: [drawMarks],
+        setCursor: [
+          (self: uPlot) => {
+            if (!onCursor) return;
+            const index = self.cursor.idx;
+            if (index === null || index === undefined) {
+              onCursor(null);
+              return;
+            }
+            onCursor({
+              index,
+              x: (self.data[0] as number[])[index],
+              values: self.data
+                .slice(1)
+                .map((row) => (row as (number | null)[])[index] ?? null),
+            });
+          },
+        ],
+      },
     };
 
     const plot = new uPlot(options, data, host);
@@ -164,7 +214,8 @@ export function Chart({ data, series, xLabel, yLabel, marks, height, className }
     // The whole plot is rebuilt on a theme change because uPlot bakes its stroke colours into the
     // options at construction. Rebuilding is cheap at these sizes and it is the only way the axes
     // and grid actually follow the theme.
-  }, [data, series, xLabel, yLabel, marks, height, theme]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- seriesKey/marksKey ARE series/marks
+  }, [data, seriesKey, marksKey, xLabel, yLabel, height, theme, onCursor]);
 
   return <div ref={hostRef} className={className ?? "uplot-host"} />;
 }

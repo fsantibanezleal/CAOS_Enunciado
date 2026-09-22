@@ -57,8 +57,8 @@
 }
 
 .enunciado-main .tablist {
-  margin-bottom: 0.6rem;
-  padding-bottom: 0.45rem;
+  margin-bottom: 0.45rem;
+  padding-bottom: 0.35rem;
   flex: 0 0 auto;
 }
 
@@ -268,7 +268,7 @@
   min-height: 0;
   min-width: 0;
   flex: 1;
-  gap: 0.4rem;
+  gap: 0.35rem;
 }
 
 .viz-canvas {
@@ -284,11 +284,17 @@
 
 .viz-readout {
   display: flex;
-  flex-wrap: wrap;
+  /* One row, scrolled rather than wrapped. Wrapping made the bar grow a second line the moment the
+     cursor entered the chart, which resized the chart under the pointer: the instrument moved while
+     being read. It also cost 20px of instrument height exactly when the read-out was in use. */
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: thin;
   gap: 0.35rem 1rem;
-  align-items: baseline;
-  padding: 0.35rem 0.6rem;
-  min-height: 2rem;
+  align-items: center;
+  padding: 0.3rem 0.6rem;
+  height: 2rem;
+  flex: 0 0 auto;
   background: var(--color-surface-2);
   border: 1px solid var(--color-border);
   border-radius: 6px;
@@ -296,6 +302,7 @@
   color: var(--color-fg-subtle);
 }
 
+.viz-readout > * { flex: 0 0 auto; white-space: nowrap; }
 .viz-readout strong { color: var(--color-fg); }
 .viz-readout code { color: var(--color-fg-faint); font-size: 0.78rem; }
 .viz-readout .ok { color: var(--color-good); }
@@ -360,7 +367,10 @@
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 8px;
-  padding: 0.4rem 0.5rem 0.2rem;
+  /* Chrome around the instrument is height taken from it on every render. ADR-0071 rule 8 puts a
+     measured floor at 50% of the viewport, and this padding is the difference between passing it
+     and missing it by a percentage point. */
+  padding: 0.25rem 0.35rem 0;
   overflow: hidden;
 }
 
@@ -776,3 +786,16 @@
 
 /* The subtab rail is a navigation column and should not sit level with the pane's first heading. */
 .subtabs-vertical .subtablist { position: sticky; top: 4.5rem; }
+
+/* A control that sits in an instrument's chrome row, rather than in the control aside. */
+.viz-readout select,
+.viz-legend select {
+  padding: 0.2rem 0.4rem;
+  background: var(--color-surface-2);
+  color: var(--color-fg);
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  font: 600 0.78rem var(--font-mono);
+}
+
+.viz-legend select:hover { border-color: var(--color-accent); }

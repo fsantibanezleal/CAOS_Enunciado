@@ -11,12 +11,12 @@
  * rather than hidden.
  */
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type { CaseRecord } from "../lib/contract.types";
 import { solveLive, type LiveSolution } from "../lib/live-solver";
 
-import { Chart } from "./Chart";
+import { Chart, type CursorReading } from "./Chart";
 
 const SAMPLES = 41;
 
@@ -51,6 +51,10 @@ export function ObjectiveSweep({
   const [points, setPoints] = useState<SweepPoint[] | null>(null);
   const [elapsed, setElapsed] = useState(0);
   const [running, setRunning] = useState(false);
+  const [cursor, setCursor] = useState<CursorReading | null>(null);
+
+  // Stable identity, or the chart rebuilds on every render and the cursor never settles.
+  const onCursor = useCallback((reading: CursorReading | null) => setCursor(reading), []);
 
   const parameter = tunables.find((t) => t.name === axis) ?? tunables[0];
   const current = parameter ? (overrides[parameter.name] ?? parameter.base) : 0;
@@ -125,31 +129,10 @@ export function ObjectiveSweep({
       : null;
 
   return (
+    // One row of chrome, below the instrument (ADR-0071 rule 4). An earlier version put the sweep
+    // control in its own row above the chart, and those 30px were the difference between the
+    // instrument taking 52% of the viewport and 49.98%, against a floor of 50%.
     <div className="viz">
-      <div className="viz-legend" style={{ justifyContent: "space-between" }}>
-        <label style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
-          <span className="rail-label">{es ? "barrer" : "sweep"}</span>
-          <select
-            value={axis}
-            onChange={(event) => setAxis(event.target.value)}
-            aria-label={es ? "Parametro a barrer" : "Parameter to sweep"}
-          >
-            {tunables.map((t) => (
-              <option key={t.name} value={t.name}>
-                {t.name}
-              </option>
-            ))}
-          </select>
-        </label>
-        <span>
-          {running
-            ? es
-              ? "resolviendo..."
-              : "solving..."
-            : `${SAMPLES} ${es ? "soluciones en" : "solves in"} ${elapsed.toFixed(0)} ms`}
-        </span>
-      </div>
-
       {data ? (
         <Chart
           data={data as never}
@@ -163,12 +146,54 @@ export function ObjectiveSweep({
           xLabel={parameter.name}
           yLabel={es ? "valor objetivo" : "objective value"}
           marks={[{ x: current, label: es ? "actual" : "now" }]}
+          onCursor={onCursor}
         />
       ) : (
         <div className="uplot-host" />
       )}
 
       <div className="viz-readout">
+        <label style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
+          <span className="rail-label">{es ? "barrer" : "sweep"}</span>
+          <select
+            value={axis}
+            onChange={(event) => setAxis(event.target.value)}
+            aria-label={es ? "Parametro a barrer" : "Parameter to sweep"}
+          >
+            {tunables.map((t) => (
+              <option key={t.name} value={t.name}>
+                {t.name}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        {cursor ? (
+          <>
+            <span>
+              <code>{parameter.name}</code> <strong>{cursor.x.toPrecision(5)}</strong>
+            </span>
+            <span>
+              {es ? "optimo" : "optimum"}{" "}
+              <strong>
+                {cursor.values[0] === null
+                  ? es
+                    ? "infactible"
+                    : "infeasible"
+                  : cursor.values[0]!.toPrecision(7)}
+              </strong>
+            </span>
+            <span className="muted">
+              {es ? "punto" : "point"} {cursor.index + 1}/{SAMPLES}
+            </span>
+          </>
+        ) : (
+          <span className="muted">
+            {es
+              ? "Pase el cursor por la curva para leer el optimo en cada valor"
+              : "Hover the curve to read the optimum at each value"}
+          </span>
+        )}
         <span>
           {parameter.description || parameter.name}
         </span>
@@ -186,6 +211,13 @@ export function ObjectiveSweep({
             {es ? "puntos son infactibles" : "points are infeasible"}
           </span>
         )}
+        <span className="muted" style={{ marginLeft: "auto" }}>
+          {running
+            ? es
+              ? "resolviendo..."
+              : "solving..."
+            : `${SAMPLES} ${es ? "soluciones en" : "solves in"} ${elapsed.toFixed(0)} ms`}
+        </span>
       </div>
     </div>
   );
