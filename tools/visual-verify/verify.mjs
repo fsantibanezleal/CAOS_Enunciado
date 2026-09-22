@@ -177,15 +177,36 @@ for (const theme of ["dark", "light"]) {
   );
 
   // Provenance highlighting is the one view that makes the product's point, so it is measured.
+  // It lives on its own tab, so the gate opens that tab first: a check that reads zero because it
+  // never navigated to its subject reports a product failure that belongs to the gate.
+  await page.getByRole("tab", { name: /statement and model|enunciado y modelo/i }).click();
+  await page.waitForTimeout(350);
   const spans = await page.locator(".narrative-span").count();
   check(spans > 0, `[${theme}] the statement shows its provenance spans`, `${spans} spans`);
 
-  // ADR-0071 rule 8: the instrument gets the space.
+  // Back to the landing tab, so the area measurement below sees what a visitor sees.
+  await page.getByRole("tab", { name: /sensitivity|sensibilidad/i }).click();
+  await page.waitForTimeout(700);
+
+  // ADR-0071 rule 8, as written: the primary VISUALIZATION takes at least half the VIEWPORT AREA.
+  //
+  // An earlier version of this check divided the main column's width by the grid's width, which is
+  // a different and much weaker question: it reads 100% for a column holding nothing but text. It
+  // also named two classes the layout had since renamed, so it returned 0 and reported a layout
+  // failure that was its own staleness. Measure the drawn thing, by area, against the window.
   const share = await page.evaluate(() => {
-    const main = document.querySelector(".case-main");
-    const body = document.querySelector(".workbench");
-    if (!main || !body) return 0;
-    return main.getBoundingClientRect().width / body.getBoundingClientRect().width;
+    const viewport = window.innerWidth * window.innerHeight;
+    if (!viewport) return 0;
+    const drawn = [...document.querySelectorAll("canvas, .uplot-host, .viz-canvas, .heat, svg.fig-svg")];
+    let largest = 0;
+    for (const element of drawn) {
+      const box = element.getBoundingClientRect();
+      // Only what is actually on screen counts; a figure scrolled out of view is not the instrument.
+      const width = Math.max(0, Math.min(box.right, window.innerWidth) - Math.max(box.left, 0));
+      const height = Math.max(0, Math.min(box.bottom, window.innerHeight) - Math.max(box.top, 0));
+      largest = Math.max(largest, width * height);
+    }
+    return largest / viewport;
   });
   check(
     share >= 0.5,

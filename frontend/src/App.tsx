@@ -6,12 +6,13 @@
  * lands once.
  */
 
-import { AppShell, type ShellConfig } from "@fasl-work/caos-app-shell";
+import { AppShell, CitationsProvider, type ShellConfig } from "@fasl-work/caos-app-shell";
 import { ScanText } from "lucide-react";
 import { useEffect } from "react";
 import { Outlet } from "react-router";
 
 import { ArchitectureTabs } from "./components/ArchitectureTabs";
+import { CITATIONS } from "./data/citations";
 import { useData } from "./lib/data";
 
 const VERSION = "0.01.000";
@@ -58,9 +59,14 @@ export function Layout() {
     fixedRoutes: ["/"],
   };
 
+  // The citation registry is provided ONCE, wrapping the shell, so `<Cite>` and `<Refs>` resolve on
+  // every route (ADR-0017 section 4.3). Mounting it per page meant a section that cited a work the
+  // page had not imported rendered a dangling id with nothing to say so.
   return (
-    <AppShell config={config}>
-      <Outlet />
-    </AppShell>
+    <CitationsProvider items={CITATIONS}>
+      <AppShell config={config}>
+        <Outlet />
+      </AppShell>
+    </CitationsProvider>
   );
 }
