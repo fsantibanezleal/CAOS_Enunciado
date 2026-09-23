@@ -21,6 +21,15 @@ const DIST = join(HERE, "..", "..", "frontend", "dist");
 const SHOTS = join(HERE, "screenshots");
 const PORT = 4907;
 
+// The gate runs against the local build by default and against a deployed origin when asked:
+//
+//   VERIFY_BASE=https://enunciado.fasl-work.com node verify.mjs
+//
+// Checking dist/ proves the build is right; it does not prove the thing serving to readers is. A
+// site can be built correctly and deployed stale, and this account has shipped both.
+const BASE = process.env.VERIFY_BASE ?? `http://localhost:${PORT}`;
+const LIVE = Boolean(process.env.VERIFY_BASE);
+
 const TYPES = {
   ".html": "text/html",
   ".js": "text/javascript",
@@ -43,6 +52,25 @@ function check(ok, label, detail = "") {
 
 const server = createServer(async (req, res) => {
   const url = decodeURIComponent(req.url.split("?")[0]);
+  // GitHub Pages 301-redirects a directory URL without its trailing slash: /introduction becomes
+  // /introduction/. That redirect CHANGES THE BASE the browser resolves relative URLs against, and
+  // a build with a relative base then asks for /introduction/assets/... and gets 404s. The page
+  // answers 200 and renders nothing.
+  //
+  // This server did not redirect, so `./assets/...` resolved to `/assets/...` and the local gate
+  // was green against a build that was blank in production. Modelling the host's redirect is the
+  // difference between a gate that checks the site and a gate that checks itself.
+  if (url !== "/" && !extname(url) && !url.endsWith("/")) {
+    try {
+      await readFile(join(DIST, url, "index.html"));
+      res.writeHead(301, { Location: `${url}/` });
+      res.end();
+      return;
+    } catch {
+      // Not a directory; fall through to the normal resolution.
+    }
+  }
+
   const path = join(DIST, url === "/" ? "index.html" : url);
   try {
     // Directory-index resolution, which every static host performs: /methodology serves
@@ -73,7 +101,7 @@ const server = createServer(async (req, res) => {
     }
   }
 });
-await new Promise((resolve) => server.listen(PORT, resolve));
+if (!LIVE) await new Promise((resolve) => server.listen(PORT, resolve));
 await mkdir(SHOTS, { recursive: true });
 
 const browser = await chromium.launch();
@@ -87,7 +115,7 @@ for (const theme of ["dark", "light"]) {
   });
   page.on("pageerror", (e) => consoleErrors.push(String(e)));
 
-  await page.goto(`http://localhost:${PORT}/`, { waitUntil: "networkidle" });
+  await page.goto(`${BASE}/`, { waitUntil: "networkidle" });
   await page.waitForTimeout(700);
 
   // Reach the theme by CLICKING the toggle, not by writing storage.
@@ -354,7 +382,7 @@ for (const theme of ["dark", "light"]) {
 {
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await context.newPage();
-  await page.goto(`http://localhost:${PORT}/`, { waitUntil: "networkidle" });
+  await page.goto(`${BASE}/`, { waitUntil: "networkidle" });
   await page.waitForTimeout(700);
 
   // Through the real control, for the same reason the theme is.
@@ -375,7 +403,7 @@ for (const theme of ["dark", "light"]) {
     ["/benchmark", "Benchmark"],
     ["/", "Workbench"],
   ]) {
-    await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: "networkidle" });
+    await page.goto(`${BASE}${route}`, { waitUntil: "networkidle" });
     await page.waitForTimeout(1200);
     const text = (await page.textContent("#root")) ?? "";
 
@@ -432,17 +460,38 @@ for (const theme of ["dark", "light"]) {
 //
 // Against the built site this proves the per-route documents exist. Set VERIFY_BASE to the live
 // origin to assert the same thing about what is actually published.
-const origin = process.env.VERIFY_BASE ?? `http://localhost:${PORT}`;
+const origin = BASE;
 for (const route of ["introduction", "methodology", "implementation", "experiments", "benchmark"]) {
   const response = await fetch(`${origin}/${route}`, { redirect: "follow" });
   check(response.status === 200, `deep link /${route} answers 200`, `status ${response.status}`);
+
+  // And it must MOUNT after that request, in a browser, following whatever redirect the host does.
+  //
+  // A 200 is not evidence the SPA rendered. The live site answered 200 on every deep link while
+  // every one of them was blank: Pages 301s /introduction to /introduction/, that redirect changes
+  // the base relative URLs resolve against, and the deployed build had a relative base because an
+  // unset Actions variable expands to "" and `??` does not catch it. Only a browser following the
+  // redirect can see this, and only if the gate's server performs the redirect too.
+  {
+    const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+    const page = await context.newPage();
+    await page.goto(`${origin}/${route}`, { waitUntil: "networkidle" });
+    await page.waitForTimeout(1200);
+    const text = (await page.textContent("#root")) ?? "";
+    check(
+      text.trim().length > 400,
+      `deep link /${route} mounts in a browser`,
+      `${text.trim().length} chars at ${page.url()}`,
+    );
+    await context.close();
+  }
 }
 // And a path that genuinely does not exist must still say so.
 const missing = await fetch(`${origin}/not-a-route-here`, { redirect: "follow" });
 check(missing.status === 404, `an unknown path still answers 404`, `status ${missing.status}`);
 
+if (!LIVE) server.close();
 await browser.close();
-server.close();
 
 console.log(`\n${passes.length} passed, ${failures.length} failed`);
 if (failures.length) {
