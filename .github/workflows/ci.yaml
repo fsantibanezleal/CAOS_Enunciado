@@ -68,5 +68,8 @@ jobs:
         # calls no model. The first version of the report was assembled by hand from a printed
         # summary, and a hand-assembled artifact cannot be checked against the thing it summarises.
         run: |
-          python -m pip install --quiet 'copela' 'planteo'
+          # PINNED, not floated. The report is a function of this code, so the check only means
+          # something against the versions that produced the committed artifact. A newer copela
+          # breaking this is the correct outcome: it says the artifact needs re-deriving.
+          python -m pip install --quiet 'copela==0.2.0' 'planteo==0.1.0'
           PYTHONPATH=data-pipeline python data-pipeline/report.py --check
