@@ -105,6 +105,8 @@ def test_the_site_names_every_class_the_classifier_can_return() -> None:
         ("solving failed: No value for uninitialized ScalarParam object demand", "a parameter left without a value"),
         ("error: closure [demand]: referenced but never declared", "a name used but never declared"),
         ("infeasibleOrUnbounded", "the model it produced is infeasible or unbounded"),
+        # copela 0.3.3's form: an unbounded model is a failure to run.
+        ("unbounded", "the model it produced is unbounded"),
         ("the response did not parse into a problem: 'span'", "an assumption or open question with no span"),
         ("the response did not parse into a problem: 'statement'", "a required field left out"),
         # planteo 0.1.2's form of the same two defects.
@@ -174,3 +176,23 @@ def test_a_reply_cut_off_while_reasoning_is_classed_by_the_cap(tokens, fingerpri
         key=SimpleNamespace(case_id="opt-001"),
     )
     assert classify(record, cap) == expected
+
+
+def test_an_unbounded_candidate_scored_as_a_run_is_still_classed_unbounded() -> None:
+    """copela before 0.3.3 passed an unbounded candidate and then refuted it by a relation that had
+    nothing to compare. The record keeps those verdicts; the class says what the solver found."""
+    from types import SimpleNamespace
+
+    record = SimpleNamespace(
+        verdicts=[
+            {"layer": "executable", "outcome": "pass", "detail": "unbounded"},
+            {"layer": "structural", "outcome": "undecided", "detail": "both solve to the same optimum"},
+            {"layer": "property", "outcome": "fail", "detail": "objective-scaling: no shared variables to compare"},
+        ],
+        error="",
+        output_tokens=2000,
+        provider_fingerprint="ollama@h#think=False#num_ctx=12288",
+        response_excerpt="",
+        key=SimpleNamespace(case_id="opt-006"),
+    )
+    assert classify(record) == "the model it produced is unbounded"
