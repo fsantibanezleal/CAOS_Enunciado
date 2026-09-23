@@ -344,6 +344,37 @@ for (const theme of ["dark", "light"]) {
   // product-quality-bar.md: at least ten to twelve methods, each a real working tab.
   check(methodsSeen >= 12, `[${theme}] the workbench carries at least 12 methods`, `${methodsSeen} methods`);
 
+  // The method loop above runs on one continuous case, and the Duality view once lied on exactly
+  // the cases it never visited. HiGHS returns no duals for a mixed-integer solve; the view read the
+  // missing values as zero, showed every price as 0 on the four integer cases, and reported
+  // complementary slackness as holding, which on all-zero prices it trivially does. "Drew
+  // something" passed. So an integer case is opened on purpose, in both pricing modes.
+  await page.selectOption("#case-select", "opt-014");
+  await page.waitForTimeout(450);
+  await page.locator('.enunciado-main > .tabs > .tablist [role="tab"]', { hasText: /answer|respuesta/i }).click();
+  await page.waitForTimeout(300);
+  await page.getByRole("tab", { name: /^duality$|^dualidad$/i }).click();
+  await page.waitForTimeout(1200);
+  const dualPanel = page.locator(".tabpanel:not([hidden]) .subtabpanel:not([hidden])");
+  for (const mode of ["relaxation", "fixed"]) {
+    if (mode === "fixed") {
+      await dualPanel.getByRole("button", { name: /integers fixed|enteras fijadas/i }).click();
+      await page.waitForTimeout(900);
+    }
+    const readout = dualPanel.locator(".viz-readout");
+    const verdict = await readout.getAttribute("data-certificate");
+    const summary = ((await readout.textContent()) ?? "").replace(/\s+/g, " ");
+    const priced = Number((summary.match(/(\d+)\/\d+ (constraints priced|restricciones con precio)/) ?? [])[1] ?? 0);
+    const body = (await dualPanel.textContent()) ?? "";
+    const labelled = mode === "relaxation" ? /no duals|no devuelve duales/i.test(body) : /O'Neill/.test(body);
+    check(
+      verdict === "holds" && priced > 0 && labelled,
+      `[${theme}] an integer case is priced through a labelled LP (${mode}) and its certificate holds`,
+      `certificate ${verdict}, ${priced} priced, source labelled ${labelled}`,
+    );
+  }
+  await page.screenshot({ path: join(SHOTS, `${theme}-duality-integer-case.png`) });
+
   await page.locator('.enunciado-main > .tabs > .tablist [role="tab"]', { hasText: /answer|respuesta/i }).click();
   await page.waitForTimeout(400);
   await page.getByRole("tab", { name: /sensitivity|sensibilidad/i }).click();

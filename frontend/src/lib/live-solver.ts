@@ -34,6 +34,8 @@ export interface ColumnState {
   /** Reduced cost. Nonzero only where the variable sits at a bound. */
   dual: number;
   status: string;
+  lower: number | null;
+  upper: number | null;
 }
 
 export interface LiveSolution {
@@ -51,6 +53,25 @@ export interface LiveSolution {
    */
   rows: RowState[];
   columns: ColumnState[];
+  /**
+   * Whether the solver returned dual values at all.
+   *
+   * It does not for a mixed-integer solve: an integer optimum is not a vertex of a linear program,
+   * so no dual certifies it, and HiGHS leaves `Dual` undefined on every row and column. Reading that
+   * as zero is how a panel once showed every shadow price as 0 on the four integer cases and
+   * reported complementary slackness as holding, which on all-zero prices it trivially does.
+   */
+  hasDuals: boolean;
+}
+
+/** What to change about the model before it is solved. Each is a named method on the workbench. */
+export interface SolveOptions {
+  /** Drop integrality and nothing else: the LP relaxation. */
+  relax?: boolean;
+  /** Require every decision to be whole: the discretisation probe for a continuous case. */
+  forceInteger?: boolean;
+  /** Hold these variables at these values: the fixed-integer LP, for pricing a MIP. */
+  fix?: Record<string, number>;
 }
 
 /** A linear term: coefficient times a variable name. */
@@ -60,7 +81,7 @@ class NotLinear extends Error {}
 
 let enginePromise: Promise<HighsModule> | null = null;
 
-interface HighsModule {
+export interface HighsModule {
   solve: (lp: string) => HighsResult;
 }
 
@@ -68,6 +89,8 @@ interface HighsColumn {
   Primal: number;
   Dual?: number;
   Status?: string;
+  Lower?: number | null;
+  Upper?: number | null;
 }
 
 interface HighsRow {
@@ -206,7 +229,7 @@ function formatTerms(terms: Terms): string {
 export function toLpFormat(
   problem: Problem,
   overrides: Record<string, number> = {},
-  options: { relax?: boolean; forceInteger?: boolean } = {},
+  options: SolveOptions = {},
 ): { lp: string; integers: string[] } | null {
   try {
     const values: Record<string, number> = {};
@@ -217,6 +240,13 @@ export function toLpFormat(
     for (const q of problem.quantities) {
       if (q.role === "variable") {
         decisions.add(q.name);
+        const fixed = options.fix?.[q.name];
+        if (fixed !== undefined) {
+          // Held at a value, and no longer integer: a fixed column has nothing left to branch on,
+          // and leaving it in Generals would keep the solve a MIP, which returns no duals.
+          bounds.push(`${q.name} = ${fixed}`);
+          continue;
+        }
         // `forceInteger` is the discretisation probe: the same model with every decision required
         // to be whole. It answers "if the statement had meant whole units, how far would the
         // optimum move", which is the question the integrality trap turns on.
@@ -307,54 +337,52 @@ function relationToRow(
   return `${name}: ${formatTerms(terms)} ${operator} ${rhs}`;
 }
 
-/** Solve a case in the browser, with the given parameter overrides. */
+/** A solve that produced nothing to show, with the reason. */
+function empty(status: LiveSolution["status"], detail: string, solveMs: number): LiveSolution {
+  return { status, objective: null, values: {}, detail, solveMs, rows: [], columns: [], hasDuals: false };
+}
+
+/**
+ * Solve a case in the browser, with the given parameter overrides.
+ *
+ * `highs` is the engine to use. The site never passes it and gets the lazily loaded WebAssembly
+ * build; the method tests pass the same npm build loaded under node, so what they prove is this
+ * function and not a copy of it.
+ */
 export async function solveLive(
   record: CaseRecord,
   overrides: Record<string, number> = {},
-  options: { relax?: boolean; forceInteger?: boolean } = {},
+  options: SolveOptions = {},
+  highs?: HighsModule,
 ): Promise<LiveSolution> {
   const written = toLpFormat(record.reference, overrides, options);
   if (written === null) {
-    return {
-      status: "error",
-      objective: null,
-      values: {},
-      detail: "this model is not expressible in the browser lane",
-      solveMs: 0,
-      rows: [],
-      columns: [],
-    };
+    return empty("error", "this model is not expressible in the browser lane", 0);
   }
 
-  const highs = await engine();
+  const solver = highs ?? (await engine());
   const started = performance.now();
   try {
-    const result = highs.solve(written.lp);
+    const result = solver.solve(written.lp);
     const solveMs = performance.now() - started;
     const status = String(result.Status).toLowerCase();
 
-    if (status.includes("infeasible")) {
-      return {
-        status: "infeasible",
-        objective: null,
-        values: {},
-        detail: "infeasible, and correctly so",
-        solveMs,
-        rows: [],
-        columns: [],
-      };
-    }
-    if (status.includes("unbounded")) {
-      return {
-        status: "unbounded",
-        objective: null,
-        values: {},
-        detail: "unbounded",
-        solveMs,
-        rows: [],
-        columns: [],
-      };
-    }
+    if (status.includes("infeasible")) return empty("infeasible", "infeasible, and correctly so", solveMs);
+    if (status.includes("unbounded")) return empty("unbounded", "unbounded", solveMs);
+
+    // HiGHS writes an absent bound as -Infinity or +Infinity, not as null. JSON.stringify prints
+    // both as null, which is how a first reading of its output got this wrong: a `>=` row carries
+    // `Upper: Infinity`, a view scaled a bar by it, and the result was a line at x = NaN. Absent is
+    // normalised to null here, once, so no view has to know. HiGHS also treats any magnitude from
+    // 1e20 up as infinite, which is how a derived column's `>= -1e30` comes back.
+    const finite = (value: number | null | undefined) =>
+      value === null || value === undefined || !Number.isFinite(value) || Math.abs(value) >= 1e20
+        ? null
+        : value;
+
+    const hasDuals =
+      Object.values(result.Columns ?? {}).some((c) => c.Dual !== undefined) ||
+      (result.Rows ?? []).some((r) => r.Dual !== undefined);
 
     const values: Record<string, number> = {};
     const columns: ColumnState[] = [];
@@ -365,15 +393,10 @@ export async function solveLive(
         primal: column.Primal + 0,
         dual: (column.Dual ?? 0) + 0,
         status: String(column.Status ?? ""),
+        lower: finite(column.Lower),
+        upper: finite(column.Upper),
       });
     }
-
-    // HiGHS writes an absent bound as -Infinity or +Infinity, not as null. JSON.stringify prints
-    // both as null, which is how a first reading of its output got this wrong: a `>=` row carries
-    // `Upper: Infinity`, a view scaled a bar by it, and the result was a line at x = NaN. Absent is
-    // normalised to null here, once, so no view has to know.
-    const finite = (value: number | null | undefined) =>
-      value === null || value === undefined || !Number.isFinite(value) ? null : value;
 
     const rows: RowState[] = (result.Rows ?? []).map((row, index) => {
       const primal = row.Primal ?? 0;
@@ -403,18 +426,124 @@ export async function solveLive(
       solveMs,
       rows,
       columns,
+      hasDuals,
     };
   } catch (error) {
-    return {
-      status: "error",
-      objective: null,
-      values: {},
-      detail: error instanceof Error ? error.message : String(error),
-      solveMs: performance.now() - started,
-      rows: [],
-      columns: [],
-    };
+    return empty("error", error instanceof Error ? error.message : String(error), performance.now() - started);
   }
+}
+
+/** The decision variables a case requires to be whole. */
+export function integerVariables(problem: Problem): string[] {
+  return problem.quantities
+    .filter((q) => q.role === "variable" && (q.domain === "integer" || q.domain === "boolean"))
+    .map((q) => q.name);
+}
+
+/**
+ * The four optimality conditions of a linear program, evaluated from the numbers, not the labels.
+ *
+ * A solver's "Optimal" is a claim. These are the conditions that make it true, and each is computed
+ * here from the model as this lane wrote it and the values HiGHS returned, so a wrong sign
+ * convention, a misread row, or a solution for a different model shows up as a residual instead of
+ * as a plausible table:
+ *
+ *   primal feasibility    every row and column inside its bounds
+ *   dual feasibility      each price has the sign its active side allows (sense-adjusted)
+ *   stationarity          c - A^T y - d = 0, the reduced costs are what the prices imply
+ *   complementarity       a price or a reduced cost is nonzero only where its side binds
+ *
+ * All four at zero is a certificate: the primal and dual solutions prove each other optimal, which
+ * is why `dualObjective` then equals the primal objective (strong duality). Which side of a row is
+ * active is decided from the activity against its bounds, not from the solver's status string.
+ */
+export interface Certificate {
+  primal: number;
+  dual: number;
+  stationarity: number;
+  complementarity: number;
+  /** b^T y plus the bound terms: the dual objective the prices imply. */
+  dualObjective: number;
+  /** The scale the residuals are judged against: 1 plus the largest magnitude involved. */
+  scale: number;
+}
+
+export function certificate(
+  model: { columns: string[]; rows: LinearRow[]; objective: Map<string, number>; sense: string },
+  solution: LiveSolution,
+): Certificate {
+  // Maximising flips which sign each active side allows; the prices HiGHS reports are dz*/db in
+  // both senses, which the probe in the method tests pins down.
+  const sigma = model.sense === "maximise" ? -1 : 1;
+
+  let scale = 1;
+  const note = (value: number | null) => {
+    if (value !== null && Number.isFinite(value)) scale = Math.max(scale, Math.abs(value));
+  };
+
+  let primal = 0;
+  let dual = 0;
+  let complementarity = 0;
+  let dualObjective = 0;
+
+  // One pass serves rows and columns: both are a value, a pair of bounds, and a price on them.
+  const side = (value: number, lower: number | null, upper: number | null, price: number) => {
+    note(value);
+    note(lower);
+    note(upper);
+    note(price);
+    const tolerance = 1e-7 * (1 + Math.abs(value));
+    const atLower = lower !== null && Math.abs(value - lower) <= tolerance;
+    const atUpper = upper !== null && Math.abs(value - upper) <= tolerance;
+
+    primal = Math.max(
+      primal,
+      lower === null ? 0 : lower - value,
+      upper === null ? 0 : value - upper,
+    );
+
+    if (atLower && atUpper) {
+      // An equality, or a fixed column: either sign is allowed.
+      dualObjective += price * (lower as number);
+    } else if (atLower) {
+      dual = Math.max(dual, -sigma * price);
+      dualObjective += price * (lower as number);
+    } else if (atUpper) {
+      dual = Math.max(dual, sigma * price);
+      dualObjective += price * (upper as number);
+    } else {
+      // Not binding, so the price must be zero. Its product with the distance to the nearest
+      // finite bound is the complementary-slackness residual; with no finite bound at all, any
+      // nonzero price is itself the violation.
+      const distances = [lower === null ? null : value - lower, upper === null ? null : upper - value]
+        .filter((d): d is number => d !== null);
+      const distance = distances.length ? Math.min(...distances) : 1;
+      complementarity = Math.max(complementarity, Math.abs(price) * distance);
+      const nearest =
+        lower !== null && (upper === null || value - lower <= upper - value) ? lower : upper;
+      if (nearest !== null) dualObjective += price * nearest;
+    }
+  };
+
+  solution.rows.forEach((row) => side(row.primal, row.lower, row.upper, row.dual));
+  for (const column of solution.columns) side(column.primal, column.lower, column.upper, column.dual);
+
+  // Stationarity, column by column, from the model's own coefficients. The HiGHS rows are the
+  // relations in order, so they pair by index; a column the model does not have (the `__zero`
+  // placeholder an empty row is written with) has no coefficient anywhere and is skipped.
+  const prices = solution.rows.map((row) => row.dual);
+  const reduced = new Map(solution.columns.map((column) => [column.name, column.dual]));
+  let stationarity = 0;
+  for (const name of model.columns) {
+    if (!reduced.has(name)) continue;
+    let implied = model.objective.get(name) ?? 0;
+    model.rows.forEach((row, index) => {
+      implied -= (row.terms.get(name) ?? 0) * (prices[index] ?? 0);
+    });
+    stationarity = Math.max(stationarity, Math.abs(implied - (reduced.get(name) ?? 0)));
+  }
+
+  return { primal, dual, stationarity, complementarity, dualObjective, scale };
 }
 
 /** Parameters a reader may move, with a sensible range around their baked value. */

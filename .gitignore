@@ -12,9 +12,11 @@ dist/
 .DS_Store
 Thumbs.db
 # The run ledgers ARE the evidence. The benchmark page states that its report is a pure
-# function of the committed ledger and the corpus, and `report.py --check` proves it on every
-# CI run, so the ledger has to be in the repository for that claim to mean anything. They are
-# 260 KB in total, including the two superseded runs that record what the instrument got wrong.
+# function of the committed ledger and the corpus: CI re-derives every rate from the ledger with
+# the standard library on each push, and `report.py --check` is the full proof, run locally
+# (ADR-0074 keeps pipeline scripts out of CI). Either way the ledger has to be in the repository
+# for that claim to mean anything. They are 260 KB in total, including the two superseded runs
+# that record what the instrument got wrong.
 build/
 tools/portability/node_modules/
 tools/portability/site/
@@ -23,3 +25,5 @@ frontend/dist/
 frontend/public/data/
 tools/visual-verify/node_modules/
 tools/visual-verify/screenshots/
+# `tsc -b` rewrites this on every build; tracking it dirtied the tree after each one.
+*.tsbuildinfo
