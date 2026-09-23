@@ -4,6 +4,8 @@ This is the shape inside `cases.json` under `reference`, and it is what `planteo
 It is also what a model is asked to produce, so its constraints are the constraints the measurement
 is about.
 
+![The intermediate representation: what a typed document is made of](../assets/document.svg)
+
 ## The envelope
 
 ```json
@@ -50,6 +52,8 @@ claims is a document about a different statement.
 - **`observed`** and **`set`** are for the families that are not yet measured.
 
 ### `dimension`
+
+![A dimension as an exponent vector, and what a mismatch looks like](../assets/dimension.svg)
 
 ```json
 { "symbol": "t/h", "exponents": { "mass": "1", "time": "-1" } }
@@ -104,6 +108,8 @@ representation that admits anything cannot reject anything.
 documents that differ only in sense and sign reduce to the same form.
 
 ## `span`
+
+![A span: offsets and covered text, stored together](../assets/span.svg)
 
 ```json
 { "start": 34, "end": 52, "text": "480 tonnes per hour" }

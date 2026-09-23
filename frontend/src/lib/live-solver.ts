@@ -6,8 +6,9 @@
  * it here. Nothing round-trips to a server, because the portability probe in `tools/portability/`
  * measured that it does not have to.
  *
- * The engine is loaded on first use, never at page load: it is 3.37 MB, and a reader who only
- * reads the statement should never pay for it.
+ * The engine is a separate 3.37 MB chunk, fetched on first use rather than bundled into the first
+ * paint. On the workbench first use is immediate, because the landing tab sweeps a parameter; the
+ * document pages never fetch it.
  */
 
 import type { CaseRecord, ExpressionNode, Problem, RelationNode } from "./contract.types";

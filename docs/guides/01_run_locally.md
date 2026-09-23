@@ -21,7 +21,7 @@ pip install -r requirements.txt
 ## The dev server
 
 ```powershell
-.\run.ps1 dev          # http://localhost:5173
+.\run.ps1 dev          # http://localhost:5904
 ```
 
 **The dev server is not what the gate checks, on purpose.** A dev server serves modules the build
@@ -32,13 +32,18 @@ shipped a build that was blank in production while every local check was green.
 ## The checks
 
 ```powershell
-.\run.ps1 check        # lint, artifacts, SDD gate, version agreement, report re-derivation
-.\run.ps1 verify       # build, then 130 browser checks against the built site
-.\run.ps1 live         # the same 130 checks against https://enunciado.fasl-work.com
+.\run.ps1 check        # lint, every guard, report re-derivation, method tests, figure export
+.\run.ps1 verify       # build, then 165 browser checks against the built site
+.\run.ps1 live         # the same 165 checks against https://enunciado.fasl-work.com
+.\run.ps1 diagrams     # re-export docs/assets/*.svg after editing a diagram component
 ```
 
-`check` is what CI runs, and it takes a second. `verify` needs Playwright's browsers; keep them off
-the system drive:
+`check` is a superset of CI and takes a few seconds. CI runs only its standard-library guards (lint,
+SDD, docs, version, the artifact and ledger consistency check, the CI budget, content standards and
+control characters). The report re-derivation, the method tests and the figure-export check are
+local, because ADR-0074 keeps pipeline scripts and a product's test suite out of CI; they are the
+validation of record, so run `check` before every push. `verify` needs Playwright's browsers; keep
+them off the system drive:
 
 ```powershell
 $env:PLAYWRIGHT_BROWSERS_PATH = 'E:/_Temp/ms-playwright'

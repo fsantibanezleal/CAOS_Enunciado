@@ -21,7 +21,7 @@ pip install -e ".[dev]"
 python scripts/check_artifacts.py                   # the committed artifacts are readable
 PYTHONPATH=data-pipeline python data-pipeline/report.py --check
 
-cd frontend && npm ci && npm run dev                # http://localhost:5173
+cd frontend && npm ci && npm run dev                # http://localhost:5904
 ```
 
 Nothing above calls a model, and nothing above costs money. The measurement is committed; running

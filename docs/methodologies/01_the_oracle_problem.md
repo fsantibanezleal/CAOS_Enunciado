@@ -42,12 +42,20 @@ graph and reduces equivalence to isomorphism through a customised Weisfeiler-Leh
 symmetric-decomposable detection, reporting 100% consistent verdicts across random parameter
 configurations where solver-based checking is inconsistent and hits infeasibility.
 
-What is implemented here is the **canonical form**, not graph isomorphism, and the difference
-matters: canonicalisation is cheaper and weaker. It recognises the rewrites it enumerates and nothing
-else. A model equivalent through a substitution the canonicaliser does not know comes out as not
-proven, and it comes out correctly: the verdict says what it knows, not what it would like to know.
+What decides the published verdict is a **canonical form**, not graph isomorphism, and the
+difference matters: canonicalisation is cheaper and weaker. It recognises the rewrites it enumerates
+and nothing else. A model equivalent through a substitution the canonicaliser does not know comes
+out as not proven, and it comes out correctly: the verdict says what it knows, not what it would
+like to know.
+
+The workbench also draws each model as a graph and runs colour refinement on it, which is the
+uncustomised core of ORGEval's test and not an isomorphism test: a different signature proves the
+graphs are not isomorphic, and an equal one proves nothing. It is a view, not a layer. The details,
+and the theorem behind "proves nothing", are in [`05_structural_equivalence.md`](05_structural_equivalence.md).
 
 ## The asymmetry, which is the whole thing
+
+![Which comparisons conclude, and in which direction](../assets/refutation.svg)
 
 | Premise | Conclusion |
 |---|---|

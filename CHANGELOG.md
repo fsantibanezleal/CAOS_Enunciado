@@ -4,6 +4,81 @@ All notable changes to this product are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions are `X.XX.XXX` in this file, in
 `VERSION`, in the git tag and in the site footer; CI checks that the last two agree.
 
+## [0.03.000] - 2026-09-23
+
+The workbench reaches the method floor, fourteen methods in four groups, and the release audits
+what the site says against what the code does. Most of what is under Fixed was found that way,
+not by a failing check.
+
+### Added
+
+- **Fourteen methods, grouped by what they read**: the statement (provenance, open questions,
+  dimensions, coverage), the model (canonical form, the graph and Weisfeiler-Lehman refinement,
+  metamorphic relations), the answer (sensitivity, feasible region, activity, duality, integrality
+  gap) and the models (every attempt, and the anatomy of each failure). The two learned-model tabs
+  read `data/artifacts/attempts.json`, the ledger re-keyed by case.
+- **The Duality tab is an optimality certificate.** It evaluates primal feasibility, dual
+  feasibility, stationarity and complementary slackness from the model the browser wrote and the
+  numbers HiGHS returned, and shows the dual objective beside the primal one. Binding rows at a
+  zero price are marked as the degenerate case they are.
+- **The graph sees integrality.** Variables are seeded with their domain and bounds, so a model and
+  its LP relaxation are different graphs, and the Graph tab offers that comparison.
+- **Method tests, run locally** (`frontend/tests/`, ADR-0074 keeps them out of CI): the canonical
+  form and the graph over all twenty cases, and, with the npm HiGHS build loaded under node, the
+  browser lane against the bake's optimum on every case, the certificate on every continuous
+  optimum and every relaxation, and the fixed-integer LP against the integer optimum. Every proof
+  was mutation-checked: each fails when the rule it protects is removed.
+- **Methodology is restructured to six tabs that match the workbench**, with a new Duality and
+  integrality tab and four new figures, each drawn from an example solved with the shipped HiGHS
+  build. Dense figures render at full width.
+- **The wiki carries the site's figures.** `frontend/export-diagrams.mjs` renders the seventeen
+  diagram components into `docs/assets/*.svg`, with the shell's palettes embedded so each follows
+  the reader's colour scheme on GitHub; `--check` fails when an export is stale. Two new deep pages,
+  `05_structural_equivalence.md` and `06_duality_and_integrality.md`, and the `attempts.json`
+  contract.
+- **`scripts/check_control_chars.py`**, in CI: no control character in tracked text.
+- **Retroactive release tags** `v0.01.000` and `v0.02.000`, which ADR-0068 required and this repo
+  never had.
+
+### Fixed
+
+- **The Duality tab showed a vacuous certificate on every integer case.** HiGHS returns no duals for
+  a mixed-integer solve; the tab read the missing values as zero, drew every price as 0 on opt-013 to
+  opt-016, and reported complementary slackness as holding. An integer case is now priced through a
+  labelled LP, its relaxation or the one left with the integers fixed (O'Neill et al. 2005).
+- **Two equations on the Experiments page were broken on the live site.** A backslash lost through an
+  inline heredoc turned `\bigl` into a backspace and `\text` into a tab; KaTeX rendered one as a
+  parse error and the other as brace-less italics, and the gate's check for the text "ext{" saw
+  neither. Every README run command had the same defect (`.\run.ps1` read as `.`, a carriage return
+  and `un.ps1`), as did a comment in the gate. The gate now reads each equation's TeX source and
+  fails on a control character or a KaTeX error.
+- **The Methodology page described the wrong canonical form.** It said the structural layer fixes the
+  objective sense and moves terms across comparators. planteo's form, which decides the published
+  verdict, does neither; the stronger form is the workbench's own. The page now says which is which
+  and what the layer decided: 2 of the 16 candidates that ran, both by refutation, and PASS on none.
+- **The site said the solver loads only when a reader moves a control.** The footer, the
+  Implementation page, the architecture modal and the wiki all said so, and it stopped being true
+  when the workbench began landing on a live sweep. They now say the engine is fetched on first use,
+  which on the workbench is immediate, and that nothing computed in the page is published.
+- **The footer listed MiniZinc as an engine.** Nothing the product ships runs it; it appears only in
+  the portability probe.
+- **"DISTINGUISHED: different models" overclaimed.** A different Weisfeiler-Lehman signature proves
+  the graphs non-isomorphic, not the models inequivalent (a row scaled by two is the same constraint
+  and a different graph). The label now says "not a renaming or reordering of it".
+- The feasible-region view refuses an integer axis instead of shading the LP relaxation as the
+  feasible set.
+- The method tests' bundle is written under `node_modules/.cache`, not the system temp directory, and
+  `tsconfig.tsbuildinfo` is no longer tracked.
+
+### Changed
+
+- `requirements.txt` pins `copela==0.2.1` and `planteo==0.1.1`. copela 0.2.1 reads both optima in the
+  minimising sense before comparing them, so a sense-flipped rewrite of the reference is no longer
+  refuted; neither refutation in the published ledger changes, and the report re-derives
+  identically. planteo 0.1.1 is a documentation release: its README had claimed a MiniZinc emitter.
+- New references, each checked at its primary record: Shervashidze et al. 2011, Cai, Fürer and
+  Immerman 1992, Wolsey 2020, O'Neill et al. 2005.
+
 ## [0.02.000] - 2026-09-22
 
 The release that took the web surface to the ADR-0017 bar, and the four defects that rebuild

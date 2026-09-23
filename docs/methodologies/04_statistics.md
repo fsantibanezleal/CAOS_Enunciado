@@ -38,6 +38,8 @@ non-associativity: a property of the service, not of the model.
 The difference between those two point rates fits entirely inside the overlap of their intervals,
 which is precisely what the interval is for.
 
+![Two passes over the identical corpus](../assets/sampling.svg)
+
 ## What the interval does NOT cover
 
 A Wilson interval describes binomial sampling uncertainty over these twenty cases. It does not cover:

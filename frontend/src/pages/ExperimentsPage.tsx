@@ -251,7 +251,7 @@ function Corpus({ lang }: { lang: "en" | "es" }) {
       </p>
 
       <Equation
-        tex={String.raw`\Prigl[	ext{a sampled item is wrong}igr] \;\geq\; 0.081 \ 	ext{(EasyLP)} \quad	ext{to}\quad 0.540 \ 	ext{(IndustryOR)}`}
+        tex={String.raw`\Pr\bigl[\text{a sampled item is wrong}\bigr] \;\geq\; 0.081 \ \text{(EasyLP)} \quad\text{to}\quad 0.540 \ \text{(IndustryOR)}`}
         caption={
           es
             ? "Las tasas de error minimas que la encuesta ancla encontro al auditar los bancos del campo. Con 0,54, mas de la mitad de los items de IndustryOR estan mal, de modo que una puntuacion contra el conjunto tal como se publica mide sobre todo el acuerdo con sus errores."
@@ -653,7 +653,7 @@ function Threats({ lang }: { lang: "en" | "es" }) {
       </p>
 
       <Equation
-        tex={String.raw`w_{95}(\hat{p} = 0.5,\ n = 20) \;pprox\; 0.40, \qquad n \ 	ext{needed for}\ w_{95} \leq 0.10 \;pprox\; 384`}
+        tex={String.raw`w_{95}(\hat{p} = 0.5,\ n = 20) \;\approx\; 0.40, \qquad n \ \text{needed for}\ w_{95} \leq 0.10 \;\approx\; 384`}
         caption={
           es
             ? "El ancho del intervalo de Wilson a este tamano de muestra, y el tamano que haria falta para reducirlo a diez puntos. Es la razon aritmetica por la que esta pagina no ordena modelos, y tambien el numero que dice cuanto costaria poder hacerlo."

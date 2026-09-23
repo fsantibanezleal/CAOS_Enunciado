@@ -393,8 +393,8 @@ export function ArchitectureDiagram({ lang }: { lang: Lang }) {
       </text>
       <text x={380} y={284} textAnchor="middle" className="dg-note">
         {es
-          ? "Todo numero publicado viene del artefacto. Lo unico que se calcula al vuelo es lo que usted cambia."
-          : "Every published number comes from the artifact. The only thing computed live is what you change."}
+          ? "Todo numero publicado viene del artefacto. Lo que el navegador calcula explica la respuesta y nunca se publica."
+          : "Every published number comes from the artifact. What the browser computes explains the answer and is never published."}
       </text>
       <text x={380} y={304} textAnchor="middle" className="dg-note">
         {es

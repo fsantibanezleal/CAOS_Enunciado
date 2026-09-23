@@ -6,6 +6,8 @@ otherwise.
 
 ## Optimization (measured)
 
+![The redundant row, the scaling and the permutation, as one general relation](../assets/metamorphic.svg)
+
 **Structural.** Graph isomorphism over the model graph is the state of the art (ORGEval,
 arXiv:2510.27610). Canonical form is what is implemented, and it is weaker.
 

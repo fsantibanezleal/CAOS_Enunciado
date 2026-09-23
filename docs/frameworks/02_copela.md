@@ -43,9 +43,15 @@ of the published measurement read `gap +0.000` because of it.
 The missing direction is conclusive and costs one extra solve:
 
 ```
-z*(P_cand) != z*(P_ref)   =>   P_cand is not P_ref
-z*(P_cand) == z*(P_ref)   =>   nothing
+s(P) = +1 when P minimises, -1 when it maximises
+s(P_cand) z*(P_cand) != s(P_ref) z*(P_ref)   =>   P_cand is not P_ref
+s(P_cand) z*(P_cand) == s(P_ref) z*(P_ref)   =>   nothing
 ```
+
+The sign `s` arrived in 0.02.001 (R-020). Before it the raw values were compared, so a candidate
+maximising the negative of the cost, the reference's model written the other way round, solved to
+`-z` against `z` and was refuted. The published ledger was scored by 0.02.000; neither of its two
+refutations changes under the fix, because both compare values of the same sign.
 
 The asymmetry is deliberate and stays. A matching optimum never promotes a verdict to PASS, because
 compensating errors reach the right number, which is the limitation the anchor survey documents
@@ -93,6 +99,8 @@ elided. A correct run is described by its verdicts; a failed one is not, and re-
 does not work because hosted inference is not deterministic.
 
 ## The provider seam
+
+![What a run record can pin, and what it cannot](../assets/provider-seam.svg)
 
 The fingerprint records which controls were actually exercised, including when the answer is none:
 

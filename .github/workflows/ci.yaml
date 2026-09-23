@@ -87,3 +87,9 @@ jobs:
       - name: No em-dash and no emoji in product content (ADR-0067)
         # Its first run here found ten em-dashes, all of them the empty-value placeholder in tables.
         run: python scripts/check_content_standards.py
+
+      - name: No control character where a backslash was lost
+        # A heredoc drops one backslash level, so `\text` lands as a tab, `\bigl` as a backspace and
+        # `.\run.ps1` as a carriage return. Two equations and every README run command shipped that
+        # way, and the browser gate missed them because KaTeX renders a tab as a space.
+        run: python scripts/check_control_chars.py
