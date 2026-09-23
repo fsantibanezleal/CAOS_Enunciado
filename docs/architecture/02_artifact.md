@@ -1,12 +1,17 @@
 # 02. The committed artifact
 
-Three files, and a contract with two halves.
+Five files from two pipeline steps, and a contract with two halves.
 
 | File | Written by | Read by |
 |---|---|---|
 | `data/artifacts/cases.json` | `bake.py` | the web surface, `check_artifacts.py` |
 | `data/artifacts/manifest.json` | `bake.py` | the web surface, `check_artifacts.py` |
-| `data/artifacts/gap-report.json` | `report.py` | the Benchmark page, `report.py --check` |
+| `data/artifacts/gap-report.json` | `report.py` | the Benchmark, the pages that quote the measurement, `check_artifacts.py` |
+| `data/artifacts/attempts.json` | `report.py` | the workbench's sidebar and its two learned-model tabs, `check_artifacts.py` |
+| `data/artifacts/cap-sensitivity.json` | `report.py`, when a second-cap ledger exists | the Benchmark's cap table, `check_artifacts.py` |
+
+Every model in them is named `provider/model_id`, and `gap-report.json` lists the models once, in
+the order every view draws them.
 
 `frontend/public/data/` is a working copy for the dev server and is **not tracked**. Writing only
 there produces a local site that disagrees with the published one and nothing says so, which is why
@@ -22,6 +27,11 @@ of blanks:
 ```
 load  <=>  manifest.schema == SCHEMA_build  and  manifest.case_count == |cases|
 ```
+
+The report and the attempts carry schemas of their own, `enunciado-gap-report/2.0` and
+`enunciado-attempts/1.1`, checked the same way. The report had none until it was re-keyed by
+provider, and a report of the old shape read with the new types would have rendered every
+breakdown empty without a word.
 
 The second equality is the one that earns its place. It catches a **partial bake**, which is the
 most common silent failure of this kind: a truncated artifact serves clean, weighs less, and says

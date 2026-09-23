@@ -20,7 +20,7 @@ import { type GapReport, type ModelRow, type RateJson, TIER_NAME, TRAP_NAME } fr
 import { orderedCases, useData } from "../lib/data";
 import { FAILURE_CLASSES, className, failureClass } from "../lib/failure-classes";
 import { solveLive } from "../lib/live-solver";
-import { providerName, useReport } from "../lib/models";
+import { providerShort, useReport } from "../lib/models";
 
 export function BenchmarkPage() {
   const lang = (useShellLang() ?? "en") as "en" | "es";
@@ -78,6 +78,17 @@ function Measured({
   const models = report.models;
   const hosted = models.filter((m) => m.lane === "hosted").length;
   const local = models.length - hosted;
+  const lanes = es
+    ? local === 0
+      ? "todos alojados"
+      : hosted === 0
+        ? "todos locales"
+        : `${hosted} alojados, ${local} locales`
+    : local === 0
+      ? "all hosted"
+      : hosted === 0
+        ? "all local"
+        : `${hosted} hosted, ${local} local`;
   const providers = [...new Set(models.map((m) => m.provider))];
   const span =
     report.measured_from === report.measured_to
@@ -97,8 +108,8 @@ function Measured({
         <h1>{es ? "Comparativa" : "Benchmark"}</h1>
         <p className="lede">
           {es
-            ? `Una medicion, ${span}: ${models.length} modelos de ${providers.length} proveedores (${hosted} alojados, ${local} locales) sobre ${report.corpus.cases} casos de optimizacion escritos a mano en ${report.corpus.tiers} niveles, ${report.corpus.repeats} repeticion por caso. ${report.call_count} llamadas registradas, ${report.cost_usd.toFixed(2)} dolares a precio de lista. Las dos tasas se informan por separado porque un solo numero dejaria que una tasa alta de "se ejecuto" escondiera una baja de "era el modelo pedido", que es exactamente la distancia que esta pagina existe para mostrar.`
-            : `One measurement, ${span}: ${models.length} models from ${providers.length} providers (${hosted} hosted, ${local} local) over ${report.corpus.cases} authored optimization cases in ${report.corpus.tiers} tiers, ${report.corpus.repeats} repeat per case. ${report.call_count} recorded calls, ${report.cost_usd.toFixed(2)} dollars at list price. The two rates are reported separately because a single number would let a high "it ran" rate conceal a low "it was the model asked for" rate, which is exactly the distance this page exists to show.`}
+            ? `Una medicion, ${span}: ${models.length} modelos de ${providers.length} proveedores (${lanes}) sobre ${report.corpus.cases} casos de optimizacion escritos a mano en ${report.corpus.tiers} niveles, ${report.corpus.repeats} repeticion por caso. ${report.call_count} llamadas registradas, ${report.cost_usd.toFixed(2)} dolares a precio de lista. Las dos tasas se informan por separado porque un solo numero dejaria que una tasa alta de "se ejecuto" escondiera una baja de "era el modelo pedido", que es exactamente la distancia que esta pagina existe para mostrar.`
+            : `One measurement, ${span}: ${models.length} models from ${providers.length} providers (${lanes}) over ${report.corpus.cases} authored optimization cases in ${report.corpus.tiers} tiers, ${report.corpus.repeats} repeat per case. ${report.call_count} recorded calls, ${report.cost_usd.toFixed(2)} dollars at list price. The two rates are reported separately because a single number would let a high "it ran" rate conceal a low "it was the model asked for" rate, which is exactly the distance this page exists to show.`}
         </p>
       </div>
 
@@ -134,7 +145,7 @@ function Measured({
                     <td className="mono" title={`${model.model_versions.join(", ")}\n${model.fingerprints.join("\n")}`}>
                       {model.model_id}
                     </td>
-                    <td>{providerName(model.provider, lang)}</td>
+                    <td>{providerShort(model.provider)}</td>
                     <td className="num">{describeRate(cell.ran)}</td>
                     <td className="num">{describeRate(cell.faithful)}</td>
                     <td className="num">
@@ -262,6 +273,15 @@ function Measured({
   );
 }
 
+/** The most frequent failure class in a breakdown, translated, with its count. */
+function leadingFailure(breakdown: Record<string, number>, lang: "en" | "es"): string {
+  const [key, count] =
+    Object.entries(breakdown ?? {})
+      .filter(([name]) => !failureClass(name)?.survived)
+      .sort((a, b) => b[1] - a[1])[0] ?? [];
+  return key ? `${className(key, lang)} (${count})` : "–";
+}
+
 function describeRate(rate: RateJson): string {
   if (rate.total === 0) return "–";
   return `${rate.value.toFixed(3)} [${rate.interval_low.toFixed(3)}, ${rate.interval_high.toFixed(3)}]`;
@@ -309,6 +329,7 @@ function CapSection({
                   <th className="num">{es ? "Fiel" : "Faithful"}</th>
                   <th className="num">{es ? "Brecha" : "Gap"}</th>
                   <th className="num">{es ? "En el tope" : "At the cap"}</th>
+                  <th>{es ? "Fallo principal" : "Leading failure"}</th>
                   <th className="num">{es ? "Mediana de tokens" : "Median tokens"}</th>
                   <th className="num">USD</th>
                 </tr>
@@ -329,6 +350,7 @@ function CapSection({
                           <td className="num">
                             {at.at_cap}/{at.calls}
                           </td>
+                          <td>{leadingFailure(at.failure_breakdown, lang)}</td>
                           <td className="num">{at.median_output_tokens}</td>
                           <td className="num">{at.cost_usd.toFixed(2)}</td>
                         </tr>
@@ -340,8 +362,8 @@ function CapSection({
           </div>
           <p className="figure-caption">
             {es
-              ? "Tabla 2. El mismo corpus y el mismo protocolo a dos topes. La corrida al tope mayor vive en data/runs/optimization-cap32768.jsonl y no entra en la Figura 1: la clave del libro mayor no incluye el tope, y mezclar las dos cambiaria lo que mide cada fila."
-              : "Table 2. The same corpus and protocol at two caps. The run at the larger cap lives in data/runs/optimization-cap32768.jsonl and is not in Figure 1: the ledger key does not include the cap, and mixing the two would change what each row measures."}
+              ? "Tabla 2. El mismo corpus y el mismo protocolo a dos topes. La corrida al tope mayor vive en data/runs/optimization-cap32768.jsonl y no entra en la Figura 1: la clave del libro mayor no incluye el tope, y mezclar las dos cambiaria lo que mide cada fila. Las corridas al tope mayor usaron el criterio de corte en 20, para completar el corpus. El fallo principal es la clase de fallo mas frecuente a ese tope: cuando el tope deja de morder, lo que queda a la vista es el error de formalizacion que el truncamiento escondia."
+              : "Table 2. The same corpus and protocol at two caps. The run at the larger cap lives in data/runs/optimization-cap32768.jsonl and is not in Figure 1: the ledger key does not include the cap, and mixing the two would change what each row measures. The runs at the larger cap used the kill criterion at 20, to complete the corpus. The leading failure is the most frequent failure class at that cap: once the cap stops binding, what shows is the formalization error the truncation was hiding."}
           </p>
         </>
       )}

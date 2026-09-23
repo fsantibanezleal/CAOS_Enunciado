@@ -164,6 +164,21 @@ function locate(attempt: Attempt, text: string, es: boolean): { marks: Mark[]; n
     };
   }
 
+  const bare = detail.match(/did not parse into a problem: '([a-z_]+)'$/);
+  if (bare) {
+    return {
+      marks: [],
+      note:
+        bare[1] === "span"
+          ? es
+            ? "Un supuesto o una pregunta abierta del documento no lleva span hacia el enunciado, asi que nada dice de donde sale. La representacion exige uno, y el analizador lo informo solo con el nombre del campo."
+            : "An assumption or open question in the document carries no span into the statement, so nothing says where it comes from. The representation requires one, and the parser reported it by the field's name alone."
+          : es
+            ? `Al documento le falta el campo obligatorio "${bare[1]}", y el analizador lo informo solo con su nombre.`
+            : `The document lacks the required field "${bare[1]}", and the parser reported it by its name alone.`,
+    };
+  }
+
   if (detail === "infeasible") {
     return {
       marks: [],

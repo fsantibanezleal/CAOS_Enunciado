@@ -9,7 +9,7 @@ is found for free rather than at frontier prices.
 
 Usage:
 
-    python data-pipeline/sweep_run.py --provider ollama --model qwen3.5:4b --repeats 3
+    python data-pipeline/sweep_run.py --provider ollama --model qwen3:8b --repeats 1
     python data-pipeline/sweep_run.py --provider anthropic --model claude-sonnet-5 --budget-usd 2.00
     python data-pipeline/sweep_run.py --report-only
 """
@@ -65,7 +65,7 @@ def parse_for_case(text: str, case: Case):
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run the optimization sweep.")
     parser.add_argument("--provider", default="ollama")
-    parser.add_argument("--model", default="qwen3.5:4b")
+    parser.add_argument("--model", default="qwen3:8b")
     parser.add_argument("--repeats", type=int, default=3)
     parser.add_argument("--budget-usd", type=float, default=None)
     parser.add_argument("--limit-cases", type=int, default=None, help="for a smoke run")

@@ -109,6 +109,9 @@ export function RateIntervals({
         ))}
       </div>
 
+      {/* A phone scales an 1100-unit figure to a third, and 12px labels to 4px. Below its minimum
+          width the figure scrolls inside its own frame instead, as the model matrices do. */}
+      <div className="fig-scroll">
       <svg
         className="fig-svg wide"
         viewBox={`0 0 ${WIDTH} ${height}`}
@@ -118,7 +121,7 @@ export function RateIntervals({
             ? `Tasas medidas con intervalos de confianza para ${models.length} modelos`
             : `Measured rates with confidence intervals for ${models.length} models`
         }
-        style={{ maxWidth: "100%", width: "100%" }}
+        style={{ maxWidth: "100%", width: "100%", minWidth: 760 }}
         data-rows={layout.rows.length}
       >
         {/* The axis: a rate is a number in [0, 1] and the scale never moves, so a reader compares
@@ -228,6 +231,7 @@ export function RateIntervals({
           );
         })}
       </svg>
+      </div>
 
       <div className="viz-legend">
         <span>
