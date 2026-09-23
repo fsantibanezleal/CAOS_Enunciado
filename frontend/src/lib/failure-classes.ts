@@ -45,9 +45,9 @@ export const FAILURE_CLASSES: FailureClass[] = [
     key: "no answer: the reasoning used the whole cap",
     es: "sin respuesta: el razonamiento agoto el tope",
     ruleEn:
-      "The reply is all reasoning and no answer, and it stopped at the token cap. A reasoning model spends the cap on reasoning before it writes anything.",
+      "The reply reached the token cap while the model was still reasoning and holds no finished document: the reasoning came back in a field of its own, or, where a local model's template ignores the reasoning switch, was written into the answer, or opened a reasoning block the cap never let close. A reasoning model spends the cap on reasoning before it writes anything.",
     ruleEs:
-      "La respuesta es solo razonamiento, sin respuesta, y se detuvo en el tope de tokens. Un modelo que razona gasta el tope razonando antes de escribir nada.",
+      "La respuesta alcanzo el tope de tokens mientras el modelo aun razonaba y no contiene un documento terminado: el razonamiento llego en un campo propio, o, donde la plantilla de un modelo local ignora el interruptor, se escribio en la respuesta, o abrio un bloque de razonamiento que el tope no dejo cerrar. Un modelo que razona gasta el tope razonando antes de escribir nada.",
     layer: "executable",
     ran: false,
   },

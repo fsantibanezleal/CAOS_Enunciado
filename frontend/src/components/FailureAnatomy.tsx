@@ -147,6 +147,22 @@ function locate(attempt: Attempt, text: string, es: boolean): { marks: Mark[]; n
     };
   }
 
+  // A local model whose template ignores the reasoning switch writes its reasoning into the answer,
+  // and the cap falls before any document begins: the excerpt IS the reasoning.
+  if (attempt.failure_class === "no answer: the reasoning used the whole cap") {
+    const open = text.trimStart().startsWith("<think>");
+    return {
+      marks: [],
+      note: es
+        ? open
+          ? "El modelo abrio un bloque de razonamiento y el tope cayo antes de que lo cerrara: no llego a empezar el documento. El extracto es su razonamiento."
+          : "El modelo seguia razonando cuando cayo el tope, y escribia el razonamiento en la respuesta misma porque su plantilla ignora el interruptor: no llego a empezar el documento. El extracto es su razonamiento."
+        : open
+          ? "The model opened a reasoning block and the cap fell before it closed it: it never began the document. The excerpt is its reasoning."
+          : "The model was still reasoning when the cap fell, and wrote the reasoning into the answer itself because its template ignores the switch: it never began the document. The excerpt is its reasoning.",
+    };
+  }
+
   const inverted = detail.match(/quantity '([^']+)' has lower ([-\d.e+]+) above upper ([-\d.e+]+)/);
   if (inverted) {
     const [, name, lower, upper] = inverted;

@@ -365,8 +365,30 @@ _NO_ANSWER = re.compile(
 )
 
 
-def classify(record) -> str:
-    """The failure class for one record, derived from its verdicts rather than assigned by hand."""
+def _still_reasoning_at_the_cap(record, cap: int) -> bool:
+    """The call billed exactly its cap and the model is one that reasons.
+
+    copela marks a reply that was all reasoning when the reasoning comes back in a field of its own.
+    A local model whose template ignores the reasoning switch writes it into the answer instead, so
+    qwen3:4b's twenty replies were reasoning prose cut at the cap, and deepseek-r1's opened a
+    `<think>` block the cap never let it close. They failed to parse on a brace fragment inside the
+    reasoning, and read as "unparseable output", a formatting failure, when the model never got to
+    the document. The fingerprint says whether the model can reason: the local lane records
+    `think=n/a` for one that cannot.
+    """
+    if record.output_tokens < cap:
+        return False
+    fingerprint = record.provider_fingerprint or ""
+    reasons = "#think=" in fingerprint and "#think=n/a" not in fingerprint
+    return reasons or (record.response_excerpt or "").lstrip().startswith("<think>")
+
+
+def classify(record, cap: int = PROTOCOL_CAP) -> str:
+    """The failure class for one record, derived from its verdicts rather than assigned by hand.
+
+    ``cap`` is the output cap the record's ledger ran at, because a record at a second cap is judged
+    against that one.
+    """
     verdicts = {v["layer"]: v for v in record.verdicts}
     executable = verdicts.get(Layer.EXECUTABLE.value)
     structural = verdicts.get(Layer.STRUCTURAL.value)
@@ -413,6 +435,8 @@ def classify(record) -> str:
             return "the solver failed on the model it produced"
         if "the call failed" in head:
             return "the call itself failed"
+        if "did not parse" in head and _still_reasoning_at_the_cap(record, cap):
+            return "no answer: the reasoning used the whole cap"
         if "did not parse" in head:
             return "unparseable output"
         return "other executable failure"
@@ -655,7 +679,7 @@ def _at_cap(ledger: Ledger, cap: int) -> dict[str, dict[str, object]]:
         middle = len(outputs) // 2
         failures: dict[str, int] = defaultdict(int)
         for record in rows:
-            failures[classify(record)] += 1
+            failures[classify(record, cap)] += 1
         out[key] = {
             "calls": len(rows),
             "ran": cell["ran"],

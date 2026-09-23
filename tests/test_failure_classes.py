@@ -122,9 +122,55 @@ def test_a_validator_message_names_its_class(detail, expected) -> None:
     """The messages the validator and the solver write, each classed by its own phrase."""
     from types import SimpleNamespace
 
+    # The fields a ledger record always carries, at values that trigger no cap rule.
     record = SimpleNamespace(
         verdicts=[{"layer": "executable", "outcome": "fail", "detail": detail}],
         error="",
+        output_tokens=900,
+        provider_fingerprint="stub-fingerprint",
+        response_excerpt="",
         key=SimpleNamespace(case_id="opt-001"),
     )
     assert classify(record) == expected
+
+
+@pytest.mark.parametrize(
+    ("tokens", "fingerprint", "excerpt", "cap", "expected"),
+    [
+        # qwen3:4b: its template ignores think=False, so the reasoning is the answer, cut at the cap.
+        (8192, "ollama@h#think=False#num_ctx=12288", "We are given a problem statement", 8192,
+         "no answer: the reasoning used the whole cap"),
+        # deepseek-r1: a reasoning block the cap never let close.
+        (8192, "ollama@h#think=False#num_ctx=12288", "<think>\nOkay, let's tackle", 8192,
+         "no answer: the reasoning used the whole cap"),
+        # Below the cap the reply had room to finish, so a parse failure is a parse failure.
+        (3000, "ollama@h#think=False#num_ctx=12288", "We are given a problem statement", 8192,
+         "unparseable output"),
+        # A model that cannot reason, at the cap: nothing says it was reasoning.
+        (8192, "ollama@h#think=n/a#num_ctx=12288", "Here is the model", 8192, "unparseable output"),
+        # A record from a 32768-token ledger is judged against its own cap.
+        (8192, "ollama@h#think=False#num_ctx=40960", "We are given a problem statement", 32768,
+         "unparseable output"),
+    ],
+)
+def test_a_reply_cut_off_while_reasoning_is_classed_by_the_cap(tokens, fingerprint, excerpt, cap, expected) -> None:
+    """A reasoning model that wrote its reasoning into the answer and ran out of cap did not fail to
+    format a document: it never started one."""
+    from types import SimpleNamespace
+
+    record = SimpleNamespace(
+        verdicts=[
+            {
+                "layer": "executable",
+                "outcome": "fail",
+                "detail": "the response did not parse into a problem: Expecting property name "
+                "enclosed in double quotes: line 1 column 2 (char 1)",
+            }
+        ],
+        error="",
+        output_tokens=tokens,
+        provider_fingerprint=fingerprint,
+        response_excerpt=excerpt,
+        key=SimpleNamespace(case_id="opt-001"),
+    )
+    assert classify(record, cap) == expected
