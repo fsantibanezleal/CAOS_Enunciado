@@ -76,12 +76,24 @@ def main(argv: list[str] | None = None) -> int:
         choices=["on", "off", "default"],
         default="off",
         help=(
-            "reasoning on a local reasoning model. Default off: a small reasoning model spends its "
-            "whole output budget thinking and returns nothing, which reads as a formalization "
-            "failure and is a truncation"
+            "reasoning on a local reasoning model. Default off: qwen3:4b, in a context that held the "
+            "whole cap, reasoned through all 8192 tokens of it and answered nothing. Off is a "
+            "request, honoured only where the model's template implements it (qwen3:8b's does, "
+            "qwen3:4b's does not), and the fingerprint records what was asked"
         ),
     )
     parser.add_argument("--max-tokens", type=int, default=8192)
+    parser.add_argument(
+        "--max-consecutive-failures",
+        type=int,
+        default=10,
+        help=(
+            "the kill criterion. It exists to stop a sweep that a harness fault is failing on every "
+            "call. When the failures ARE the measurement, as when a reasoning model reaches the cap "
+            "on case after case, raising it to the corpus size completes the corpus; the report "
+            "records every sweep that was resumed that way"
+        ),
+    )
     args = parser.parse_args(argv)
 
     if args.report_only:
@@ -121,10 +133,10 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         # A free model costs nothing per token, so the ceiling is nominal. It still exists,
         # because the kill criterion rides on the same object.
-        budget = Budget(limit_usd=0.0001, max_consecutive_failures=10)
+        budget = Budget(limit_usd=0.0001, max_consecutive_failures=args.max_consecutive_failures)
         budget.limit_usd = float("inf")
     else:
-        budget = Budget(limit_usd=args.budget_usd, max_consecutive_failures=10)
+        budget = Budget(limit_usd=args.budget_usd, max_consecutive_failures=args.max_consecutive_failures)
 
     # Exclusive for a writing run. Two sweeps sharing one ledger interleave records from whatever
     # code each happened to start with, and the file stops meaning one thing.
@@ -157,6 +169,7 @@ def main(argv: list[str] | None = None) -> int:
         f"= {len(corpus) * args.repeats} call(s) at most"
     )
     print(f"  budget: {'no per-token cost' if free else budget.describe()}")
+    print(f"  kill criterion: {args.max_consecutive_failures} consecutive failures")
     if args.provider == "ollama":
         print(f"  reasoning: {args.think}, max_tokens {args.max_tokens}")
 

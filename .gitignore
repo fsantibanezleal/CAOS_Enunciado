@@ -27,3 +27,6 @@ tools/visual-verify/node_modules/
 tools/visual-verify/screenshots/
 # `tsc -b` rewrites this on every build; tracking it dirtied the tree after each one.
 *.tsbuildinfo
+# A sweep's exclusive lock on its ledger. It lives only while a sweep runs; committed, it would
+# block every clone's first sweep with "locked by another process".
+data/runs/*.lock

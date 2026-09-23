@@ -50,7 +50,9 @@ def _ledger_rates(records: list[dict]) -> dict[str, tuple[int, int, int]]:
         ran = verdicts.get("executable") == "pass"
         strong = (verdicts.get("structural"), verdicts.get("property"))
         faithful = ran and "fail" not in strong and "pass" in strong
-        tally = counts.setdefault(record["model_id"], [0, 0, 0])
+        # A model is its provider and its id, as in the report: one id served by two providers
+        # is two lanes, and keying by the id alone would compare each cell with a merged count.
+        tally = counts.setdefault(f"{record['provider']}/{record['model_id']}", [0, 0, 0])
         tally[0] += int(ran)
         tally[1] += int(faithful)
         tally[2] += 1
@@ -80,9 +82,47 @@ def check_derived(problems: list[str]) -> str:
             f"gap-report.json says {report.get('call_count')} calls, the ledger holds {len(records)}"
         )
 
+    if report.get("schema") != "enunciado-gap-report/2.0":
+        problems.append(f"gap-report.json has schema {report.get('schema')!r}, not 2.0")
+    if attempts.get("schema") != "enunciado-attempts/1.1":
+        problems.append(f"attempts.json has schema {attempts.get('schema')!r}, not 1.1")
+
     expected = _ledger_rates(records)
+    calls: dict[str, int] = {}
+    for record in records:
+        key = f"{record['provider']}/{record['model_id']}"
+        calls[key] = calls.get(key, 0) + 1
+
+    # Every model the ledger ran has one cell and one row in the model list, and nothing else does.
+    # The earlier check only walked the cells, so a model with no cell went unreported.
+    cell_models = [f"{c['provider']}/{c['model_id']}" for c in report.get("cells", [])]
+    listed = [m.get("key") for m in report.get("models", [])]
+    for name, found in (("cells", cell_models), ("models", listed)):
+        if sorted(found) != sorted(calls):
+            problems.append(
+                f"gap-report.json {name} name {sorted(found)}, the ledger ran {sorted(calls)}"
+            )
+    for row in report.get("models", []):
+        if row.get("calls") != calls.get(row.get("key")):
+            problems.append(f"{row.get('key')}: listed with {row.get('calls')} calls, ran {calls.get(row.get('key'))}")
+
+    # Each breakdown is a re-grouping of the same records, so it must add back up to them.
+    for model, counts in (report.get("failure_breakdown") or {}).items():
+        if sum(counts.values()) != calls.get(model):
+            problems.append(
+                f"{model}: the failure breakdown sums to {sum(counts.values())}, the ledger ran "
+                f"{calls.get(model)}"
+            )
+    for model, quadrants in (report.get("layer_agreement") or {}).items():
+        measured = expected.get(model, (0, 0, 0))[2]
+        if sum(quadrants.values()) != measured:
+            problems.append(
+                f"{model}: the layer agreement sums to {sum(quadrants.values())}, the ledger "
+                f"measured {measured}"
+            )
+
     for cell in report.get("cells", []):
-        model = cell["model_id"]
+        model = f"{cell['provider']}/{cell['model_id']}"
         if model not in expected:
             problems.append(f"gap-report.json has a cell for {model}, which the ledger never ran")
             continue
@@ -102,7 +142,53 @@ def check_derived(problems: list[str]) -> str:
     if in_attempts != len(records):
         problems.append(f"attempts.json holds {in_attempts} attempts, the ledger {len(records)}")
 
-    return f", the report and {in_attempts} attempts agree with the ledger"
+    checked = check_sensitivity(problems, expected)
+    return f", the report and {in_attempts} attempts agree with the ledger{checked}"
+
+
+def check_sensitivity(problems: list[str], main: dict[str, tuple[int, int, int]]) -> str:
+    """cap-sensitivity.json agrees with its ledgers, one per cap, and with the main ledger's row.
+
+    The file compares one protocol at two caps. Each side is recounted from its own ledger here,
+    so a stale comparison, or one whose second ledger has gone, fails CI like a stale report.
+    """
+    path = ARTIFACTS / "cap-sensitivity.json"
+    ledgers = sorted(LEDGER.parent.glob("optimization-cap*.jsonl"))
+    if not path.is_file():
+        if ledgers:
+            problems.append("a cap ledger exists and cap-sensitivity.json does not")
+        return ""
+    if not ledgers:
+        problems.append("cap-sensitivity.json exists and no cap ledger produces it")
+        return ""
+
+    sensitivity = json.loads(path.read_text(encoding="utf-8"))
+    if sensitivity.get("schema") != "enunciado-cap-sensitivity/1.0":
+        problems.append(f"cap-sensitivity.json has schema {sensitivity.get('schema')!r}")
+    rows = {row["model"]: row for row in sensitivity.get("rows", [])}
+
+    counted = 0
+    for ledger in ledgers:
+        cap = ledger.stem.removeprefix("optimization-cap")
+        records = [json.loads(line) for line in ledger.read_text(encoding="utf-8").splitlines() if line.strip()]
+        for model, (ran, faithful, total) in _ledger_rates(records).items():
+            for label, expected, entry in (
+                (cap, (ran, faithful, total), (rows.get(model) or {}).get("by_cap", {}).get(cap)),
+                ("8192", main.get(model), (rows.get(model) or {}).get("by_cap", {}).get("8192")),
+            ):
+                if expected is None:
+                    continue
+                if entry is None:
+                    problems.append(f"cap-sensitivity.json has no {model} at cap {label}")
+                    continue
+                published = (entry["ran"]["passed"], entry["faithful"]["passed"], entry["ran"]["total"])
+                if published != tuple(expected):
+                    problems.append(
+                        f"{model} at cap {label}: published ran/faithful/total {published}, the "
+                        f"ledger gives {tuple(expected)}"
+                    )
+                counted += 1
+    return f", and {counted} cap comparisons agree with their ledgers"
 
 
 def main() -> int:
