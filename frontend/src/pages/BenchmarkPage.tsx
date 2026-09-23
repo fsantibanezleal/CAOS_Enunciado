@@ -16,7 +16,7 @@ import { Chart } from "../components/Chart";
 import { FailureBars } from "../components/FailureBars";
 import { RateIntervals, type RateCell } from "../components/RateIntervals";
 import { TIER_NAME, TRAP_NAME } from "../lib/contract.types";
-import { orderedCases, useData } from "../lib/data";
+import { artifactUrl, orderedCases, useData } from "../lib/data";
 import { solveLive } from "../lib/live-solver";
 
 interface RateJson {
@@ -50,7 +50,7 @@ export function BenchmarkPage() {
 
   useEffect(() => {
     let cancelled = false;
-    void fetch("data/gap-report.json", { cache: "no-cache" })
+    void fetch(artifactUrl("gap-report.json"), { cache: "no-cache" })
       .then((response) => {
         if (!response.ok) throw new Error(String(response.status));
         return response.json() as Promise<ReportJson>;
