@@ -2,30 +2,11 @@
  "cases": {
   "opt-001": [
    {
-    "cost_usd": 0.007797,
-    "failure_class": "fabricated provenance: words not in the statement",
-    "input_tokens": 1032,
-    "latency_ms": 6282.4,
-    "model_id": "claude-haiku-4-5",
-    "model_version": "claude-haiku-4-5-20251001",
-    "output_tokens": 1353,
-    "provider": "anthropic",
-    "provider_fingerprint": "anthropic#no-effort#no-temperature",
-    "repeat": 0,
-    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A plant blends ore from two pits. Pit A costs 12 USD per tonne and pit B costs 9 USD per tonne. Together they must deliver at least 100 tonnes. Minimise the total cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_a\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Mass of ore sourced from Pit A\",\n      \"span\": {\"start\": 31, \"end\": 36, \"text\": \"Pit A\"}\n    },\n    {\n      \"name\": \"x_b\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Mass of ore sourced from Pit B\",\n      \"span\": {\"start\": 54, \"end\": 59, \"text\": \"Pit B\"}\n    },\n    {\n      \"name\": \"c_a\n[... 1862 characters omitted ...]\n    \"comparator\": \"==\",\n      \"right\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"c_a\"}, {\"tag\": \"ref\", \"name\": \"x_a\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"c_b\"}, {\"tag\": \"ref\", \"name\": \"x_b\"}]}\n        ]\n      },\n      \"name\": \"total_cost_definition\",\n      \"span\": {\"inferred_reason\": \"definition of objective quantity\"}\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\"tag\": \"ref\", \"name\": \"total_cost\"},\n      \"name\": \"minimise_cost\",\n      \"span\": {\"start\": 160, \"end\": 177, \"text\": \"Minimise the total cost\"}\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"Are there upper bounds on the amount of ore that can be sourced from each pit?\",\n      \"span\": {\"inferred_reason\": \"not stated in problem\"},\n      \"resolution\": \"Assumed no upper bounds; variables are unbounded above.\",\n      \"affects\": [\"x_a\", \"x_b\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
-    "verdicts": [
-     {
-      "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains 'Pit B', and it does not",
-      "layer": "executable",
-      "outcome": "fail"
-     }
-    ]
-   },
-   {
     "cost_usd": 0.048382,
     "failure_class": "ran and survived every check",
     "input_tokens": 1326,
     "latency_ms": 32712.8,
+    "model": "anthropic/claude-sonnet-5",
     "model_id": "claude-sonnet-5",
     "model_version": "claude-sonnet-5",
     "output_tokens": 4573,
@@ -50,34 +31,130 @@
       "outcome": "pass"
      }
     ]
-   }
-  ],
-  "opt-002": [
+   },
    {
-    "cost_usd": 0.008591,
-    "failure_class": "a quantity declared derived and never defined",
-    "input_tokens": 1036,
-    "latency_ms": 7371.2,
+    "cost_usd": 0.007797,
+    "failure_class": "fabricated provenance: words not in the statement",
+    "input_tokens": 1032,
+    "latency_ms": 6282.4,
+    "model": "anthropic/claude-haiku-4-5",
     "model_id": "claude-haiku-4-5",
     "model_version": "claude-haiku-4-5-20251001",
-    "output_tokens": 1511,
+    "output_tokens": 1353,
     "provider": "anthropic",
     "provider_fingerprint": "anthropic#no-effort#no-temperature",
     "repeat": 0,
-    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A truck can carry 8 tonnes. Concentrate is worth 400 USD per tonne and tailings sand is worth 60 USD per tonne. At most 3 tonnes of concentrate is available. Load the truck to maximise the value carried.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"capacity\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 8.0,\n      \"description\": \"Maximum load capacity of the truck\",\n      \"span\": {\"start\": 15, \"end\": 23, \"text\": \"8 tonnes\"}\n    },\n    {\n      \"name\": \"price_concentrate\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"USD/t\", \"exponents\": {\"currency\": \"1\", \"mass\": \"-1\"}},\n      \"domain\": \"real\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 400.0,\n      \"description\": \"Value of concentrate per tonne\",\n\n[... 2826 characters omitted ...]\n\"name\": \"x_tailings\"}]}\n        ]\n      },\n      \"name\": \"maximise_value\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"Is tailings sand availability unlimited, or is there a constraint on how much tailings can be sourced?\",\n      \"span\": {\"start\": 109, \"end\": 152, \"text\": \"At most 3 tonnes of concentrate is available\"},\n      \"resolution\": \"The problem statement only constrains concentrate availability. I assumed tailings sand is available in unlimited quantity, constrained only by truck capacity.\",\n      \"affects\": [\"x_tailings\"]\n    },\n    {\n      \"question\": \"Can fractional tonnes be loaded, or must loads be in whole tonnes?\",\n      \"span\": {\"inferred_reason\": \"problem does not specify integrality constraint\"},\n      \"resolution\": \"I assumed continuous variables (fractional tonnes allowed). If integer tonnes are required, x_concentrate and x_tailings should be integer domain.\",\n      \"affects\": [\"x_concentrate\", \"x_tailings\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A plant blends ore from two pits. Pit A costs 12 USD per tonne and pit B costs 9 USD per tonne. Together they must deliver at least 100 tonnes. Minimise the total cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_a\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Mass of ore sourced from Pit A\",\n      \"span\": {\"start\": 31, \"end\": 36, \"text\": \"Pit A\"}\n    },\n    {\n      \"name\": \"x_b\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Mass of ore sourced from Pit B\",\n      \"span\": {\"start\": 54, \"end\": 59, \"text\": \"Pit B\"}\n    },\n    {\n      \"name\": \"c_a\n[... 1862 characters omitted ...]\n    \"comparator\": \"==\",\n      \"right\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"c_a\"}, {\"tag\": \"ref\", \"name\": \"x_a\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"c_b\"}, {\"tag\": \"ref\", \"name\": \"x_b\"}]}\n        ]\n      },\n      \"name\": \"total_cost_definition\",\n      \"span\": {\"inferred_reason\": \"definition of objective quantity\"}\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\"tag\": \"ref\", \"name\": \"total_cost\"},\n      \"name\": \"minimise_cost\",\n      \"span\": {\"start\": 160, \"end\": 177, \"text\": \"Minimise the total cost\"}\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"Are there upper bounds on the amount of ore that can be sourced from each pit?\",\n      \"span\": {\"inferred_reason\": \"not stated in problem\"},\n      \"resolution\": \"Assumed no upper bounds; variables are unbounded above.\",\n      \"affects\": [\"x_a\", \"x_b\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
     "verdicts": [
      {
-      "detail": "error: determinacy [total_value]: is derived but no relation defines it (under-determined)",
+      "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains 'Pit B', and it does not",
       "layer": "executable",
       "outcome": "fail"
      }
     ]
    },
    {
+    "cost_usd": 0.014142,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 937,
+    "latency_ms": 32437.4,
+    "model": "zai/glm-5.3",
+    "model_id": "glm-5.3",
+    "model_version": "glm-5.3",
+    "output_tokens": 2916,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=high#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 930,
+    "latency_ms": 204441.3,
+    "model": "zai/glm-4.5-flash",
+    "model_id": "glm-4.5-flash",
+    "model_version": "glm-4.5-flash",
+    "output_tokens": 8192,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=model-decides#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 30394 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 30394 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.033781,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 1016,
+    "latency_ms": 94425.0,
+    "model": "deepseek/deepseek-v4-pro",
+    "model_id": "deepseek-v4-pro",
+    "model_version": "deepseek-v4-pro",
+    "output_tokens": 8192,
+    "provider": "deepseek",
+    "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 29337 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 29337 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "fabricated provenance: words not in the statement",
+    "input_tokens": 948,
+    "latency_ms": 26651.9,
+    "model": "ollama/qwen3:8b",
+    "model_id": "qwen3:8b",
+    "model_version": "qwen3:8b@500a1f067a9f",
+    "output_tokens": 1097,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A plant blends ore from two pits. Pit A costs 12 USD per tonne and pit B costs 9 USD per tonne. Together they must deliver at least 100 tonnes. Minimise the total cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_a\",\n      \"role\": \"variable\",\n      \"dimension\": {\n        \"symbol\": \"t\",\n        \"exponents\": {\n          \"mass\": \"1\"\n        }\n      },\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"what it is\",\n      \"span\": {\n        \"start\": 34,\n        \"end\": 39,\n        \"text\": \"Pit A\"\n      }\n    },\n    {\n      \"name\": \"x_b\",\n      \"role\": \"variable\",\n      \"dimension\": {\n        \"symbol\": \"t\",\n        \"exponents\": {\n          \"mass\": \"1\"\n        }\n      },\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"what it is\",\n      \"span\": {\n[... 1791 characters omitted ...]\nssion\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\n                \"tag\": \"ref\",\n                \"name\": \"c_a\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"x_a\"\n              }\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\n                \"tag\": \"ref\",\n                \"name\": \"c_b\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"x_b\"\n              }\n            ]\n          }\n        ]\n      },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"what the statement does not determine\",\n      \"span\": {\n        \"start\": 61,\n        \"end\": 78,\n        \"text\": \"Minimise the total cost\"\n      },\n      \"resolution\": \"the reading you took, and why\",\n      \"affects\": [\n        \"total_cost\"\n      ]\n    }\n  ],\n  \"feasibility_only\": false\n}",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains 'Pit B', and it does not",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   }
+  ],
+  "opt-002": [
+   {
     "cost_usd": 0.026816,
     "failure_class": "ran and survived every check",
     "input_tokens": 1338,
     "latency_ms": 17225.9,
+    "model": "anthropic/claude-sonnet-5",
     "model_id": "claude-sonnet-5",
     "model_version": "claude-sonnet-5",
     "output_tokens": 2414,
@@ -102,34 +179,140 @@
       "outcome": "pass"
      }
     ]
-   }
-  ],
-  "opt-003": [
+   },
    {
-    "cost_usd": 0.008352,
+    "cost_usd": 0.008591,
     "failure_class": "a quantity declared derived and never defined",
-    "input_tokens": 1052,
-    "latency_ms": 6310.0,
+    "input_tokens": 1036,
+    "latency_ms": 7371.2,
+    "model": "anthropic/claude-haiku-4-5",
     "model_id": "claude-haiku-4-5",
     "model_version": "claude-haiku-4-5-20251001",
-    "output_tokens": 1460,
+    "output_tokens": 1511,
     "provider": "anthropic",
     "provider_fingerprint": "anthropic#no-effort#no-temperature",
     "repeat": 0,
-    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A workshop makes two products. A frame takes 2 hours on the press and earns 90 USD. A bracket takes 1 hour and earns 40 USD. The press runs 60 hours a week. How many of each should be made in a week to maximise earnings, if fractional units are acceptable?\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"frames\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Number of frames to produce in a week\",\n      \"span\": {\"start\": 29, \"end\": 34, \"text\": \"frame\"}\n    },\n    {\n      \"name\": \"brackets\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Number of brackets to produce in a week\n[... 2518 characters omitted ...]\n  },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\"tag\": \"ref\", \"name\": \"press_hours_per_bracket\"},\n              {\"tag\": \"ref\", \"name\": \"brackets\"}\n            ]\n          }\n        ]\n      },\n      \"comparator\": \"<=\",\n      \"right\": {\"tag\": \"ref\", \"name\": \"press_hours_available\"},\n      \"name\": \"press_capacity\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"maximise\",\n      \"expression\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\"tag\": \"ref\", \"name\": \"earnings_per_frame\"},\n              {\"tag\": \"ref\", \"name\": \"frames\"}\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\"tag\": \"ref\", \"name\": \"earnings_per_bracket\"},\n              {\"tag\": \"ref\", \"name\": \"brackets\"}\n            ]\n          }\n        ]\n      },\n      \"name\": \"total_earnings\"\n    }\n  ],\n  \"open_questions\": [],\n  \"feasibility_only\": false\n}\n```",
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A truck can carry 8 tonnes. Concentrate is worth 400 USD per tonne and tailings sand is worth 60 USD per tonne. At most 3 tonnes of concentrate is available. Load the truck to maximise the value carried.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"capacity\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 8.0,\n      \"description\": \"Maximum load capacity of the truck\",\n      \"span\": {\"start\": 15, \"end\": 23, \"text\": \"8 tonnes\"}\n    },\n    {\n      \"name\": \"price_concentrate\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"USD/t\", \"exponents\": {\"currency\": \"1\", \"mass\": \"-1\"}},\n      \"domain\": \"real\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 400.0,\n      \"description\": \"Value of concentrate per tonne\",\n\n[... 2826 characters omitted ...]\n\"name\": \"x_tailings\"}]}\n        ]\n      },\n      \"name\": \"maximise_value\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"Is tailings sand availability unlimited, or is there a constraint on how much tailings can be sourced?\",\n      \"span\": {\"start\": 109, \"end\": 152, \"text\": \"At most 3 tonnes of concentrate is available\"},\n      \"resolution\": \"The problem statement only constrains concentrate availability. I assumed tailings sand is available in unlimited quantity, constrained only by truck capacity.\",\n      \"affects\": [\"x_tailings\"]\n    },\n    {\n      \"question\": \"Can fractional tonnes be loaded, or must loads be in whole tonnes?\",\n      \"span\": {\"inferred_reason\": \"problem does not specify integrality constraint\"},\n      \"resolution\": \"I assumed continuous variables (fractional tonnes allowed). If integer tonnes are required, x_concentrate and x_tailings should be integer domain.\",\n      \"affects\": [\"x_concentrate\", \"x_tailings\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
     "verdicts": [
      {
-      "detail": "error: determinacy [total_earnings]: is derived but no relation defines it (under-determined)",
+      "detail": "error: determinacy [total_value]: is derived but no relation defines it (under-determined)",
       "layer": "executable",
       "outcome": "fail"
      }
     ]
    },
    {
+    "cost_usd": 0.029133,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 943,
+    "latency_ms": 67277.6,
+    "model": "zai/glm-5.3",
+    "model_id": "glm-5.3",
+    "model_version": "glm-5.3",
+    "output_tokens": 6321,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=high#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms are equal",
+      "layer": "structural",
+      "outcome": "pass"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "a constant with no unit",
+    "input_tokens": 936,
+    "latency_ms": 137177.0,
+    "model": "zai/glm-4.5-flash",
+    "model_id": "glm-4.5-flash",
+    "model_version": "glm-4.5-flash",
+    "output_tokens": 5151,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=model-decides#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A truck can carry 8 tonnes. Concentrate is worth 400 USD per tonne and tailings sand is worth 60 USD per tonne. At most 3 tonnes of concentrate is available. Load the truck to maximise the value carried.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"truck_capacity\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": 8.0,\n      \"description\": \"capacity of the truck in tonnes\",\n      \"span\": {\"start\": 0, \"end\": 23, \"text\": \"A truck can carry 8 tonnes\"}\n    },\n    {\n      \"name\": \"concentrate_value\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"USD/t\", \"exponents\": {\"currency\": \"1\", \"mass\": \"-1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": 400.0,\n      \"description\": \"value of concen\n[... 2685 characters omitted ...]\n\": {\"tag\": \"ref\", \"name\": \"x_t\"},\n      \"comparator\": \">=\",\n      \"right\": {\"tag\": \"const\", \"value\": 0.0},\n      \"name\": \"tailings_non_negative\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"maximise\",\n      \"expression\": {\"tag\": \"sum\", \"terms\": [\n        {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"x_c\"}, {\"tag\": \"ref\", \"name\": \"concentrate_value\"}]},\n        {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"x_t\"}, {\"tag\": \"ref\", \"name\": \"tailings_value\"}]}\n      ]},\n      \"name\": \"maximize_value\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"Can fractional tonnes be loaded, or must the amounts be integer?\",\n      \"span\": {\"inferred_reason\": \"not specified in the problem statement\"},\n      \"resolution\": \"I've treated the variables as real numbers since the problem doesn't explicitly require integer solutions, though in practice loading fractional tonnes might not be possible.\",\n      \"affects\": [\"x_c\", \"x_t\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['tag', 'value']",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.03091,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 1022,
+    "latency_ms": 77785.0,
+    "model": "deepseek/deepseek-v4-pro",
+    "model_id": "deepseek-v4-pro",
+    "model_version": "deepseek-v4-pro",
+    "output_tokens": 7465,
+    "provider": "deepseek",
+    "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
+    "repeat": 0,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "fabricated provenance: words not in the statement",
+    "input_tokens": 954,
+    "latency_ms": 26398.5,
+    "model": "ollama/qwen3:8b",
+    "model_id": "qwen3:8b",
+    "model_version": "qwen3:8b@500a1f067a9f",
+    "output_tokens": 1131,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A truck can carry 8 tonnes. Concentrate is worth 400 USD per tonne and tailings sand is worth 60 USD per tonne. At most 3 tonnes of concentrate is available. Load the truck to maximise the value carried.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_a\",\n      \"role\": \"variable\",\n      \"dimension\": {\n        \"symbol\": \"t\",\n        \"exponents\": {\n          \"mass\": \"1\"\n        }\n      },\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": 3.0,\n      \"value\": null,\n      \"description\": \"amount of concentrate loaded\",\n      \"span\": {\n        \"start\": 34,\n        \"end\": 39,\n        \"text\": \"Pit A\"\n      }\n    },\n    {\n      \"name\": \"x_b\",\n      \"role\": \"variable\",\n      \"dimension\": {\n        \"symbol\": \"t\",\n        \"exponents\": {\n          \"mass\": \"1\"\n        }\n      },\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": 8.0,\n      \"value\": null,\n[... 1980 characters omitted ...]\n \"tag\": \"product\",\n            \"factors\": [\n              {\n                \"tag\": \"ref\",\n                \"name\": \"c_a\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"x_a\"\n              }\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\n                \"tag\": \"ref\",\n                \"name\": \"c_b\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"x_b\"\n              }\n            ]\n          }\n        ]\n      },\n      \"name\": \"total_value\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"what the statement does not determine\",\n      \"span\": {\n        \"start\": 61,\n        \"end\": 78,\n        \"text\": \"Minimise the cost\"\n      },\n      \"resolution\": \"The statement says 'maximise the value carried', so the objective is to maximise the total value, not to minimise the cost.\",\n      \"affects\": [\"total_value\"]\n    }\n  ],\n  \"feasibility_only\": false\n}",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains 'Pit A', and it does not",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   }
+  ],
+  "opt-003": [
+   {
     "cost_usd": 0.052308,
     "failure_class": "ran and survived every check",
     "input_tokens": 1349,
     "latency_ms": 37969.6,
+    "model": "anthropic/claude-sonnet-5",
     "model_id": "claude-sonnet-5",
     "model_version": "claude-sonnet-5",
     "output_tokens": 4961,
@@ -154,14 +337,150 @@
       "outcome": "pass"
      }
     ]
+   },
+   {
+    "cost_usd": 0.008352,
+    "failure_class": "a quantity declared derived and never defined",
+    "input_tokens": 1052,
+    "latency_ms": 6310.0,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 1460,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A workshop makes two products. A frame takes 2 hours on the press and earns 90 USD. A bracket takes 1 hour and earns 40 USD. The press runs 60 hours a week. How many of each should be made in a week to maximise earnings, if fractional units are acceptable?\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"frames\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Number of frames to produce in a week\",\n      \"span\": {\"start\": 29, \"end\": 34, \"text\": \"frame\"}\n    },\n    {\n      \"name\": \"brackets\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Number of brackets to produce in a week\n[... 2518 characters omitted ...]\n  },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\"tag\": \"ref\", \"name\": \"press_hours_per_bracket\"},\n              {\"tag\": \"ref\", \"name\": \"brackets\"}\n            ]\n          }\n        ]\n      },\n      \"comparator\": \"<=\",\n      \"right\": {\"tag\": \"ref\", \"name\": \"press_hours_available\"},\n      \"name\": \"press_capacity\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"maximise\",\n      \"expression\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\"tag\": \"ref\", \"name\": \"earnings_per_frame\"},\n              {\"tag\": \"ref\", \"name\": \"frames\"}\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\"tag\": \"ref\", \"name\": \"earnings_per_bracket\"},\n              {\"tag\": \"ref\", \"name\": \"brackets\"}\n            ]\n          }\n        ]\n      },\n      \"name\": \"total_earnings\"\n    }\n  ],\n  \"open_questions\": [],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "error: determinacy [total_earnings]: is derived but no relation defines it (under-determined)",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.030377,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 955,
+    "latency_ms": 70027.6,
+    "model": "zai/glm-5.3",
+    "model_id": "glm-5.3",
+    "model_version": "glm-5.3",
+    "output_tokens": 6600,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=high#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.024545,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 1036,
+    "latency_ms": 64496.8,
+    "model": "deepseek/deepseek-v4-pro",
+    "model_id": "deepseek-v4-pro",
+    "model_version": "deepseek-v4-pro",
+    "output_tokens": 5853,
+    "provider": "deepseek",
+    "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
+    "repeat": 0,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms are equal",
+      "layer": "structural",
+      "outcome": "pass"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "fabricated provenance: words not in the statement",
+    "input_tokens": 966,
+    "latency_ms": 31419.5,
+    "model": "ollama/qwen3:8b",
+    "model_id": "qwen3:8b",
+    "model_version": "qwen3:8b@500a1f067a9f",
+    "output_tokens": 1327,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A workshop makes two products. A frame takes 2 hours on the press and earns 90 USD. A bracket takes 1 hour and earns 40 USD. The press runs 60 hours a week. How many of each should be made in a week to maximise earnings, if fractional units are acceptable?\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_a\",\n      \"role\": \"variable\",\n      \"dimension\": {\n        \"symbol\": \"1\",\n        \"exponents\": {}\n      },\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"number of frames produced\",\n      \"span\": {\n        \"start\": 34,\n        \"end\": 39,\n        \"text\": \"frame\"\n      }\n    },\n    {\n      \"name\": \"x_b\",\n      \"role\": \"variable\",\n      \"dimension\": {\n        \"symbol\": \"1\",\n        \"exponents\": {}\n      },\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"de\n[... 2731 characters omitted ...]\n    \"expression\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\n                \"tag\": \"ref\",\n                \"name\": \"c_a\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"x_a\"\n              }\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\n                \"tag\": \"ref\",\n                \"name\": \"c_b\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"x_b\"\n              }\n            ]\n          }\n        ]\n      },\n      \"name\": \"total_earnings\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"what the statement does not determine\",\n      \"span\": {\n        \"start\": 61,\n        \"end\": 78,\n        \"text\": \"Maximise the earnings\"\n      },\n      \"resolution\": \"the reading you took, and why\",\n      \"affects\": [\"total_earnings\"]\n    }\n  ],\n  \"feasibility_only\": false\n}",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains 'Maximise the earnings', and it does not",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
    }
   ],
   "opt-004": [
+   {
+    "cost_usd": 0.0381,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 1345,
+    "latency_ms": 27966.9,
+    "model": "anthropic/claude-sonnet-5",
+    "model_id": "claude-sonnet-5",
+    "model_version": "claude-sonnet-5",
+    "output_tokens": 3541,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "repeat": 0,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
    {
     "cost_usd": 0.007575,
     "failure_class": "ran and survived every check",
     "input_tokens": 1040,
     "latency_ms": 6045.8,
+    "model": "anthropic/claude-haiku-4-5",
     "model_id": "claude-haiku-4-5",
     "model_version": "claude-haiku-4-5-20251001",
     "output_tokens": 1307,
@@ -188,15 +507,16 @@
     ]
    },
    {
-    "cost_usd": 0.0381,
+    "cost_usd": 0.028156,
     "failure_class": "ran and survived every check",
-    "input_tokens": 1345,
-    "latency_ms": 27966.9,
-    "model_id": "claude-sonnet-5",
-    "model_version": "claude-sonnet-5",
-    "output_tokens": 3541,
-    "provider": "anthropic",
-    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "input_tokens": 946,
+    "latency_ms": 64676.6,
+    "model": "zai/glm-5.3",
+    "model_id": "glm-5.3",
+    "model_version": "glm-5.3",
+    "output_tokens": 6098,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=high#do_sample=false#no-seed",
     "repeat": 0,
     "response_excerpt": "",
     "verdicts": [
@@ -206,9 +526,9 @@
       "outcome": "pass"
      },
      {
-      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "detail": "canonical forms are equal",
       "layer": "structural",
-      "outcome": "undecided"
+      "outcome": "pass"
      },
      {
       "detail": "2 relation(s) held",
@@ -216,14 +536,78 @@
       "outcome": "pass"
      }
     ]
+   },
+   {
+    "cost_usd": 0.033793,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 1025,
+    "latency_ms": 91806.7,
+    "model": "deepseek/deepseek-v4-pro",
+    "model_id": "deepseek-v4-pro",
+    "model_version": "deepseek-v4-pro",
+    "output_tokens": 8192,
+    "provider": "deepseek",
+    "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 29031 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 29031 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "fabricated provenance: words not in the statement",
+    "input_tokens": 958,
+    "latency_ms": 26971.8,
+    "model": "ollama/qwen3:8b",
+    "model_id": "qwen3:8b",
+    "model_version": "qwen3:8b@500a1f067a9f",
+    "output_tokens": 1150,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"Two warehouses can supply a site. The north warehouse charges 15 USD per tonne delivered and the south charges 22 USD per tonne. The site needs 40 tonnes. The north warehouse can send no more than 25 tonnes. Minimise delivery cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_a\",\n      \"role\": \"variable\",\n      \"dimension\": {\n        \"symbol\": \"t\",\n        \"exponents\": {\n          \"mass\": \"1\"\n        }\n      },\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": 25.0,\n      \"value\": null,\n      \"description\": \"amount of tonnes delivered from the north warehouse\",\n      \"span\": {\n        \"start\": 61,\n        \"end\": 66,\n        \"text\": \"north\"\n      }\n    },\n    {\n      \"name\": \"x_b\",\n      \"role\": \"variable\",\n      \"dimension\": {\n        \"symbol\": \"t\",\n        \"exponents\": {\n          \"mass\": \"1\"\n        }\n      },\n      \"domain\": \"real\",\n      \"l\n[... 2110 characters omitted ...]\n: [\n              {\n                \"tag\": \"ref\",\n                \"name\": \"c_a\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"x_a\"\n              }\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\n                \"tag\": \"ref\",\n                \"name\": \"c_b\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"x_b\"\n              }\n            ]\n          }\n        ]\n      },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"what the statement does not determine\",\n      \"span\": {\n        \"start\": 61,\n        \"end\": 78,\n        \"text\": \"Minimise the cost\"\n      },\n      \"resolution\": \"the objective is to minimise the total cost, which is the sum of the cost from both warehouses, as the statement does not specify any other objective\",\n      \"affects\": [\n        \"total_cost\"\n      ]\n    }\n  ],\n  \"feasibility_only\": false\n}",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains 'south warehouse', and it does not",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
    }
   ],
   "opt-005": [
+   {
+    "cost_usd": 0.07033,
+    "failure_class": "a constant with no unit",
+    "input_tokens": 1355,
+    "latency_ms": 61384.1,
+    "model": "anthropic/claude-sonnet-5",
+    "model_id": "claude-sonnet-5",
+    "model_version": "claude-sonnet-5",
+    "output_tokens": 6762,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A lab buys reagent from two suppliers. Supplier A charges 4.50 USD per kilogram and supplier B charges 4200 USD per tonne. The lab needs 3 tonnes this month. Supplier A can deliver at most 1200 kilograms. Minimise the purchase cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"price_a\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"USD/t\", \"exponents\": {\"currency\": \"1\", \"mass\": \"-1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": 4500.0,\n      \"description\": \"Price per tonne charged by Supplier A, converted from 4.50 USD per kilogram (1 tonne = 1000 kg).\",\n      \"span\": {\"start\": 51, \"end\": 73, \"text\": \"4.50 USD per kilogram\"}\n    },\n    {\n      \"name\": \"price_b\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"USD/t\", \"exponents\": {\"currency\": \"1\", \"mass\": \"-1\"}},\n      \"domain\": \"real\",\n  \n[... 2498 characters omitted ...]\n since the statement uses 'needs' rather than 'exactly' or 'no more than'.\",\n      \"affects\": [\"meet_monthly_demand\", \"total_purchase_cost\"]\n    },\n    {\n      \"question\": \"Is there any upper limit on how much Supplier B can deliver?\",\n      \"span\": {\"start\": 88, \"end\": 116, \"text\": \"supplier B charges 4200 USD per tonne\"},\n      \"resolution\": \"No capacity limit is stated for Supplier B, so x_b is left unbounded above.\",\n      \"affects\": [\"supplier_a_capacity\", \"total_purchase_cost\"]\n    },\n    {\n      \"question\": \"The problem gives prices and limits in mixed units (kg for A, tonnes for B); how should these be reconciled?\",\n      \"span\": {\"start\": 143, \"end\": 187, \"text\": \"Supplier A can deliver at most 1200 kilograms\"},\n      \"resolution\": \"All mass quantities were converted to tonnes (1 tonne = 1000 kg) for dimensional consistency: 4.50 USD/kg -> 4500 USD/t, and 1200 kg -> 1.2 t.\",\n      \"affects\": [\"price_a\", \"x_a\", \"supplier_a_capacity\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['tag', 'value']",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
    {
     "cost_usd": 0.007504,
     "failure_class": "ran and survived every check",
     "input_tokens": 1049,
     "latency_ms": 6062.0,
+    "model": "anthropic/claude-haiku-4-5",
     "model_id": "claude-haiku-4-5",
     "model_version": "claude-haiku-4-5-20251001",
     "output_tokens": 1291,
@@ -250,20 +634,63 @@
     ]
    },
    {
-    "cost_usd": 0.07033,
-    "failure_class": "a constant with no unit",
-    "input_tokens": 1355,
-    "latency_ms": 61384.1,
-    "model_id": "claude-sonnet-5",
-    "model_version": "claude-sonnet-5",
-    "output_tokens": 6762,
-    "provider": "anthropic",
-    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "cost_usd": 0.037376,
+    "failure_class": "truncated output",
+    "input_tokens": 951,
+    "latency_ms": 99869.8,
+    "model": "zai/glm-5.3",
+    "model_id": "glm-5.3",
+    "model_version": "glm-5.3",
+    "output_tokens": 8192,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=high#do_sample=false#no-seed",
     "repeat": 0,
-    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A lab buys reagent from two suppliers. Supplier A charges 4.50 USD per kilogram and supplier B charges 4200 USD per tonne. The lab needs 3 tonnes this month. Supplier A can deliver at most 1200 kilograms. Minimise the purchase cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"price_a\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"USD/t\", \"exponents\": {\"currency\": \"1\", \"mass\": \"-1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": 4500.0,\n      \"description\": \"Price per tonne charged by Supplier A, converted from 4.50 USD per kilogram (1 tonne = 1000 kg).\",\n      \"span\": {\"start\": 51, \"end\": 73, \"text\": \"4.50 USD per kilogram\"}\n    },\n    {\n      \"name\": \"price_b\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"USD/t\", \"exponents\": {\"currency\": \"1\", \"mass\": \"-1\"}},\n      \"domain\": \"real\",\n  \n[... 2498 characters omitted ...]\n since the statement uses 'needs' rather than 'exactly' or 'no more than'.\",\n      \"affects\": [\"meet_monthly_demand\", \"total_purchase_cost\"]\n    },\n    {\n      \"question\": \"Is there any upper limit on how much Supplier B can deliver?\",\n      \"span\": {\"start\": 88, \"end\": 116, \"text\": \"supplier B charges 4200 USD per tonne\"},\n      \"resolution\": \"No capacity limit is stated for Supplier B, so x_b is left unbounded above.\",\n      \"affects\": [\"supplier_a_capacity\", \"total_purchase_cost\"]\n    },\n    {\n      \"question\": \"The problem gives prices and limits in mixed units (kg for A, tonnes for B); how should these be reconciled?\",\n      \"span\": {\"start\": 143, \"end\": 187, \"text\": \"Supplier A can deliver at most 1200 kilograms\"},\n      \"resolution\": \"All mass quantities were converted to tonnes (1 tonne = 1000 kg) for dimensional consistency: 4.50 USD/kg -> 4500 USD/t, and 1200 kg -> 1.2 t.\",\n      \"affects\": [\"price_a\", \"x_a\", \"supplier_a_capacity\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A lab buys reagent from two suppliers. Supplier A charges 4.50 USD per kilogram and supplier B charges 4200 USD per tonne. The lab needs 3 tonnes this month. Supplier A can deliver at most 1200 kilograms. Minimise the purchase cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_a\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"kg\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Kilograms of reagent purchased from supplier A this month (decision variable, normalised to kilograms)\",\n      \"span\": {\"start\": 39, \"end\": 49, \"text\": \"Supplier A\"}\n    },\n    {\n      \"name\": \"x_b\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"kg\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n[... 814 characters omitted ...]\n2,\n      \"description\": \"Supplier B price, stated as 4200 USD per tonne, normalised to 4.20 USD per kilogram (1 t = 1000 kg)\",\n      \"span\": {\"start\": 103, \"end\": 121, \"text\": \"4200 USD per tonne\"}\n    },\n    {\n      \"name\": \"demand\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"kg\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 3000.0,\n      \"description\": \"Reagent required this month, stated as 3 tonnes, normalised to 3000 kg\",\n      \"span\": {\"start\": 137, \"end\": 145, \"text\": \"3 tonnes\"}\n    },\n    {\n      \"name\": \"cap_a\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"kg\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 1200.0,\n      \"description\": \"Maximum kilograms supplier A can deliver this month, used as stated\",\n      \"span\": {\"start\": 189, \"end\": 203, \"text\": \"1200 kilograms\"}\n    },\n    {\n      \"name\": \"cost_a\",\n      \"role\": \"",
     "verdicts": [
      {
-      "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['tag', 'value']",
+      "detail": "the response did not parse into a problem: the JSON object is not closed",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.033799,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 1029,
+    "latency_ms": 101728.6,
+    "model": "deepseek/deepseek-v4-pro",
+    "model_id": "deepseek-v4-pro",
+    "model_version": "deepseek-v4-pro",
+    "output_tokens": 8192,
+    "provider": "deepseek",
+    "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 29888 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 29888 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "fabricated provenance: words not in the statement",
+    "input_tokens": 964,
+    "latency_ms": 26933.7,
+    "model": "ollama/qwen3:8b",
+    "model_id": "qwen3:8b",
+    "model_version": "qwen3:8b@500a1f067a9f",
+    "output_tokens": 1150,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A lab buys reagent from two suppliers. Supplier A charges 4.50 USD per kilogram and supplier B charges 4200 USD per tonne. The lab needs 3 tonnes this month. Supplier A can deliver at most 1200 kilograms. Minimise the purchase cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_a\",\n      \"role\": \"variable\",\n      \"dimension\": {\n        \"symbol\": \"t\",\n        \"exponents\": {\n          \"mass\": \"1\"\n        }\n      },\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": 1200.0,\n      \"description\": \"amount of reagent purchased from supplier A in tonnes\",\n      \"span\": {\n        \"start\": 61,\n        \"end\": 78,\n        \"text\": \"Minimise the cost\"\n      }\n    },\n    {\n      \"name\": \"x_b\",\n      \"role\": \"variable\",\n      \"dimension\": {\n        \"symbol\": \"t\",\n        \"exponents\": {\n          \"mass\": \"1\"\n        }\n      },\n      \"domain\": \"real\",\n      \"lower\n[... 2107 characters omitted ...]\nag\": \"ref\",\n                \"name\": \"c_a\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"x_a\"\n              }\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\n                \"tag\": \"ref\",\n                \"name\": \"c_b\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"x_b\"\n              }\n            ]\n          }\n        ]\n      },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"what the statement does not determine\",\n      \"span\": {\n        \"start\": 61,\n        \"end\": 78,\n        \"text\": \"Minimise the cost\"\n      },\n      \"resolution\": \"the reading is that the objective is to minimize the total cost, which is the sum of the cost from supplier A and supplier B, with the cost per kilogram and per tonne given as parameters.\",\n      \"affects\": [\n        \"total_cost\"\n      ]\n    }\n  ],\n  \"feasibility_only\": false\n}",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains 'Minimise the cost', and it does not",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -272,10 +699,42 @@
   ],
   "opt-006": [
    {
+    "cost_usd": 0.036734,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 1357,
+    "latency_ms": 27607.6,
+    "model": "anthropic/claude-sonnet-5",
+    "model_id": "claude-sonnet-5",
+    "model_version": "claude-sonnet-5",
+    "output_tokens": 3402,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "repeat": 0,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.008888,
     "failure_class": "ran, then REFUTED: solves to a different optimum",
     "input_tokens": 1058,
     "latency_ms": 7017.5,
+    "model": "anthropic/claude-haiku-4-5",
     "model_id": "claude-haiku-4-5",
     "model_version": "claude-haiku-4-5-20251001",
     "output_tokens": 1566,
@@ -302,62 +761,76 @@
     ]
    },
    {
-    "cost_usd": 0.036734,
-    "failure_class": "ran and survived every check",
-    "input_tokens": 1357,
-    "latency_ms": 27607.6,
-    "model_id": "claude-sonnet-5",
-    "model_version": "claude-sonnet-5",
-    "output_tokens": 3402,
-    "provider": "anthropic",
-    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "cost_usd": 0.037394,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 964,
+    "latency_ms": 96287.4,
+    "model": "zai/glm-5.3",
+    "model_id": "glm-5.3",
+    "model_version": "glm-5.3",
+    "output_tokens": 8192,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=high#do_sample=false#no-seed",
     "repeat": 0,
-    "response_excerpt": "",
+    "response_excerpt": "[no answer: the model emitted 28704 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
     "verdicts": [
      {
-      "detail": "optimal",
-      "layer": "executable",
-      "outcome": "pass"
-     },
-     {
-      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
-      "layer": "structural",
-      "outcome": "undecided"
-     },
-     {
-      "detail": "2 relation(s) held",
-      "layer": "property",
-      "outcome": "pass"
-     }
-    ]
-   }
-  ],
-  "opt-007": [
-   {
-    "cost_usd": 0.009344,
-    "failure_class": "unparseable output",
-    "input_tokens": 1049,
-    "latency_ms": 7823.4,
-    "model_id": "claude-haiku-4-5",
-    "model_version": "claude-haiku-4-5-20251001",
-    "output_tokens": 1659,
-    "provider": "anthropic",
-    "provider_fingerprint": "anthropic#no-effort#no-temperature",
-    "repeat": 0,
-    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A quarry ships aggregate by rail and by road. Rail costs 6 USD per tonne, road costs 11 USD per tonne. The quarry employs 34 people. Rail capacity is 500 tonnes per week. The customer wants 700 tonnes this week. Minimise the shipping cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_rail\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"tonnes shipped by rail\",\n      \"span\": {\"start\": 10, \"end\": 14, \"text\": \"rail\"}\n    },\n    {\n      \"name\": \"x_road\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"tonnes shipped by road\",\n      \"span\": {\"start\": 23,\n[... 2935 characters omitted ...]\ne\": \"c_road\"}, {\"tag\": \"ref\", \"name\": \"x_road\"}]\n          }\n        ]\n      },\n      \"name\": \"total_cost_definition\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\"tag\": \"ref\", \"name\": \"total_cost\"},\n      \"name\": \"minimise_shipping_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"Is road capacity unconstrained, or should there be a road capacity limit?\",\n      \"inferred_reason\": \"The problem specifies rail capacity but gives no explicit constraint on road shipments.\",\n      \"resolution\": \"Assumed road capacity is unlimited; road can ship any amount needed.\",\n      \"affects\": [\"x_road\"]\n    },\n    {\n      \"question\": \"What is the relevance of the 34 employees?\",\n      \"span\": {\"start\": 100, \"end\": 117, \"text\": \"quarry employs 34 people\"},\n      \"resolution\": \"No constraint or objective involving labour was stated; treated as context only and not included in the model.\",\n      \"affects\": []\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
-    "verdicts": [
-     {
-      "detail": "the response did not parse into a problem: 'span'",
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 28704 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
       "layer": "executable",
       "outcome": "fail"
      }
     ]
    },
    {
+    "cost_usd": 0.03382,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 1045,
+    "latency_ms": 98040.7,
+    "model": "deepseek/deepseek-v4-pro",
+    "model_id": "deepseek-v4-pro",
+    "model_version": "deepseek-v4-pro",
+    "output_tokens": 8192,
+    "provider": "deepseek",
+    "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 30457 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 30457 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "unparseable output",
+    "input_tokens": 979,
+    "latency_ms": 29030.9,
+    "model": "ollama/qwen3:8b",
+    "model_id": "qwen3:8b",
+    "model_version": "qwen3:8b@500a1f067a9f",
+    "output_tokens": 1241,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A contractor hires two crews. The day crew costs 1800 USD per shift and the night crew costs 2400 USD per shift. Together they must complete at least 30 shifts of work this month. The total wage bill must not exceed 64000 USD. Maximise the number of night shifts, because they free the site during the day.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_a\",\n      \"role\": \"variable\",\n      \"dimension\": {\n        \"symbol\": \"1\",\n        \"exponents\": {}\n      },\n      \"domain\": \"integer\",\n      \"lower\": 0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"number of day shifts\",\n      \"span\": {\n        \"start\": 34,\n        \"end\": 40,\n        \"text\": \"day crew\"\n      }\n    },\n    {\n      \"name\": \"x_b\",\n      \"role\": \"variable\",\n      \"dimension\": {\n        \"symbol\": \"1\",\n        \"exponents\": {}\n      },\n      \"domain\": \"integer\",\n      \"lower\": 0,\n \n[... 2245 characters omitted ...]\n  \"factors\": [\n          {\n            \"tag\": \"ref\",\n            \"name\": \"c_a\"\n          },\n          {\n            \"tag\": \"ref\",\n            \"name\": \"x_a\"\n          }\n        ]\n      },\n      \"comparator\": \"+\",\n      \"right\": {\n        \"tag\": \"product\",\n        \"factors\": [\n          {\n            \"tag\": \"ref\",\n            \"name\": \"c_b\"\n          },\n          {\n            \"tag\": \"ref\",\n            \"name\": \"x_b\"\n          }\n        ]\n      },\n      \"name\": \"budget_constraint\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"maximise\",\n      \"expression\": {\n        \"tag\": \"ref\",\n        \"name\": \"x_b\"\n      },\n      \"name\": \"max_night_shifts\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"what the statement does not determine\",\n      \"span\": {\n        \"start\": 84,\n        \"end\": 92,\n        \"text\": \"Maximise the number of night shifts\"\n      },\n      \"resolution\": \"the reading you took, and why\",\n      \"affects\": [\"max_night_shifts\"]\n    }\n  ],\n  \"feasibility_only\": false\n}",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: '+' is not a valid Comparator",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   }
+  ],
+  "opt-007": [
+   {
     "cost_usd": 0.038192,
     "failure_class": "ran and survived every check",
     "input_tokens": 1356,
     "latency_ms": 26887.3,
+    "model": "anthropic/claude-sonnet-5",
     "model_id": "claude-sonnet-5",
     "model_version": "claude-sonnet-5",
     "output_tokens": 3548,
@@ -382,14 +855,99 @@
       "outcome": "pass"
      }
     ]
+   },
+   {
+    "cost_usd": 0.009344,
+    "failure_class": "unparseable output",
+    "input_tokens": 1049,
+    "latency_ms": 7823.4,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 1659,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A quarry ships aggregate by rail and by road. Rail costs 6 USD per tonne, road costs 11 USD per tonne. The quarry employs 34 people. Rail capacity is 500 tonnes per week. The customer wants 700 tonnes this week. Minimise the shipping cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_rail\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"tonnes shipped by rail\",\n      \"span\": {\"start\": 10, \"end\": 14, \"text\": \"rail\"}\n    },\n    {\n      \"name\": \"x_road\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"tonnes shipped by road\",\n      \"span\": {\"start\": 23,\n[... 2935 characters omitted ...]\ne\": \"c_road\"}, {\"tag\": \"ref\", \"name\": \"x_road\"}]\n          }\n        ]\n      },\n      \"name\": \"total_cost_definition\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\"tag\": \"ref\", \"name\": \"total_cost\"},\n      \"name\": \"minimise_shipping_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"Is road capacity unconstrained, or should there be a road capacity limit?\",\n      \"inferred_reason\": \"The problem specifies rail capacity but gives no explicit constraint on road shipments.\",\n      \"resolution\": \"Assumed road capacity is unlimited; road can ship any amount needed.\",\n      \"affects\": [\"x_road\"]\n    },\n    {\n      \"question\": \"What is the relevance of the 34 employees?\",\n      \"span\": {\"start\": 100, \"end\": 117, \"text\": \"quarry employs 34 people\"},\n      \"resolution\": \"No constraint or objective involving labour was stated; treated as context only and not included in the model.\",\n      \"affects\": []\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: 'span'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.037378,
+    "failure_class": "truncated output",
+    "input_tokens": 952,
+    "latency_ms": 93041.2,
+    "model": "zai/glm-5.3",
+    "model_id": "glm-5.3",
+    "model_version": "glm-5.3",
+    "output_tokens": 8192,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=high#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A quarry ships aggregate by rail and by road. Rail costs 6 USD per tonne, road costs 11 USD per tonne. The quarry employs 34 people. Rail capacity is 500 tonnes per week. The customer wants 700 tonnes this week. Minimise the shipping cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_rail\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Tonnes of aggregate shipped by rail during the week in question.\",\n      \"span\": {\"start\": 25, \"end\": 32, \"text\": \"by rail\"}\n    },\n    {\n      \"name\": \"x_road\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Tonnes of aggregate shipped by road during the week in question.\",\n      \"span\": {\"start\": 37, \"end\": 44, \"text\": \"by road\"}\n    },\n    {\n      \"name\": \"c_rail\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"USD/t\", \"exponents\": {\"currency\": \"1\", \"mass\": \"-1\"}},\n      \"domain\": \"real\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 6.0,\n      \"description\": \"Unit shipping cost by rail.\",\n      \"span\": {\"start\": 57, \"end\": 72, \"text\": \"6 USD per tonne\"}\n    },\n    {\n      \"name\": \"c_road\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the JSON object is not closed",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.033801,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 1031,
+    "latency_ms": 97985.1,
+    "model": "deepseek/deepseek-v4-pro",
+    "model_id": "deepseek-v4-pro",
+    "model_version": "deepseek-v4-pro",
+    "output_tokens": 8192,
+    "provider": "deepseek",
+    "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 30291 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 30291 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
    }
   ],
   "opt-008": [
+   {
+    "cost_usd": 0.061132,
+    "failure_class": "a constant with no unit",
+    "input_tokens": 1401,
+    "latency_ms": 45511.8,
+    "model": "anthropic/claude-sonnet-5",
+    "model_id": "claude-sonnet-5",
+    "model_version": "claude-sonnet-5",
+    "output_tokens": 5833,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "repeat": 0,
+    "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A mill processes 900 tonnes of feed a day. Feed sent to the fine circuit recovers 88 per cent of the metal and costs 3 USD per tonne to process. Whatever is not sent to the fine circuit goes to the coarse circuit, which recovers 71 per cent and costs 1.20 USD per tonne. Recovered metal is worth 40 USD per tonne of feed recovered. Maximise the daily margin.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"feed_total\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"t/day\", \"exponents\": {\"mass\": \"1\", \"time\": \"-1\"}},\n      \"domain\": \"real\",\n      \"lower\": 900.0,\n      \"upper\": 900.0,\n      \"value\": 900.0,\n      \"description\": \"Total tonnes of feed processed by the mill per day\",\n      \"span\": {\"start\": 15, \"end\": 43, \"text\": \"900 tonnes of feed a day\"}\n    },\n    {\n      \"name\": \"x_f\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t/day\", \"e\n[... 5042 characters omitted ...]\n11, \"text\": \"worth 40 USD per tonne of feed recovered\"},\n      \"resolution\": \"Interpreted 'tonne of feed recovered' as the recovery fraction applied directly to tonnes of feed sent to each circuit (i.e., recovered quantity = recovery_rate * feed_tonnes), since no separate metal grade is given.\",\n      \"affects\": [\"margin_definition\", \"daily_margin\"]\n    },\n    {\n      \"question\": \"Is the split of feed between fine and coarse circuits a free continuous decision, or are there additional capacity/minimum constraints on either circuit?\",\n      \"span\": {\"inferred_reason\": \"The statement only says feed not sent to fine goes to coarse, with no explicit capacity bounds beyond the total 900 t/day, so x_f is treated as a free real variable between 0 and feed_total.\"},\n      \"resolution\": \"Assumed x_f can range continuously from 0 to feed_total (900 t/day), with x_c determined as the remainder.\",\n      \"affects\": [\"coarse_split_definition\", \"daily_margin\"]\n    }\n  ],\n  \"feasibility_only\": false\n}",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['tag', 'value']",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
    {
     "cost_usd": 0.015554,
     "failure_class": "a constant with no unit",
     "input_tokens": 1079,
     "latency_ms": 12967.6,
+    "model": "anthropic/claude-haiku-4-5",
     "model_id": "claude-haiku-4-5",
     "model_version": "claude-haiku-4-5-20251001",
     "output_tokens": 2895,
@@ -406,20 +964,42 @@
     ]
    },
    {
-    "cost_usd": 0.061132,
-    "failure_class": "a constant with no unit",
-    "input_tokens": 1401,
-    "latency_ms": 45511.8,
-    "model_id": "claude-sonnet-5",
-    "model_version": "claude-sonnet-5",
-    "output_tokens": 5833,
-    "provider": "anthropic",
-    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "cost_usd": 0.03742,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 982,
+    "latency_ms": 93854.1,
+    "model": "zai/glm-5.3",
+    "model_id": "glm-5.3",
+    "model_version": "glm-5.3",
+    "output_tokens": 8192,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=high#do_sample=false#no-seed",
     "repeat": 0,
-    "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A mill processes 900 tonnes of feed a day. Feed sent to the fine circuit recovers 88 per cent of the metal and costs 3 USD per tonne to process. Whatever is not sent to the fine circuit goes to the coarse circuit, which recovers 71 per cent and costs 1.20 USD per tonne. Recovered metal is worth 40 USD per tonne of feed recovered. Maximise the daily margin.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"feed_total\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"t/day\", \"exponents\": {\"mass\": \"1\", \"time\": \"-1\"}},\n      \"domain\": \"real\",\n      \"lower\": 900.0,\n      \"upper\": 900.0,\n      \"value\": 900.0,\n      \"description\": \"Total tonnes of feed processed by the mill per day\",\n      \"span\": {\"start\": 15, \"end\": 43, \"text\": \"900 tonnes of feed a day\"}\n    },\n    {\n      \"name\": \"x_f\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t/day\", \"e\n[... 5042 characters omitted ...]\n11, \"text\": \"worth 40 USD per tonne of feed recovered\"},\n      \"resolution\": \"Interpreted 'tonne of feed recovered' as the recovery fraction applied directly to tonnes of feed sent to each circuit (i.e., recovered quantity = recovery_rate * feed_tonnes), since no separate metal grade is given.\",\n      \"affects\": [\"margin_definition\", \"daily_margin\"]\n    },\n    {\n      \"question\": \"Is the split of feed between fine and coarse circuits a free continuous decision, or are there additional capacity/minimum constraints on either circuit?\",\n      \"span\": {\"inferred_reason\": \"The statement only says feed not sent to fine goes to coarse, with no explicit capacity bounds beyond the total 900 t/day, so x_f is treated as a free real variable between 0 and feed_total.\"},\n      \"resolution\": \"Assumed x_f can range continuously from 0 to feed_total (900 t/day), with x_c determined as the remainder.\",\n      \"affects\": [\"coarse_split_definition\", \"daily_margin\"]\n    }\n  ],\n  \"feasibility_only\": false\n}",
+    "response_excerpt": "[no answer: the model emitted 28345 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
     "verdicts": [
      {
-      "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['tag', 'value']",
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 28345 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.033841,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 1061,
+    "latency_ms": 107182.1,
+    "model": "deepseek/deepseek-v4-pro",
+    "model_id": "deepseek-v4-pro",
+    "model_version": "deepseek-v4-pro",
+    "output_tokens": 8192,
+    "provider": "deepseek",
+    "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 34143 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 34143 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -428,10 +1008,32 @@
   ],
   "opt-009": [
    {
+    "cost_usd": 0.084722,
+    "failure_class": "truncated output",
+    "input_tokens": 1401,
+    "latency_ms": 62598.8,
+    "model": "anthropic/claude-sonnet-5",
+    "model_id": "claude-sonnet-5",
+    "model_version": "claude-sonnet-5",
+    "output_tokens": 8192,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A depot plans three weeks. It starts with 20 tonnes in store. Each week it may buy at a price that rises: 50 USD per tonne in week one, 58 in week two, 63 in week three. Demand is 30 tonnes in week one, 45 in week two, 25 in week three, and must be met from the store after that week's purchase arrives. The store holds at most 60 tonnes at the end of any week. Minimise the total purchase cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"stock_0\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": 20.0,\n      \"description\": \"Initial stock in store before week one.\",\n      \"span\": {\"start\": 42, \"end\": 60, \"text\": \"20 tonnes in store\"}\n    },\n    {\n      \"name\": \"price_1\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"US\n[... 3553 characters omitted ...]\nkly buying generically ('it may buy') without a distinct per-week purchase-amount phrase to quote.\"}\n    },\n    {\n      \"name\": \"stock_1\",\n      \"role\": \"derived\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": 60.0,\n      \"value\": null,\n      \"description\": \"Stock remaining at end of week one, after purchase arrives and demand is met.\",\n      \"span\": {\"inferred_reason\": \"The store balance after week one is implied by the narrative but not named explicitly as a quantity.\"}\n    },\n    {\n      \"name\": \"stock_2\",\n      \"role\": \"derived\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": 60.0,\n      \"value\": null,\n      \"description\": \"Stock remaining at end of week two.\",\n      \"span\": {\"inferred_reason\": \"The store balance after week two is implied by the narrative but not named explicitly as a quantity.\"}\n    },\n    {\n      \"name\": \"stock_3",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the JSON object is not closed",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.019671,
     "failure_class": "a constant with no unit",
     "input_tokens": 1096,
     "latency_ms": 15635.0,
+    "model": "anthropic/claude-haiku-4-5",
     "model_id": "claude-haiku-4-5",
     "model_version": "claude-haiku-4-5-20251001",
     "output_tokens": 3715,
@@ -448,20 +1050,42 @@
     ]
    },
    {
-    "cost_usd": 0.084722,
-    "failure_class": "truncated output",
-    "input_tokens": 1401,
-    "latency_ms": 62598.8,
-    "model_id": "claude-sonnet-5",
-    "model_version": "claude-sonnet-5",
+    "cost_usd": 0.037442,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 998,
+    "latency_ms": 96852.9,
+    "model": "zai/glm-5.3",
+    "model_id": "glm-5.3",
+    "model_version": "glm-5.3",
     "output_tokens": 8192,
-    "provider": "anthropic",
-    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=high#do_sample=false#no-seed",
     "repeat": 0,
-    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A depot plans three weeks. It starts with 20 tonnes in store. Each week it may buy at a price that rises: 50 USD per tonne in week one, 58 in week two, 63 in week three. Demand is 30 tonnes in week one, 45 in week two, 25 in week three, and must be met from the store after that week's purchase arrives. The store holds at most 60 tonnes at the end of any week. Minimise the total purchase cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"stock_0\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": 20.0,\n      \"description\": \"Initial stock in store before week one.\",\n      \"span\": {\"start\": 42, \"end\": 60, \"text\": \"20 tonnes in store\"}\n    },\n    {\n      \"name\": \"price_1\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"US\n[... 3553 characters omitted ...]\nkly buying generically ('it may buy') without a distinct per-week purchase-amount phrase to quote.\"}\n    },\n    {\n      \"name\": \"stock_1\",\n      \"role\": \"derived\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": 60.0,\n      \"value\": null,\n      \"description\": \"Stock remaining at end of week one, after purchase arrives and demand is met.\",\n      \"span\": {\"inferred_reason\": \"The store balance after week one is implied by the narrative but not named explicitly as a quantity.\"}\n    },\n    {\n      \"name\": \"stock_2\",\n      \"role\": \"derived\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": 60.0,\n      \"value\": null,\n      \"description\": \"Stock remaining at end of week two.\",\n      \"span\": {\"inferred_reason\": \"The store balance after week two is implied by the narrative but not named explicitly as a quantity.\"}\n    },\n    {\n      \"name\": \"stock_3",
+    "response_excerpt": "[no answer: the model emitted 29554 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
     "verdicts": [
      {
-      "detail": "the response did not parse into a problem: the JSON object is not closed",
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 29554 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.033863,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 1078,
+    "latency_ms": 104535.2,
+    "model": "deepseek/deepseek-v4-pro",
+    "model_id": "deepseek-v4-pro",
+    "model_version": "deepseek-v4-pro",
+    "output_tokens": 8192,
+    "provider": "deepseek",
+    "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 31823 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 31823 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -470,30 +1094,11 @@
   ],
   "opt-010": [
    {
-    "cost_usd": 0.008862,
-    "failure_class": "a quantity declared derived and never defined",
-    "input_tokens": 1067,
-    "latency_ms": 6926.2,
-    "model_id": "claude-haiku-4-5",
-    "model_version": "claude-haiku-4-5-20251001",
-    "output_tokens": 1559,
-    "provider": "anthropic",
-    "provider_fingerprint": "anthropic#no-effort#no-temperature",
-    "repeat": 0,
-    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A smelter blends two concentrates. Concentrate X assays 28 per cent copper and costs 210 USD per tonne. Concentrate Y assays 19 per cent and costs 140 USD per tonne. The furnace needs 500 tonnes of blend, and the blend must assay at least 24 per cent copper. Minimise the cost of the blend.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_amount\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"description\": \"Amount of Concentrate X in the blend\",\n      \"span\": {\"start\": 39, \"end\": 50, \"text\": \"Concentrate X\"}\n    },\n    {\n      \"name\": \"y_amount\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"description\": \"Amount of Concen\n[... 2429 characters omitted ...]\n     \"comparator\": \"==\",\n      \"right\": {\"tag\": \"ref\", \"name\": \"blend_required\"},\n      \"name\": \"blend_mass_balance\"\n    },\n    {\n      \"tag\": \"compare\",\n      \"left\": {\"tag\": \"sum\", \"terms\": [{\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"x_amount\"}, {\"tag\": \"ref\", \"name\": \"x_assay\"}]}, {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"y_amount\"}, {\"tag\": \"ref\", \"name\": \"y_assay\"}]}]},\n      \"comparator\": \">=\",\n      \"right\": {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"blend_required\"}, {\"tag\": \"ref\", \"name\": \"min_assay\"}]},\n      \"name\": \"assay_requirement\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\"tag\": \"sum\", \"terms\": [{\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"x_cost\"}, {\"tag\": \"ref\", \"name\": \"x_amount\"}]}, {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"y_cost\"}, {\"tag\": \"ref\", \"name\": \"y_amount\"}]}]},\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [],\n  \"feasibility_only\": false\n}\n```",
-    "verdicts": [
-     {
-      "detail": "error: determinacy [total_cost]: is derived but no relation defines it (under-determined)",
-      "layer": "executable",
-      "outcome": "fail"
-     }
-    ]
-   },
-   {
     "cost_usd": 0.043956,
     "failure_class": "ran and survived every check",
     "input_tokens": 1373,
     "latency_ms": 31815.8,
+    "model": "anthropic/claude-sonnet-5",
     "model_id": "claude-sonnet-5",
     "model_version": "claude-sonnet-5",
     "output_tokens": 4121,
@@ -518,14 +1123,109 @@
       "outcome": "pass"
      }
     ]
+   },
+   {
+    "cost_usd": 0.008862,
+    "failure_class": "a quantity declared derived and never defined",
+    "input_tokens": 1067,
+    "latency_ms": 6926.2,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 1559,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A smelter blends two concentrates. Concentrate X assays 28 per cent copper and costs 210 USD per tonne. Concentrate Y assays 19 per cent and costs 140 USD per tonne. The furnace needs 500 tonnes of blend, and the blend must assay at least 24 per cent copper. Minimise the cost of the blend.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_amount\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"description\": \"Amount of Concentrate X in the blend\",\n      \"span\": {\"start\": 39, \"end\": 50, \"text\": \"Concentrate X\"}\n    },\n    {\n      \"name\": \"y_amount\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"description\": \"Amount of Concen\n[... 2429 characters omitted ...]\n     \"comparator\": \"==\",\n      \"right\": {\"tag\": \"ref\", \"name\": \"blend_required\"},\n      \"name\": \"blend_mass_balance\"\n    },\n    {\n      \"tag\": \"compare\",\n      \"left\": {\"tag\": \"sum\", \"terms\": [{\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"x_amount\"}, {\"tag\": \"ref\", \"name\": \"x_assay\"}]}, {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"y_amount\"}, {\"tag\": \"ref\", \"name\": \"y_assay\"}]}]},\n      \"comparator\": \">=\",\n      \"right\": {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"blend_required\"}, {\"tag\": \"ref\", \"name\": \"min_assay\"}]},\n      \"name\": \"assay_requirement\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\"tag\": \"sum\", \"terms\": [{\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"x_cost\"}, {\"tag\": \"ref\", \"name\": \"x_amount\"}]}, {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"y_cost\"}, {\"tag\": \"ref\", \"name\": \"y_amount\"}]}]},\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "error: determinacy [total_cost]: is derived but no relation defines it (under-determined)",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.037396,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 965,
+    "latency_ms": 89737.6,
+    "model": "zai/glm-5.3",
+    "model_id": "glm-5.3",
+    "model_version": "glm-5.3",
+    "output_tokens": 8192,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=high#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 27525 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 27525 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.03382,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 1045,
+    "latency_ms": 104803.7,
+    "model": "deepseek/deepseek-v4-pro",
+    "model_id": "deepseek-v4-pro",
+    "model_version": "deepseek-v4-pro",
+    "output_tokens": 8192,
+    "provider": "deepseek",
+    "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 30977 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 30977 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
    }
   ],
   "opt-011": [
+   {
+    "cost_usd": 0.04318,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 1380,
+    "latency_ms": 27383.6,
+    "model": "anthropic/claude-sonnet-5",
+    "model_id": "claude-sonnet-5",
+    "model_version": "claude-sonnet-5",
+    "output_tokens": 4042,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "repeat": 0,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
    {
     "cost_usd": 0.012319,
     "failure_class": "ran and survived every check",
     "input_tokens": 1069,
     "latency_ms": 9215.6,
+    "model": "anthropic/claude-haiku-4-5",
     "model_id": "claude-haiku-4-5",
     "model_version": "claude-haiku-4-5-20251001",
     "output_tokens": 2250,
@@ -552,15 +1252,16 @@
     ]
    },
    {
-    "cost_usd": 0.04318,
+    "cost_usd": 0.032071,
     "failure_class": "ran and survived every check",
-    "input_tokens": 1380,
-    "latency_ms": 27383.6,
-    "model_id": "claude-sonnet-5",
-    "model_version": "claude-sonnet-5",
-    "output_tokens": 4042,
-    "provider": "anthropic",
-    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "input_tokens": 971,
+    "latency_ms": 76541.7,
+    "model": "zai/glm-5.3",
+    "model_id": "glm-5.3",
+    "model_version": "glm-5.3",
+    "output_tokens": 6980,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=high#do_sample=false#no-seed",
     "repeat": 0,
     "response_excerpt": "",
     "verdicts": [
@@ -580,34 +1281,36 @@
       "outcome": "pass"
      }
     ]
-   }
-  ],
-  "opt-012": [
+   },
    {
-    "cost_usd": 0.012162,
-    "failure_class": "a constant with no unit",
-    "input_tokens": 1072,
-    "latency_ms": 9367.3,
-    "model_id": "claude-haiku-4-5",
-    "model_version": "claude-haiku-4-5-20251001",
-    "output_tokens": 2218,
-    "provider": "anthropic",
-    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "cost_usd": 0.033829,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 1052,
+    "latency_ms": 94908.5,
+    "model": "deepseek/deepseek-v4-pro",
+    "model_id": "deepseek-v4-pro",
+    "model_version": "deepseek-v4-pro",
+    "output_tokens": 8192,
+    "provider": "deepseek",
+    "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
     "repeat": 0,
-    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A workshop has 120 hours of machining and 90 hours of finishing available this month. A pump takes 4 hours machining and 2 hours finishing, and sells for a margin of 260 USD. A valve takes 2 hours machining and 3 hours finishing, with a margin of 180 USD. No more than 20 pumps can be sold. Maximise the margin.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_pump\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Number of pumps to produce\",\n      \"span\": {\"start\": 73, \"end\": 78, \"text\": \"pump\"}\n    },\n    {\n      \"name\": \"x_valve\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"descri\n[... 4516 characters omitted ...]\n\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"const\", \"value\": 3.0, \"dimension\": {\"symbol\": \"h\", \"exponents\": {\"time\": \"1\"}}}, {\"tag\": \"ref\", \"name\": \"x_valve\"}]}\n        ]\n      },\n      \"comparator\": \"<=\",\n      \"right\": {\"tag\": \"ref\", \"name\": \"finishing_available\"},\n      \"name\": \"finishing_constraint\"\n    },\n    {\n      \"tag\": \"compare\",\n      \"left\": {\"tag\": \"ref\", \"name\": \"x_pump\"},\n      \"comparator\": \"<=\",\n      \"right\": {\"tag\": \"ref\", \"name\": \"pump_sales_limit\"},\n      \"name\": \"pump_sales_limit_constraint\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"maximise\",\n      \"expression\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"margin_pump\"}, {\"tag\": \"ref\", \"name\": \"x_pump\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"margin_valve\"}, {\"tag\": \"ref\", \"name\": \"x_valve\"}]}\n        ]\n      },\n      \"name\": \"total_margin\"\n    }\n  ],\n  \"open_questions\": [],\n  \"feasibility_only\": false\n}\n```",
+    "response_excerpt": "[no answer: the model emitted 29537 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
     "verdicts": [
      {
-      "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['dimension', 'tag', 'value']",
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 29537 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
       "layer": "executable",
       "outcome": "fail"
      }
     ]
-   },
+   }
+  ],
+  "opt-012": [
    {
     "cost_usd": 0.04722,
     "failure_class": "ran, then REFUTED: solves to a different optimum",
     "input_tokens": 1375,
     "latency_ms": 32434.7,
+    "model": "anthropic/claude-sonnet-5",
     "model_id": "claude-sonnet-5",
     "model_version": "claude-sonnet-5",
     "output_tokens": 4447,
@@ -632,44 +1335,78 @@
       "outcome": "pass"
      }
     ]
-   }
-  ],
-  "opt-013": [
+   },
    {
-    "cost_usd": 0.00758,
-    "failure_class": "ran and survived every check",
-    "input_tokens": 1035,
-    "latency_ms": 6500.5,
+    "cost_usd": 0.012162,
+    "failure_class": "a constant with no unit",
+    "input_tokens": 1072,
+    "latency_ms": 9367.3,
+    "model": "anthropic/claude-haiku-4-5",
     "model_id": "claude-haiku-4-5",
     "model_version": "claude-haiku-4-5-20251001",
-    "output_tokens": 1309,
+    "output_tokens": 2218,
     "provider": "anthropic",
     "provider_fingerprint": "anthropic#no-effort#no-temperature",
     "repeat": 0,
-    "response_excerpt": "",
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A workshop has 120 hours of machining and 90 hours of finishing available this month. A pump takes 4 hours machining and 2 hours finishing, and sells for a margin of 260 USD. A valve takes 2 hours machining and 3 hours finishing, with a margin of 180 USD. No more than 20 pumps can be sold. Maximise the margin.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_pump\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Number of pumps to produce\",\n      \"span\": {\"start\": 73, \"end\": 78, \"text\": \"pump\"}\n    },\n    {\n      \"name\": \"x_valve\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"descri\n[... 4516 characters omitted ...]\n\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"const\", \"value\": 3.0, \"dimension\": {\"symbol\": \"h\", \"exponents\": {\"time\": \"1\"}}}, {\"tag\": \"ref\", \"name\": \"x_valve\"}]}\n        ]\n      },\n      \"comparator\": \"<=\",\n      \"right\": {\"tag\": \"ref\", \"name\": \"finishing_available\"},\n      \"name\": \"finishing_constraint\"\n    },\n    {\n      \"tag\": \"compare\",\n      \"left\": {\"tag\": \"ref\", \"name\": \"x_pump\"},\n      \"comparator\": \"<=\",\n      \"right\": {\"tag\": \"ref\", \"name\": \"pump_sales_limit\"},\n      \"name\": \"pump_sales_limit_constraint\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"maximise\",\n      \"expression\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"margin_pump\"}, {\"tag\": \"ref\", \"name\": \"x_pump\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"margin_valve\"}, {\"tag\": \"ref\", \"name\": \"x_valve\"}]}\n        ]\n      },\n      \"name\": \"total_margin\"\n    }\n  ],\n  \"open_questions\": [],\n  \"feasibility_only\": false\n}\n```",
     "verdicts": [
      {
-      "detail": "optimal",
+      "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['dimension', 'tag', 'value']",
       "layer": "executable",
-      "outcome": "pass"
-     },
-     {
-      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
-      "layer": "structural",
-      "outcome": "undecided"
-     },
-     {
-      "detail": "2 relation(s) held",
-      "layer": "property",
-      "outcome": "pass"
+      "outcome": "fail"
      }
     ]
    },
+   {
+    "cost_usd": 0.036108,
+    "failure_class": "dimensional mismatch",
+    "input_tokens": 969,
+    "latency_ms": 93173.2,
+    "model": "zai/glm-5.3",
+    "model_id": "glm-5.3",
+    "model_version": "glm-5.3",
+    "output_tokens": 7898,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=high#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A workshop has 120 hours of machining and 90 hours of finishing available this month. A pump takes 4 hours machining and 2 hours finishing, and sells for a margin of 260 USD. A valve takes 2 hours machining and 3 hours finishing, with a margin of 180 USD. No more than 20 pumps can be sold. Maximise the margin.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"machining_hours_available\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"h\", \"exponents\": {\"time\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 120.0,\n      \"description\": \"Hours of machining capacity available this month\",\n      \"span\": {\"start\": 15, \"end\": 37, \"text\": \"120 hours of machining\"}\n    },\n    {\n      \"name\": \"finishing_hours_available\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"h\", \"exponents\": {\"time\": \"1\"}},\n      \"dom\n[... 7264 characters omitted ...]\nnal.\",\n      \"span\": {\"inferred_reason\": \"The statement never says whether pumps and valves are divisible; no sentence constrains production or sales to integer units.\"},\n      \"resolution\": \"Read as a continuous linear program: pumps and valves are real-valued with only non-negativity bounds, the standard reading when no integrality is stated.\",\n      \"affects\": [\"pumps\", \"valves\", \"total_margin\"]\n    },\n    {\n      \"question\": \"Whether production is assumed equal to sales, i.e. whether unsold units may be produced and held.\",\n      \"span\": {\"inferred_reason\": \"The statement gives a sales cap for pumps but never states an inventory or production-equals-sales rule.\"},\n      \"resolution\": \"Read production as equal to sales with no inventory: the margin is earned per unit sold, and producing unsold units would only consume hours without adding margin, so this reading cannot change the optimum.\",\n      \"affects\": [\"pumps\", \"valves\", \"total_margin\"]\n    }\n  ],\n  \"feasibility_only\": false\n}",
+    "verdicts": [
+     {
+      "detail": "error: dimensions [total_margin_def]: total_margin_def: left side is USD but right side is USD*ea; they cannot be compared",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.033828,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 1051,
+    "latency_ms": 98870.5,
+    "model": "deepseek/deepseek-v4-pro",
+    "model_id": "deepseek-v4-pro",
+    "model_version": "deepseek-v4-pro",
+    "output_tokens": 8192,
+    "provider": "deepseek",
+    "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 31918 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 31918 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   }
+  ],
+  "opt-013": [
    {
     "cost_usd": 0.03573,
     "failure_class": "ran and survived every check",
     "input_tokens": 1330,
     "latency_ms": 26600.0,
+    "model": "anthropic/claude-sonnet-5",
     "model_id": "claude-sonnet-5",
     "model_version": "claude-sonnet-5",
     "output_tokens": 3307,
@@ -694,14 +1431,109 @@
       "outcome": "pass"
      }
     ]
+   },
+   {
+    "cost_usd": 0.00758,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 1035,
+    "latency_ms": 6500.5,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 1309,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 0,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.020544,
+    "failure_class": "dimensional mismatch",
+    "input_tokens": 937,
+    "latency_ms": 50869.0,
+    "model": "zai/glm-5.3",
+    "model_id": "glm-5.3",
+    "model_version": "glm-5.3",
+    "output_tokens": 4371,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=high#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"Reagent is sold only in sealed drums of 55 kilograms, at 340 USD per drum. A plant needs at least 900 kilograms this month. Unused reagent cannot be returned. Minimise the amount spent.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"drum_mass\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"kg\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 55.0,\n      \"description\": \"mass of reagent contained in one sealed drum\",\n      \"span\": {\"start\": 40, \"end\": 52, \"text\": \"55 kilograms\"}\n    },\n    {\n      \"name\": \"drum_price\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"USD/drum\", \"exponents\": {\"currency\": \"1\", \"count\": \"-1\"}},\n      \"domain\": \"real\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 340.0,\n      \"description\": \"selling price of one sealed drum\",\n      \"spa\n[... 2528 characters omitted ...]\n\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"Whether surplus reagent above the requirement has any salvage value or can be carried into a later month; the statement only forbids returning it.\",\n      \"span\": {\"start\": 122, \"end\": 155, \"text\": \"Unused reagent cannot be returned.\"},\n      \"resolution\": \"Read as: surplus is worthless in this decision and no carry-over credit is taken, so the objective counts cash out only and the smallest drum count meeting demand is optimal.\",\n      \"affects\": [\"total_spend\"]\n    },\n    {\n      \"question\": \"Whether the plant holds any initial stock of reagent before this month's purchases.\",\n      \"span\": {\"start\": 75, \"end\": 120, \"text\": \"A plant needs at least 900 kilograms this month\"},\n      \"resolution\": \"Read as: no initial inventory; the full requirement must be met by drums purchased now, since the statement mentions only purchases.\",\n      \"affects\": [\"meet_demand\", \"define_reagent_bought\"]\n    }\n  ],\n  \"feasibility_only\": false\n}",
+    "verdicts": [
+     {
+      "detail": "error: dimensions [define_reagent_bought]: define_reagent_bought: left side is kg but right side is kg*drum; they cannot be compared",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.033784,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 1018,
+    "latency_ms": 102473.6,
+    "model": "deepseek/deepseek-v4-pro",
+    "model_id": "deepseek-v4-pro",
+    "model_version": "deepseek-v4-pro",
+    "output_tokens": 8192,
+    "provider": "deepseek",
+    "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 31718 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 31718 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
    }
   ],
   "opt-014": [
+   {
+    "cost_usd": 0.08468,
+    "failure_class": "truncated output",
+    "input_tokens": 1380,
+    "latency_ms": 61551.3,
+    "model": "anthropic/claude-sonnet-5",
+    "model_id": "claude-sonnet-5",
+    "model_version": "claude-sonnet-5",
+    "output_tokens": 8192,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A contractor may open a temporary crushing station. Opening it costs 40000 USD for the season regardless of use, after which crushing costs 3 USD per tonne there, up to 9000 tonnes. The existing plant charges 9 USD per tonne with no fixed cost and can take at most 6000 tonnes. The season's tonnage is 15000. Minimise the total cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"open_station\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"boolean\",\n      \"lower\": 0,\n      \"upper\": 1,\n      \"value\": null,\n      \"description\": \"1 if the temporary crushing station is opened this season, 0 otherwise\",\n      \"span\": {\"start\": 24, \"end\": 50, \"text\": \"temporary crushing station\"}\n    },\n    {\n      \"name\": \"fixed_cost\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"USD\", \"exponents\": {\"currency\":\n[... 2621 characters omitted ...]\n\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0,\n      \"upper\": 6000,\n      \"value\": null,\n      \"description\": \"tonnage of material processed at the existing plant\",\n      \"span\": {\"inferred_reason\": \"The statement describes plant throughput implicitly via 'can take at most 6000 tonnes' but does not name a variable explicitly.\"}\n    }\n  ],\n  \"relations\": [\n    {\n      \"tag\": \"compare\",\n      \"left\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\"tag\": \"ref\", \"name\": \"x_station\"},\n          {\"tag\": \"ref\", \"name\": \"x_plant\"}\n        ]\n      },\n      \"comparator\": \"==\",\n      \"right\": {\"tag\": \"ref\", \"name\": \"total_tonnage\"},\n      \"name\": \"meet_total_tonnage\"\n    },\n    {\n      \"tag\": \"compare\",\n      \"left\": {\"tag\": \"ref\", \"name\": \"x_station\"},\n      \"comparator\": \"<=\",\n      \"right\": {\n        \"tag\": \"product\",\n        \"factors\": [\n          {\"tag\": \"ref\", \"name\": \"cap_station\"},\n          {\"tag\": \"ref\", \"name\": \"open_station\"}\n        ]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the JSON object is not closed",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
    {
     "cost_usd": 0.010219,
     "failure_class": "unparseable output",
     "input_tokens": 1069,
     "latency_ms": 7939.7,
+    "model": "anthropic/claude-haiku-4-5",
     "model_id": "claude-haiku-4-5",
     "model_version": "claude-haiku-4-5-20251001",
     "output_tokens": 1830,
@@ -718,20 +1550,52 @@
     ]
    },
    {
-    "cost_usd": 0.08468,
-    "failure_class": "truncated output",
-    "input_tokens": 1380,
-    "latency_ms": 61551.3,
-    "model_id": "claude-sonnet-5",
-    "model_version": "claude-sonnet-5",
-    "output_tokens": 8192,
-    "provider": "anthropic",
-    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "cost_usd": 0.031113,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 975,
+    "latency_ms": 74608.0,
+    "model": "zai/glm-5.3",
+    "model_id": "glm-5.3",
+    "model_version": "glm-5.3",
+    "output_tokens": 6761,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=high#do_sample=false#no-seed",
     "repeat": 0,
-    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A contractor may open a temporary crushing station. Opening it costs 40000 USD for the season regardless of use, after which crushing costs 3 USD per tonne there, up to 9000 tonnes. The existing plant charges 9 USD per tonne with no fixed cost and can take at most 6000 tonnes. The season's tonnage is 15000. Minimise the total cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"open_station\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"boolean\",\n      \"lower\": 0,\n      \"upper\": 1,\n      \"value\": null,\n      \"description\": \"1 if the temporary crushing station is opened this season, 0 otherwise\",\n      \"span\": {\"start\": 24, \"end\": 50, \"text\": \"temporary crushing station\"}\n    },\n    {\n      \"name\": \"fixed_cost\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"USD\", \"exponents\": {\"currency\":\n[... 2621 characters omitted ...]\n\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0,\n      \"upper\": 6000,\n      \"value\": null,\n      \"description\": \"tonnage of material processed at the existing plant\",\n      \"span\": {\"inferred_reason\": \"The statement describes plant throughput implicitly via 'can take at most 6000 tonnes' but does not name a variable explicitly.\"}\n    }\n  ],\n  \"relations\": [\n    {\n      \"tag\": \"compare\",\n      \"left\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\"tag\": \"ref\", \"name\": \"x_station\"},\n          {\"tag\": \"ref\", \"name\": \"x_plant\"}\n        ]\n      },\n      \"comparator\": \"==\",\n      \"right\": {\"tag\": \"ref\", \"name\": \"total_tonnage\"},\n      \"name\": \"meet_total_tonnage\"\n    },\n    {\n      \"tag\": \"compare\",\n      \"left\": {\"tag\": \"ref\", \"name\": \"x_station\"},\n      \"comparator\": \"<=\",\n      \"right\": {\n        \"tag\": \"product\",\n        \"factors\": [\n          {\"tag\": \"ref\", \"name\": \"cap_station\"},\n          {\"tag\": \"ref\", \"name\": \"open_station\"}\n        ]",
+    "response_excerpt": "",
     "verdicts": [
      {
-      "detail": "the response did not parse into a problem: the JSON object is not closed",
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.033832,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 1054,
+    "latency_ms": 104710.2,
+    "model": "deepseek/deepseek-v4-pro",
+    "model_id": "deepseek-v4-pro",
+    "model_version": "deepseek-v4-pro",
+    "output_tokens": 8192,
+    "provider": "deepseek",
+    "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 30959 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 30959 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -740,10 +1604,32 @@
   ],
   "opt-015": [
    {
+    "cost_usd": 0.084656,
+    "failure_class": "truncated output",
+    "input_tokens": 1368,
+    "latency_ms": 68501.7,
+    "model": "anthropic/claude-sonnet-5",
+    "model_id": "claude-sonnet-5",
+    "model_version": "claude-sonnet-5",
+    "output_tokens": 8192,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A kiln can be run or left idle. If it is run at all it must process at least 200 tonnes, and it cannot exceed 500 tonnes. Running it earns 24 USD per tonne but costs 4000 USD to fire up. Only 150 tonnes of feed are available. Decide whether to run the kiln so as to maximise the margin.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": 500.0,\n      \"value\": null,\n      \"description\": \"Tonnes of feed actually processed by the kiln\",\n      \"span\": {\"inferred_reason\": \"The statement never names the processed-tonnage quantity explicitly; it only bounds it via 'process at least 200 tonnes' and 'cannot exceed 500 tonnes'.\"}\n    },\n    {\n      \"name\": \"y\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\"\n[... 1546 characters omitted ...]\nupper\": null,\n      \"value\": 4000.0,\n      \"description\": \"Fixed cost incurred to fire up the kiln if it is run\",\n      \"span\": {\"start\": 166, \"end\": 174, \"text\": \"4000 USD\"}\n    },\n    {\n      \"name\": \"feed_available\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 150.0,\n      \"description\": \"Total feed tonnage available for processing\",\n      \"span\": {\"start\": 192, \"end\": 202, \"text\": \"150 tonnes\"}\n    },\n    {\n      \"name\": \"margin\",\n      \"role\": \"derived\",\n      \"dimension\": {\"symbol\": \"USD\", \"exponents\": {\"currency\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Net margin: revenue from processed tonnage minus the fixed firing-up cost if run\",\n      \"span\": {\"start\": 266, \"end\": 286, \"text\": \"maximise the margin\"}\n    }\n  ],\n  \"relations\": [\n    {\n      \"tag\": \"compare\",\n      \"left\": {\"",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the JSON object is not closed",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.013129,
     "failure_class": "unparseable output",
     "input_tokens": 1064,
     "latency_ms": 11993.2,
+    "model": "anthropic/claude-haiku-4-5",
     "model_id": "claude-haiku-4-5",
     "model_version": "claude-haiku-4-5-20251001",
     "output_tokens": 2413,
@@ -760,20 +1646,42 @@
     ]
    },
    {
-    "cost_usd": 0.084656,
-    "failure_class": "truncated output",
-    "input_tokens": 1368,
-    "latency_ms": 68501.7,
-    "model_id": "claude-sonnet-5",
-    "model_version": "claude-sonnet-5",
-    "output_tokens": 8192,
-    "provider": "anthropic",
-    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "cost_usd": 0.03513,
+    "failure_class": "a constant with no unit",
+    "input_tokens": 968,
+    "latency_ms": 86407.8,
+    "model": "zai/glm-5.3",
+    "model_id": "glm-5.3",
+    "model_version": "glm-5.3",
+    "output_tokens": 7676,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=high#do_sample=false#no-seed",
     "repeat": 0,
-    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A kiln can be run or left idle. If it is run at all it must process at least 200 tonnes, and it cannot exceed 500 tonnes. Running it earns 24 USD per tonne but costs 4000 USD to fire up. Only 150 tonnes of feed are available. Decide whether to run the kiln so as to maximise the margin.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": 500.0,\n      \"value\": null,\n      \"description\": \"Tonnes of feed actually processed by the kiln\",\n      \"span\": {\"inferred_reason\": \"The statement never names the processed-tonnage quantity explicitly; it only bounds it via 'process at least 200 tonnes' and 'cannot exceed 500 tonnes'.\"}\n    },\n    {\n      \"name\": \"y\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\"\n[... 1546 characters omitted ...]\nupper\": null,\n      \"value\": 4000.0,\n      \"description\": \"Fixed cost incurred to fire up the kiln if it is run\",\n      \"span\": {\"start\": 166, \"end\": 174, \"text\": \"4000 USD\"}\n    },\n    {\n      \"name\": \"feed_available\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 150.0,\n      \"description\": \"Total feed tonnage available for processing\",\n      \"span\": {\"start\": 192, \"end\": 202, \"text\": \"150 tonnes\"}\n    },\n    {\n      \"name\": \"margin\",\n      \"role\": \"derived\",\n      \"dimension\": {\"symbol\": \"USD\", \"exponents\": {\"currency\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Net margin: revenue from processed tonnage minus the fixed firing-up cost if run\",\n      \"span\": {\"start\": 266, \"end\": 286, \"text\": \"maximise the margin\"}\n    }\n  ],\n  \"relations\": [\n    {\n      \"tag\": \"compare\",\n      \"left\": {\"",
+    "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A kiln can be run or left idle. If it is run at all it must process at least 200 tonnes, and it cannot exceed 500 tonnes. Running it earns 24 USD per tonne but costs 4000 USD to fire up. Only 150 tonnes of feed are available. Decide whether to run the kiln so as to maximise the margin.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"run\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"boolean\",\n      \"lower\": 0.0,\n      \"upper\": 1.0,\n      \"value\": null,\n      \"description\": \"1 if the kiln is fired up and run, 0 if it is left idle.\",\n      \"span\": {\"start\": 14, \"end\": 30, \"text\": \"run or left idle\"}\n    },\n    {\n      \"name\": \"x\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": 500.0,\n      \"value\": null,\n     \n[... 3965 characters omitted ...]\ngin\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"Whether the tonnage processed must be a whole number of tonnes or may be fractional.\",\n      \"span\": {\"inferred_reason\": \"the statement gives tonne bounds but never addresses integrality of the processed amount\"},\n      \"resolution\": \"Read as continuous (real-valued) tonnage, since no whole-tonne requirement is stated; the choice does not change the outcome because running is infeasible anyway.\",\n      \"affects\": [\"x\", \"margin\"]\n    },\n    {\n      \"question\": \"Whether the 150 tonnes of feed directly cap the kiln's processed tonnage.\",\n      \"span\": {\"start\": 192, \"end\": 223, \"text\": \"150 tonnes of feed are available\"},\n      \"resolution\": \"Read the feed as the kiln's input material, so processed tonnes cannot exceed 150 t. Since 150 < the 200 t minimum run, running is infeasible and leaving the kiln idle (margin 0) is the only optimal choice.\",\n      \"affects\": [\"x\", \"run\", \"margin\"]\n    }\n  ],\n  \"feasibility_only\": false\n}",
     "verdicts": [
      {
-      "detail": "the response did not parse into a problem: the JSON object is not closed",
+      "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['tag', 'value']",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.033824,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 1048,
+    "latency_ms": 109330.7,
+    "model": "deepseek/deepseek-v4-pro",
+    "model_id": "deepseek-v4-pro",
+    "model_version": "deepseek-v4-pro",
+    "output_tokens": 8192,
+    "provider": "deepseek",
+    "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 32710 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 32710 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -782,10 +1690,32 @@
   ],
   "opt-016": [
    {
+    "cost_usd": 0.076342,
+    "failure_class": "a constant with no unit",
+    "input_tokens": 1366,
+    "latency_ms": 47373.7,
+    "model": "anthropic/claude-sonnet-5",
+    "model_id": "claude-sonnet-5",
+    "model_version": "claude-sonnet-5",
+    "output_tokens": 7361,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "repeat": 0,
+    "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"Three drills must be assigned to three benches, one drill to each bench and one bench to each drill. The hours each drill needs on each bench are: drill one takes 9, 12 and 7 hours on benches A, B and C; drill two takes 11, 8 and 10; drill three takes 6, 13 and 12. Minimise the total hours.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"h_1A\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"h\", \"exponents\": {\"time\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0, \"upper\": null, \"value\": 9.0,\n      \"description\": \"Hours drill one needs on bench A\",\n      \"span\": {\"start\": 163, \"end\": 164, \"text\": \"9\"}\n    },\n    {\n      \"name\": \"h_1B\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"h\", \"exponents\": {\"time\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0, \"upper\": null, \"value\": 12.0,\n      \"description\": \"Hours drill one needs on b\n[... 7537 characters omitted ...]\n{\"tag\": \"ref\", \"name\": \"x_1A\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_1B\"}, {\"tag\": \"ref\", \"name\": \"x_1B\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_1C\"}, {\"tag\": \"ref\", \"name\": \"x_1C\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_2A\"}, {\"tag\": \"ref\", \"name\": \"x_2A\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_2B\"}, {\"tag\": \"ref\", \"name\": \"x_2B\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_2C\"}, {\"tag\": \"ref\", \"name\": \"x_2C\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_3A\"}, {\"tag\": \"ref\", \"name\": \"x_3A\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_3B\"}, {\"tag\": \"ref\", \"name\": \"x_3B\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_3C\"}, {\"tag\": \"ref\", \"name\": \"x_3C\"}]}\n        ]\n      },\n      \"name\": \"total_hours\"\n    }\n  ],\n  \"open_questions\": [],\n  \"feasibility_only\": false\n}",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['tag', 'value']",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.019855,
     "failure_class": "a constant with no unit",
     "input_tokens": 1070,
     "latency_ms": 14402.7,
+    "model": "anthropic/claude-haiku-4-5",
     "model_id": "claude-haiku-4-5",
     "model_version": "claude-haiku-4-5-20251001",
     "output_tokens": 3757,
@@ -802,20 +1732,42 @@
     ]
    },
    {
-    "cost_usd": 0.076342,
-    "failure_class": "a constant with no unit",
-    "input_tokens": 1366,
-    "latency_ms": 47373.7,
-    "model_id": "claude-sonnet-5",
-    "model_version": "claude-sonnet-5",
-    "output_tokens": 7361,
-    "provider": "anthropic",
-    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "cost_usd": 0.037408,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 974,
+    "latency_ms": 90903.3,
+    "model": "zai/glm-5.3",
+    "model_id": "glm-5.3",
+    "model_version": "glm-5.3",
+    "output_tokens": 8192,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=high#do_sample=false#no-seed",
     "repeat": 0,
-    "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"Three drills must be assigned to three benches, one drill to each bench and one bench to each drill. The hours each drill needs on each bench are: drill one takes 9, 12 and 7 hours on benches A, B and C; drill two takes 11, 8 and 10; drill three takes 6, 13 and 12. Minimise the total hours.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"h_1A\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"h\", \"exponents\": {\"time\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0, \"upper\": null, \"value\": 9.0,\n      \"description\": \"Hours drill one needs on bench A\",\n      \"span\": {\"start\": 163, \"end\": 164, \"text\": \"9\"}\n    },\n    {\n      \"name\": \"h_1B\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"h\", \"exponents\": {\"time\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0, \"upper\": null, \"value\": 12.0,\n      \"description\": \"Hours drill one needs on b\n[... 7537 characters omitted ...]\n{\"tag\": \"ref\", \"name\": \"x_1A\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_1B\"}, {\"tag\": \"ref\", \"name\": \"x_1B\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_1C\"}, {\"tag\": \"ref\", \"name\": \"x_1C\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_2A\"}, {\"tag\": \"ref\", \"name\": \"x_2A\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_2B\"}, {\"tag\": \"ref\", \"name\": \"x_2B\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_2C\"}, {\"tag\": \"ref\", \"name\": \"x_2C\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_3A\"}, {\"tag\": \"ref\", \"name\": \"x_3A\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_3B\"}, {\"tag\": \"ref\", \"name\": \"x_3B\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_3C\"}, {\"tag\": \"ref\", \"name\": \"x_3C\"}]}\n        ]\n      },\n      \"name\": \"total_hours\"\n    }\n  ],\n  \"open_questions\": [],\n  \"feasibility_only\": false\n}",
+    "response_excerpt": "[no answer: the model emitted 23492 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
     "verdicts": [
      {
-      "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['tag', 'value']",
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 23492 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.033833,
+    "failure_class": "truncated output",
+    "input_tokens": 1055,
+    "latency_ms": 93527.6,
+    "model": "deepseek/deepseek-v4-pro",
+    "model_id": "deepseek-v4-pro",
+    "model_version": "deepseek-v4-pro",
+    "output_tokens": 8192,
+    "provider": "deepseek",
+    "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
+    "repeat": 0,
+    "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"Three drills must be assigned to three benches, one drill to each bench and one bench to each drill. The hours each drill needs on each bench are: drill one takes 9, 12 and 7 hours on benches A, B and C; drill two takes 11, 8 and 10; drill three takes 6, 13 and 12. Minimise the total hours.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_1A\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"boolean\",\n      \"lower\": 0.0,\n      \"upper\": 1.0,\n      \"value\": null,\n      \"description\": \"1 if drill 1 is assigned to bench A, 0 otherwise\",\n      \"span\": {\"start\": 48, \"end\": 99, \"text\": \"one drill to each bench and one bench to each drill\"}\n    },\n    {\n      \"name\": \"x_1B\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"boolean\",\n      \"lower\": 0.0,\n      \"upper\": 1.0,\n      \"value\": null,\n      \"description\": \"1 if drill 1 is assigned to bench B, 0 otherwise\",\n      \"span\": {\"start\": 48, \"end\": 99, \"text\": \"one drill to each bench and one bench to each drill\"}\n    },\n    {\n      \"name\": \"x_1C\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"boolean\",\n      \"lower\": 0.0,\n      \"upper\": 1.0,\n      \"value\": null,\n      \"description",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the JSON object is not closed",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -824,10 +1776,32 @@
   ],
   "opt-017": [
    {
+    "cost_usd": 0.028794,
+    "failure_class": "a constant with no unit",
+    "input_tokens": 1342,
+    "latency_ms": 20080.6,
+    "model": "anthropic/claude-sonnet-5",
+    "model_id": "claude-sonnet-5",
+    "model_version": "claude-sonnet-5",
+    "output_tokens": 2611,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A depot stocks bolts and nuts. It must hold at least twice as many bolts as nuts. Bolts cost 3 USD each and nuts cost 1 USD each, and the depot must hold at least 600 items in total. Minimise the cost of the holding.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"b\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"count\", \"exponents\": {\"count\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"number of bolts held in the depot\",\n      \"span\": {\"start\": 16, \"end\": 21, \"text\": \"bolts\"}\n    },\n    {\n      \"name\": \"n\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"count\", \"exponents\": {\"count\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"number of nuts held in the depot\",\n      \"span\": {\"start\"\n[... 2530 characters omitted ...]\nduct\",\n            \"factors\": [\n              {\"tag\": \"ref\", \"name\": \"cost_nut\"},\n              {\"tag\": \"ref\", \"name\": \"n\"}\n            ]\n          }\n        ]\n      },\n      \"name\": \"total_cost_definition\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\"tag\": \"ref\", \"name\": \"total_cost\"},\n      \"name\": \"minimise_holding_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"Are the numbers of bolts and nuts required to be whole (integer) counts, or could they be treated as continuous real quantities for relaxation purposes?\",\n      \"span\": {\"inferred_reason\": \"The statement refers to discrete physical items ('bolts', 'nuts', 'items') but never explicitly states an integrality requirement.\"},\n      \"resolution\": \"Treated b and n as integer-domain variables since bolts and nuts are discrete countable items.\",\n      \"affects\": [\"total_cost\", \"bolts_at_least_twice_nuts\", \"min_total_items_constraint\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['tag', 'value']",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.008948,
     "failure_class": "a constant with no unit",
     "input_tokens": 1043,
     "latency_ms": 6861.2,
+    "model": "anthropic/claude-haiku-4-5",
     "model_id": "claude-haiku-4-5",
     "model_version": "claude-haiku-4-5-20251001",
     "output_tokens": 1581,
@@ -844,17 +1818,39 @@
     ]
    },
    {
-    "cost_usd": 0.028794,
+    "cost_usd": 0.032338,
     "failure_class": "a constant with no unit",
-    "input_tokens": 1342,
-    "latency_ms": 20080.6,
-    "model_id": "claude-sonnet-5",
-    "model_version": "claude-sonnet-5",
-    "output_tokens": 2611,
-    "provider": "anthropic",
-    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "input_tokens": 948,
+    "latency_ms": 71365.0,
+    "model": "zai/glm-5.3",
+    "model_id": "glm-5.3",
+    "model_version": "glm-5.3",
+    "output_tokens": 7048,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=high#do_sample=false#no-seed",
     "repeat": 0,
-    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A depot stocks bolts and nuts. It must hold at least twice as many bolts as nuts. Bolts cost 3 USD each and nuts cost 1 USD each, and the depot must hold at least 600 items in total. Minimise the cost of the holding.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"b\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"count\", \"exponents\": {\"count\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"number of bolts held in the depot\",\n      \"span\": {\"start\": 16, \"end\": 21, \"text\": \"bolts\"}\n    },\n    {\n      \"name\": \"n\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"count\", \"exponents\": {\"count\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"number of nuts held in the depot\",\n      \"span\": {\"start\"\n[... 2530 characters omitted ...]\nduct\",\n            \"factors\": [\n              {\"tag\": \"ref\", \"name\": \"cost_nut\"},\n              {\"tag\": \"ref\", \"name\": \"n\"}\n            ]\n          }\n        ]\n      },\n      \"name\": \"total_cost_definition\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\"tag\": \"ref\", \"name\": \"total_cost\"},\n      \"name\": \"minimise_holding_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"Are the numbers of bolts and nuts required to be whole (integer) counts, or could they be treated as continuous real quantities for relaxation purposes?\",\n      \"span\": {\"inferred_reason\": \"The statement refers to discrete physical items ('bolts', 'nuts', 'items') but never explicitly states an integrality requirement.\"},\n      \"resolution\": \"Treated b and n as integer-domain variables since bolts and nuts are discrete countable items.\",\n      \"affects\": [\"total_cost\", \"bolts_at_least_twice_nuts\", \"min_total_items_constraint\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A depot stocks bolts and nuts. It must hold at least twice as many bolts as nuts. Bolts cost 3 USD each and nuts cost 1 USD each, and the depot must hold at least 600 items in total. Minimise the cost of the holding.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_bolts\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"item\", \"exponents\": {\"count\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"number of bolts the depot holds\",\n      \"span\": {\"start\": 67, \"end\": 72, \"text\": \"bolts\"}\n    },\n    {\n      \"name\": \"x_nuts\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"item\", \"exponents\": {\"count\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"number of nuts the depot holds\",\n      \"span\": {\"start\": 7\n[... 2950 characters omitted ...]\n\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\"tag\": \"ref\", \"name\": \"total_cost\"},\n      \"name\": \"minimise_holding_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"Whether the numbers of bolts and nuts held may be fractional or must be whole items.\",\n      \"span\": {\"start\": 163, \"end\": 172, \"text\": \"600 items\"},\n      \"resolution\": \"Read as integer counts, since bolts and nuts are discrete items and the total is stated as a count of items.\",\n      \"affects\": [\"x_bolts\", \"x_nuts\"]\n    },\n    {\n      \"question\": \"Whether 'the cost of the holding' includes anything beyond acquiring the stock at the stated unit prices (e.g. storage costs).\",\n      \"span\": {\"start\": 183, \"end\": 216, \"text\": \"Minimise the cost of the holding.\"},\n      \"resolution\": \"Read as the purchase cost alone: 3 USD per bolt plus 1 USD per nut. No other holding or storage costs are given in the statement.\",\n      \"affects\": [\"total_cost\"]\n    }\n  ],\n  \"feasibility_only\": false\n}",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['tag', 'value']",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.033248,
+    "failure_class": "a constant with no unit",
+    "input_tokens": 1029,
+    "latency_ms": 88044.4,
+    "model": "deepseek/deepseek-v4-pro",
+    "model_id": "deepseek-v4-pro",
+    "model_version": "deepseek-v4-pro",
+    "output_tokens": 8053,
+    "provider": "deepseek",
+    "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
+    "repeat": 0,
+    "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A depot stocks bolts and nuts. It must hold at least twice as many bolts as nuts. Bolts cost 3 USD each and nuts cost 1 USD each, and the depot must hold at least 600 items in total. Minimise the cost of the holding.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"n_bolts\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"item\", \"exponents\": {\"count\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Number of bolts held in the depot\",\n      \"span\": {\"start\": 15, \"end\": 20, \"text\": \"bolts\"}\n    },\n    {\n      \"name\": \"n_nuts\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"item\", \"exponents\": {\"count\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Number of nuts held in the depot\",\n      \"span\": {\"start\n[... 1394 characters omitted ...]\n\n      \"name\": \"at_least_twice_as_many_bolts_as_nuts\"\n    },\n    {\n      \"tag\": \"compare\",\n      \"left\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\"tag\": \"ref\", \"name\": \"n_bolts\"},\n          {\"tag\": \"ref\", \"name\": \"n_nuts\"}\n        ]\n      },\n      \"comparator\": \">=\",\n      \"right\": {\"tag\": \"ref\", \"name\": \"min_total_items\"},\n      \"name\": \"at_least_600_items_total\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\"tag\": \"ref\", \"name\": \"cost_bolts\"},\n              {\"tag\": \"ref\", \"name\": \"n_bolts\"}\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\"tag\": \"ref\", \"name\": \"cost_nuts\"},\n              {\"tag\": \"ref\", \"name\": \"n_nuts\"}\n            ]\n          }\n        ]\n      },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [],\n  \"feasibility_only\": false\n}",
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['tag', 'value']",
@@ -866,30 +1862,11 @@
   ],
   "opt-018": [
    {
-    "cost_usd": 0.007593,
-    "failure_class": "a quantity declared derived and never defined",
-    "input_tokens": 1048,
-    "latency_ms": 5893.8,
-    "model_id": "claude-haiku-4-5",
-    "model_version": "claude-haiku-4-5-20251001",
-    "output_tokens": 1309,
-    "provider": "anthropic",
-    "provider_fingerprint": "anthropic#no-effort#no-temperature",
-    "repeat": 0,
-    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A processor can buy ore from a nearby pit at 70 USD per tonne or from a distant pit at 52 USD per tonne. Haulage from the distant pit is quoted separately at 15 USD per tonne. The plant needs 800 tonnes. Minimise what the processor pays.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_near\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Amount of ore purchased from the nearby pit\",\n      \"span\": {\"start\": 22, \"end\": 35, \"text\": \"nearby pit\"}\n    },\n    {\n      \"name\": \"x_distant\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Amount of ore purchased \n[... 1867 characters omitted ...]\n\"relations\": [\n    {\n      \"tag\": \"compare\",\n      \"left\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\"tag\": \"ref\", \"name\": \"x_near\"},\n          {\"tag\": \"ref\", \"name\": \"x_distant\"}\n        ]\n      },\n      \"comparator\": \">=\",\n      \"right\": {\"tag\": \"ref\", \"name\": \"demand\"},\n      \"name\": \"meet_demand\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\"tag\": \"ref\", \"name\": \"c_near\"},\n              {\"tag\": \"ref\", \"name\": \"x_near\"}\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\"tag\": \"sum\", \"terms\": [{\"tag\": \"ref\", \"name\": \"c_distant\"}, {\"tag\": \"ref\", \"name\": \"c_haulage\"}]},\n              {\"tag\": \"ref\", \"name\": \"x_distant\"}\n            ]\n          }\n        ]\n      },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [],\n  \"feasibility_only\": false\n}\n```",
-    "verdicts": [
-     {
-      "detail": "error: determinacy [total_cost]: is derived but no relation defines it (under-determined)",
-      "layer": "executable",
-      "outcome": "fail"
-     }
-    ]
-   },
-   {
     "cost_usd": 0.037162,
     "failure_class": "ran and survived every check",
     "input_tokens": 1351,
     "latency_ms": 27506.7,
+    "model": "anthropic/claude-sonnet-5",
     "model_id": "claude-sonnet-5",
     "model_version": "claude-sonnet-5",
     "output_tokens": 3446,
@@ -914,14 +1891,119 @@
       "outcome": "pass"
      }
     ]
+   },
+   {
+    "cost_usd": 0.007593,
+    "failure_class": "a quantity declared derived and never defined",
+    "input_tokens": 1048,
+    "latency_ms": 5893.8,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 1309,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A processor can buy ore from a nearby pit at 70 USD per tonne or from a distant pit at 52 USD per tonne. Haulage from the distant pit is quoted separately at 15 USD per tonne. The plant needs 800 tonnes. Minimise what the processor pays.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_near\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Amount of ore purchased from the nearby pit\",\n      \"span\": {\"start\": 22, \"end\": 35, \"text\": \"nearby pit\"}\n    },\n    {\n      \"name\": \"x_distant\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Amount of ore purchased \n[... 1867 characters omitted ...]\n\"relations\": [\n    {\n      \"tag\": \"compare\",\n      \"left\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\"tag\": \"ref\", \"name\": \"x_near\"},\n          {\"tag\": \"ref\", \"name\": \"x_distant\"}\n        ]\n      },\n      \"comparator\": \">=\",\n      \"right\": {\"tag\": \"ref\", \"name\": \"demand\"},\n      \"name\": \"meet_demand\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\"tag\": \"ref\", \"name\": \"c_near\"},\n              {\"tag\": \"ref\", \"name\": \"x_near\"}\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\"tag\": \"sum\", \"terms\": [{\"tag\": \"ref\", \"name\": \"c_distant\"}, {\"tag\": \"ref\", \"name\": \"c_haulage\"}]},\n              {\"tag\": \"ref\", \"name\": \"x_distant\"}\n            ]\n          }\n        ]\n      },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "error: determinacy [total_cost]: is derived but no relation defines it (under-determined)",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.024568,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 954,
+    "latency_ms": 61845.5,
+    "model": "zai/glm-5.3",
+    "model_id": "glm-5.3",
+    "model_version": "glm-5.3",
+    "output_tokens": 5280,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=high#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms are equal",
+      "layer": "structural",
+      "outcome": "pass"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.033803,
+    "failure_class": "truncated output",
+    "input_tokens": 1032,
+    "latency_ms": 89303.6,
+    "model": "deepseek/deepseek-v4-pro",
+    "model_id": "deepseek-v4-pro",
+    "model_version": "deepseek-v4-pro",
+    "output_tokens": 8192,
+    "provider": "deepseek",
+    "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
+    "repeat": 0,
+    "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A processor can buy ore from a nearby pit at 70 USD per tonne or from a distant pit at 52 USD per tonne. Haulage from the distant pit is quoted separately at 15 USD per tonne. The plant needs 800 tonnes. Minimise what the processor pays.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"nearby_cost\",\n      \"role\": \"parameter\",\n      \"dimension\": {\n        \"symbol\": \"USD/t\",\n        \"exponents\": {\n          \"currency\": \"1\",\n          \"mass\": \"-1\"\n        }\n      },\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": 70.0,\n      \"description\": \"Purchase cost of ore from the nearby pit per tonne.\",\n      \"span\": {\n        \"start\": 46,\n        \"end\": 61,\n        \"text\": \"70 USD per tonne\"\n      }\n    },\n    {\n      \"name\": \"distant_cost\",\n      \"role\": \"parameter\",\n      \"dimension\": {\n        \"symbol\": \"USD/t\",\n        \"exponents\": {\n \n[... 621 characters omitted ...]\n\": 15.0,\n      \"description\": \"Haulage cost from the distant pit per tonne.\",\n      \"span\": {\n        \"start\": 159,\n        \"end\": 174,\n        \"text\": \"15 USD per tonne\"\n      }\n    },\n    {\n      \"name\": \"demand\",\n      \"role\": \"parameter\",\n      \"dimension\": {\n        \"symbol\": \"t\",\n        \"exponents\": {\n          \"mass\": \"1\"\n        }\n      },\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": 800.0,\n      \"description\": \"Ore tonnage required by the plant.\",\n      \"span\": {\n        \"start\": 193,\n        \"end\": 202,\n        \"text\": \"800 tonnes\"\n      }\n    },\n    {\n      \"name\": \"x_nearby\",\n      \"role\": \"variable\",\n      \"dimension\": {\n        \"symbol\": \"t\",\n        \"exponents\": {\n          \"mass\": \"1\"\n        }\n      },\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Tonnes of ore bought from the nearby pit.\",\n      \"span\": {\n        \"start\": 21,\n        \"end\": 41,\n        \"text\": \"ore from a",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the JSON object is not closed",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
    }
   ],
   "opt-019": [
    {
+    "cost_usd": 0.027592,
+    "failure_class": "infeasible, as the case is",
+    "input_tokens": 1326,
+    "latency_ms": 18782.5,
+    "model": "anthropic/claude-sonnet-5",
+    "model_id": "claude-sonnet-5",
+    "model_version": "claude-sonnet-5",
+    "output_tokens": 2494,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A crew must work at least 40 shifts this month to cover the roster. Overtime rules cap the crew at 32 shifts a month. Each shift costs 900 USD. Minimise the cost of covering the roster.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_shifts\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"shift\", \"exponents\": {\"count\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Number of shifts the crew works this month\",\n      \"span\": {\"start\": 20, \"end\": 26, \"text\": \"shifts\"}\n    },\n    {\n      \"name\": \"min_shifts\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"shift\", \"exponents\": {\"count\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 40,\n      \"description\": \"Minimum required shifts to cover the roster\",\n      \"span\": {\"\n[... 2108 characters omitted ...]\n\"factors\": [\n          {\"tag\": \"ref\", \"name\": \"cost_per_shift\"},\n          {\"tag\": \"ref\", \"name\": \"x_shifts\"}\n        ]\n      },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"The statement requires at least 40 shifts but caps shifts at 32, which are mutually exclusive constraints, making the problem infeasible as literally stated.\",\n      \"span\": {\"start\": 0, \"end\": 189, \"text\": \"A crew must work at least 40 shifts this month to cover the roster. Overtime rules cap the crew at 32 shifts a month. Each shift costs 900 USD. Minimise the cost of covering the roster.\"},\n      \"resolution\": \"Both constraints were kept as literally stated (x_shifts >= 40 and x_shifts <= 32), which together render the feasible region empty; this contradiction was not resolved since the statement gives no indication of which constraint should be relaxed.\",\n      \"affects\": [\"total_cost\", \"min_shift_requirement\", \"max_shift_cap\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "infeasible",
+      "layer": "executable",
+      "outcome": "fail"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "the candidate is infeasible, so the relations have nothing to compare against",
+      "layer": "property",
+      "outcome": "not-applicable"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.006945,
-    "failure_class": "the model it produced is infeasible",
+    "failure_class": "infeasible, as the case is",
     "input_tokens": 1030,
     "latency_ms": 6546.7,
+    "model": "anthropic/claude-haiku-4-5",
     "model_id": "claude-haiku-4-5",
     "model_version": "claude-haiku-4-5-20251001",
     "output_tokens": 1183,
@@ -948,42 +2030,76 @@
     ]
    },
    {
-    "cost_usd": 0.027592,
-    "failure_class": "the model it produced is infeasible",
-    "input_tokens": 1326,
-    "latency_ms": 18782.5,
-    "model_id": "claude-sonnet-5",
-    "model_version": "claude-sonnet-5",
-    "output_tokens": 2494,
-    "provider": "anthropic",
-    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "cost_usd": 0.029838,
+    "failure_class": "a variable whose lower bound is above its upper",
+    "input_tokens": 938,
+    "latency_ms": 71449.7,
+    "model": "zai/glm-5.3",
+    "model_id": "glm-5.3",
+    "model_version": "glm-5.3",
+    "output_tokens": 6483,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=high#do_sample=false#no-seed",
     "repeat": 0,
-    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A crew must work at least 40 shifts this month to cover the roster. Overtime rules cap the crew at 32 shifts a month. Each shift costs 900 USD. Minimise the cost of covering the roster.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_shifts\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"shift\", \"exponents\": {\"count\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Number of shifts the crew works this month\",\n      \"span\": {\"start\": 20, \"end\": 26, \"text\": \"shifts\"}\n    },\n    {\n      \"name\": \"min_shifts\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"shift\", \"exponents\": {\"count\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 40,\n      \"description\": \"Minimum required shifts to cover the roster\",\n      \"span\": {\"\n[... 2108 characters omitted ...]\n\"factors\": [\n          {\"tag\": \"ref\", \"name\": \"cost_per_shift\"},\n          {\"tag\": \"ref\", \"name\": \"x_shifts\"}\n        ]\n      },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"The statement requires at least 40 shifts but caps shifts at 32, which are mutually exclusive constraints, making the problem infeasible as literally stated.\",\n      \"span\": {\"start\": 0, \"end\": 189, \"text\": \"A crew must work at least 40 shifts this month to cover the roster. Overtime rules cap the crew at 32 shifts a month. Each shift costs 900 USD. Minimise the cost of covering the roster.\"},\n      \"resolution\": \"Both constraints were kept as literally stated (x_shifts >= 40 and x_shifts <= 32), which together render the feasible region empty; this contradiction was not resolved since the statement gives no indication of which constraint should be relaxed.\",\n      \"affects\": [\"total_cost\", \"min_shift_requirement\", \"max_shift_cap\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A crew must work at least 40 shifts this month to cover the roster. Overtime rules cap the crew at 32 shifts a month. Each shift costs 900 USD. Minimise the cost of covering the roster.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"n_shifts\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"shift\", \"exponents\": {\"count\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": 40.0,\n      \"upper\": 32.0,\n      \"value\": null,\n      \"description\": \"Number of shifts the crew works this month\",\n      \"span\": {\"start\": 26, \"end\": 46, \"text\": \"40 shifts this month\"}\n    },\n    {\n      \"name\": \"roster_min\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"shift\", \"exponents\": {\"count\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 40.0,\n      \"description\": \"Minimum shifts required this month to cover the roste\n[... 2210 characters omitted ...]\n), so no value of the crew's shifts satisfies both constraints; the problem as written is infeasible. Which bound is intended?\",\n      \"span\": {\"start\": 83, \"end\": 108, \"text\": \"cap the crew at 32 shifts\"},\n      \"resolution\": \"Both bounds taken literally with no silent relaxation; the feasible set is empty (40 <= n_shifts <= 32 is unsatisfiable), so no optimum exists until one of the bounds is corrected by the problem author.\",\n      \"affects\": [\"n_shifts\", \"meet_roster\", \"overtime_cap\", \"total_cost\"]\n    },\n    {\n      \"question\": \"The statement does not say whether the number of shifts must be a whole number or may be treated as continuous.\",\n      \"span\": {\"start\": 26, \"end\": 34, \"text\": \"40 shifts\"},\n      \"resolution\": \"Read n_shifts as integer, since roster shifts are scheduled as whole shifts; the choice does not change the outcome here because the bound contradiction makes the model infeasible either way.\",\n      \"affects\": [\"n_shifts\"]\n    }\n  ],\n  \"feasibility_only\": false\n}",
     "verdicts": [
      {
-      "detail": "infeasible",
+      "detail": "the response did not parse into a problem: quantity 'n_shifts' has lower 40.0 above upper 32.0",
       "layer": "executable",
       "outcome": "fail"
-     },
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.033787,
+    "failure_class": "truncated output",
+    "input_tokens": 1020,
+    "latency_ms": 91616.4,
+    "model": "deepseek/deepseek-v4-pro",
+    "model_id": "deepseek-v4-pro",
+    "model_version": "deepseek-v4-pro",
+    "output_tokens": 8192,
+    "provider": "deepseek",
+    "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
+    "repeat": 0,
+    "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A crew must work at least 40 shifts this month to cover the roster. Overtime rules cap the crew at 32 shifts a month. Each shift costs 900 USD. Minimise the cost of covering the roster.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"shifts_worked\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"shift\", \"exponents\": {\"count\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Number of shifts worked by the crew this month.\",\n      \"span\": {\"start\": 29, \"end\": 35, \"text\": \"shifts\"}\n    },\n    {\n      \"name\": \"min_shifts\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"shift\", \"exponents\": {\"count\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 40,\n      \"description\": \"Minimum number of shifts required to cover the roster.\",\n      \"span\": {\"start\": 26, \"end\": 28, \"text\": \"40\"}\n    },\n    {\n      \"name\": \"max_shifts\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"shift\", \"exponents\": {\"count\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 32,\n      \"description\": \"Maximum number of shifts allowed by overtime rules",
+    "verdicts": [
      {
-      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
-      "layer": "structural",
-      "outcome": "undecided"
-     },
-     {
-      "detail": "the candidate is infeasible, so the relations have nothing to compare against",
-      "layer": "property",
-      "outcome": "not-applicable"
+      "detail": "the response did not parse into a problem: the JSON object is not closed",
+      "layer": "executable",
+      "outcome": "fail"
      }
     ]
    }
   ],
   "opt-020": [
    {
+    "cost_usd": 0.046758,
+    "failure_class": "unparseable output",
+    "input_tokens": 1344,
+    "latency_ms": 34684.8,
+    "model": "anthropic/claude-sonnet-5",
+    "model_id": "claude-sonnet-5",
+    "model_version": "claude-sonnet-5",
+    "output_tokens": 4407,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "repeat": 0,
+    "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A pipeline can move 18 of product A or 25 of product B per hour, and runs 10 hours a day. Product A is worth 340 per unit moved and product B is worth 210. A customer contract requires at least 60 of product A each day. Maximise the daily value moved.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"rate_a\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"unit/h\", \"exponents\": {\"count\": \"1\", \"time\": \"-1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": 18.0,\n      \"description\": \"Pipeline throughput for product A per hour\",\n      \"span\": {\"start\": 21, \"end\": 23, \"text\": \"18\"}\n    },\n    {\n      \"name\": \"rate_b\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"unit/h\", \"exponents\": {\"count\": \"1\", \"time\": \"-1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": 25.0,\n      \"des\n[... 4066 characters omitted ...]\nbe integer or can be continuous.\",\n      \"span\": {\"inferred_reason\": \"The statement does not state integrality requirements for the moved quantities\"},\n      \"resolution\": \"Modeled x_a and x_b as continuous real variables, since pipeline flow is naturally a continuous quantity.\",\n      \"affects\": [\"total_daily_value\", \"time_capacity\", \"contract_minimum_A\"]\n    },\n    {\n      \"question\": \"Whether the pipeline can only move one product at a time or can split its 10 hours between products A and B in the same day.\",\n      \"span\": {\"start\": 0, \"end\": 89, \"text\": \"A pipeline can move 18 of product A or 25 of product B per hour, and runs 10 hours a day.\"},\n      \"resolution\": \"Interpreted the pipeline as capable of splitting its daily 10 hours between products A and B, with total time used bounded by 10 hours, since the contract requires simultaneous minimum delivery of A alongside value from B.\",\n      \"affects\": [\"time_capacity\", \"total_daily_value\"]\n    }\n  ],\n  \"feasibility_only\": false\n}",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: Invalid literal for Fraction: \"{'tag': 'const', 'value': -1}\"",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.012576,
     "failure_class": "dimensional mismatch",
     "input_tokens": 1051,
     "latency_ms": 12105.6,
+    "model": "anthropic/claude-haiku-4-5",
     "model_id": "claude-haiku-4-5",
     "model_version": "claude-haiku-4-5-20251001",
     "output_tokens": 2305,
@@ -1000,20 +2116,42 @@
     ]
    },
    {
-    "cost_usd": 0.046758,
-    "failure_class": "unparseable output",
-    "input_tokens": 1344,
-    "latency_ms": 34684.8,
-    "model_id": "claude-sonnet-5",
-    "model_version": "claude-sonnet-5",
-    "output_tokens": 4407,
-    "provider": "anthropic",
-    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "cost_usd": 0.037383,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 956,
+    "latency_ms": 99189.9,
+    "model": "zai/glm-5.3",
+    "model_id": "glm-5.3",
+    "model_version": "glm-5.3",
+    "output_tokens": 8192,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=high#do_sample=false#no-seed",
     "repeat": 0,
-    "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A pipeline can move 18 of product A or 25 of product B per hour, and runs 10 hours a day. Product A is worth 340 per unit moved and product B is worth 210. A customer contract requires at least 60 of product A each day. Maximise the daily value moved.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"rate_a\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"unit/h\", \"exponents\": {\"count\": \"1\", \"time\": \"-1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": 18.0,\n      \"description\": \"Pipeline throughput for product A per hour\",\n      \"span\": {\"start\": 21, \"end\": 23, \"text\": \"18\"}\n    },\n    {\n      \"name\": \"rate_b\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"unit/h\", \"exponents\": {\"count\": \"1\", \"time\": \"-1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": 25.0,\n      \"des\n[... 4066 characters omitted ...]\nbe integer or can be continuous.\",\n      \"span\": {\"inferred_reason\": \"The statement does not state integrality requirements for the moved quantities\"},\n      \"resolution\": \"Modeled x_a and x_b as continuous real variables, since pipeline flow is naturally a continuous quantity.\",\n      \"affects\": [\"total_daily_value\", \"time_capacity\", \"contract_minimum_A\"]\n    },\n    {\n      \"question\": \"Whether the pipeline can only move one product at a time or can split its 10 hours between products A and B in the same day.\",\n      \"span\": {\"start\": 0, \"end\": 89, \"text\": \"A pipeline can move 18 of product A or 25 of product B per hour, and runs 10 hours a day.\"},\n      \"resolution\": \"Interpreted the pipeline as capable of splitting its daily 10 hours between products A and B, with total time used bounded by 10 hours, since the contract requires simultaneous minimum delivery of A alongside value from B.\",\n      \"affects\": [\"time_capacity\", \"total_daily_value\"]\n    }\n  ],\n  \"feasibility_only\": false\n}",
+    "response_excerpt": "[no answer: the model emitted 28426 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
     "verdicts": [
      {
-      "detail": "the response did not parse into a problem: Invalid literal for Fraction: \"{'tag': 'const', 'value': -1}\"",
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 28426 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.03381,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 1038,
+    "latency_ms": 97751.7,
+    "model": "deepseek/deepseek-v4-pro",
+    "model_id": "deepseek-v4-pro",
+    "model_version": "deepseek-v4-pro",
+    "output_tokens": 8192,
+    "provider": "deepseek",
+    "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 29724 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 29724 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -1021,5 +2159,5 @@
    }
   ]
  },
- "schema": "enunciado-attempts/1.0"
+ "schema": "enunciado-attempts/1.1"
 }
