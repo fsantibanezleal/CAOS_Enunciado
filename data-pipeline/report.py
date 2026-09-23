@@ -392,6 +392,16 @@ _NO_ANSWER = re.compile(
 )
 
 
+def record_cap(record, default: int = PROTOCOL_CAP) -> int:
+    """The output cap a call ran at: its own, from copela 0.4.0's ledger schema 1.1, or the ledger's.
+
+    Records written before schema 1.1 do not carry it, and read as zero, so they fall back to the
+    cap their ledger was run at. Read with getattr because the copela that wrote an older ledger
+    may be the one installed.
+    """
+    return int(getattr(record, "max_tokens", 0) or 0) or default
+
+
 def _still_reasoning_at_the_cap(record, cap: int) -> bool:
     """The call billed exactly its cap and the model is one that reasons.
 
@@ -403,7 +413,7 @@ def _still_reasoning_at_the_cap(record, cap: int) -> bool:
     the document. The fingerprint says whether the model can reason: the local lane records
     `think=n/a` for one that cannot.
     """
-    if record.output_tokens < cap:
+    if record.output_tokens < record_cap(record, cap):
         return False
     fingerprint = record.provider_fingerprint or ""
     reasons = "#think=" in fingerprint and "#think=n/a" not in fingerprint
@@ -640,8 +650,10 @@ def model_order(ledger: Ledger) -> list[dict[str, object]]:
                 "cost_usd": 0.0,
                 "latencies": [],
                 "outputs": [],
+                "capped": 0,
                 "versions": set(),
                 "fingerprints": set(),
+                "harnesses": set(),
                 "dates": [],
             },
         )
@@ -650,8 +662,12 @@ def model_order(ledger: Ledger) -> list[dict[str, object]]:
         row["cost_usd"] += record.cost_usd
         row["latencies"].append(record.latency_ms)
         row["outputs"].append(record.output_tokens)
+        row["capped"] += int(record.output_tokens >= record_cap(record))
         row["versions"].add(record.model_version)
         row["fingerprints"].add(record.provider_fingerprint)
+        # copela 0.4.0 names itself in each record; an older record does not, and that is shown as
+        # unknown rather than assumed to be whatever is installed now.
+        row["harnesses"].add(getattr(record, "harness", "") or "unrecorded (ledger schema 1.0)")
         row["dates"].append(record.recorded_at[:10])
 
     def median(values: list[float]) -> float:
@@ -674,9 +690,10 @@ def model_order(ledger: Ledger) -> list[dict[str, object]]:
             "cost_usd": round(float(row["cost_usd"]), 4),
             "median_latency_s": round(median(row["latencies"]) / 1000, 1),
             "median_output_tokens": int(median(row["outputs"])),
-            "at_cap": sum(1 for tokens in row["outputs"] if tokens >= PROTOCOL_CAP),
+            "at_cap": row["capped"],
             "model_versions": sorted(row["versions"]),
             "fingerprints": sorted(row["fingerprints"]),
+            "harnesses": sorted(row["harnesses"]),
             "measured_from": min(row["dates"]),
             "measured_to": max(row["dates"]),
         }
@@ -720,7 +737,7 @@ def _at_cap(ledger: Ledger, cap: int) -> dict[str, dict[str, object]]:
             "ran": cell["ran"],
             "faithful": cell["faithful"],
             "gap": cell["gap"],
-            "at_cap": sum(1 for tokens in outputs if tokens >= cap),
+            "at_cap": sum(1 for r in rows if r.output_tokens >= record_cap(r, cap)),
             # What the calls failed on at this cap: the reason the comparison exists is that a
             # binding cap hides the formalization errors behind truncations.
             "failure_breakdown": dict(sorted(failures.items())),
