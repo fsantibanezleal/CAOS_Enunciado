@@ -38,6 +38,8 @@ the same conclusion by a different route.
 
 ## What authoring costs, and what it buys
 
+![The authoring protocol, with the two contaminating shortcuts struck out](../assets/holdout.svg)
+
 It costs cases. Twenty is fewer than any set in that table, and the consequence is in the intervals:
 at n = 20 a 95% Wilson interval spans close to half the useful range, and this product therefore
 cannot rank two models.

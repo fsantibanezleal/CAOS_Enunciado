@@ -38,6 +38,8 @@ ground truth.
 
 ## The sweep
 
+![The sweep protocol, with the anti-pattern it refuses struck out](../assets/sweep-protocol.svg)
+
 `data-pipeline/sweep_run.py` drives `copela.Sweep` over cases times models times repeats. What
 matters is what it refuses to do:
 

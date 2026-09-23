@@ -57,9 +57,17 @@
 }
 
 .enunciado-main .tablist {
-  margin-bottom: 0.45rem;
-  padding-bottom: 0.35rem;
+  margin-bottom: 0.35rem;
+  padding-bottom: 0.25rem;
   flex: 0 0 auto;
+}
+
+/* The group row is navigation between four questions, not a heading, so it is set at the size of a
+   control. With two rows of chrome above the instrument, the first version of this layout measured
+   49.8% against ADR-0071 rule 8's 50% floor; these two rows are where the difference came from. */
+.enunciado-main > .tabs > .tablist .tab {
+  padding: 0.32rem 0.85rem;
+  font-size: 0.88rem;
 }
 
 /* `:not([hidden])` is load-bearing. The shell renders every panel and hides the inactive ones with
@@ -778,6 +786,10 @@
 .fig-row .fig-svg { max-width: 100%; }
 .fig-row .figure { margin-block: 0; }
 
+/* A dense figure on its own row renders a little above its 760-unit design size, so an 11px label
+   reads at about 13px. Any wider and the labels outgrow the prose around them. */
+.figure.full .fig-svg { max-width: 940px; }
+
 /* Long-form sections carry their own vertical rhythm; the shell's default is tuned for shorter
    pages and runs the headings into the text above them at this density. */
 .prose section > h2:first-child { margin-top: 0; }
@@ -824,3 +836,83 @@ body,
   height: auto;
   min-height: 100%;
 }
+
+/* ---------- the method groups ---------- */
+
+/*
+ * The workbench is two levels: four groups named for the question a reader is asking, and the
+ * method tabs of the active group (ADR-0071 rule 5). Each level is ONE row that scrolls rather than
+ * wraps (rule 4), and the second row is compact, because every pixel of chrome is taken from the
+ * instrument and rule 8 holds the instrument to half the viewport.
+ *
+ * `:not([hidden])` is load-bearing here for the same reason it is on `.tabpanel`: the shell renders
+ * every sub-panel and hides the inactive ones, and an author `display` would un-hide them.
+ */
+.enunciado-main .subtabs {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  margin-block: 0;
+}
+
+.enunciado-main .subtablist {
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  gap: 0.25rem;
+  margin-bottom: 0.3rem;
+}
+
+.enunciado-main .subtablist::-webkit-scrollbar { display: none; }
+
+.enunciado-main .subtab {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  padding: 0.2rem 0.7rem;
+  font-size: 0.79rem;
+}
+
+.enunciado-main .subtabpanels {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.enunciado-main .subtabpanel:not([hidden]) {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The shell does not ship a selectable chip, and ADR-0017's style row requires the app to define
+   one: the pill plus a filled-accent `.on`. */
+.chip.on {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+button.chip {
+  font: inherit;
+  font-size: 0.71rem;
+  line-height: 1.55;
+  background: var(--color-surface);
+}
+
+button.chip { cursor: pointer; }
+button.chip:hover { border-color: var(--color-accent); color: var(--color-fg); }
+/* A method that does not apply to the selected case stays visible and says why in its title,
+   rather than disappearing and leaving the reader to wonder where it went. */
+button.chip:disabled,
+button.chip:disabled:hover {
+  cursor: not-allowed;
+  opacity: 0.45;
+  border-color: var(--color-border);
+  color: var(--color-fg-subtle);
+}
+.chip.on:disabled { background: var(--color-surface-2); }

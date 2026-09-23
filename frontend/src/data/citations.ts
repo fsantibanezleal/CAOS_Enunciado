@@ -116,4 +116,31 @@ export const CITATIONS: Citation[] = [
       "Nethercote, N., Stuckey, P. J., Becket, R., Brand, S., Duck, G. J., Tack, G. MiniZinc: Towards a Standard CP Modelling Language. Principles and Practice of Constraint Programming (CP 2007), LNCS 4741, 529-543, 2007.",
     doi: "10.1007/978-3-540-74970-7_38",
   },
+  {
+    id: "shervashidze2011",
+    label: "Shervashidze et al. 2011",
+    citation:
+      "Shervashidze, N., Schweitzer, P., van Leeuwen, E. J., Mehlhorn, K., Borgwardt, K. M. Weisfeiler-Lehman Graph Kernels. Journal of Machine Learning Research 12(77), 2539-2561, 2011.",
+    url: "https://jmlr.org/papers/v12/shervashidze11a.html",
+  },
+  {
+    id: "cfi1992",
+    label: "Cai, Fürer and Immerman 1992",
+    citation:
+      "Cai, J.-Y., Fürer, M., Immerman, N. An optimal lower bound on the number of variables for graph identification. Combinatorica 12(4), 389-410, 1992.",
+    doi: "10.1007/BF01305232",
+  },
+  {
+    id: "wolsey2020",
+    label: "Wolsey 2020",
+    citation: "Wolsey, L. Integer Programming. Wiley, 2020.",
+    doi: "10.1002/9781119606475",
+  },
+  {
+    id: "oneill2005",
+    label: "O'Neill et al. 2005",
+    citation:
+      "O'Neill, R. P., Sotkiewicz, P. M., Hobbs, B. F., Rothkopf, M. H., Stewart, W. R. Efficient market-clearing prices in markets with nonconvexities. European Journal of Operational Research 164(1), 269-285, 2005.",
+    doi: "10.1016/j.ejor.2003.12.011",
+  },
 ];

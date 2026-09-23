@@ -206,3 +206,28 @@ export function describeDimension(dimension: Dimension): string {
   const si = parts.length ? parts.join("·") : "1";
   return dimension.symbol && dimension.symbol !== si ? `${dimension.symbol}  (${si})` : si;
 }
+
+/** One model's attempt at one case, as `report.py` derives it from the ledger. */
+export interface Attempt {
+  model_id: string;
+  provider: string;
+  repeat: number;
+  /** Derived from the verdict message, the same rule the Benchmark's breakdown uses. */
+  failure_class: string;
+  verdicts: { layer: string; outcome: Outcome; detail: string }[];
+  cost_usd: number;
+  latency_ms: number;
+  input_tokens: number;
+  output_tokens: number;
+  /** Present only when something failed: a digest cannot be debugged. */
+  response_excerpt: string;
+  model_version: string;
+  provider_fingerprint: string;
+}
+
+export interface AttemptsArtifact {
+  schema: string;
+  cases: Record<string, Attempt[]>;
+}
+
+export const ATTEMPTS_SCHEMA = "enunciado-attempts/1.0";

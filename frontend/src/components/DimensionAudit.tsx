@@ -217,7 +217,7 @@ export function DimensionAudit({ problem, lang }: { problem: Problem; lang: "en"
                 <td>
                   <span className="chip">{q.role}</span>
                 </td>
-                <td className="dim">{q.dimension.symbol || "—"}</td>
+                <td className="dim">{q.dimension.symbol || "–"}</td>
                 <td className="dim">{render(vector(q.dimension))}</td>
               </tr>
             ))}

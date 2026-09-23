@@ -1,0 +1,248 @@
+/**
+ * The failure, in the model's own words, with the defect located.
+ *
+ * A failure class is a label. This panel opens the response the model actually wrote, as the ledger
+ * kept it, and finds the exact spot the validator objected to: the constant with no unit, the
+ * exponent written as an expression, the span quoting words the statement does not contain, the
+ * point where the output was cut off. The difference between "a constant with no unit" and seeing
+ * `"tag": "const", "value": 1.2` with nothing after it is the difference between a statistic and an
+ * explanation.
+ *
+ * The ledger keeps a bounded excerpt, 2000 characters with the middle elided, so a defect can fall
+ * in the omitted part. When it does, the panel says so rather than highlighting something nearby.
+ */
+
+import { useEffect, useMemo, useState } from "react";
+
+import type { Attempt, AttemptsArtifact, CaseRecord } from "../lib/contract.types";
+import { loadAttempts } from "../lib/data";
+
+interface Mark {
+  start: number;
+  end: number;
+  why: string;
+}
+
+/** Every `{...}` object in the text containing `"tag": "const"` and no `"unit"` key. */
+function constantsWithoutUnit(text: string): Mark[] {
+  const marks: Mark[] = [];
+  const needle = /"tag"\s*:\s*"const"/g;
+  let found: RegExpExecArray | null;
+  while ((found = needle.exec(text)) !== null) {
+    // Walk out to the enclosing braces with a depth count. Naive about braces inside strings, which
+    // this output never has around a const node, and bounded so a broken excerpt cannot spin.
+    let open = found.index;
+    for (let depth = 0; open > 0 && open > found.index - 400; open -= 1) {
+      if (text[open] === "}") depth += 1;
+      if (text[open] === "{") {
+        if (depth === 0) break;
+        depth -= 1;
+      }
+    }
+    let close = found.index;
+    for (let depth = 0; close < text.length && close < found.index + 400; close += 1) {
+      if (text[close] === "{") depth += 1;
+      if (text[close] === "}") {
+        if (depth === 0) break;
+        depth -= 1;
+      }
+    }
+    const body = text.slice(open, close + 1);
+    if (!/"unit"\s*:/.test(body)) {
+      marks.push({ start: open, end: close + 1, why: "a constant with no unit" });
+    }
+  }
+  return marks;
+}
+
+function locate(attempt: Attempt, text: string, es: boolean): { marks: Mark[]; note: string } {
+  const failing = attempt.verdicts.find((v) => v.outcome === "fail");
+  const detail = failing?.detail ?? "";
+
+  if (detail.includes("missing its 'unit' field")) {
+    const marks = constantsWithoutUnit(text);
+    return {
+      marks,
+      note: marks.length
+        ? es
+          ? `${marks.length} constante(s) sin campo unit en el extracto. Una suma de terminos con dimension exige que cada constante declare la suya.`
+          : `${marks.length} constant(s) with no unit field in the excerpt. A sum of dimensioned terms requires every constant to declare its own.`
+        : es
+          ? "La constante sin unidad cae en la parte omitida del extracto."
+          : "The constant with no unit falls in the omitted part of the excerpt.",
+    };
+  }
+
+  const fraction = detail.match(/Invalid literal for Fraction: "(.+?)"/);
+  if (fraction) {
+    const exponent = /"exponent"\s*:\s*\{/g;
+    const marks: Mark[] = [];
+    let found: RegExpExecArray | null;
+    while ((found = exponent.exec(text)) !== null) {
+      const end = text.indexOf("}", found.index);
+      marks.push({ start: found.index, end: end < 0 ? found.index + 40 : end + 1, why: "an exponent written as an expression" });
+    }
+    return {
+      marks,
+      note: es
+        ? "Un exponente debe ser una fraccion literal, como \"-1\" o \"1/2\". El modelo escribio un nodo de expresion donde va un numero."
+        : "An exponent must be a literal fraction such as \"-1\" or \"1/2\". The model wrote an expression node where a number belongs.",
+    };
+  }
+
+  const named = detail.match(/\[([A-Za-z_][\w]*)\]/);
+  if (named && (detail.includes("is derived but") || detail.includes("dimensions ["))) {
+    const name = named[1];
+    const pattern = new RegExp(`"name"\\s*:\\s*"${name}"`, "g");
+    const marks: Mark[] = [];
+    let found: RegExpExecArray | null;
+    while ((found = pattern.exec(text)) !== null) {
+      marks.push({ start: found.index, end: found.index + found[0].length, why: name });
+    }
+    return {
+      marks,
+      note: detail.includes("is derived but")
+        ? es
+          ? `${name} se declara derivada y ninguna relacion la define. Queda como una incognita libre.`
+          : `${name} is declared derived and no relation defines it. It is left as a free unknown.`
+        : es
+          ? `Los dos lados de ${name} llevan dimensiones distintas.`
+          : `The two sides of ${name} carry different dimensions.`,
+    };
+  }
+
+  const fabricated = detail.match(/contains '(.+?)'/);
+  if (fabricated) {
+    const at = text.indexOf(fabricated[1]);
+    return {
+      marks: at >= 0 ? [{ start: at, end: at + fabricated[1].length, why: "fabricated provenance" }] : [],
+      note: es
+        ? `El span afirma que el enunciado contiene "${fabricated[1]}", y no lo contiene.`
+        : `The span claims the statement contains "${fabricated[1]}", and it does not.`,
+    };
+  }
+
+  if (detail.includes("not closed")) {
+    return {
+      marks: [{ start: Math.max(0, text.length - 90), end: text.length, why: "cut off here" }],
+      note: es
+        ? "La salida se corto antes de cerrar el objeto JSON: el tope de tokens se alcanzo a mitad del documento."
+        : "The output was cut before the JSON object closed: the token cap was reached mid-document.",
+    };
+  }
+
+  if (attempt.verdicts.some((v) => v.layer === "structural" && v.outcome === "fail")) {
+    return {
+      marks: [],
+      note: es
+        ? "Este documento valido y resolvio. Su defecto es semantico: resuelve a otro optimo, y eso no se ve en el texto sino en la respuesta."
+        : "This document validated and solved. Its defect is semantic: it solves to a different optimum, and that is not visible in the text but in the answer.",
+    };
+  }
+
+  return { marks: [], note: detail };
+}
+
+export function FailureAnatomy({ record, lang }: { record: CaseRecord; lang: "en" | "es" }) {
+  const es = lang === "es";
+  const [artifact, setArtifact] = useState<AttemptsArtifact | null>(null);
+  const [error, setError] = useState("");
+  const [pick, setPick] = useState(0);
+
+  useEffect(() => {
+    loadAttempts().then(setArtifact, (e) => setError(String(e)));
+  }, []);
+
+  const failures = useMemo(
+    () => (artifact?.cases[record.case_id] ?? []).filter((a) => a.response_excerpt),
+    [artifact, record.case_id],
+  );
+
+  useEffect(() => setPick(0), [record.case_id]);
+
+  if (error) return <p className="muted">{error}</p>;
+  if (!artifact) return <p className="muted">{es ? "Cargando el libro mayor..." : "Loading the ledger..."}</p>;
+  if (failures.length === 0) {
+    return (
+      <p className="muted">
+        {es
+          ? "Ningun intento fallo en este caso, asi que no hay extracto que abrir. El libro mayor solo guarda la respuesta cuando algo fallo."
+          : "No attempt failed on this case, so there is no excerpt to open. The ledger keeps a response only when something failed."}
+      </p>
+    );
+  }
+
+  const attempt = failures[Math.min(pick, failures.length - 1)];
+  const text = attempt.response_excerpt;
+  const { marks, note } = locate(attempt, text, es);
+
+  // Split the excerpt into plain and marked runs, in order, so overlapping marks cannot nest.
+  const sorted = [...marks].sort((a, b) => a.start - b.start);
+  const runs: { text: string; mark: Mark | null }[] = [];
+  let cursor = 0;
+  for (const mark of sorted) {
+    if (mark.start < cursor) continue;
+    if (mark.start > cursor) runs.push({ text: text.slice(cursor, mark.start), mark: null });
+    runs.push({ text: text.slice(mark.start, mark.end), mark });
+    cursor = mark.end;
+  }
+  if (cursor < text.length) runs.push({ text: text.slice(cursor), mark: null });
+
+  const elided = text.includes("characters omitted");
+
+  return (
+    <div className="viz">
+      <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", marginBottom: "0.4rem" }}>
+        {failures.map((f, index) => (
+          <button
+            key={`${f.model_id}-${f.repeat}`}
+            type="button"
+            className={`chip${index === pick ? " on" : ""}`}
+            onClick={() => setPick(index)}
+            style={{ cursor: "pointer" }}
+          >
+            {f.model_id} {"·"} {f.failure_class}
+          </button>
+        ))}
+      </div>
+
+      <pre className="emitted" style={{ flex: 1, minHeight: 0, overflow: "auto", whiteSpace: "pre-wrap", margin: 0 }}>
+        {runs.map((run, index) =>
+          run.mark ? (
+            <mark
+              key={index}
+              title={run.mark.why}
+              style={{
+                background: "color-mix(in srgb, var(--color-bad) 22%, transparent)",
+                color: "inherit",
+                outline: "1.5px solid var(--color-bad)",
+                borderRadius: "3px",
+              }}
+            >
+              {run.text}
+            </mark>
+          ) : (
+            <span key={index}>{run.text}</span>
+          ),
+        )}
+      </pre>
+
+      <div className="viz-readout">
+        <span className={marks.length ? "bad" : "muted"}>
+          {marks.length} {es ? "defecto(s) localizado(s)" : "defect(s) located"}
+        </span>
+        <span>{note}</span>
+        {marks.length === 0 && elided && (
+          <span className="muted">
+            {es
+              ? "el punto exacto cae en la parte omitida del extracto; el libro mayor guarda 2000 caracteres"
+              : "the exact spot falls in the omitted part of the excerpt; the ledger keeps 2000 characters"}
+          </span>
+        )}
+        {elided && (
+          <span className="muted">{es ? "extracto con el centro omitido" : "excerpt, middle elided"}</span>
+        )}
+      </div>
+    </div>
+  );
+}

@@ -393,8 +393,8 @@ export function ArchitectureDiagram({ lang }: { lang: Lang }) {
       </text>
       <text x={380} y={284} textAnchor="middle" className="dg-note">
         {es
-          ? "Todo numero publicado viene del artefacto. Lo unico que se calcula al vuelo es lo que usted cambia."
-          : "Every published number comes from the artifact. The only thing computed live is what you change."}
+          ? "Todo numero publicado viene del artefacto. Lo que el navegador calcula explica la respuesta y nunca se publica."
+          : "Every published number comes from the artifact. What the browser computes explains the answer and is never published."}
       </text>
       <text x={380} y={304} textAnchor="middle" className="dg-note">
         {es
@@ -686,43 +686,73 @@ export function DocumentDiagram({ lang }: { lang: Lang }) {
 
 /* ------------------------------------------------------------- canonical form */
 
-/** Two different-looking models reduced to the same canonical form. */
+/**
+ * One pair, two canonicalisers, two verdicts, and both honest.
+ *
+ * The product has two canonical forms and it matters which is which. The published verdict uses
+ * planteo's, over the typed document: it renames by structure, sorts terms and orients comparator
+ * sides, and it keeps the objective sense, so this pair comes out NOT PROVEN. The workbench computes
+ * a stronger form over the linear rows, which fixes the sense and moves every term, so the same pair
+ * comes out EQUIVALENT. Neither can call two different models equivalent.
+ */
 export function CanonicalDiagram({ lang }: { lang: Lang }) {
   const es = lang === "es";
   return (
-    <svg className="fig-svg wide" viewBox="0 0 700 270" role="img"
-      aria-label={es ? "Dos modelos distintos con la misma forma canonica" : "Two different models with the same canonical form"}>
+    <svg className="fig-svg wide" viewBox="0 0 760 330" role="img"
+      aria-label={es ? "El mismo par ante dos formas canonicas" : "One pair under two canonical forms"}>
       <Arrow id="canon-arrow" />
 
-      <rect x={10} y={24} width={244} height={86} rx="8" className="dg-box accent" />
-      <text x={24} y={44} className="dg-box-title accent">A</text>
-      <text x={24} y={64} className="dg-box-sub">max 3x + 2y</text>
-      <text x={24} y={80} className="dg-box-sub">x + y &lt;= 10</text>
-      <text x={24} y={96} className="dg-box-sub">2x + y &lt;= 16</text>
+      {/* The pair. */}
+      <rect x={10} y={46} width={230} height={214} rx="9" className="dg-box accent" />
+      <text x={24} y={68} className="dg-box-title accent">{es ? "El par" : "The pair"}</text>
+      <text x={24} y={94} className="dg-box-title">A</text>
+      <text x={44} y={94} className="dg-box-sub">max 3x + 2y</text>
+      <text x={44} y={112} className="dg-box-sub">x + y &lt;= 10</text>
+      <text x={44} y={130} className="dg-box-sub">2x + y &lt;= 16</text>
+      <line x1={24} y1={150} x2={226} y2={150} className="dg-grid" />
+      <text x={24} y={176} className="dg-box-title">B</text>
+      <text x={44} y={176} className="dg-box-sub">min -2y - 3x</text>
+      <text x={44} y={194} className="dg-box-sub">16 &gt;= y + 2x</text>
+      <text x={44} y={212} className="dg-box-sub">y + x &lt;= 10</text>
+      <text x={24} y={242} className="dg-note">{es ? "el mismo modelo, escrito dos veces" : "the same model, written twice"}</text>
 
-      <rect x={10} y={150} width={244} height={86} rx="8" className="dg-box accent" />
-      <text x={24} y={170} className="dg-box-title accent">B</text>
-      <text x={24} y={190} className="dg-box-sub">min -2y - 3x</text>
-      <text x={24} y={206} className="dg-box-sub">16 &gt;= y + 2x</text>
-      <text x={24} y={222} className="dg-box-sub">y + x &lt;= 10</text>
+      {/* The published form. */}
+      <line x1={244} y1={118} x2={290} y2={86} className="dg-edge" markerEnd="url(#canon-arrow)" />
+      <rect x={294} y={34} width={250} height={100} rx="8" className="dg-box" />
+      <text x={308} y={56} className="dg-box-title">{es ? "planteo: forma del documento" : "planteo: document form"}</text>
+      <text x={308} y={76} className="dg-box-sub">{es ? "renombra por estructura, ordena terminos," : "renames by structure, sorts terms,"}</text>
+      <text x={308} y={93} className="dg-box-sub">{es ? "orienta los lados del comparador;" : "orients comparator sides;"}</text>
+      <text x={308} y={110} className="dg-box-sub" style={{ fill: "var(--color-warn)" }}>
+        {es ? "conserva el sentido del objetivo" : "keeps the objective sense"}
+      </text>
+      <text x={308} y={126} className="dg-edge-label">{es ? "decide el veredicto publicado" : "decides the published verdict"}</text>
+      <line x1={548} y1={84} x2={580} y2={84} className="dg-edge" markerEnd="url(#canon-arrow)" />
+      <rect x={584} y={54} width={166} height={60} rx="8" className="dg-box" opacity="0.8" />
+      <text x={667} y={80} textAnchor="middle" className="dg-box-title">{es ? "NO PROBADO" : "NOT PROVEN"}</text>
+      <text x={667} y={100} textAnchor="middle" className="dg-box-sub">{es ? "max frente a min" : "max against min"}</text>
 
-      <line x1={258} y1={67} x2={316} y2={110} className="dg-edge" markerEnd="url(#canon-arrow)" />
-      <line x1={258} y1={193} x2={316} y2={150} className="dg-edge" markerEnd="url(#canon-arrow)" />
-      <text x={270} y={86} className="dg-edge-label">{es ? "canonizar" : "canonicalise"}</text>
+      {/* The workbench form. */}
+      <line x1={244} y1={190} x2={290} y2={222} className="dg-edge" markerEnd="url(#canon-arrow)" />
+      <rect x={294} y={174} width={250} height={100} rx="8" className="dg-box good" />
+      <text x={308} y={196} className="dg-box-title">{es ? "banco: forma lineal" : "workbench: linear form"}</text>
+      <text x={308} y={216} className="dg-box-sub">{es ? "fija el sentido en minimizar," : "fixes the sense to minimise,"}</text>
+      <text x={308} y={233} className="dg-box-sub">{es ? "mueve todo termino a la izquierda," : "moves every term left,"}</text>
+      <text x={308} y={250} className="dg-box-sub">{es ? "normaliza filas y signo; orden WL" : "normalises rows and sign; WL order"}</text>
+      <text x={308} y={266} className="dg-edge-label">{es ? "se muestra, no se publica" : "shown, not published"}</text>
+      <line x1={548} y1={224} x2={580} y2={224} className="dg-edge" markerEnd="url(#canon-arrow)" />
+      <rect x={584} y={194} width={166} height={60} rx="8" className="dg-box good" />
+      <text x={667} y={220} textAnchor="middle" className="dg-box-title accent">{es ? "EQUIVALENTE" : "EQUIVALENT"}</text>
+      <text x={667} y={240} textAnchor="middle" className="dg-box-sub">{es ? "digest igual" : "equal digest"}</text>
 
-      <rect x={322} y={96} width={252} height={68} rx="8" className="dg-box good" />
-      <text x={336} y={118} className="dg-box-title">{es ? "Forma canonica" : "Canonical form"}</text>
-      <text x={336} y={136} className="dg-box-sub">{es ? "sentido fijado, terminos ordenados," : "sense fixed, terms ordered,"}</text>
-      <text x={336} y={152} className="dg-box-sub">{es ? "comparadores normalizados" : "comparators normalised"}</text>
-
-      <line x1={578} y1={130} x2={614} y2={130} className="dg-edge" markerEnd="url(#canon-arrow)" />
-      <text x={646} y={126} textAnchor="middle" className="dg-box-title accent">=</text>
-      <text x={646} y={146} textAnchor="middle" className="dg-box-sub">{es ? "EQUIV." : "EQUIV."}</text>
-
-      <text x={350} y={258} textAnchor="middle" className="dg-note">
+      <text x={380} y={302} textAnchor="middle" className="dg-note">
         {es
-          ? "Igualdad canonica prueba equivalencia. Desigualdad canonica no prueba nada: dos modelos pueden ser equivalentes y no reducirse a la misma forma."
-          : "Canonical equality proves equivalence. Canonical inequality proves nothing: two models can be equivalent and not reduce to the same form."}
+          ? "Ninguna puede llamar equivalentes a dos modelos distintos: cada una solo aplica reescrituras que conservan el conjunto de soluciones."
+          : "Neither can call two different models equivalent: each applies only rewrites that keep the solution set."}
+      </text>
+      <text x={380} y={320} textAnchor="middle" className="dg-note">
+        {es
+          ? "La mas debil se equivoca solo hacia lo seguro: un NO PROBADO de mas, nunca un EQUIVALENTE falso."
+          : "The weaker one errs only in the safe direction: an extra NOT PROVEN, never a false EQUIVALENT."}
       </text>
     </svg>
   );
@@ -951,6 +981,341 @@ export function ProviderSeamDiagram({ lang }: { lang: Lang }) {
         {es
           ? "Una huella que dijera temperature=0 para un proveedor que no la acepta seria reproducibilidad afirmada y no ejercida."
           : "A fingerprint claiming temperature=0 for a provider that does not accept it is reproducibility asserted and not exercised."}
+      </text>
+    </svg>
+  );
+}
+
+/* ---------------------------------------------------------- WL refinement */
+
+/**
+ * Colour refinement on a small model's graph, round 0 and the round it stabilises.
+ *
+ * The model is min x + 2y + z subject to x + y <= 4 and y + z <= 4. Every variable starts alike
+ * (same domain, same bounds) and both rows start alike (same comparator, same right-hand side). One
+ * round of looking at neighbourhoods separates y, the variable in both rows; x and z never separate,
+ * because swapping them is a symmetry of the model and refinement cannot break a symmetry.
+ */
+export function RefinementDiagram({ lang }: { lang: Lang }) {
+  const es = lang === "es";
+  const A = "color-mix(in oklab, var(--color-accent) 55%, var(--color-surface))";
+  const M = "color-mix(in oklab, var(--color-magenta) 60%, var(--color-surface))";
+  const R = "color-mix(in oklab, var(--color-warn) 55%, var(--color-surface))";
+  const O = "color-mix(in oklab, var(--color-good) 55%, var(--color-surface))";
+
+  const panel = (ox: number, stable: boolean) => {
+    const variables = [
+      { id: "x", y: 100, fill: A },
+      { id: "y", y: 168, fill: stable ? M : A },
+      { id: "z", y: 236, fill: A },
+    ];
+    const rows = [
+      { id: "r1", y: 134 },
+      { id: "r2", y: 202 },
+    ];
+    const vx = ox + 62;
+    const rx = ox + 262;
+    const objective = { x: ox + 262, y: 62 };
+    const edges: { from: [number, number]; to: [number, number]; w: string }[] = [
+      { from: [vx, 100], to: [objective.x, objective.y], w: "1" },
+      { from: [vx, 168], to: [objective.x, objective.y], w: "2" },
+      { from: [vx, 236], to: [objective.x, objective.y], w: "1" },
+      { from: [vx, 100], to: [rx, 134], w: "1" },
+      { from: [vx, 168], to: [rx, 134], w: "1" },
+      { from: [vx, 168], to: [rx, 202], w: "1" },
+      { from: [vx, 236], to: [rx, 202], w: "1" },
+    ];
+    return (
+      <g>
+        <text x={ox} y={34} className="dg-box-title">
+          {stable
+            ? es
+              ? "ronda 1: estable"
+              : "round 1: stable"
+            : es
+              ? "ronda 0: semillas"
+              : "round 0: seeds"}
+        </text>
+        {edges.map((edge, index) => {
+          // The one weight that differs is drawn heavier and labelled ON its edge, over a halo, a
+          // third of the way along: at the midpoint the label sat on a crossing and read as either
+          // edge's, and beside the edge it sat on a third one.
+          const lx = edge.from[0] + 0.35 * (edge.to[0] - edge.from[0]);
+          const ly = edge.from[1] + 0.35 * (edge.to[1] - edge.from[1]);
+          return (
+            <g key={index}>
+              <line
+                x1={edge.from[0]}
+                y1={edge.from[1]}
+                x2={edge.to[0]}
+                y2={edge.to[1]}
+                className="dg-edge"
+                style={edge.w === "2" ? { strokeWidth: 3.2 } : undefined}
+              />
+              {edge.w === "2" && (
+                <>
+                  <rect x={lx - 9} y={ly - 9} width={18} height={16} rx={4} style={{ fill: "var(--color-bg)" }} />
+                  <text x={lx} y={ly + 3.5} textAnchor="middle" className="dg-node-label">
+                    2
+                  </text>
+                </>
+              )}
+            </g>
+          );
+        })}
+        {variables.map((node) => (
+          <g key={node.id}>
+            <circle cx={vx} cy={node.y} r={16} style={{ fill: node.fill }} stroke="var(--color-border)" />
+            <text x={vx} y={node.y + 4} textAnchor="middle" className="dg-node-label">
+              {node.id}
+            </text>
+          </g>
+        ))}
+        {rows.map((node) => (
+          <g key={node.id}>
+            <rect x={rx - 16} y={node.y - 16} width={32} height={32} rx={5} style={{ fill: R }} stroke="var(--color-border)" />
+            <text x={rx} y={node.y + 4} textAnchor="middle" className="dg-node-label">
+              {node.id}
+            </text>
+          </g>
+        ))}
+        <circle cx={objective.x} cy={objective.y} r={17} style={{ fill: O }} stroke="var(--color-border)" />
+        <text x={objective.x} y={objective.y + 4} textAnchor="middle" className="dg-node-label">
+          obj
+        </text>
+        <text x={ox} y={276} className="dg-box-sub">
+          {stable
+            ? es
+              ? "4 clases: y se separa; x y z no se separaran nunca"
+              : "4 classes: y separates; x and z never will"
+            : es
+              ? "3 clases: variables iguales, filas iguales, objetivo"
+              : "3 classes: variables alike, rows alike, objective"}
+        </text>
+      </g>
+    );
+  };
+
+  return (
+    <svg className="fig-svg wide" viewBox="0 0 760 340" role="img"
+      aria-label={es ? "Refinamiento de colores sobre el grafo de un modelo" : "Colour refinement on a model's graph"}>
+      <text x={380} y={14} textAnchor="middle" className="dg-edge-label">
+        min x + 2y + z   s.t.   r1: x + y &lt;= 4,   r2: y + z &lt;= 4
+      </text>
+      {panel(16, false)}
+      <line x1={372} y1={30} x2={372} y2={282} className="dg-grid" />
+      {panel(400, true)}
+      <text x={380} y={306} textAnchor="middle" className="dg-note">
+        {es
+          ? "Cada ronda recolorea un nodo con su color y el multiconjunto de pares (peso, color vecino). Se detiene cuando nada se separa."
+          : "Each round recolours a node from its colour and the multiset of (weight, neighbour colour) pairs. It stops when nothing splits."}
+      </text>
+      <text x={380} y={324} textAnchor="middle" className="dg-note">
+        {es
+          ? "Coloraciones estables distintas prueban grafos no isomorfos. Iguales no prueban nada: un ciclo de 6 y dos triangulos no se separan."
+          : "Different stable colourings prove the graphs non-isomorphic. Equal ones prove nothing: a 6-cycle and two triangles never separate."}
+      </text>
+    </svg>
+  );
+}
+
+/* ---------------------------------------------------------- LP duality */
+
+/**
+ * The geometry of an LP optimum and its dual certificate.
+ *
+ * max 2x + 3y subject to x + y <= 4, x + 3y <= 6, x <= 3.5. The optimum (3, 1) sits where the first
+ * two rows bind, and the objective vector lies in the cone of their normals: c = 1.5 a1 + 0.5 a2.
+ * Those coefficients ARE the shadow prices. The third row is slack, so its price is zero. The numbers
+ * were solved with the same HiGHS build the site ships, not drawn from memory.
+ */
+export function DualityGeometryDiagram({ lang }: { lang: Lang }) {
+  const es = lang === "es";
+  const px = (x: number) => 50 + x * 86;
+  const py = (y: number) => 290 - y * 80;
+  const polygon: [number, number][] = [
+    [0, 0],
+    [3.5, 0],
+    [3.5, 0.5],
+    [3, 1],
+    [0, 2],
+  ];
+  const vertex = { x: px(3), y: py(1) };
+  // Directions in screen space, from each data-space vector through the axis scales.
+  const toward = (dx: number, dy: number, length: number) => {
+    const sx = dx * 86;
+    const sy = -dy * 80;
+    const norm = Math.hypot(sx, sy);
+    return { x: vertex.x + (sx / norm) * length, y: vertex.y + (sy / norm) * length };
+  };
+  const a1 = toward(1, 1, 74);
+  const a2 = toward(1, 3, 74);
+  const c = toward(2, 3, 92);
+  const wedge1 = toward(1, 1, 104);
+  const wedge2 = toward(1, 3, 104);
+
+  return (
+    <svg className="fig-svg wide" viewBox="0 0 760 330" role="img"
+      aria-label={es ? "La geometria de un optimo lineal y su certificado dual" : "The geometry of an LP optimum and its dual certificate"}>
+      <Arrow id="dual-arrow" />
+      <text x={16} y={16} className="dg-edge-label">
+        max 2x + 3y   s.t.   r1: x + y &lt;= 4,   r2: x + 3y &lt;= 6,   r3: x &lt;= 3.5
+      </text>
+
+      {/* Axes. */}
+      <line x1={px(0)} y1={py(0)} x2={px(5)} y2={py(0)} className="dg-axis" />
+      <line x1={px(0)} y1={py(0)} x2={px(0)} y2={py(3)} className="dg-axis" />
+      <text x={px(5)} y={py(0) + 16} textAnchor="end" className="dg-axis-label">x</text>
+      <text x={px(0) - 10} y={py(3) + 4} textAnchor="end" className="dg-axis-label">y</text>
+
+      {/* The feasible polygon. */}
+      <polygon points={polygon.map(([x, y]) => `${px(x)},${py(y)}`).join(" ")} className="dg-fill-accent" />
+
+      {/* The three rows. */}
+      <line x1={px(1)} y1={py(3)} x2={px(4)} y2={py(0)} className="dg-curve-faint" />
+      <line x1={px(0)} y1={py(2)} x2={px(5)} y2={py(1 / 3)} className="dg-curve-faint" />
+      <line x1={px(3.5)} y1={py(0)} x2={px(3.5)} y2={py(3)} className="dg-curve-faint" />
+      <text x={px(1.55) + 8} y={py(2.45)} className="dg-edge-label">r1</text>
+      <text x={px(5) - 4} y={py(1 / 3) - 8} textAnchor="end" className="dg-edge-label">r2</text>
+      <text x={px(3.5) + 6} y={py(2.8)} className="dg-edge-label">r3 {es ? "holgada" : "slack"}</text>
+
+      {/* The objective contour through the optimum. */}
+      <line x1={px(0)} y1={py(3)} x2={px(4.5)} y2={py(0)} className="dg-marker" />
+      <text x={px(0.3)} y={py(2.95)} className="dg-marker-label">2x + 3y = 9</text>
+
+      {/* The cone of the binding normals, and c inside it. */}
+      <polygon points={`${vertex.x},${vertex.y} ${wedge1.x},${wedge1.y} ${wedge2.x},${wedge2.y}`} className="dg-fill-warn" />
+      <line x1={vertex.x} y1={vertex.y} x2={a1.x} y2={a1.y} className="dg-edge" markerEnd="url(#dual-arrow)" />
+      <line x1={vertex.x} y1={vertex.y} x2={a2.x} y2={a2.y} className="dg-edge" markerEnd="url(#dual-arrow)" />
+      <line x1={vertex.x} y1={vertex.y} x2={c.x} y2={c.y} className="dg-curve" markerEnd="url(#dual-arrow)" />
+      <text x={a1.x + 6} y={a1.y + 10} className="dg-edge-label">a1</text>
+      <text x={a2.x - 8} y={a2.y - 2} textAnchor="end" className="dg-edge-label">a2</text>
+      <text x={c.x + 6} y={c.y} className="dg-node-label">c</text>
+
+      <circle cx={vertex.x} cy={vertex.y} r={5.5} className="dg-bar" />
+      <text x={vertex.x - 10} y={vertex.y + 18} textAnchor="end" className="dg-node-label">x* = (3, 1)</text>
+
+      {/* The certificate, written out. */}
+      <rect x={498} y={60} width={252} height={196} rx="9" className="dg-box" />
+      <text x={512} y={84} className="dg-box-title">{es ? "El certificado" : "The certificate"}</text>
+      <text x={512} y={108} className="dg-box-sub">primal   c·x* = 2(3) + 3(1) = 9</text>
+      <text x={512} y={128} className="dg-box-sub">dual   b·y* = 4(1.5) + 6(0.5) + 3.5(0)</text>
+      <text x={512} y={146} className="dg-box-sub">         = 9</text>
+      <text x={512} y={172} className="dg-box-sub" style={{ fill: "var(--color-accent)" }}>
+        c = 1.5 a1 + 0.5 a2
+      </text>
+      <text x={512} y={190} className="dg-box-sub">
+        {es ? "los coeficientes son los precios" : "the coefficients are the prices"}
+      </text>
+      <text x={512} y={216} className="dg-box-sub">
+        {es ? "r3 holgada, y3 = 0:" : "r3 slack, so y3 = 0:"}
+      </text>
+      <text x={512} y={234} className="dg-box-sub">
+        {es ? "holgura complementaria" : "complementary slackness"}
+      </text>
+
+      <text x={380} y={318} textAnchor="middle" className="dg-note">
+        {es
+          ? "El optimo es un vertice donde c cae en el cono de las normales activas. Los pesos de esa combinacion son los precios sombra."
+          : "The optimum is a vertex where c falls in the cone of the binding normals. The weights of that combination are the shadow prices."}
+      </text>
+    </svg>
+  );
+}
+
+/* ---------------------------------------------------------- integrality */
+
+/**
+ * Why the LP relaxation bounds an integer program and does not solve it.
+ *
+ * max y subject to -x + y <= 1, 3x + 2y <= 12, 2x + 3y <= 12, x and y whole. The relaxation's
+ * optimum is the vertex (1.8, 2.8); the integer optima are (1, 2) and (2, 2), which are not vertices
+ * of the polygon at all, and rounding the relaxation's answer lands outside it. Solved with the
+ * HiGHS build the site ships.
+ */
+export function IntegralityDiagram({ lang }: { lang: Lang }) {
+  const es = lang === "es";
+  const px = (x: number) => 50 + x * 90;
+  const py = (y: number) => 290 - y * 70;
+  const feasible = (x: number, y: number) =>
+    -x + y <= 1 + 1e-9 && 3 * x + 2 * y <= 12 + 1e-9 && 2 * x + 3 * y <= 12 + 1e-9;
+  const lattice: { x: number; y: number; ok: boolean }[] = [];
+  for (let x = 0; x <= 4; x += 1) {
+    for (let y = 0; y <= 3; y += 1) lattice.push({ x, y, ok: feasible(x, y) });
+  }
+  const polygon: [number, number][] = [
+    [0, 0],
+    [4, 0],
+    [2.4, 2.4],
+    [1.8, 2.8],
+    [0, 1],
+  ];
+
+  return (
+    <svg className="fig-svg wide" viewBox="0 0 760 330" role="img"
+      aria-label={es ? "Por que la relajacion acota y no resuelve" : "Why the relaxation bounds and does not solve"}>
+      <text x={16} y={16} className="dg-edge-label">
+        max y   s.t.   -x + y &lt;= 1,   3x + 2y &lt;= 12,   2x + 3y &lt;= 12,   x, y {es ? "enteros" : "whole"}
+      </text>
+
+      <line x1={px(0)} y1={py(0)} x2={px(4.5)} y2={py(0)} className="dg-axis" />
+      <line x1={px(0)} y1={py(0)} x2={px(0)} y2={py(3.4)} className="dg-axis" />
+      <text x={px(4.5)} y={py(0) + 16} textAnchor="end" className="dg-axis-label">x</text>
+      <text x={px(0) - 10} y={py(3.4) + 4} textAnchor="end" className="dg-axis-label">y</text>
+
+      <polygon points={polygon.map(([x, y]) => `${px(x)},${py(y)}`).join(" ")} className="dg-fill-accent" />
+
+      {/* The two optimum levels: where the relaxation stops, and where the integers do. */}
+      <line x1={px(0)} y1={py(2.8)} x2={px(4.5)} y2={py(2.8)} className="dg-marker" />
+      <line x1={px(0)} y1={py(2)} x2={px(4.5)} y2={py(2)} className="dg-curve-2" />
+      <line x1={px(4.5) + 10} y1={py(2.8)} x2={px(4.5) + 10} y2={py(2)} className="dg-curve" />
+      {/* Under the bracket, not beside it: beside it the Spanish label ran into the box. */}
+      <text x={px(4.5) + 10} y={py(2) + 18} textAnchor="middle" className="dg-node-label">
+        {es ? "brecha 0.8" : "gap 0.8"}
+      </text>
+
+      {lattice.map((point) => (
+        <circle
+          key={`${point.x}-${point.y}`}
+          cx={px(point.x)}
+          cy={py(point.y)}
+          r={4}
+          style={{
+            fill: point.ok ? "var(--color-accent)" : "transparent",
+            stroke: point.ok ? "var(--color-accent)" : "var(--color-fg-faint)",
+          }}
+        />
+      ))}
+
+      {/* The relaxation's vertex, the two integer optima, and the rounded point that falls out. */}
+      <circle cx={px(1.8)} cy={py(2.8)} r={8} fill="none" stroke="var(--color-warn)" strokeWidth={2} />
+      <text x={px(1.8) + 14} y={py(2.8) + 22} className="dg-marker-label">LP (1.8, 2.8)</text>
+      {[1, 2].map((x) => (
+        <circle key={x} cx={px(x)} cy={py(2)} r={7} style={{ fill: "var(--color-magenta)" }} />
+      ))}
+      <text x={px(1.5)} y={py(2) + 22} textAnchor="middle" className="dg-node-label">
+        {es ? "optimos enteros" : "integer optima"}
+      </text>
+      <line x1={px(2) - 6} y1={py(3) - 6} x2={px(2) + 6} y2={py(3) + 6} stroke="var(--color-bad)" strokeWidth={2} />
+      <line x1={px(2) - 6} y1={py(3) + 6} x2={px(2) + 6} y2={py(3) - 6} stroke="var(--color-bad)" strokeWidth={2} />
+      <text x={px(2) + 12} y={py(3) - 14} className="dg-edge-label" style={{ fill: "var(--color-bad)" }}>
+        {es ? "redondeo (2, 3): infactible" : "rounded (2, 3): infeasible"}
+      </text>
+
+      <rect x={528} y={60} width={222} height={200} rx="9" className="dg-box" />
+      <text x={542} y={84} className="dg-box-title">{es ? "Lo que se lee" : "What it shows"}</text>
+      <text x={542} y={108} className="dg-box-sub">{es ? "relajacion: z = 2.8" : "relaxation: z = 2.8"}</text>
+      <text x={542} y={126} className="dg-box-sub">{es ? "enteros: z = 2, en (1, 2) y (2, 2)" : "integers: z = 2, at (1, 2), (2, 2)"}</text>
+      <text x={542} y={150} className="dg-box-sub">{es ? "brecha 0.8: el 40% del optimo" : "gap 0.8: 40% of the optimum"}</text>
+      <text x={542} y={174} className="dg-box-sub">{es ? "ningun optimo entero es" : "no integer optimum is"}</text>
+      <text x={542} y={192} className="dg-box-sub">{es ? "un vertice del poligono" : "a vertex of the polygon"}</text>
+      <text x={542} y={216} className="dg-box-sub">{es ? "redondear la respuesta" : "rounding the relaxed answer"}</text>
+      <text x={542} y={234} className="dg-box-sub">{es ? "relajada sale del conjunto" : "leaves the feasible set"}</text>
+
+      <text x={380} y={318} textAnchor="middle" className="dg-note">
+        {es
+          ? "La relajacion acota el optimo entero y no dice donde esta. Un modelo que olvida la integralidad informa la cota como si fuera la respuesta."
+          : "The relaxation bounds the integer optimum and does not say where it is. A model that forgets integrality reports the bound as the answer."}
       </text>
     </svg>
   );

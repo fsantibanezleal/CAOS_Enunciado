@@ -5,8 +5,8 @@ is installed and unused is removed rather than documented.
 
 | Library | Version | Licence | Where | Why |
 |---|---|---|---|---|
-| `planteo` | 0.1.0 | MIT | offline, and its types in the browser | The typed representation, its validator, its canonical form and its Pyomo emitter |
-| `copela` | 0.2.0 | MIT | offline | The measurement harness: providers, sweep, ledger, budget, verdict layers |
+| `planteo` | 0.1.1 | MIT | offline, and its types in the browser | The typed representation, its validator, its canonical form and its Pyomo emitter |
+| `copela` | 0.2.1 | MIT | offline | The measurement harness: providers, sweep, ledger, budget, verdict layers |
 | Pyomo | 6.x | BSD-3 | offline | Solver-agnostic modelling layer |
 | HiGHS | 1.x | MIT | offline and browser | LP and MILP. The same engine on both sides of the boundary |
 | React | 19 | MIT | browser | The web surface |
@@ -55,10 +55,16 @@ SCIP changes one string rather than a code path.
 
 ## Version pinning, and why it is exact
 
-CI installs `copela==0.2.0` and `planteo==0.1.0`, not floating ranges. The published report is a
-function of that code, so the re-derivation check only means something against the versions that
-produced the artifact. A newer `copela` breaking that check is the correct outcome: it says the
-artifact needs re-deriving.
+`requirements.txt` pins `copela==0.2.1` and `planteo==0.1.1`, not floating ranges. The published
+report is a function of that code, so `report.py --check`, run locally by `run.ps1 check`, only
+means something against pinned versions. A newer `copela` breaking that check is the correct
+outcome: it says the artifact needs re-deriving. CI does not install either package: ADR-0074 keeps
+pipeline scripts out of CI, and CI instead recomputes every model's rates from the raw ledger with
+the standard library (`scripts/check_artifacts.py`).
+
+The published ledger was scored by `copela` 0.2.0. 0.2.1 changes only how a future sweep compares
+two optima (both are read in the minimising sense, R-020), and the report re-derives identically
+under it, because the report reads the verdicts the ledger recorded rather than re-scoring them.
 
 This was learned the hard way. The published measurement had been produced with `copela` code that
 was not on the index at all: 0.1.0 carried a structural layer that could not refute, so installing

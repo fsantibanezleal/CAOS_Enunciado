@@ -32,8 +32,8 @@ export function ImplementationPage() {
         <h1>{es ? "Implementacion" : "Implementation"}</h1>
         <p className="lede">
           {es
-            ? "Dos paquetes en PyPI, un repositorio de producto, un artefacto versionado de 221 KB y un motor de 3,37 MB que se carga solo cuando usted mueve algo. Nada de lo que esta pagina publica se calcula al cargar; todo lo que usted cambia se calcula aqui, en su navegador, con el mismo solucionador que produjo los numeros publicados."
-            : "Two PyPI packages, one product repository, a 221 KB committed artifact, and a 3.37 MB engine that loads only when you move something. Nothing this page publishes is computed at load; everything you change is computed here, in your browser, with the same solver that produced the published numbers."}
+            ? "Dos paquetes en PyPI, un repositorio de producto, un artefacto versionado de 221 KB y un motor de 3,37 MB que se descarga en su primer uso, al abrir el banco de trabajo. Nada de lo que esta pagina publica se calcula al cargar; lo que el banco calcula en vivo se calcula aqui, en su navegador, con el mismo solucionador que produjo los numeros publicados."
+            : "Two PyPI packages, one product repository, a 221 KB committed artifact, and a 3.37 MB engine fetched on first use, when the workbench opens. Nothing this page publishes is computed at load; what the workbench computes live is computed here, in your browser, with the same solver that produced the published numbers."}
         </p>
       </div>
       <SubTabs tabs={tabs} orientation="vertical" ariaLabel={es ? "Modulos" : "Modules"} />
@@ -71,8 +71,8 @@ function Architecture({ lang }: { lang: "en" | "es" }) {
         <h3>{es ? "Precalculado, sin conexion" : "Precomputed, offline"}</h3>
         <p>
           {es
-            ? "Todo lo que esta pagina publica se calculo sin conexion y viaja en el artefacto. Lo unico que se calcula mientras usted lee es lo que usted mismo cambia."
-            : "Everything this page publishes was computed offline and travels in the artifact. The only thing computed while you read is what you change yourself."}
+            ? "Todo lo que esta pagina publica se calculo sin conexion y viaja en el artefacto. Lo que se calcula mientras usted lee explica la respuesta y no se publica."
+            : "Everything this page publishes was computed offline and travels in the artifact. What is computed while you read explains the answer and is not published."}
         </p>
         <ul className="tick-list">
           <li>{es ? "Las veinte referencias y sus optimos" : "The twenty references and their optima"}</li>
@@ -94,8 +94,8 @@ function Architecture({ lang }: { lang: "en" | "es" }) {
 
       <p className="measure">
         {es
-          ? "Lo que esa division compra es concreto. El horneado puede ser lento, porque corre una vez en una maquina que su autor controla, y puede por tanto permitirse verificar cada referencia, comprobar cada optimo declarado y ejecutar cada relacion de propiedad antes de dejar entrar un caso. La pagina puede ser rapida, porque no resuelve nada que ya este resuelto. Y la parte que si se calcula mientras usted lee es exactamente la parte que usted pidio al mover un control, lo que hace que el costo de la via en vivo sea proporcional al uso y no a la visita."
-          : "What that division buys is concrete. The bake can be slow, because it runs once on a machine its author controls, and can therefore afford to verify every reference, check every claimed optimum and execute every property relation before letting a case in. The page can be fast, because it solves nothing that is already solved. And the part that is computed while you read is exactly the part you asked for by moving a control, which makes the cost of the live lane proportional to use rather than to visits."}
+          ? "Lo que esa division compra es concreto. El horneado puede ser lento, porque corre una vez en una maquina que su autor controla, y puede por tanto permitirse verificar cada referencia, comprobar cada optimo declarado y ejecutar cada relacion de propiedad antes de dejar entrar un caso. La pagina puede ser rapida, porque no publica nada que no este ya resuelto. Lo que si se calcula mientras usted lee son las vistas del banco de trabajo que explican la respuesta, desde el barrido de 41 resoluciones con que se abre hasta cada control que usted mueve; son modelos de diez filas o menos, que se resuelven en menos de un milisegundo cada uno, y ninguno de esos calculos llega a una cifra publicada."
+          : "What that division buys is concrete. The bake can be slow, because it runs once on a machine its author controls, and can therefore afford to verify every reference, check every claimed optimum and execute every property relation before letting a case in. The page can be fast, because it publishes nothing that is not already solved. What is computed while you read is the workbench's views that explain the answer, from the 41-solve sweep it opens on to every control you move; they are models of ten rows or fewer, each solved in under a millisecond, and none of that computation reaches a published figure."}
       </p>
 
       <h3>{es ? "Vivo, en su navegador" : "Live, in your browser"}</h3>
@@ -138,8 +138,8 @@ function Architecture({ lang }: { lang: "en" | "es" }) {
         tex={String.raw`\text{payload}_{\text{first paint}} = 221\,\text{KB} \;\ll\; \text{payload}_{\text{engine}} = 3.37\,\text{MB (lazy)}`}
         caption={
           es
-            ? "La razon de la carga diferida. Un lector que solo lee el enunciado no debe pagar el motor; solo lo paga quien mueve un control."
-            : "The reason for lazy loading. A reader who only reads the statement should not pay for the engine; only someone who moves a control does."
+            ? "La razon de la carga diferida. Un lector de las paginas de documentos nunca paga el motor, y el banco de trabajo lo descarga despues de su primer render, no antes."
+            : "The reason for lazy loading. A reader of the document pages never pays for the engine, and the workbench fetches it after its first paint rather than before."
         }
       />
 
@@ -207,8 +207,8 @@ function Planteo({ lang }: { lang: "en" | "es" }) {
 
       <Callout variant="honest" title={es ? "Version y alcance" : "Version and scope"}>
         {es
-          ? "planteo 0.1.0 cubre la clase lineal y entera mixta. El esquema del documento lleva su propio numero de version, separado del paquete, para que un artefacto viejo pueda decir con que forma fue escrito en lugar de renderizar blancos."
-          : "planteo 0.1.0 covers the linear and mixed-integer class. The document schema carries its own version number, separate from the package, so an old artifact can say what shape it was written in rather than rendering blanks."}
+          ? "Las versiones 0.1 de planteo cubren la clase lineal y entera mixta. El esquema del documento lleva su propio numero de version, separado del paquete, para que un artefacto viejo pueda decir con que forma fue escrito en lugar de renderizar blancos."
+          : "The 0.1 releases of planteo cover the linear and mixed-integer class. The document schema carries its own version number, separate from the package, so an old artifact can say what shape it was written in rather than rendering blanks."}
       </Callout>
 
       <Refs ids={["pyomo", "survey2025"]} label={es ? "Referencias" : "Refs"} />
@@ -427,8 +427,8 @@ function BrowserLane({ lang }: { lang: "en" | "es" }) {
       <div className="two-col">
         <p>
           {es
-            ? "Cuando usted mueve un control en el banco de trabajo, el modelo se reconstruye desde el mismo documento tipado que el horneado uso y se resuelve aqui, con HiGHS compilado a WebAssembly. El motor se carga en el primer uso y nunca al cargar la pagina: son 3,37 MB, y un lector que solo lee el enunciado no debe pagarlos."
-            : "When you move a control on the workbench, the model is rebuilt from the same typed document the bake used and solved here, with HiGHS compiled to WebAssembly. The engine loads on first use and never at page load: it is 3.37 MB, and a reader who only reads the statement should not pay for it."}
+            ? "El banco de trabajo reconstruye el modelo desde el mismo documento tipado que el horneado uso y lo resuelve aqui, con HiGHS compilado a WebAssembly: al abrirse, para el barrido de la pestana de entrada, y de nuevo cada vez que usted mueve un control. El motor es un bloque aparte de 3,37 MB que se descarga en su primer uso en vez de empaquetarse en el primer render, asi que las cinco paginas de documentos nunca lo descargan."
+            : "The workbench rebuilds the model from the same typed document the bake used and solves it here, with HiGHS compiled to WebAssembly: on opening, for the landing tab's sweep, and again whenever you move a control. The engine is a separate 3.37 MB chunk fetched on first use rather than bundled into the first paint, so the five document pages never fetch it."}
         </p>
         <p>
           {es

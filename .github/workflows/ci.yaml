@@ -71,17 +71,25 @@ jobs:
         # are looking at, and a wrong one points bug reports at the wrong build.
         run: python scripts/check_version.py
 
-      - name: The committed artifacts are present and readable
-        # Stdlib only. It checks that the bake was run and committed; it does NOT re-run the bake.
+      - name: The committed artifacts are present, readable, and agree with the ledger
+        # Stdlib only. It checks that the bake was run and committed, and recomputes the two published
+        # rates per model from the raw ledger with nothing but json. It does NOT re-run the bake or
+        # the report: those are pipeline scripts, and they run locally (`run.ps1 check`).
         run: python scripts/check_artifacts.py
 
-      - name: The published report agrees with the run ledger
-        # A pure re-derivation: it reads two committed files and compares, so it costs a second and
-        # calls no model. The first version of the report was assembled by hand from a printed
-        # summary, and a hand-assembled artifact cannot be checked against the thing it summarises.
-        run: |
-          # PINNED, not floated. The report is a function of this code, so the check only means
-          # something against the versions that produced the committed artifact. A newer copela
-          # breaking this is the correct outcome: it says the artifact needs re-deriving.
-          python -m pip install --quiet 'copela==0.2.0' 'planteo==0.1.0'
-          PYTHONPATH=data-pipeline python data-pipeline/report.py --check
+      - name: The CI budget guard (ADR-0074)
+        # Copied from the template, where it is the enforcement of record. On its first run here it
+        # failed this very workflow: the report re-derivation step ran `data-pipeline/report.py`,
+        # which is a pipeline entry point, and installed two packages to do it. That step now runs
+        # in the local check, and CI keeps only the stdlib consistency check above.
+        run: python scripts/check_ci_budget.py
+
+      - name: No em-dash and no emoji in product content (ADR-0067)
+        # Its first run here found ten em-dashes, all of them the empty-value placeholder in tables.
+        run: python scripts/check_content_standards.py
+
+      - name: No control character where a backslash was lost
+        # A heredoc drops one backslash level, so `\text` lands as a tab, `\bigl` as a backspace and
+        # `.\run.ps1` as a carriage return. Two equations and every README run command shipped that
+        # way, and the browser gate missed them because KaTeX renders a tab as a space.
+        run: python scripts/check_control_chars.py

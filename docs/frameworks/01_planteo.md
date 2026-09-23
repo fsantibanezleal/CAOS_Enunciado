@@ -108,7 +108,7 @@ The second is not named DIFFERENT, because canonical inequality proves nothing.
 
 ## Scope, honestly
 
-0.1.0 covers the linear and mixed-integer class. It does not express quantifiers over infinite sets,
+The 0.1 releases cover the linear and mixed-integer class. It does not express quantifiers over infinite sets,
 differential equations, or most of what a mathematical proposition needs. The document schema
 carries its own version number, separate from the package, so an old artifact can say what shape it
 was written in rather than rendering blanks.

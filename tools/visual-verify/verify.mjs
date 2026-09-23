@@ -207,7 +207,7 @@ for (const theme of ["dark", "light"]) {
 
     // Two failure modes that render as plausible-looking mathematics.
     //
-    // A `	ext{...}` inside a PLAIN template literal loses its backslash, because `	` is a tab
+    // A `\text{...}` inside a PLAIN template literal loses its backslash, because `\t` is a tab
     // and `\D` is just `D`: the equation then typesets as a tab followed by "ext{ran}". It looks
     // like a spacing quirk, not like a bug. `String.raw` is required for every tex string, and this
     // check is what makes forgetting it visible.
@@ -237,6 +237,30 @@ for (const theme of ["dark", "light"]) {
       leaks.length === 0,
       `[${theme}] ${label}: equations are in the page's language`,
       leaks.length ? `Spanish in the typeset math: ${leaks.join(", ")}` : "clean",
+    );
+
+    // The check above looks at the typeset output, and it missed two broken equations on the
+    // Experiments page. A lost `\t` in `\text{...}` becomes a tab, KaTeX reads the tab as a space,
+    // and "ext{a sampled item is wrong}" typesets as italic letters with no braces, so the text
+    // "ext{" never appears. The TeX SOURCE KaTeX was given survives in the MathML annotation, and a
+    // control character there is certain evidence of a lost backslash. A KaTeX parse error is the
+    // other way an equation dies quietly, as a red fragment of source.
+    const tex = await page.evaluate(() => {
+      const sources = [...document.querySelectorAll('.katex annotation[encoding="application/x-tex"]')].map(
+        (a) => a.textContent ?? "",
+      );
+      return {
+        count: sources.length,
+        mangled: sources.filter((s) => /[\u0000-\u0009\u000b-\u001f\u007f]/.test(s)).map((s) => s.slice(0, 48)),
+        errors: document.querySelectorAll(".katex-error").length,
+      };
+    });
+    check(
+      tex.mangled.length === 0 && tex.errors === 0,
+      `[${theme}] ${label}: every equation's TeX source is intact and parses`,
+      tex.mangled.length || tex.errors
+        ? `${tex.mangled.length} with a control character (${tex.mangled.join(" | ")}), ${tex.errors} parse error(s)`
+        : `${tex.count} equations`,
     );
 
     await page.screenshot({ path: join(SHOTS, `${theme}-${label.toLowerCase()}.png`) });
@@ -269,12 +293,16 @@ for (const theme of ["dark", "light"]) {
   // Provenance highlighting is the one view that makes the product's point, so it is measured.
   // It lives on its own tab, so the gate opens that tab first: a check that reads zero because it
   // never navigated to its subject reports a product failure that belongs to the gate.
-  await page.getByRole("tab", { name: /statement and model|enunciado y modelo/i }).click();
+  await page.locator('.enunciado-main > .tabs > .tablist [role="tab"]', { hasText: /statement|enunciado/i }).first().click();
+  await page.waitForTimeout(250);
+  await page.getByRole("tab", { name: /provenance|procedencia/i }).click();
   await page.waitForTimeout(350);
   const spans = await page.locator(".narrative-span").count();
   check(spans > 0, `[${theme}] the statement shows its provenance spans`, `${spans} spans`);
 
   // Back to the landing tab, so the area measurement below sees what a visitor sees.
+  await page.locator('.enunciado-main > .tabs > .tablist [role="tab"]', { hasText: /answer|respuesta/i }).click();
+  await page.waitForTimeout(250);
   await page.getByRole("tab", { name: /sensitivity|sensibilidad/i }).click();
   await page.waitForTimeout(700);
 
@@ -297,27 +325,82 @@ for (const theme of ["dark", "light"]) {
     readoutAfter.slice(0, 54).replace(/\s+/g, " "),
   );
 
-  // EVERY tab is opened, screenshotted and checked for content, in both themes. Counting tabs is
-  // not verifying them: a panel that throws, renders empty, or renders the previous tab's content
-  // still leaves the tab strip looking correct.
-  const tabIds = await page.locator('.tablist [role="tab"]').count();
-  for (let index = 0; index < tabIds; index += 1) {
-    const tab = page.locator('.tablist [role="tab"]').nth(index);
-    const name = ((await tab.textContent()) ?? `tab-${index}`).trim();
-    await tab.click();
-    await page.waitForTimeout(900);
-    const panel = page.locator('[role="tabpanel"]:not([hidden])');
-    const text = ((await panel.textContent()) ?? "").trim();
-    const drawn = await panel.locator("canvas, svg, table, .heat-cell, .narrative-span").count();
-    check(
-      text.length > 80 && drawn > 0,
-      `[${theme}] the "${name}" panel drew something`,
-      `${text.length} chars, ${drawn} drawn element(s)`,
-    );
-    await page.screenshot({
-      path: join(SHOTS, `${theme}-tab-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.png`),
-    });
+  // EVERY method in EVERY group is opened, screenshotted and checked, in both themes.
+  //
+  // The workbench is two levels deep, groups and then methods, and an earlier version of this loop
+  // clicked only the first level: four checks, while fourteen methods sat behind them unopened.
+  // Counting tabs is not verifying them, and neither is opening the parents of the tabs.
+  const groupCount = await page.locator('.enunciado-main > .tabs > .tablist [role="tab"]').count();
+  let methodsSeen = 0;
+  for (let g = 0; g < groupCount; g += 1) {
+    const group = page.locator('.enunciado-main > .tabs > .tablist [role="tab"]').nth(g);
+    const groupName = ((await group.textContent()) ?? `group-${g}`).trim();
+    await group.click();
+    await page.waitForTimeout(400);
+
+    const methods = page.locator('.tabpanel:not([hidden]) .subtablist [role="tab"]');
+    const methodCount = await methods.count();
+    for (let m = 0; m < methodCount; m += 1) {
+      const method = methods.nth(m);
+      const name = ((await method.textContent()) ?? `method-${m}`).trim();
+      await method.click();
+      // The learned tabs fetch the ledger on first use and the answer tabs solve; give both time.
+      await page.waitForTimeout(1100);
+      const panel = page.locator('.tabpanel:not([hidden]) .subtabpanel:not([hidden])');
+      const text = ((await panel.textContent()) ?? "").trim();
+      const drawn = await panel
+        .locator("canvas, svg, table, .heat-cell, .narrative-span, pre, mark")
+        .count();
+      check(
+        text.length > 80 && drawn > 0,
+        `[${theme}] ${groupName} / "${name}" drew something`,
+        `${text.length} chars, ${drawn} drawn element(s)`,
+      );
+      methodsSeen += 1;
+      await page.screenshot({
+        path: join(
+          SHOTS,
+          `${theme}-method-${`${groupName}-${name}`.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.png`,
+        ),
+      });
+    }
   }
+  // product-quality-bar.md: at least ten to twelve methods, each a real working tab.
+  check(methodsSeen >= 12, `[${theme}] the workbench carries at least 12 methods`, `${methodsSeen} methods`);
+
+  // The method loop above runs on one continuous case, and the Duality view once lied on exactly
+  // the cases it never visited. HiGHS returns no duals for a mixed-integer solve; the view read the
+  // missing values as zero, showed every price as 0 on the four integer cases, and reported
+  // complementary slackness as holding, which on all-zero prices it trivially does. "Drew
+  // something" passed. So an integer case is opened on purpose, in both pricing modes.
+  await page.selectOption("#case-select", "opt-014");
+  await page.waitForTimeout(450);
+  await page.locator('.enunciado-main > .tabs > .tablist [role="tab"]', { hasText: /answer|respuesta/i }).click();
+  await page.waitForTimeout(300);
+  await page.getByRole("tab", { name: /^duality$|^dualidad$/i }).click();
+  await page.waitForTimeout(1200);
+  const dualPanel = page.locator(".tabpanel:not([hidden]) .subtabpanel:not([hidden])");
+  for (const mode of ["relaxation", "fixed"]) {
+    if (mode === "fixed") {
+      await dualPanel.getByRole("button", { name: /integers fixed|enteras fijadas/i }).click();
+      await page.waitForTimeout(900);
+    }
+    const readout = dualPanel.locator(".viz-readout");
+    const verdict = await readout.getAttribute("data-certificate");
+    const summary = ((await readout.textContent()) ?? "").replace(/\s+/g, " ");
+    const priced = Number((summary.match(/(\d+)\/\d+ (constraints priced|restricciones con precio)/) ?? [])[1] ?? 0);
+    const body = (await dualPanel.textContent()) ?? "";
+    const labelled = mode === "relaxation" ? /no duals|no devuelve duales/i.test(body) : /O'Neill/.test(body);
+    check(
+      verdict === "holds" && priced > 0 && labelled,
+      `[${theme}] an integer case is priced through a labelled LP (${mode}) and its certificate holds`,
+      `certificate ${verdict}, ${priced} priced, source labelled ${labelled}`,
+    );
+  }
+  await page.screenshot({ path: join(SHOTS, `${theme}-duality-integer-case.png`) });
+
+  await page.locator('.enunciado-main > .tabs > .tablist [role="tab"]', { hasText: /answer|respuesta/i }).click();
+  await page.waitForTimeout(400);
   await page.getByRole("tab", { name: /sensitivity|sensibilidad/i }).click();
   await page.waitForTimeout(600);
 
@@ -404,6 +487,8 @@ for (const theme of ["dark", "light"]) {
     );
 
     const thin = [];
+    const brokenTex = [];
+    let texTabs = 0;
     for (let index = 0; index < count; index += 1) {
       const tab = rail.nth(index);
       const name = ((await tab.textContent()) ?? `tab-${index}`).trim();
@@ -422,7 +507,17 @@ for (const theme of ["dark", "light"]) {
         svgs: node.querySelectorAll("svg.fig-svg").length,
         callouts: node.querySelectorAll(".callout-honest").length,
         refs: node.querySelectorAll(".th-refs, .refs, [class*=refs]").length,
+        // Per TAB, because a panel's equations exist only while it is shown: the per-route check
+        // above sees the first tab's and nothing else, and the two broken equations were not there.
+        texMangled: [...node.querySelectorAll('.katex annotation[encoding="application/x-tex"]')]
+          .map((a) => a.textContent ?? "")
+          .filter((s) => /[\u0000-\u0009\u000b-\u001f\u007f]/.test(s)).length,
+        texErrors: node.querySelectorAll(".katex-error").length,
       }));
+      if (seen.texMangled || seen.texErrors) {
+        brokenTex.push(`${name}: ${seen.texMangled} with a control character, ${seen.texErrors} parse error(s)`);
+      }
+      texTabs += 1;
       const short = [];
       if (seen.paragraphs < floor.paragraphs) short.push(`${seen.paragraphs} dense paragraphs`);
       if (seen.captioned < floor.equations) short.push(`${seen.captioned} captioned equations`);
@@ -435,6 +530,11 @@ for (const theme of ["dark", "light"]) {
       thin.length === 0,
       `${floor.label} tabs all meet the ADR-0017 content floor`,
       thin.length ? thin.join(" | ") : `${count} tabs, all at or above the floor`,
+    );
+    check(
+      brokenTex.length === 0 && texTabs === count,
+      `${floor.label}: every tab's equations have an intact TeX source and parse`,
+      brokenTex.length ? brokenTex.join(" | ") : `${texTabs} tabs checked`,
     );
   }
 

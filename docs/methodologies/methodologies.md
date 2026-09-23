@@ -3,9 +3,18 @@
 The oracle strategy: what decides whether a formalization is the problem the statement described,
 given that no general procedure exists for that question.
 
-Deep pages: [`01_the_oracle_problem.md`](01_the_oracle_problem.md),
-[`02_layers.md`](02_layers.md), [`03_relations_per_family.md`](03_relations_per_family.md),
-[`04_statistics.md`](04_statistics.md).
+Deep pages:
+
+| Page | What it covers |
+|---|---|
+| [`01_the_oracle_problem.md`](01_the_oracle_problem.md) | why no general oracle exists, and the two substitutes |
+| [`02_layers.md`](02_layers.md) | the four layers, what each concludes and what it cannot |
+| [`03_relations_per_family.md`](03_relations_per_family.md) | the metamorphic relations, measured and designed |
+| [`04_statistics.md`](04_statistics.md) | Wilson intervals, the width, run-to-run variation |
+| [`05_structural_equivalence.md`](05_structural_equivalence.md) | the two canonical forms, the graph and colour refinement, answer refutation in one sense |
+| [`06_duality_and_integrality.md`](06_duality_and_integrality.md) | shadow prices, the four-part certificate, the relaxation bound, pricing a MIP |
+
+![The end-to-end pipeline, statement to four verdicts](../assets/pipeline.svg)
 
 ## The measurement, in four lines
 
