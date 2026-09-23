@@ -374,6 +374,73 @@ for (const theme of ["dark", "light"]) {
   await context.close();
 }
 
+// The ADR-0017 content-depth floors, MEASURED.
+//
+// Section 2 of the ADR states numbers: at least six method-family tabs, each with at least four
+// dense prose paragraphs, at least two captioned equations, at least one hand-authored SVG, one
+// honest callout and one inline Refs row; at least eight implementation tabs; at least six
+// experiment tabs. Those were written as numbers so they could be checked, and until now they were
+// checked by reading. A claim of compliance that nobody can re-run is an assertion.
+{
+  const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const page = await context.newPage();
+
+  const floors = [
+    { route: "/methodology", label: "Methodology", tabs: 6, paragraphs: 4, equations: 2, svgs: 1 },
+    { route: "/implementation", label: "Implementation", tabs: 8, paragraphs: 2, equations: 1, svgs: 0 },
+    { route: "/experiments", label: "Experiments", tabs: 6, paragraphs: 2, equations: 1, svgs: 0 },
+  ];
+
+  for (const floor of floors) {
+    await page.goto(`${BASE}${floor.route}`, { waitUntil: "networkidle" });
+    await page.waitForTimeout(900);
+
+    const rail = page.locator(".subtablist [role=\"tab\"]");
+    const count = await rail.count();
+    check(
+      count >= floor.tabs,
+      `${floor.label} has at least ${floor.tabs} tabs`,
+      `${count} tabs`,
+    );
+
+    const thin = [];
+    for (let index = 0; index < count; index += 1) {
+      const tab = rail.nth(index);
+      const name = ((await tab.textContent()) ?? `tab-${index}`).trim();
+      await tab.click();
+      await page.waitForTimeout(260);
+      const panel = page.locator(".subtabpanel:not([hidden]), [role=\"tabpanel\"]:not([hidden])").last();
+      const seen = await panel.evaluate((node) => ({
+        // A "dense paragraph" is one with real content, so short ones do not count toward the floor.
+        paragraphs: [...node.querySelectorAll("p")].filter(
+          (p) => (p.textContent ?? "").trim().length > 280,
+        ).length,
+        equations: node.querySelectorAll(".equation").length,
+        captioned: [...node.querySelectorAll(".equation")].filter(
+          (e) => (e.querySelector(".equation-caption")?.textContent ?? "").trim().length > 20,
+        ).length,
+        svgs: node.querySelectorAll("svg.fig-svg").length,
+        callouts: node.querySelectorAll(".callout-honest").length,
+        refs: node.querySelectorAll(".th-refs, .refs, [class*=refs]").length,
+      }));
+      const short = [];
+      if (seen.paragraphs < floor.paragraphs) short.push(`${seen.paragraphs} dense paragraphs`);
+      if (seen.captioned < floor.equations) short.push(`${seen.captioned} captioned equations`);
+      if (seen.svgs < floor.svgs) short.push(`${seen.svgs} SVGs`);
+      if (seen.callouts < 1) short.push("no honest callout");
+      if (seen.refs < 1) short.push("no Refs row");
+      if (short.length) thin.push(`${name}: ${short.join(", ")}`);
+    }
+    check(
+      thin.length === 0,
+      `${floor.label} tabs all meet the ADR-0017 content floor`,
+      thin.length ? thin.join(" | ") : `${count} tabs, all at or above the floor`,
+    );
+  }
+
+  await context.close();
+}
+
 // The Spanish pass.
 //
 // ADR-0016 asks for bilingual by construction and ADR-0017 makes it a gate item, and every check

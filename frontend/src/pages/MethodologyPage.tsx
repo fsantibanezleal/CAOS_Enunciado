@@ -12,6 +12,7 @@ import { FigureRow } from "../components/layout";
 
 import {
   CanonicalDiagram,
+  ProviderSeamDiagram,
   DimensionDiagram,
   JudgeDiagram,
   MetamorphicDiagram,
@@ -493,6 +494,21 @@ function ModelLane({ lang }: { lang: "en" | "es" }) {
           ? "La temperatura cero no es determinismo, y la via lo asume. La causa dominante de la no determinacion no es la no asociatividad en coma flotante con la planificacion en GPU; es la dependencia del tamano de lote en los nucleos de reduccion. Los nucleos invariantes al lote dan salida identica bit a bit a un costo de rendimiento de alrededor del 61,5%, reducido a cerca del 34,35% con grafos CUDA, y aun asi queda no determinacion residual del camino de servicio. Nada de eso se compra sobre una API alojada, asi que el registro fija lo que puede (identificador y version del modelo, semilla, huella del proveedor) e informa n repeticiones con una banda de tolerancia, en lugar de afirmar una reproduccion exacta que no tiene."
           : "Temperature zero is not determinism, and the lane assumes it. The dominant cause of nondeterminism is not floating-point non-associativity with GPU scheduling; it is the batch-size dependence of reduction kernels. Batch-invariant kernels give bit-identical output at roughly 61.5% throughput cost, reduced to about 34.35% with CUDA graphs, and residual nondeterminism still remains from the serving path. None of that is purchasable over a hosted API, so the record pins what it can (model id and version, seed, provider fingerprint) and reports n repeats with a tolerance band, rather than claiming an exact reproduction it does not have."}
       </p>
+
+      <FigureRow
+        figure={<ProviderSeamDiagram lang={lang} />}
+        caption={
+          es
+            ? "Figura 1. La costura del proveedor. La columna izquierda es lo que el registro fija; la derecha es lo que ninguna huella puede arreglar."
+            : "Figure 1. The provider seam. The left column is what the record pins; the right is what no fingerprint can fix."
+        }
+      >
+        <p>
+          {es
+            ? "La consecuencia practica es que la huella describe lo ejercido y no lo pretendido. La API de Anthropic ya no acepta un parametro de temperatura, y el esfuerzo de razonamiento solo esta disponible en parte de la familia, asi que la huella dice no-temperature y no-effort cuando eso es lo cierto, en lugar de registrar un control que no se aplico."
+            : "The practical consequence is that the fingerprint describes what was exercised and not what was intended. The Anthropic API no longer accepts a temperature parameter, and reasoning effort is available on only part of the family, so the fingerprint says no-temperature and no-effort when that is the truth, rather than recording a control that was never applied."}
+        </p>
+      </FigureRow>
 
       <Equation
         tex={String.raw`\text{fingerprint} \;=\; \bigl\langle \text{provider},\; \text{effort},\; \text{temperature policy} \bigr\rangle`}

@@ -893,3 +893,65 @@ export function HoldoutDiagram({ lang }: { lang: Lang }) {
     </svg>
   );
 }
+
+/* ------------------------------------------------------------ provider seam */
+
+/**
+ * What a run record can pin, and what it cannot.
+ *
+ * The honest half of the multi-model lane. Hosted inference is not reproducible bit for bit, so the
+ * record states which controls were actually exercised rather than which were intended, and the
+ * column on the right is the part no fingerprint can fix.
+ */
+export function ProviderSeamDiagram({ lang }: { lang: Lang }) {
+  const es = lang === "es";
+  const pinned = es
+    ? ["identificador del modelo", "version del modelo", "digest del prompt", "tope de tokens", "esfuerzo, si el modelo lo admite"]
+    : ["model id", "model version", "prompt digest", "token cap", "effort, where the model takes it"];
+  const unpinned = es
+    ? ["tamano de lote del servicio", "nucleos de reduccion", "precision numerica", "uso de cache", "hardware y software del servidor"]
+    : ["the service's batch size", "reduction kernels", "numerical precision", "cache use", "server hardware and software"];
+
+  return (
+    <svg className="fig-svg wide" viewBox="0 0 700 300" role="img"
+      aria-label={es ? "Lo que un registro de corrida puede fijar" : "What a run record can pin"}>
+      <Arrow id="seam-arrow" />
+
+      <rect x={8} y={26} width={316} height={196} rx="10" className="dg-box accent" />
+      <text x={166} y={50} textAnchor="middle" className="dg-box-title accent">
+        {es ? "Se fija, y se registra" : "Pinned, and recorded"}
+      </text>
+      {pinned.map((item, index) => (
+        <text key={item} x={28} y={78 + index * 27} className="dg-box-sub">
+          {item}
+        </text>
+      ))}
+
+      <rect x={376} y={26} width={316} height={196} rx="10" className="dg-box" />
+      <text x={534} y={50} textAnchor="middle" className="dg-box-title">
+        {es ? "No se puede fijar" : "Cannot be pinned"}
+      </text>
+      {unpinned.map((item, index) => (
+        <text key={item} x={396} y={78 + index * 27} className="dg-box-sub" style={{ fill: "var(--color-bad)" }}>
+          {item}
+        </text>
+      ))}
+
+      <line x1={350} y1={40} x2={350} y2={212} className="dg-asymptote" />
+      <text x={350} y={232} textAnchor="middle" className="dg-marker-label">
+        {es ? "la costura del proveedor" : "the provider seam"}
+      </text>
+
+      <text x={350} y={262} textAnchor="middle" className="dg-note">
+        {es
+          ? "Por eso el registro informa n repeticiones con una banda de tolerancia, en vez de afirmar una reproduccion exacta que no tiene."
+          : "That is why the record reports n repeats with a tolerance band, rather than claiming an exact reproduction it does not have."}
+      </text>
+      <text x={350} y={282} textAnchor="middle" className="dg-note">
+        {es
+          ? "Una huella que dijera temperature=0 para un proveedor que no la acepta seria reproducibilidad afirmada y no ejercida."
+          : "A fingerprint claiming temperature=0 for a provider that does not accept it is reproducibility asserted and not exercised."}
+      </text>
+    </svg>
+  );
+}

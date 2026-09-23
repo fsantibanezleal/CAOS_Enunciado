@@ -86,6 +86,18 @@ function Architecture({ lang }: { lang: "en" | "es" }) {
         </ul>
       </FigureRow>
 
+      <p className="measure">
+        {es
+          ? "El reparto entre las tres zonas no es una preferencia de arquitectura, es una consecuencia de tres medidas. La primera: todo motor que el corpus necesita corre en un navegador, comprobado resolviendo casos reales con HiGHS, glpk.js y MiniZinc compilados a WebAssembly, no leyendo una lista de archivos en un registro de paquetes. La segunda: el artefacto horneado pesa 221 KB para veinte casos, unos 11 KB por caso, que es un tamano que cualquier CDN estatico sirve sin paginar ni indexar nada. La tercera: la unica via que necesitaria un secreto en servidor es la llamada al modelo, y esa corre sin conexion dentro del barrido, cuyo resultado se versiona. Con las tres medidas en mano el destino deja de ser una decision y pasa a ser una lectura."
+          : "The split across the three zones is not an architectural preference, it is a consequence of three measurements. First: every engine the corpus needs runs in a browser, checked by solving real cases with HiGHS, glpk.js and MiniZinc compiled to WebAssembly, rather than by reading a file listing on a package registry. Second: the baked artifact is 221 KB for twenty cases, about 11 KB each, which any static CDN serves with no paging and no index. Third: the only lane that would need a server-held secret is the model call, and that runs offline inside the sweep, whose result is committed. With all three measured, the target stops being a decision and becomes a reading."}
+      </p>
+
+      <p className="measure">
+        {es
+          ? "Lo que esa division compra es concreto. El horneado puede ser lento, porque corre una vez en una maquina que su autor controla, y puede por tanto permitirse verificar cada referencia, comprobar cada optimo declarado y ejecutar cada relacion de propiedad antes de dejar entrar un caso. La pagina puede ser rapida, porque no resuelve nada que ya este resuelto. Y la parte que si se calcula mientras usted lee es exactamente la parte que usted pidio al mover un control, lo que hace que el costo de la via en vivo sea proporcional al uso y no a la visita."
+          : "What that division buys is concrete. The bake can be slow, because it runs once on a machine its author controls, and can therefore afford to verify every reference, check every claimed optimum and execute every property relation before letting a case in. The page can be fast, because it solves nothing that is already solved. And the part that is computed while you read is exactly the part you asked for by moving a control, which makes the cost of the live lane proportional to use rather than to visits."}
+      </p>
+
       <h3>{es ? "Vivo, en su navegador" : "Live, in your browser"}</h3>
       <div className="def-grid">
         <div className="def">
