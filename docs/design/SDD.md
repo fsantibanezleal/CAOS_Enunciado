@@ -187,7 +187,23 @@ R-027  THE report's breakdowns SHALL count a candidate as faithful exactly when 
 
 R-028  THE CI recomputation of the rates SHALL count a candidate as faithful exactly when copela does.
        Gate: tests/test_faithful_rule.py::test_the_ci_recomputation_uses_copelas_rule
+
+R-029  IF a reply was all reasoning and no answer, THEN THE taxonomy SHALL classify it as a no-answer
+       class, and SHALL NOT classify it as unparseable output.
+       Gate: tests/test_failure_classes.py::test_a_reply_is_classified_by_the_check_that_failed_it
+
+R-030  IF the sweep runner refuses to start, THEN THE runner SHALL leave the ledger unlocked.
+       Gate: tests/test_sweep_runner.py::test_a_refused_sweep_leaves_the_ledger_unlocked
 ```
+
+R-029 and R-030 came with the first sweeps outside Anthropic. A reasoning model spends its output
+cap on reasoning first, and copela reports a reply that was all reasoning as one sentence on every
+lane (its R-022); the parser quotes that sentence back as the start of a response with no JSON in it,
+so without a rule it read as unparseable output, a formatting failure, when it is a truncation of a
+kind the taxonomy did not have. The gate drives copela's own sentence through the real sweep, parser
+and ledger rather than restating it. R-030 came from reading the runner while adding the refusal
+copela 0.3.0 makes for a model with no price: the runner took the ledger's lock, a file, and then
+returned early for a paid model with no budget, which left the file behind.
 
 R-025 and R-026 came with 0.04.000. R-026 exists because the modal's diagrams named eight tokens the
 shell does not define and fell through to their dark fallbacks, so the light theme drew dark boxes on
