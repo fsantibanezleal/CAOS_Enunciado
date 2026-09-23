@@ -156,7 +156,69 @@ for (const theme of ["dark", "light"]) {
       () => document.documentElement.scrollWidth - window.innerWidth,
     );
     check(overflow <= 1, `[${theme}] ${label} does not scroll horizontally`, `${overflow}px`);
+    // A doc route must actually scroll. The shell sets html and body to 100% height and, separately,
+    // overflow-x: hidden, which turns both into 100%-tall scroll containers and leaves the document
+    // unable to scroll: anchors and scrollTo do nothing and a full-page capture is one screen of
+    // content followed by blank. The wheel still works, so nothing looks wrong.
+    const scrolls = await page.evaluate(() => {
+      const before = window.scrollY;
+      window.scrollTo(0, 1200);
+      const moved = window.scrollY;
+      window.scrollTo(0, before);
+      return {
+        moved,
+        docHeight: document.documentElement.scrollHeight,
+        viewport: window.innerHeight,
+      };
+    });
+    check(
+      scrolls.docHeight <= scrolls.viewport + 2 || scrolls.moved > 0,
+      `[${theme}] ${label} scrolls the document`,
+      `doc ${scrolls.docHeight}px, viewport ${scrolls.viewport}px, scrollTo reached ${scrolls.moved}`,
+    );
+
+    // Two failure modes that render as plausible-looking mathematics.
+    //
+    // A `	ext{...}` inside a PLAIN template literal loses its backslash, because `	` is a tab
+    // and `\D` is just `D`: the equation then typesets as a tab followed by "ext{ran}". It looks
+    // like a spacing quirk, not like a bug. `String.raw` is required for every tex string, and this
+    // check is what makes forgetting it visible.
+    //
+    // The second is an equation with a hard-coded Spanish word on the English page, which no
+    // bilingual check catches because the surrounding prose IS branched.
+    // `.katex-html` is the VISIBLE typeset output. `.katex` also contains a hidden MathML
+    // annotation carrying the original LaTeX source, so reading it finds "ext{" and a tab in every
+    // correct equation: a check that fires on everything is a check that will be turned off.
+    const math = await page.evaluate(() =>
+      [...document.querySelectorAll(".katex-html")].map((e) => e.textContent ?? "").join(" | "),
+    );
+    const swallowed = math.includes("ext{") || math.includes(String.fromCharCode(9));
+    check(
+      !swallowed,
+      `[${theme}] ${label}: no equation lost a backslash`,
+      swallowed
+        ? `found ${math.includes("ext{") ? '"ext{"' : "a tab"} near: ${
+            math.slice(Math.max(0, math.indexOf(math.includes("ext{") ? "ext{" : String.fromCharCode(9))) - 20, 60)
+          }`
+        : `${math.length} chars of typeset math`,
+    );
+    const leaks = ["frente a", "si mismo", "coste", "determinado", "indefinido", "fallos"].filter(
+      (word) => math.toLowerCase().includes(word),
+    );
+    check(
+      leaks.length === 0,
+      `[${theme}] ${label}: equations are in the page's language`,
+      leaks.length ? `Spanish in the typeset math: ${leaks.join(", ")}` : "clean",
+    );
+
     await page.screenshot({ path: join(SHOTS, `${theme}-${label.toLowerCase()}.png`) });
+    // A doc route is taller than the viewport, and reviewing only its first screen is how a broken
+    // figure halfway down ships. The full capture is what a reviewer actually reads.
+    await page.screenshot({
+      path: join(SHOTS, `${theme}-${label.toLowerCase()}-full.png`),
+      fullPage: true,
+    });
+    await page.evaluate(() => window.scrollTo(0, 0));
   }
 
   // Back to the workbench, and exercise its controls rather than only looking at them.
@@ -177,20 +239,84 @@ for (const theme of ["dark", "light"]) {
   );
 
   // Provenance highlighting is the one view that makes the product's point, so it is measured.
+  // It lives on its own tab, so the gate opens that tab first: a check that reads zero because it
+  // never navigated to its subject reports a product failure that belongs to the gate.
+  await page.getByRole("tab", { name: /statement and model|enunciado y modelo/i }).click();
+  await page.waitForTimeout(350);
   const spans = await page.locator(".narrative-span").count();
   check(spans > 0, `[${theme}] the statement shows its provenance spans`, `${spans} spans`);
 
-  // ADR-0071 rule 8: the instrument gets the space.
+  // Back to the landing tab, so the area measurement below sees what a visitor sees.
+  await page.getByRole("tab", { name: /sensitivity|sensibilidad/i }).click();
+  await page.waitForTimeout(700);
+
+  // ADR-0017 section 3.4: a value read-out at the cursor. uPlot's own live legend renders below the
+  // plot and this host clips it, so the chart shipped with no read-out and nothing said so. The
+  // check moves a real pointer onto the curve and asserts the readout bar changed.
+  const readoutBefore = (await page.locator(".viz-readout").first().textContent()) ?? "";
+  const plot = page.locator(".uplot-host canvas").first();
+  if (await plot.count()) {
+    const box = await plot.boundingBox();
+    if (box) {
+      await page.mouse.move(box.x + box.width * 0.6, box.y + box.height * 0.5);
+      await page.waitForTimeout(250);
+    }
+  }
+  const readoutAfter = (await page.locator(".viz-readout").first().textContent()) ?? "";
+  check(
+    readoutAfter !== readoutBefore && /\d/.test(readoutAfter),
+    `[${theme}] the chart reads out a value at the cursor`,
+    readoutAfter.slice(0, 54).replace(/\s+/g, " "),
+  );
+
+  // EVERY tab is opened, screenshotted and checked for content, in both themes. Counting tabs is
+  // not verifying them: a panel that throws, renders empty, or renders the previous tab's content
+  // still leaves the tab strip looking correct.
+  const tabIds = await page.locator('.tablist [role="tab"]').count();
+  for (let index = 0; index < tabIds; index += 1) {
+    const tab = page.locator('.tablist [role="tab"]').nth(index);
+    const name = ((await tab.textContent()) ?? `tab-${index}`).trim();
+    await tab.click();
+    await page.waitForTimeout(900);
+    const panel = page.locator('[role="tabpanel"]:not([hidden])');
+    const text = ((await panel.textContent()) ?? "").trim();
+    const drawn = await panel.locator("canvas, svg, table, .heat-cell, .narrative-span").count();
+    check(
+      text.length > 80 && drawn > 0,
+      `[${theme}] the "${name}" panel drew something`,
+      `${text.length} chars, ${drawn} drawn element(s)`,
+    );
+    await page.screenshot({
+      path: join(SHOTS, `${theme}-tab-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.png`),
+    });
+  }
+  await page.getByRole("tab", { name: /sensitivity|sensibilidad/i }).click();
+  await page.waitForTimeout(600);
+
+  // ADR-0071 rule 8, as written: the primary VISUALIZATION takes at least half the VIEWPORT AREA.
+  //
+  // An earlier version of this check divided the main column's width by the grid's width, which is
+  // a different and much weaker question: it reads 100% for a column holding nothing but text. It
+  // also named two classes the layout had since renamed, so it returned 0 and reported a layout
+  // failure that was its own staleness. Measure the drawn thing, by area, against the window.
   const share = await page.evaluate(() => {
-    const main = document.querySelector(".case-main");
-    const body = document.querySelector(".workbench");
-    if (!main || !body) return 0;
-    return main.getBoundingClientRect().width / body.getBoundingClientRect().width;
+    const viewport = window.innerWidth * window.innerHeight;
+    if (!viewport) return 0;
+    const drawn = [...document.querySelectorAll("canvas, .uplot-host, .viz-canvas, .heat, svg.fig-svg")];
+    let largest = 0;
+    for (const element of drawn) {
+      const box = element.getBoundingClientRect();
+      // Only what is actually on screen counts; a figure scrolled out of view is not the instrument.
+      const width = Math.max(0, Math.min(box.right, window.innerWidth) - Math.max(box.left, 0));
+      const height = Math.max(0, Math.min(box.bottom, window.innerHeight) - Math.max(box.top, 0));
+      largest = Math.max(largest, width * height);
+    }
+    return largest / viewport;
   });
   check(
     share >= 0.5,
     `[${theme}] the instrument takes at least half the App route`,
-    `${(share * 100).toFixed(0)}%`,
+    `${(share * 100).toFixed(1)}%`,
   );
 
   await page.screenshot({ path: join(SHOTS, `${theme}-workbench.png`) });
@@ -216,6 +342,84 @@ for (const theme of ["dark", "light"]) {
     `[${theme}] no console errors`,
     consoleErrors.slice(0, 2).join(" | ").slice(0, 160),
   );
+
+  await context.close();
+}
+
+// The Spanish pass.
+//
+// ADR-0016 asks for bilingual by construction and ADR-0017 makes it a gate item, and every check
+// above ran in English: the theme is a mode the gate exercised and the language is a mode it did
+// not. An untranslated page and a translated one look equally fine to a check that never switches.
+{
+  const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const page = await context.newPage();
+  await page.goto(`http://localhost:${PORT}/`, { waitUntil: "networkidle" });
+  await page.waitForTimeout(700);
+
+  // Through the real control, for the same reason the theme is.
+  const langButton = page.getByRole("button", { name: /language|idioma|^en$|^es$/i }).first();
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const current = await page.evaluate(() => document.documentElement.lang || "");
+    const shown = ((await langButton.textContent()) ?? "").trim().toLowerCase();
+    if (current === "es" || shown === "es") break;
+    await langButton.click();
+    await page.waitForTimeout(350);
+  }
+
+  for (const [route, label] of [
+    ["/introduction", "Introduction"],
+    ["/methodology", "Methodology"],
+    ["/implementation", "Implementation"],
+    ["/experiments", "Experiments"],
+    ["/benchmark", "Benchmark"],
+    ["/", "Workbench"],
+  ]) {
+    await page.goto(`http://localhost:${PORT}${route}`, { waitUntil: "networkidle" });
+    await page.waitForTimeout(1200);
+    const text = (await page.textContent("#root")) ?? "";
+
+    // Positive evidence that this is Spanish: several function words that no English sentence on
+    // these pages contains. Counting them beats testing for one, which a stray proper noun passes.
+    const markers = [" que ", " del ", " para ", " con ", " una ", " los ", " sin "].filter((w) =>
+      text.includes(w),
+    );
+    check(
+      markers.length >= 4 && text.length > 400,
+      `[es] ${label} renders in Spanish`,
+      `${markers.length}/7 markers, ${text.length} chars`,
+    );
+
+    // The mirror of the English check: no untranslated equation on the Spanish page.
+    const math = await page.evaluate(() =>
+      [...document.querySelectorAll(".katex-html")].map((e) => e.textContent ?? "").join(" | "),
+    );
+    const english = ["against", "when", "with", "determined", "marginal cost", "failures"].filter(
+      (word) => math.toLowerCase().includes(word),
+    );
+    check(
+      english.length === 0,
+      `[es] ${label}: equations are in the page's language`,
+      english.length ? `English in the typeset math: ${english.join(", ")}` : "clean",
+    );
+
+    // The CHROME, not just the prose. The app had two sources of truth for the language: the shell
+    // store, which the prose followed, and an i18next instance fixed at "en" that nothing told.
+    // Half the workbench furniture stayed English beside Spanish paragraphs, and every
+    // "does this page render in Spanish" check passed because the prose was the bulk of the text.
+    if (label === "Workbench") {
+      const leaks = ["WHAT MAKES THIS HARD", "Tier ", "control case", "Statement", ">Case<"].filter(
+        (phrase) => text.includes(phrase.replace(/[<>]/g, "")),
+      );
+      check(
+        leaks.length === 0,
+        `[es] the workbench chrome is translated`,
+        leaks.length ? `English chrome: ${leaks.join(", ")}` : "clean",
+      );
+    }
+
+    await page.screenshot({ path: join(SHOTS, `es-${label.toLowerCase()}.png`) });
+  }
 
   await context.close();
 }

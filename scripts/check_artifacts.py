@@ -11,7 +11,6 @@ shows yesterday's numbers, and nothing in a green build would say so.
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -65,8 +64,12 @@ def main() -> int:
                 problems.append(f"{label}: missing {field}")
         claimed = case.get("claimed_optimum")
         solution = case.get("solution") or {}
-        if claimed is not None and solution.get("objective") is not None:
-            if abs(float(solution["objective"]) - float(claimed)) > 1e-6 * max(1.0, abs(float(claimed))):
+        if (
+            claimed is not None
+            and solution.get("objective") is not None
+            and abs(float(solution["objective"]) - float(claimed))
+            > 1e-6 * max(1.0, abs(float(claimed)))
+        ):
                 problems.append(
                     f"{label}: committed artifact claims {claimed} and records "
                     f"{solution['objective']}"

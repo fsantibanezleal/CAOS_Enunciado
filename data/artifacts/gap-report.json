@@ -1,85 +1,335 @@
 {
-  "cells": [
-    {
-      "provider": "anthropic",
-      "model_id": "claude-haiku-4-5",
-      "family": "optimization",
-      "ran": {
-        "passed": 5,
-        "total": 20,
-        "value": 0.25,
-        "interval_low": 0.11186170140766569,
-        "interval_high": 0.468700877618744,
-        "confidence": 0.95
-      },
-      "faithful": {
-        "passed": 4,
-        "total": 20,
-        "value": 0.2,
-        "interval_low": 0.08065766257979809,
-        "interval_high": 0.4160174322518936,
-        "confidence": 0.95
-      },
-      "gap": 0.04999999999999999,
-      "gap_is_defined": true,
-      "unmeasured": 0
-    },
-    {
-      "provider": "anthropic",
-      "model_id": "claude-sonnet-5",
-      "family": "optimization",
-      "ran": {
-        "passed": 11,
-        "total": 20,
-        "value": 0.55,
-        "interval_low": 0.34208534245034233,
-        "interval_high": 0.7418021417443759,
-        "confidence": 0.95
-      },
-      "faithful": {
-        "passed": 10,
-        "total": 20,
-        "value": 0.5,
-        "interval_low": 0.2992980081982123,
-        "interval_high": 0.7007019918017877,
-        "confidence": 0.95
-      },
-      "gap": 0.050000000000000044,
-      "gap_is_defined": true,
-      "unmeasured": 0
-    }
-  ],
-  "judge": [],
-  "note": "The layers are reported separately by design. There is no combined score: a single number would let a high 'it ran' rate conceal a low 'it was right' rate, which is the distance this report exists to show. Rates are over repeats with a Wilson interval, because pinning whatever controls a provider exposes does not make hosted inference deterministic, so a single run is not a result.",
-  "measured_on": "2026-09-22",
-  "corpus": "20 authored optimization cases across 5 complexity tiers, 1 repeat each",
-  "cost_usd": 1.2263,
-  "failure_breakdown": {
-    "claude-sonnet-5": {
-      "ran and survived every check": 10,
-      "a constant with no unit": 4,
-      "truncated output": 3,
-      "ran, then REFUTED: solves to a different optimum": 1,
-      "the model it produced is infeasible": 1,
-      "unparseable output": 1
-    },
-    "claude-haiku-4-5": {
-      "a constant with no unit": 5,
-      "a quantity declared derived and never defined": 4,
-      "ran and survived every check": 4,
-      "unparseable output": 3,
-      "fabricated provenance: words not in the statement": 1,
-      "ran, then REFUTED: solves to a different optimum": 1,
-      "the model it produced is infeasible": 1,
-      "dimensional mismatch": 1
-    }
+ "by_tier": {
+  "claude-haiku-4-5": {
+   "1": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "2": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "3": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "4": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "5": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   }
   },
-  "caveats": [
-    "Twenty cases at ONE repeat gives a wide interval. It is enough to see that a gap exists and not enough to rank these two models against each other: their intervals overlap almost entirely.",
-    "Run-to-run variation is real and visible here. An earlier run of the identical corpus put claude-haiku-4-5 at ran 0.350; this one puts it at 0.250. Nothing changed but the sampling. That is what the interval is for.",
-    "The true statement is substituted before parsing and provenance offsets are recomputed from the quoted text. Both favour the model, and both are stated because the measurement is about formalization rather than transcription.",
-    "Current Claude models accept no temperature and no seed, so those controls are recorded as absent rather than as pinned values.",
-    "The structural layer can only REFUTE. A matching optimum never proves equivalence, because compensating errors reach the right number.",
-    "A candidate the configured solver cannot express is excluded from both rates and counted as unmeasured, because a limitation of the instrument is not a failure of the subject."
-  ]
+  "claude-sonnet-5": {
+   "1": {
+    "confidence": 0.95,
+    "interval_high": 1.0,
+    "interval_low": 0.5101091635454027,
+    "passed": 4,
+    "total": 4,
+    "value": 1.0
+   },
+   "2": {
+    "confidence": 0.95,
+    "interval_high": 0.8499610108478505,
+    "interval_low": 0.15003898915214953,
+    "passed": 2,
+    "total": 4,
+    "value": 0.5
+   },
+   "3": {
+    "confidence": 0.95,
+    "interval_high": 0.8499610108478505,
+    "interval_low": 0.15003898915214953,
+    "passed": 2,
+    "total": 4,
+    "value": 0.5
+   },
+   "4": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "5": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   }
+  }
+ },
+ "by_trap": {
+  "claude-haiku-4-5": {
+   "ambiguity": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "derived-bound": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "droppable-constraint": {
+    "confidence": 0.95,
+    "interval_high": 0.6244653702374747,
+    "interval_low": 0.036224108632430085,
+    "passed": 1,
+    "total": 5,
+    "value": 0.2
+   },
+   "implicit-quantity": {
+    "confidence": 0.95,
+    "interval_high": 0.5614970317550455,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 3,
+    "value": 0.0
+   },
+   "integrality": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "none": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "red-herring": {
+    "confidence": 0.95,
+    "interval_high": 0.7934506856227626,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 1,
+    "value": 0.0
+   },
+   "unit-mismatch": {
+    "confidence": 0.95,
+    "interval_high": 0.9054687942657693,
+    "interval_low": 0.09453120573423074,
+    "passed": 1,
+    "total": 2,
+    "value": 0.5
+   }
+  },
+  "claude-sonnet-5": {
+   "ambiguity": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "derived-bound": {
+    "confidence": 0.95,
+    "interval_high": 1.0,
+    "interval_low": 0.34238022750665303,
+    "passed": 2,
+    "total": 2,
+    "value": 1.0
+   },
+   "droppable-constraint": {
+    "confidence": 0.95,
+    "interval_high": 0.6244653702374747,
+    "interval_low": 0.036224108632430085,
+    "passed": 1,
+    "total": 5,
+    "value": 0.2
+   },
+   "implicit-quantity": {
+    "confidence": 0.95,
+    "interval_high": 0.5614970317550455,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 3,
+    "value": 0.0
+   },
+   "integrality": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "none": {
+    "confidence": 0.95,
+    "interval_high": 0.9544127391902995,
+    "interval_low": 0.30064184258240184,
+    "passed": 3,
+    "total": 4,
+    "value": 0.75
+   },
+   "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 1.0,
+    "interval_low": 0.34238022750665303,
+    "passed": 2,
+    "total": 2,
+    "value": 1.0
+   },
+   "red-herring": {
+    "confidence": 0.95,
+    "interval_high": 1.0,
+    "interval_low": 0.20654931437723745,
+    "passed": 1,
+    "total": 1,
+    "value": 1.0
+   },
+   "unit-mismatch": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   }
+  }
+ },
+ "call_count": 40,
+ "caveats": [
+  "Twenty cases at ONE repeat gives a wide interval. It is enough to see that a gap exists and not enough to rank these two models against each other: their intervals overlap almost entirely.",
+  "Run-to-run variation is real and visible here. An earlier run of the identical corpus put claude-haiku-4-5 at ran 0.350; this one puts it at 0.250. Nothing changed but the sampling. That is what the interval is for.",
+  "The true statement is substituted before parsing and provenance offsets are recomputed from the quoted text. Both favour the model, and both are stated because the measurement is about formalization rather than transcription.",
+  "Current Claude models accept no temperature and no seed, so those controls are recorded as absent rather than as pinned values.",
+  "The structural layer can only REFUTE. A matching optimum never proves equivalence, because compensating errors reach the right number.",
+  "A candidate the configured solver cannot express is counted as unmeasured and excluded from both rates. Charging a limit of the instrument to the subject is the error this product exists to expose.",
+  "The per-tier and per-trap rates below are re-groupings of the same forty records, so their denominators are four and smaller. They indicate where to look next; they do not support a claim about any single tier."
+ ],
+ "cells": [
+  {
+   "faithful": {
+    "confidence": 0.95,
+    "interval_high": 0.4160174322518936,
+    "interval_low": 0.08065766257979809,
+    "passed": 4,
+    "total": 20,
+    "value": 0.2
+   },
+   "family": "optimization",
+   "gap": 0.04999999999999999,
+   "gap_is_defined": true,
+   "model_id": "claude-haiku-4-5",
+   "provider": "anthropic",
+   "ran": {
+    "confidence": 0.95,
+    "interval_high": 0.468700877618744,
+    "interval_low": 0.11186170140766569,
+    "passed": 5,
+    "total": 20,
+    "value": 0.25
+   },
+   "unmeasured": 0
+  },
+  {
+   "faithful": {
+    "confidence": 0.95,
+    "interval_high": 0.7007019918017877,
+    "interval_low": 0.2992980081982123,
+    "passed": 10,
+    "total": 20,
+    "value": 0.5
+   },
+   "family": "optimization",
+   "gap": 0.050000000000000044,
+   "gap_is_defined": true,
+   "model_id": "claude-sonnet-5",
+   "provider": "anthropic",
+   "ran": {
+    "confidence": 0.95,
+    "interval_high": 0.7418021417443759,
+    "interval_low": 0.34208534245034233,
+    "passed": 11,
+    "total": 20,
+    "value": 0.55
+   },
+   "unmeasured": 0
+  }
+ ],
+ "corpus": "20 authored optimization cases across 5 complexity tiers, 1 repeat each",
+ "cost_usd": 1.2263,
+ "failure_breakdown": {
+  "claude-haiku-4-5": {
+   "a constant with no unit": 5,
+   "a quantity declared derived and never defined": 4,
+   "dimensional mismatch": 1,
+   "fabricated provenance: words not in the statement": 1,
+   "ran and survived every check": 4,
+   "ran, then REFUTED: solves to a different optimum": 1,
+   "the model it produced is infeasible": 1,
+   "unparseable output": 3
+  },
+  "claude-sonnet-5": {
+   "a constant with no unit": 4,
+   "ran and survived every check": 10,
+   "ran, then REFUTED: solves to a different optimum": 1,
+   "the model it produced is infeasible": 1,
+   "truncated output": 3,
+   "unparseable output": 1
+  }
+ },
+ "judge": [],
+ "layer_agreement": {
+  "claude-haiku-4-5": {
+   "did-not-run/not-faithful": 15,
+   "ran/faithful": 4,
+   "ran/not-faithful": 1
+  },
+  "claude-sonnet-5": {
+   "did-not-run/not-faithful": 9,
+   "ran/faithful": 10,
+   "ran/not-faithful": 1
+  }
+ },
+ "measured_on": "2026-09-22",
+ "note": "The layers are reported separately by design. There is no combined score: a single number would let a high 'it ran' rate conceal a low 'it was right' rate, which is the distance this report exists to show. Rates are over repeats with a Wilson interval, because pinning whatever controls a provider exposes does not make hosted inference deterministic, so a single run is not a result."
 }
