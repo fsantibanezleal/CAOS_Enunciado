@@ -786,6 +786,10 @@
 .fig-row .fig-svg { max-width: 100%; }
 .fig-row .figure { margin-block: 0; }
 
+/* A dense figure on its own row renders a little above its 760-unit design size, so an 11px label
+   reads at about 13px. Any wider and the labels outgrow the prose around them. */
+.figure.full .fig-svg { max-width: 940px; }
+
 /* Long-form sections carry their own vertical rhythm; the shell's default is tuned for shorter
    pages and runs the headings into the text above them at this density. */
 .prose section > h2:first-child { margin-top: 0; }
