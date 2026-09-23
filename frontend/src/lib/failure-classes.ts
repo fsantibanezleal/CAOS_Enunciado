@@ -140,6 +140,16 @@ export const FAILURE_CLASSES: FailureClass[] = [
     ran: false,
   },
   {
+    key: "the model it produced is unbounded",
+    es: "el modelo que produjo no esta acotado",
+    ruleEn:
+      "The solver reports the model unbounded: its objective has no bound in its direction, so there is no optimum. copela 0.3.3 records it as a failure to run; a record scored before that shows it as a run, and the Benchmark's caveats count them.",
+    ruleEs:
+      "El solucionador informa el modelo no acotado: su objetivo no tiene cota en su direccion, asi que no hay optimo. copela 0.3.3 lo registra como fallo de ejecucion; un registro calificado antes lo muestra como ejecutado, y las salvedades de la Comparativa los cuentan.",
+    layer: "executable",
+    ran: false,
+  },
+  {
     key: "the model it produced is infeasible or unbounded",
     es: "el modelo que produjo es infactible o no acotado",
     ruleEn:

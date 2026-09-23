@@ -268,6 +268,33 @@ def caveats(records, models: list[dict[str, object]], failure: dict[str, dict[st
     for note in PROTOCOL_NOTES:
         if note["model"] in keys:
             out.append(_caveat(note["en"], note["es"]))
+    scored_as_run = [
+        r
+        for r in records
+        if any(
+            v["layer"] == Layer.EXECUTABLE.value
+            and v["outcome"] == Outcome.PASS.value
+            and v.get("detail") == "unbounded"
+            for v in r.verdicts
+        )
+    ]
+    if scored_as_run:
+        names = ", ".join(sorted({f"{r.key.model_id} on {r.key.case_id}" for r in scored_as_run}))
+        out.append(
+            _caveat(
+                f"{len(scored_as_run)} candidate(s) ({names}) were unbounded and were recorded as "
+                "having run: copela before 0.3.3 passed an unbounded model at the executable layer, "
+                "and its later layers then misread the missing optimum. The records keep the "
+                "verdicts they were scored with, so each counts as ran and not faithful in its row; "
+                "the taxonomy classes it as unbounded. copela 0.3.3 fixes it for later sweeps.",
+                f"{len(scored_as_run)} candidato(s) ({names}) eran no acotados y quedaron "
+                "registrados como ejecutados: copela antes de 0.3.3 aprobaba un modelo no acotado en "
+                "la capa ejecutable, y sus capas siguientes leian mal el optimo ausente. Los "
+                "registros conservan los veredictos con que se calificaron, asi que cada uno cuenta "
+                "como corrido y no fiel en su fila; la taxonomia lo clasifica como no acotado. "
+                "copela 0.3.3 lo corrige para los barridos siguientes.",
+            )
+        )
     free = [m for m in models if m["cost_usd"] == 0]
     if free:
         out.append(
@@ -427,6 +454,8 @@ def classify(record, cap: int = PROTOCOL_CAP) -> str:
             if record.key.case_id in _infeasible_cases():
                 return "infeasible, as the case is"
             return "the model it produced is infeasible"
+        if head.strip() == "unbounded":
+            return "the model it produced is unbounded"
         if head.strip() == "infeasibleorunbounded":
             # HiGHS reports the two together when its presolve cannot tell them apart.
             return "the model it produced is infeasible or unbounded"
@@ -440,6 +469,12 @@ def classify(record, cap: int = PROTOCOL_CAP) -> str:
         if "did not parse" in head:
             return "unparseable output"
         return "other executable failure"
+
+    # copela before 0.3.3 passed an unbounded candidate as a run (its R-030), and the layers after
+    # it then misread the missing optimum. The record keeps the verdicts it was scored with, and the
+    # rates count it as a run; the class says what the solver actually found.
+    if executable and executable.get("detail") == "unbounded":
+        return "the model it produced is unbounded"
 
     if structural and structural["outcome"] == Outcome.FAIL.value:
         # copela refutes on a feasibility mismatch as well as on a different optimum. On the
