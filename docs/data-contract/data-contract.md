@@ -1,0 +1,121 @@
+# The data contract
+
+Every file this product reads or writes, what is in it, in what units, and what happens when
+something is missing. A surface reading a shape it does not understand renders blanks, and nothing
+about a blank says which side drifted, so the shape is a contract with two halves and both are
+versioned.
+
+| File | Written by | Read by | Tracked |
+|---|---|---|---|
+| `data/artifacts/cases.json` | `bake.py` | the site, `check_artifacts.py` | yes |
+| `data/artifacts/manifest.json` | `bake.py` | the site, `check_artifacts.py` | yes |
+| `data/artifacts/gap-report.json` | `report.py` | the Benchmark page, `report.py --check` | yes |
+| `data/runs/*.jsonl` | `sweep_run.py` | `report.py` | yes |
+| `frontend/public/data/*` | mirrored | the dev server | **no**, it is a working copy |
+
+The TypeScript half is `frontend/src/lib/contract.types.ts`. When one half changes shape and the
+other does not, the site fails to load with a message rather than rendering blanks.
+
+## `manifest.json`
+
+```json
+{
+  "schema": "enunciado-corpus/1.0",
+  "family": "optimization",
+  "case_count": 20,
+  "coverage": { "tier": {"1": 4, ...}, "trap": {"ambiguity": 4, ...} },
+  "coverage_gaps": [],
+  "tolerance": 1e-06
+}
+```
+
+| Field | Meaning |
+|---|---|
+| `schema` | The contract version. A mismatch with the build's constant refuses the load. |
+| `case_count` | Checked against `len(cases)`. This catches a **partial bake**, the most common silent failure of this kind: a truncated artifact serves clean and weighs less. |
+| `tolerance` | The relative tolerance used when comparing a solved optimum to a claimed one. |
+
+## `cases.json`
+
+An array of case records. The load-bearing fields:
+
+| Field | Type | Units / notes |
+|---|---|---|
+| `case_id` | string | `opt-NNN`, stable, used in deep links and the ledger key |
+| `tier` | 1..5 | difficulty of the FORMALIZATION, not of the arithmetic |
+| `traps` | string[] | empty means a control case |
+| `narrative` | string | the exact text a model is given, English |
+| `why_hard` | string | stated by the author; a case whose difficulty is not stated cannot explain a failure |
+| `open_questions` | object[] | what the statement did not determine, with the resolution chosen |
+| `reference` | `planteo.Problem` | the authored formalization |
+| `solution` | object | `feasible`, `objective`, `values`, `detail` |
+| `claimed_optimum` | number \| null | what the author claimed; verified against `solution.objective` |
+| `property_check` | object | per-relation outcome and detail |
+| `emitted_pyomo` | string | the emitted model source, for reading |
+
+### Units inside `reference`
+
+Every `Quantity` carries a `dimension`, which is a symbol plus a map of **rational exponents as
+strings** over nine axes: `length`, `mass`, `time`, `current`, `temperature`, `amount`,
+`luminosity`, `currency`, `count`.
+
+```json
+{"symbol": "t/h", "exponents": {"mass": "1", "time": "-1"}}
+```
+
+They are strings because they are exact fractions. A square root of an area is an exponent of `1/2`,
+and `0.5 + 0.5` does not always return to `1` in binary floating point.
+
+**A constant inside a sum carries its own `unit`.** A `const` node with no `unit` is rejected by the
+validator, and it is the single most common defect this measurement found in model output.
+
+### Missing data, and how it is handled
+
+| Situation | What the artifact holds | Why |
+|---|---|---|
+| A case has no solution (correctly) | `solution.feasible = false`, `objective = null` | Infeasibility is an ordinary outcome, not an error. `opt-019` is authored this way |
+| A quantity has no upper bound | the field is absent | Absent is not zero, and the emitter treats it as unbounded |
+| An element was inferred, not read | `span.inferred_reason`, no offsets | A span with offsets is a claim about the text and is checked; an inference is a different kind of statement |
+| An open question is unresolved | `open_questions[].is_open = true` | The site shows it in amber rather than hiding it |
+
+There are no null-filled placeholder rows and no sentinel values such as `-999`. A field that has no
+value is absent, and the reader of the contract must handle absence.
+
+## `gap-report.json`
+
+Derived from the ledger and the corpus by `report.py`, and re-derived by CI.
+
+| Field | Meaning |
+|---|---|
+| `cells[]` | One per model: `ran` and `faithful` rates with Wilson intervals, `gap`, `gap_is_defined`, `unmeasured` |
+| `gap` | `null` when undefined. Never zero-for-undefined |
+| `by_tier`, `by_trap` | Re-groupings of the same records; denominators of four and smaller |
+| `layer_agreement` | The four-quadrant counts. `did-not-run/faithful` must be 0 by construction |
+| `failure_breakdown` | Counts per failure class, derived from the verdict message |
+| `caveats[]` | What the measurement does not support. Facts about the run, not disclaimers |
+| `cost_usd`, `call_count`, `measured_on`, `corpus` | Provenance of the run |
+
+## `data/runs/*.jsonl`
+
+Append-only, one JSON object per line, one line per call. Required provenance per record, rejected
+at write time if absent: `model_version`, `provider_fingerprint`, `prompt_digest`,
+`response_digest`, `latency_ms`, `input_tokens`, `output_tokens`, `cost_usd`.
+
+`response_excerpt` is present **only on a failure**, bounded at 2000 characters with the middle
+elided. A correct run is described by its verdicts; a failed one is not, and hosted inference cannot
+be re-run to reproduce.
+
+Three ledgers are committed, and the two superseded ones are kept on purpose:
+
+| File | What it records |
+|---|---|
+| `optimization.jsonl` | The published measurement |
+| `optimization-before-refutation.jsonl` | Before the structural layer could refute |
+| `optimization-v1-before-instrument-fix.jsonl` | Before a solver capability limit stopped being charged to the model |
+
+## Outliers
+
+There is no outlier handling, and that is a decision rather than an omission. Every record is a
+discrete verdict over a single case; there is no continuous quantity here whose tail could be
+trimmed. The nearest analogue is a case the instrument could not measure, and those are counted
+separately as `unmeasured` and excluded from both rates rather than dropped or imputed.
