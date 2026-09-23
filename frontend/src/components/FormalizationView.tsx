@@ -134,7 +134,7 @@ export function FormalizationView({
                 </td>
                 <td className="dim">{describeDimension(q.dimension)}</td>
                 <td className="num">
-                  {q.value !== undefined && q.value !== null ? q.value : "—"}
+                  {q.value !== undefined && q.value !== null ? q.value : "–"}
                   {q.lower !== undefined && q.lower !== null ? (
                     <span className="bound">{` ≥ ${q.lower}`}</span>
                   ) : null}

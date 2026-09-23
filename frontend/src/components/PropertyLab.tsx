@@ -273,7 +273,7 @@ export function PropertyLab({
                 <td className="num">{format(row.base?.objective, es)}</td>
                 <td className="num">
                   {row.verdict === "not-applicable"
-                    ? "—"
+                    ? "–"
                     : format(row.after?.objective, es)}
                 </td>
                 <td className="num">
@@ -283,7 +283,7 @@ export function PropertyLab({
                       ? sense === "minimise"
                         ? "≥"
                         : "≤"
-                      : "—"}
+                      : "–"}
                 </td>
                 <td style={{ color: verdictColour(row.verdict), fontWeight: 600 }}>
                   {verdictLabel(row.verdict, es)}

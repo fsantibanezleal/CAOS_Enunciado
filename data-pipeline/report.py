@@ -40,6 +40,11 @@ DEFAULT_LEDGER = REPO / "data" / "runs" / "optimization.jsonl"
 #: that disagrees with the published one and nothing says so.
 DEFAULT_OUT = REPO / "data" / "artifacts" / "gap-report.json"
 DEV_COPY = REPO / "frontend" / "public" / "data" / "gap-report.json"
+#: The per-case attempts, for the workbench's learned-model tools. A separate file because the
+#: App needs it and the Benchmark does not, and because it carries the response excerpts, which
+#: are most of its weight.
+ATTEMPTS_OUT = REPO / "data" / "artifacts" / "attempts.json"
+ATTEMPTS_DEV = REPO / "frontend" / "public" / "data" / "attempts.json"
 
 #: What the measurement does not support. Each one is a fact about this run, not a disclaimer.
 CAVEATS = [
@@ -198,6 +203,44 @@ def breakdowns(ledger: Ledger) -> dict[str, object]:
     }
 
 
+def attempts(ledger_path: Path) -> dict[str, object]:
+    """Every model's attempt at every case, in the shape the workbench reads.
+
+    Nothing here is a new measurement. It is the ledger re-keyed by case, with each record's
+    failure class derived exactly as the report derives it, so the workbench and the Benchmark
+    cannot tell two different stories about the same call.
+    """
+    ledger = Ledger(ledger_path)
+    by_case: dict[str, list[dict[str, object]]] = defaultdict(list)
+    for record in ledger:
+        by_case[record.key.case_id].append(
+            {
+                "model_id": record.key.model_id,
+                "provider": record.key.provider,
+                "repeat": record.key.repeat,
+                "failure_class": classify(record),
+                "verdicts": [
+                    {"layer": v["layer"], "outcome": v["outcome"], "detail": v.get("detail", "")}
+                    for v in record.verdicts
+                ],
+                "cost_usd": round(record.cost_usd, 6),
+                "latency_ms": round(record.latency_ms, 1),
+                "input_tokens": record.input_tokens,
+                "output_tokens": record.output_tokens,
+                "response_excerpt": record.response_excerpt,
+                "model_version": record.model_version,
+                "provider_fingerprint": record.provider_fingerprint,
+            }
+        )
+    return {
+        "schema": "enunciado-attempts/1.0",
+        "cases": {
+            case_id: sorted(rows, key=lambda r: (r["model_id"], r["repeat"]))
+            for case_id, rows in sorted(by_case.items())
+        },
+    }
+
+
 def assemble(ledger_path: Path) -> dict[str, object]:
     ledger = Ledger(ledger_path)
     records = ledger.records()
@@ -230,31 +273,34 @@ def main() -> int:
 
     report = assemble(args.ledger)
     rendered = json.dumps(report, indent=1, sort_keys=True) + "\n"
+    attempts_rendered = json.dumps(attempts(args.ledger), indent=1, sort_keys=True) + "\n"
 
     if args.check:
-        if not args.out.exists():
-            print(f"{args.out} does not exist", file=sys.stderr)
+        drift = []
+        for path, text in ((args.out, rendered), (ATTEMPTS_OUT, attempts_rendered)):
+            if not path.exists():
+                drift.append(f"{path} does not exist")
+            elif path.read_text(encoding="utf-8") != text:
+                drift.append(f"{path} does not match what {args.ledger} produces")
+        if drift:
+            for line in drift:
+                print(line, file=sys.stderr)
+            print("Re-run without --check and commit the result.", file=sys.stderr)
             return 1
-        committed = args.out.read_text(encoding="utf-8")
-        if committed != rendered:
-            print(
-                f"{args.out} does not match what {args.ledger} produces. "
-                "Re-run without --check and commit the result.",
-                file=sys.stderr,
-            )
-            return 1
-        print(f"{args.out} matches the ledger ({report['call_count']} calls)")
+        print(f"{args.out.name} and {ATTEMPTS_OUT.name} match the ledger ({report['call_count']} calls)")
         return 0
 
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(rendered, encoding="utf-8")
-    print(f"wrote {args.out} from {report['call_count']} ledger record(s)")
+    ATTEMPTS_OUT.write_text(attempts_rendered, encoding="utf-8")
+    print(f"wrote {args.out.name} and {ATTEMPTS_OUT.name} from {report['call_count']} ledger record(s)")
 
-    # Keep the dev server's copy in step, so a local run and the published site show the same
+    # Keep the dev server's copies in step, so a local run and the published site show the same
     # numbers. Only when the canonical file is the default one; a custom --out is the caller's.
     if args.out == DEFAULT_OUT and DEV_COPY.parent.exists():
         DEV_COPY.write_text(rendered, encoding="utf-8")
-        print(f"  and mirrored to {DEV_COPY}")
+        ATTEMPTS_DEV.write_text(attempts_rendered, encoding="utf-8")
+        print(f"  and mirrored to {DEV_COPY.parent}")
     for cell in report["cells"]:
         gap = f"{cell['gap']:+.3f}" if cell["gap_is_defined"] else "UNDEFINED"
         print(

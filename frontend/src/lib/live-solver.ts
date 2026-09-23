@@ -12,6 +12,30 @@
 
 import type { CaseRecord, ExpressionNode, Problem, RelationNode } from "./contract.types";
 
+/** One constraint at the optimum: where it sits, and what relaxing it would be worth. */
+export interface RowState {
+  name: string;
+  /** The left-hand side evaluated at the optimum. */
+  primal: number;
+  /** The shadow price. Nonzero only where the row binds, by complementary slackness. */
+  dual: number;
+  lower: number | null;
+  upper: number | null;
+  /** HiGHS basis status: BS basic, UB at upper, LB at lower, FX fixed. */
+  status: string;
+  /** Distance to the binding side. Zero means the row is active. */
+  slack: number | null;
+}
+
+/** One variable at the optimum: its value, and its reduced cost. */
+export interface ColumnState {
+  name: string;
+  primal: number;
+  /** Reduced cost. Nonzero only where the variable sits at a bound. */
+  dual: number;
+  status: string;
+}
+
 export interface LiveSolution {
   status: "optimal" | "infeasible" | "unbounded" | "error";
   objective: number | null;
@@ -19,6 +43,14 @@ export interface LiveSolution {
   detail: string;
   /** Milliseconds spent inside the solver, so the cost of the live lane is visible. */
   solveMs: number;
+  /**
+   * The dual side of the answer, when there is one.
+   *
+   * A primal solution says WHAT to do. The dual says what each constraint is costing you, which is
+   * the half a reader can act on, and it is free: HiGHS returns it with the same solve.
+   */
+  rows: RowState[];
+  columns: ColumnState[];
 }
 
 /** A linear term: coefficient times a variable name. */
@@ -32,10 +64,26 @@ interface HighsModule {
   solve: (lp: string) => HighsResult;
 }
 
+interface HighsColumn {
+  Primal: number;
+  Dual?: number;
+  Status?: string;
+}
+
+interface HighsRow {
+  Name?: string;
+  Primal?: number;
+  Dual?: number;
+  Status?: string;
+  Lower?: number | null;
+  Upper?: number | null;
+}
+
 interface HighsResult {
   Status: string;
   ObjectiveValue: number;
-  Columns: Record<string, { Primal: number }>;
+  Columns: Record<string, HighsColumn>;
+  Rows?: HighsRow[];
 }
 
 /** Load HiGHS once, on first solve. */
@@ -158,6 +206,7 @@ function formatTerms(terms: Terms): string {
 export function toLpFormat(
   problem: Problem,
   overrides: Record<string, number> = {},
+  options: { relax?: boolean; forceInteger?: boolean } = {},
 ): { lp: string; integers: string[] } | null {
   try {
     const values: Record<string, number> = {};
@@ -168,7 +217,12 @@ export function toLpFormat(
     for (const q of problem.quantities) {
       if (q.role === "variable") {
         decisions.add(q.name);
-        if (q.domain === "integer" || q.domain === "boolean") integers.push(q.name);
+        // `forceInteger` is the discretisation probe: the same model with every decision required
+        // to be whole. It answers "if the statement had meant whole units, how far would the
+        // optimum move", which is the question the integrality trap turns on.
+        if (q.domain === "integer" || q.domain === "boolean" || options.forceInteger) {
+          integers.push(q.name);
+        }
         const lower = q.lower ?? 0;
         const upper = q.upper;
         bounds.push(
@@ -209,7 +263,11 @@ export function toLpFormat(
       ...rows.map((r) => ` ${r}`),
       "Bounds",
       ...bounds.map((b) => ` ${b}`),
-      ...(integers.length ? ["Generals", ` ${integers.join(" ")}`] : []),
+      // `relax` drops integrality and nothing else, which is exactly the LP relaxation. The
+      // integrality gap is the distance between the two answers, and it is where the tier-4 trap
+      // lives: a relaxation that looks fine is the most common way to be wrong about a
+      // discrete problem.
+      ...(integers.length && !options.relax ? ["Generals", ` ${integers.join(" ")}`] : []),
       "End",
     ].join("\n");
 
@@ -253,8 +311,9 @@ function relationToRow(
 export async function solveLive(
   record: CaseRecord,
   overrides: Record<string, number> = {},
+  options: { relax?: boolean; forceInteger?: boolean } = {},
 ): Promise<LiveSolution> {
-  const written = toLpFormat(record.reference, overrides);
+  const written = toLpFormat(record.reference, overrides, options);
   if (written === null) {
     return {
       status: "error",
@@ -262,6 +321,8 @@ export async function solveLive(
       values: {},
       detail: "this model is not expressible in the browser lane",
       solveMs: 0,
+      rows: [],
+      columns: [],
     };
   }
 
@@ -279,22 +340,69 @@ export async function solveLive(
         values: {},
         detail: "infeasible, and correctly so",
         solveMs,
+        rows: [],
+        columns: [],
       };
     }
     if (status.includes("unbounded")) {
-      return { status: "unbounded", objective: null, values: {}, detail: "unbounded", solveMs };
+      return {
+        status: "unbounded",
+        objective: null,
+        values: {},
+        detail: "unbounded",
+        solveMs,
+        rows: [],
+        columns: [],
+      };
     }
 
     const values: Record<string, number> = {};
+    const columns: ColumnState[] = [];
     for (const [name, column] of Object.entries(result.Columns ?? {})) {
       values[name] = column.Primal + 0; // normalise negative zero
+      columns.push({
+        name,
+        primal: column.Primal + 0,
+        dual: (column.Dual ?? 0) + 0,
+        status: String(column.Status ?? ""),
+      });
     }
+
+    // HiGHS writes an absent bound as -Infinity or +Infinity, not as null. JSON.stringify prints
+    // both as null, which is how a first reading of its output got this wrong: a `>=` row carries
+    // `Upper: Infinity`, a view scaled a bar by it, and the result was a line at x = NaN. Absent is
+    // normalised to null here, once, so no view has to know.
+    const finite = (value: number | null | undefined) =>
+      value === null || value === undefined || !Number.isFinite(value) ? null : value;
+
+    const rows: RowState[] = (result.Rows ?? []).map((row, index) => {
+      const primal = row.Primal ?? 0;
+      const lower = finite(row.Lower);
+      const upper = finite(row.Upper);
+      // Distance to whichever side the row is written against. A row with both sides is an
+      // equality and its slack is zero by construction.
+      const toUpper = upper === null ? null : upper - primal;
+      const toLower = lower === null ? null : primal - lower;
+      const candidates = [toUpper, toLower].filter((v): v is number => v !== null);
+      return {
+        name: row.Name ?? `c${index}`,
+        primal: primal + 0,
+        dual: (row.Dual ?? 0) + 0,
+        lower,
+        upper,
+        status: String(row.Status ?? ""),
+        slack: candidates.length ? Math.min(...candidates) : null,
+      };
+    });
+
     return {
       status: "optimal",
       objective: result.ObjectiveValue,
       values,
       detail: String(result.Status),
       solveMs,
+      rows,
+      columns,
     };
   } catch (error) {
     return {
@@ -303,6 +411,8 @@ export async function solveLive(
       values: {},
       detail: error instanceof Error ? error.message : String(error),
       solveMs: performance.now() - started,
+      rows: [],
+      columns: [],
     };
   }
 }
@@ -324,4 +434,71 @@ export function tunableParameters(record: CaseRecord) {
         step: span / 50,
       };
     });
+}
+
+/** One constraint as linear terms over the decision variables. */
+export interface LinearRow {
+  name: string;
+  terms: Map<string, number>;
+  comparator: "=" | "<=" | ">=";
+  rhs: number;
+}
+
+/**
+ * The model as rows of coefficients, with parameters folded in and derived quantities left as
+ * columns (their defining equality is simply another row, which is also how the solver sees them).
+ *
+ * Returns null when the model is not linear in this lane's sense, for the same reason `toLpFormat`
+ * does: a structural view of a model it had to approximate would be a view of a different model.
+ */
+export function linearRows(
+  problem: Problem,
+  overrides: Record<string, number> = {},
+): { columns: string[]; rows: LinearRow[]; objective: Map<string, number>; sense: string } | null {
+  try {
+    const values: Record<string, number> = {};
+    const columns: string[] = [];
+    for (const q of problem.quantities) {
+      if (q.role === "parameter") {
+        const value = overrides[q.name] ?? q.value;
+        if (value === undefined || value === null) return null;
+        values[q.name] = value;
+      } else {
+        columns.push(q.name);
+      }
+    }
+
+    const rows: LinearRow[] = [];
+    for (const [index, relation] of problem.relations.entries()) {
+      if (relation.tag !== "compare") return null;
+      const LP: Partial<Record<NonNullable<RelationNode["comparator"]>, "=" | "<=" | ">=">> = {
+        "==": "=",
+        "<=": "<=",
+        ">=": ">=",
+      };
+      const comparator = LP[relation.comparator ?? "=="];
+      if (!comparator) return null;
+      const left = linearise(relation.left, values);
+      const right = linearise(relation.right, values);
+      const terms: Terms = new Map(left.terms);
+      for (const [name, coefficient] of right.terms) {
+        terms.set(name, (terms.get(name) ?? 0) - coefficient);
+      }
+      for (const [name, coefficient] of [...terms]) if (coefficient === 0) terms.delete(name);
+      rows.push({
+        name: relation.name || `c${index}`,
+        terms,
+        comparator,
+        rhs: right.constant - left.constant,
+      });
+    }
+
+    const first = problem.objectives[0];
+    if (!first) return null;
+    const objective = linearise(first.expression, values).terms;
+    return { columns, rows, objective, sense: first.sense };
+  } catch (error) {
+    if (error instanceof NotLinear) return null;
+    throw error;
+  }
 }

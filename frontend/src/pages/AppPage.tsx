@@ -11,17 +11,25 @@
  * the case and every tab follows, which is the difference between a workbench and a case-picker.
  */
 
-import { Tabs, useShellLang } from "@fasl-work/caos-app-shell";
+import { SubTabs, Tabs, useShellLang } from "@fasl-work/caos-app-shell";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { ActivityPanel } from "../components/ActivityPanel";
+import { AmbiguityPanel } from "../components/AmbiguityPanel";
+import { AttemptsPanel } from "../components/AttemptsPanel";
+import { CanonicalPanel } from "../components/CanonicalPanel";
 import { CoverageMap } from "../components/CoverageMap";
 import { DimensionAudit } from "../components/DimensionAudit";
+import { DualityPanel } from "../components/DualityPanel";
+import { FailureAnatomy } from "../components/FailureAnatomy";
 import { FeasibleRegion } from "../components/FeasibleRegion";
 import { FormalizationView } from "../components/FormalizationView";
+import { ModelGraphPanel } from "../components/ModelGraphPanel";
 import { collectHighlights, NarrativeView } from "../components/NarrativeView";
 import { ObjectiveSweep } from "../components/ObjectiveSweep";
 import { PropertyLab } from "../components/PropertyLab";
+import { RelaxationPanel } from "../components/RelaxationPanel";
 import { TIER_NAME, TRAP_NAME, type CaseRecord } from "../lib/contract.types";
 import { orderedCases, useData } from "../lib/data";
 import { solveLive, tunableParameters, type LiveSolution } from "../lib/live-solver";
@@ -103,36 +111,19 @@ export function AppPage() {
         )
       : null;
 
-  const tabs = [
-    {
-      id: "sensitivity",
-      label: es ? "Sensibilidad" : "Sensitivity",
-      content: (
-        <ObjectiveSweep
-          record={active}
-          overrides={overrides}
-          tunables={tunables}
-          lang={lang}
-        />
-      ),
-    },
-    {
-      id: "region",
-      label: es ? "Region factible" : "Feasible region",
-      content: (
-        <FeasibleRegion
-          record={active}
-          overrides={overrides}
-          optimum={liveValues}
-          lang={lang}
-        />
-      ),
-    },
+  // Fourteen methods in four groups, each group named for the question a reader is asking
+  // (ADR-0071 rule 5: at most about six peers, then group). Every tab computes and draws something
+  // for THIS case, and every tab reacts to the parameter sliders where the method has parameters.
+  const groups = [
     {
       id: "statement",
-      label: es ? "Enunciado y modelo" : "Statement and model",
-      content: (
-        <div className="split">
+      label: es ? "El enunciado" : "The statement",
+      tabs: [
+        {
+          id: "provenance",
+          label: es ? "Procedencia" : "Provenance",
+          content: (
+            <div className="split">
           <section className="split-pane">
             <h3>{t("workbench.statement")}</h3>
             <p className="pane-hint">{t("workbench.hoverHint")}</p>
@@ -164,31 +155,117 @@ export function AppPage() {
             </div>
           </section>
         </div>
-      ),
+          ),
+        },
+        {
+          id: "questions",
+          label: es ? "Preguntas abiertas" : "Open questions",
+          content: <AmbiguityPanel record={active} lang={lang} />,
+        },
+        {
+          id: "dimensions",
+          label: es ? "Dimensiones" : "Dimensions",
+          content: <DimensionAudit problem={active.reference} lang={lang} />,
+        },
+        {
+          id: "coverage",
+          label: es ? "Cobertura" : "Coverage",
+          content: (
+            <CoverageMap
+              cases={ordered}
+              selectedId={active.case_id}
+              onSelect={setSelected}
+              lang={lang}
+            />
+          ),
+        },
+      ],
     },
     {
-      id: "dimensions",
-      label: es ? "Dimensiones" : "Dimensions",
-      content: <DimensionAudit problem={active.reference} lang={lang} />,
+      id: "model",
+      label: es ? "El modelo" : "The model",
+      tabs: [
+        {
+          id: "canonical",
+          label: es ? "Forma canonica" : "Canonical form",
+          content: <CanonicalPanel record={active} overrides={overrides} lang={lang} />,
+        },
+        {
+          id: "graph",
+          label: es ? "Grafo y Weisfeiler-Lehman" : "Graph and Weisfeiler-Lehman",
+          content: <ModelGraphPanel record={active} overrides={overrides} lang={lang} />,
+        },
+        {
+          id: "metamorphic",
+          label: es ? "Relaciones metamorficas" : "Metamorphic relations",
+          content: <PropertyLab record={active} overrides={overrides} lang={lang} />,
+        },
+      ],
     },
     {
-      id: "properties",
-      label: es ? "Propiedades" : "Properties",
-      content: <PropertyLab record={active} overrides={overrides} lang={lang} />,
+      id: "answer",
+      label: es ? "La respuesta" : "The answer",
+      tabs: [
+        {
+          id: "sensitivity",
+          label: es ? "Sensibilidad" : "Sensitivity",
+          content: (
+            <ObjectiveSweep record={active} overrides={overrides} tunables={tunables} lang={lang} />
+          ),
+        },
+        {
+          id: "region",
+          label: es ? "Region factible" : "Feasible region",
+          content: (
+            <FeasibleRegion record={active} overrides={overrides} optimum={liveValues} lang={lang} />
+          ),
+        },
+        {
+          id: "activity",
+          label: es ? "Actividad" : "Activity",
+          content: <ActivityPanel record={active} overrides={overrides} lang={lang} />,
+        },
+        {
+          id: "duality",
+          label: es ? "Dualidad" : "Duality",
+          content: <DualityPanel record={active} overrides={overrides} lang={lang} />,
+        },
+        {
+          id: "relaxation",
+          label: es ? "Brecha de integralidad" : "Integrality gap",
+          content: <RelaxationPanel record={active} overrides={overrides} lang={lang} />,
+        },
+      ],
     },
     {
-      id: "coverage",
-      label: es ? "Cobertura" : "Coverage",
-      content: (
-        <CoverageMap
-          cases={ordered}
-          selectedId={active.case_id}
-          onSelect={setSelected}
-          lang={lang}
-        />
-      ),
+      id: "models",
+      label: es ? "Los modelos" : "The models",
+      tabs: [
+        {
+          id: "attempts",
+          label: es ? "Intentos" : "Attempts",
+          content: <AttemptsPanel record={active} lang={lang} />,
+        },
+        {
+          id: "anatomy",
+          label: es ? "Anatomia del fallo" : "Failure anatomy",
+          content: <FailureAnatomy record={active} lang={lang} />,
+        },
+      ],
     },
   ];
+
+  const tabs = groups.map((group) => ({
+    id: group.id,
+    label: group.label,
+    content: (
+      <SubTabs
+        tabs={group.tabs}
+        initial={group.id === "answer" ? "sensitivity" : group.tabs[0].id}
+        ariaLabel={group.label}
+      />
+    ),
+  }));
 
   return (
     <div className="page-body wide enunciado-layout">
@@ -359,7 +436,7 @@ export function AppPage() {
       <div className="enunciado-main">
         <Tabs
           tabs={tabs}
-          initial="sensitivity"
+          initial="answer"
           ariaLabel={es ? "Vistas del caso" : "Views of this case"}
         />
       </div>
@@ -432,7 +509,7 @@ function LiveReadout({
       <div className="readout-head">
         <span className="readout-label">{es ? "objetivo, ahora" : "objective, now"}</span>
         <span className="readout-value">
-          {live.objective === null ? "—" : Number(live.objective.toPrecision(8))}
+          {live.objective === null ? "–" : Number(live.objective.toPrecision(8))}
         </span>
       </div>
       <p className="readout-note">

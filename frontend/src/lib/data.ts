@@ -8,7 +8,13 @@
 
 import { create } from "zustand";
 
-import { type CaseRecord, type Manifest, SCHEMA } from "./contract.types";
+import {
+  ATTEMPTS_SCHEMA,
+  type AttemptsArtifact,
+  type CaseRecord,
+  type Manifest,
+  SCHEMA,
+} from "./contract.types";
 
 export interface DataState {
   status: "idle" | "loading" | "ready" | "error";
@@ -80,4 +86,31 @@ export function orderedCases(cases: CaseRecord[]): CaseRecord[] {
 
 export function caseById(cases: CaseRecord[], id: string): CaseRecord | undefined {
   return cases.find((c) => c.case_id === id);
+}
+
+/**
+ * The per-case model attempts, loaded on first use.
+ *
+ * Only the learned-model tabs need it, and it is 90 KB of mostly response excerpts, so a reader who
+ * never opens those tabs never fetches it. The schema is checked for the same reason the manifest's
+ * is: a shape this build does not understand must be an error, not a panel of blanks.
+ */
+let attemptsPromise: Promise<AttemptsArtifact> | null = null;
+
+export function loadAttempts(): Promise<AttemptsArtifact> {
+  if (attemptsPromise === null) {
+    attemptsPromise = fetchJson<AttemptsArtifact>(artifactUrl("attempts.json")).then((artifact) => {
+      if (artifact.schema !== ATTEMPTS_SCHEMA) {
+        throw new Error(
+          `attempts.json is ${artifact.schema}, this build expects ${ATTEMPTS_SCHEMA}`,
+        );
+      }
+      return artifact;
+    });
+    // A failed load must be retryable rather than cached forever.
+    attemptsPromise.catch(() => {
+      attemptsPromise = null;
+    });
+  }
+  return attemptsPromise;
 }
