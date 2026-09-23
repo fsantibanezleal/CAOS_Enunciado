@@ -32,7 +32,9 @@ jobs:
         run: python -m pip install --upgrade pip ruff
 
       - name: Lint
-        run: python -m ruff check data-pipeline tests
+        # `scripts/` runs in this very workflow and was not linted: two real findings sat
+        # there for as long as it has existed.
+        run: python -m ruff check data-pipeline scripts tests
 
       - name: A file with a shebang is executable
         # Windows commits a tracked file as mode 100644 whatever its content says, so a script with
@@ -60,3 +62,14 @@ jobs:
       - name: The committed artifacts are present and readable
         # Stdlib only. It checks that the bake was run and committed; it does NOT re-run the bake.
         run: python scripts/check_artifacts.py
+
+      - name: The published report agrees with the run ledger
+        # A pure re-derivation: it reads two committed files and compares, so it costs a second and
+        # calls no model. The first version of the report was assembled by hand from a printed
+        # summary, and a hand-assembled artifact cannot be checked against the thing it summarises.
+        run: |
+          # PINNED, not floated. The report is a function of this code, so the check only means
+          # something against the versions that produced the committed artifact. A newer copela
+          # breaking this is the correct outcome: it says the artifact needs re-deriving.
+          python -m pip install --quiet 'copela==0.2.0' 'planteo==0.1.0'
+          PYTHONPATH=data-pipeline python data-pipeline/report.py --check

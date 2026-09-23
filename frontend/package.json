@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@fasl-work/caos-app-shell": "^0.6.8",
+    "highs": "^1.15.3",
     "i18next": "^23.16.4",
     "katex": "^0.16.21",
     "lucide-react": "^0.460.0",
