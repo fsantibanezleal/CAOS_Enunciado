@@ -172,6 +172,27 @@
     "cost_usd": 0.0,
     "failure_class": "fabricated provenance: words not in the statement",
     "input_tokens": 996,
+    "latency_ms": 237711.1,
+    "model": "ollama/gemma3:12b",
+    "model_id": "gemma3:12b",
+    "model_version": "gemma3:12b@f4031aab637d",
+    "output_tokens": 1218,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A plant blends ore from two pits. Pit A costs 12 USD per tonne and pit B costs 9 USD per tonne. Together they must deliver at least 100 tonnes. Minimise the total cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_a\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Ore from Pit A (tonnes)\",\n      \"span\": {\"start\": 34, \"end\": 39, \"text\": \"Pit A\"}\n    },\n    {\n      \"name\": \"x_b\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Ore from Pit B (tonnes)\",\n      \"span\": {\"start\": 44, \"end\": 49, \"text\": \"Pit B\"}\n    },\n    {\n      \"name\": \"c_a\",\n      \"role\n[... 1509 characters omitted ...]\n    ]\n      },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"The cost of ore from Pit B is not included in the objective function.\",\n      \"span\": {\"start\": 103, \"end\": 118, \"text\": \"Pit B costs 9 USD\"},\n      \"resolution\": \"The problem statement only mentions the cost of Pit A in relation to the objective. The cost of Pit B is implicitly included in the total cost, but not explicitly in the objective function.  Therefore, the objective function should be the sum of (cost per tonne * tonnes) for both pits.\",\n      \"affects\": [\"total_cost\"]\n    },\n    {\n      \"question\": \"The problem statement does not determine the objective function.\",\n      \"span\": {\"start\": 143, \"end\": 159, \"text\": \"Minimise the total cost\"},\n      \"resolution\": \"The objective function is the sum of the cost of ore from Pit A and the cost of ore from Pit B.  Specifically, it is c_a * x_a + c_b * x_b.\",\n      \"affects\": [\"total_cost\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains 'Pit B', and it does not",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "fabricated provenance: words not in the statement",
+    "input_tokens": 996,
     "latency_ms": 32111.6,
     "model": "ollama/gemma3:4b",
     "model_id": "gemma3:4b",
@@ -247,6 +268,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: the JSON object is not closed",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 942,
+    "latency_ms": 144830.3,
+    "model": "ollama/qwen3:4b",
+    "model_id": "qwen3:4b",
+    "model_version": "qwen3:4b@359d7dd4bcda",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "We are given the problem statement: \"A plant blends ore from two pits. Pit A costs 12 USD per tonne and pit B costs 9 USD per tonne. Together they must deliver at least 100 tonnes. Minimise the total cost.\"\n\nWe need to formalize it into the specified JSON.\n\nStep 1: Understand the problem.\n\n- There are two pits: A and B.\n- Cost for Pit A: 12 USD per tonne (so cost per tonne is 12 USD)\n- Cost for Pit B: 9 USD per tonne\n- Total delivery must be at least 100 tonnes (so the sum of ore from A and B >= 100 tonnes)\n- We want to minimize the total cost.\n\nStep 2: Define quantities.\n\nWe have two decision variables: the amount of ore from Pit A (in tonnes) and Pit B (in tonnes).\n\nLet:\n  x_a = amount of ore from Pit A (in tonnes)\n  x_b = amount of ore from Pit B (in tonnes)\n\nWe also have a demand: 100 tonnes.\n\nCost per tonne for A: 12 USD -> so the cost for A is 12 * x_a (USD)\nCost per tonne for B: 9 USD -> so the cost for B is 9 * x_b (USD)\n\nTotal cost = 12*x_a + 9*x_b\n\nConstraints:\n  x_a + x_b >=\n[... 27083 characters omitted ...]\n     ]\n\n  But wait, the expression is for the total cost: 12*x_a + 9*x_b.\n\n  We have two terms.\n\n  We need to define:\n\n      c_a: cost per tonne for A -> 12 USD per tonne\n      c_b: cost per tonne for B -> 9 USD per tonne\n\n  So we have two parameters.\n\n  Let's define:\n\n      c_a: parameter with value 12.0, dimension: USD per tonne -> {\"symbol\": \"USD/t\", \"exponents\": {\"currency\": \"1\", \"mass\": \"-1\"}}\n      c_b: parameter with value 9.0, dimension: USD per tonne\n\n  And then the total cost = c_a * x_a + c_b * x_b.\n\n  But the problem says: \"the problem statement\" has the text \"12 USD per tonne\" and \"9 USD per tonne\".\n\n  We'll create quantities for c_a and c_b.\n\n  However, the problem says: \"every quantity referenced in a relation or objective must be declared\".\n\n  So we need to declare:\n\n      c_a, c_b, demand, x_a, x_b.\n\n  But the problem says: \"the problem statement\" does not have a variable for the cost per tonne? \n\n  We'll add:\n\n      quantities: [\n        { ... for x_a ... },\n        {",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -474,6 +516,37 @@
    },
    {
     "cost_usd": 0.0,
+    "failure_class": "ran, then REFUTED: solves to a different optimum",
+    "input_tokens": 1000,
+    "latency_ms": 123670.4,
+    "model": "ollama/gemma3:12b",
+    "model_id": "gemma3:12b",
+    "model_version": "gemma3:12b@f4031aab637d",
+    "output_tokens": 867,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A truck can carry 8 tonnes. Concentrate is worth 400 USD per tonne and tailings sand is worth 60 USD per tonne. At most 3 tonnes of concentrate is available. Load the truck to maximise the value carried.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"truck_capacity\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": 8.0,\n      \"description\": \"Maximum mass the truck can carry.\",\n      \"span\": {\"start\": 13, \"end\": 21, \"text\": \"8 tonnes\"}\n    },\n    {\n      \"name\": \"c_a\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"USD/t\", \"exponents\": {\"currency\": \"1\", \"mass\": \"-1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": 400.0,\n      \"description\": \"Value per tonne of concentrate.\",\n      \"spa\n[... 583 characters omitted ...]\n\n      \"upper\": 3.0,\n      \"value\": null,\n      \"description\": \"Mass of concentrate loaded.\",\n      \"span\": {\"start\": 82, \"end\": 93, \"text\": \"3 tonnes of concentrate\"}\n    }\n  ],\n  \"relations\": [],\n  \"objectives\": [\n    {\n      \"sense\": \"maximise\",\n      \"expression\": {\n        \"tag\": \"product\",\n        \"factors\": [\n          {\"tag\": \"ref\", \"name\": \"c_a\"},\n          {\"tag\": \"ref\", \"name\": \"x_a\"}\n        ]\n      },\n      \"name\": \"total_value\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"What is the maximum amount of tailings sand that can be loaded?\",\n      \"span\": {\"start\": 107, \"end\": 137, \"text\": \"Load the truck to maximise the value carried.\"},\n      \"resolution\": \"The problem statement does not specify a limit on the amount of tailings sand that can be loaded, only a limit on the amount of concentrate. The total mass of concentrate and tailings sand must be less than or equal to the truck capacity.\",\n      \"affects\": [\"x_a\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "solves to 1200 where the reference solves to 1500; the same case cannot have two optima, so these are different models",
+      "layer": "structural",
+      "outcome": "fail"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
     "failure_class": "fabricated provenance: words not in the statement",
     "input_tokens": 1000,
     "latency_ms": 11224.0,
@@ -551,6 +624,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains '3 tonnes of tailings sand', and it does not",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 948,
+    "latency_ms": 130618.4,
+    "model": "ollama/qwen3:4b",
+    "model_id": "qwen3:4b",
+    "model_version": "qwen3:4b@359d7dd4bcda",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "We are given a problem statement: \"A truck can carry 8 tonnes. Concentrate is worth 400 USD per tonne and tailings sand is worth 60 USD per tonne. At most 3 tonnes of concentrate is available. Load the truck to maximise the value carried.\"\n\nWe need to formalize it into the specified JSON.\n\nStep 1: Understand the problem and identify quantities.\n\nThe problem has:\n- A truck that can carry 8 tonnes (so the maximum load is 8 tonnes).\n- Concentrate: worth 400 USD per tonne (so price per tonne for concentrate is 400 USD/t)\n- Tailings sand: worth 60 USD per tonne (so price per tonne for tailings sand is 60 USD/t)\n- At most 3 tonnes of concentrate is available.\n\nWe are to load the truck to maximize the value carried.\n\nWe have two types of materials: concentrate and tailings sand.\n\nLet:\n  x_a = amount of concentrate (in tonnes)\n  x_b = amount of tailings sand (in tonnes)\n\nConstraints:\n1. The truck can carry at most 8 tonnes: x_a + x_b <= 8\n2. At most 3 tonnes of concentrate: x_a <= 3\n3. Non-neg\n[... 29493 characters omitted ...]\nrator\": \"<=\",\n      \"right\": {\"tag\": \"const\", \"value\": 8},\n      \"name\": \"truck_capacity\"\n    },\n    {\n      \"tag\": \"compare\",\n      \"left\": {\"tag\": \"ref\", \"name\": \"x_concentrate\"},\n      \"comparator\": \"<=\",\n      \"right\": {\"tag\": \"const\", \"value\": 3},\n      \"name\": \"concentrate_avail\"\n    }\n  ]\n\n  objectives: [\n    {\n      \"sense\": \"maximise\",\n      \"expression\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\"tag\": \"const\", \"value\": 400},\n              {\"tag\": \"ref\", \"name\": \"x_concentrate\"}\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\"tag\": \"const\", \"value\": 60},\n              {\"tag\": \"ref\", \"name\": \"x_tailings\"}\n            ]\n          }\n        ]\n      },\n      \"name\": \"total_value\"\n    }\n  ]\n\n  open_questions: [\n    {\n      \"question\": \"What is the availability of tailings sand?\",\n      \"span\": {\"start\": 0, \"end\": 0, \"text\": \"tailings sand",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the document carries no schema_version; expected '1.0'",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -695,6 +789,27 @@
    },
    {
     "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 953,
+    "latency_ms": 211854.8,
+    "model": "ollama/deepseek-r1:8b",
+    "model_id": "deepseek-r1:8b",
+    "model_version": "deepseek-r1:8b@6995872bfe4c",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "<think>\nOkay, let's tackle this problem step by step. The user wants me to formalize a problem statement into a JSON document following specific rules. The problem is about a workshop making two products: frames and brackets. Each frame takes 2 hours on the press and earns 90 USD, each bracket takes 1 hour and earns 40 USD. The press runs for 60 hours a week, and I need to find how many of each to make to maximize earnings, allowing fractional units.\n\nFirst, I need to identify the quantities. There are two decision variables: the number of frames (x_a) and the number of brackets (x_b). Each should have a dimension. Since they're counts, the dimension should be \"count\" with a symbol of \"1\" and no exponents. So, for x_a: name is \"x_a\", role is \"decision\", dimension is {\"symbol\": \"1\", \"exponents\": {\"count\": \"1\"}}, domain is \"real\" because fractional units are allowed. Similarly for x_b. The description for x_a would be \"number of frames\" and for x_b \"number of brackets\".\n\nNext, the demand\n[... 37908 characters omitted ...]\n\", which is a substring from the statement. So, I need to find the exact substring in the problem statement that corresponds to the quantity.\n\nIn the problem statement, \"A frame takes 2 hours on the press and earns 90 USD.\" So, the exact substring for the earnings is \"90 USD\", and for the hours is \"2 hours\".\n\nBut the quantity for the hours is not declared separately; it's part of the description. So, perhaps the constants are not considered quantities because they are not named.\n\nThis is tricky. Let me consider the user's rules again.\n\nRule 4: A quantity is exactly one of: a parameter with a value, a decision variable, or derived by exactly one equality that has it alone on one side.\n\nThe constants here are not derived by an equality; they are given directly. But they are not named in the problem statement. So, perhaps I should not declare them as quantities because the problem statement doesn't name them.\n\nBut Rule 3 says that every quantity referenced must be declared. If I reference",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the document carries no schema_version; expected '1.0'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
     "failure_class": "fabricated provenance: words not in the statement",
     "input_tokens": 979,
     "latency_ms": 24751.3,
@@ -711,6 +826,27 @@
       "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains 'frames', and it does not",
       "layer": "executable",
       "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "not measured: the solver cannot express this model",
+    "input_tokens": 1016,
+    "latency_ms": 186274.3,
+    "model": "ollama/gemma3:12b",
+    "model_id": "gemma3:12b",
+    "model_version": "gemma3:12b@f4031aab637d",
+    "output_tokens": 1327,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "not measured: appsi_highs cannot express this model: Highs interface does not support expressions of degree None",
+      "layer": "executable",
+      "outcome": "not-applicable"
      }
     ]
    },
@@ -793,6 +929,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains 'frames', and it does not",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 960,
+    "latency_ms": 126599.6,
+    "model": "ollama/qwen3:4b",
+    "model_id": "qwen3:4b",
+    "model_version": "qwen3:4b@359d7dd4bcda",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "We are given a problem statement: \n \"A workshop makes two products. A frame takes 2 hours on the press and earns 90 USD. A bracket takes 1 hour and earns 40 USD. The press runs 60 hours a week. How many of each should be made in a week to maximise earnings, if fractional units are acceptable?\"\n\n We need to formalize it into the JSON document.\n\n Steps:\n\n 1. Identify the quantities (variables and parameters) and their dimensions.\n\n    - We have two products: frame and bracket.\n    - Let x_a = number of frames (per week)\n    - Let x_b = number of brackets (per week)\n\n    The problem says: fractional units are acceptable -> so we use real numbers.\n\n    Dimensions:\n      - Time: hours (we'll use \"h\" for hours? But note: the problem uses \"hours\", and the press runs 60 hours a week -> so time dimension is hours? However, the problem says \"a week\", so we are in a weekly context. But the problem does not specify the unit for the time dimension. We'll use \"h\" for hours? But note: the problem say\n[... 32754 characters omitted ...]\n                We'll do:\n\n                  For t_a: \n                    text: \"2\"\n                    start: 12, end: 13 -> but we don't know.\n\n                This is getting complicated.\n\n          Given the complexity, and the problem says \"approximate numbers are fine\", we'll set:\n\n            For t_a: \n                text: \"2\"\n                start: 12, end: 13\n\n            For t_b: \n                text: \"1\"\n                start: 30, end: 31\n\n            For press_hours:\n                text: \"60\"\n                start: 50, end: 51\n\n            For c_a:\n                text: \"90\"\n                start: 25, end: 26\n\n            For c_b:\n                text: \"40\"\n                start: 40, end: 41\n\n          But note: the problem says: \"the span's 'text' must be an EXACT substring of THIS problem statement\"\n\n          So we have to pick a substring that is in the problem statement.\n\n          However, the problem statement has the numbers as part of the text.\n\n          We'll",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the document carries no schema_version; expected '1.0'",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -937,6 +1094,27 @@
    },
    {
     "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 945,
+    "latency_ms": 212388.4,
+    "model": "ollama/deepseek-r1:8b",
+    "model_id": "deepseek-r1:8b",
+    "model_version": "deepseek-r1:8b@6995872bfe4c",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "<think>\nOkay, let's tackle this problem step by step. The user wants me to formalize a problem statement into a JSON document following specific rules. The problem statement is about two warehouses supplying a site with different costs and delivery limits.\n\nFirst, I need to identify all the quantities in the statement. There's the demand of 40 tonnes, the costs from north and south warehouses (15 USD/tonne and 22 USD/tonne), and the maximum delivery from the north warehouse (25 tonnes). The objective is to minimize the total cost, which depends on the amount delivered from each warehouse.\n\nNext, assigning dimensions to each quantity. Demand and the maximum delivery from the north are both mass in tonnes. Costs are currency per mass, so USD/t. These dimensions must be explicitly stated in the JSON schema.\n\nThen, defining the relations. The problem states that the total delivery must meet the demand, so I need to create a relation where the sum of deliveries from both warehouses is at le\n[... 34512 characters omitted ...]\nre. However, the problem doesn't specify that delivering more is allowed or not. So maybe the open question is whether the total delivery must be exactly 40 or can be more. But the problem doesn't specify, so the solver must assume it's exactly 40. Wait, no. The relation uses >=, so the solver can deliver more. But the user's rules say to record if not determined. So perhaps the exact amount needed is 40, but the relation allows more. This is a point of ambiguity. So I should include an open question here.\n\nBut the problem statement doesn't specify any constraint that the total delivery must be exactly 40 or can be more. It just says the site needs 40 tonnes. So the solver must ensure that the sum of deliveries is at least 40. But since the objective is to minimize cost, the solver would deliver exactly 40 unless there's a reason to deliver more. However, the problem doesn't specify that delivering more is allowed or not. So maybe the open question is whether the total delivery must be",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: \"<think> Okay, let's tackle this problem step by step. The user wants me to formalize a problem statement into a JSON document following specific rules. The prob\"",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
     "failure_class": "fabricated provenance: words not in the statement",
     "input_tokens": 971,
     "latency_ms": 20939.8,
@@ -1035,6 +1213,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: Expecting ',' delimiter: line 72 column 102 (char 2471)",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 952,
+    "latency_ms": 126494.3,
+    "model": "ollama/qwen3:4b",
+    "model_id": "qwen3:4b",
+    "model_version": "qwen3:4b@359d7dd4bcda",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "We are given a problem statement: \"Two warehouses can supply a site. The north warehouse charges 15 USD per tonne delivered and the south charges 22 USD per tonne. The site needs 40 tonnes. The north warehouse can send no more than 25 tonnes. Minimise delivery cost.\"\n\nWe need to formalize it into the specified JSON.\n\nStep 1: Understand the problem and identify quantities.\n\nThe problem has:\n- Two warehouses: north and south.\n- The site needs 40 tonnes (a demand).\n- North warehouse: max 25 tonnes (so we have a constraint on the north delivery).\n- Cost: north is 15 USD per tonne, south is 22 USD per tonne.\n\nWe have two decision variables: \n  x_a = amount of tonne from north (Pit A? but note: the problem says \"north warehouse\", so we'll call it \"north\")\n  x_b = amount of tonne from south\n\nBut note: the problem says \"Minimise delivery cost\". The cost is 15*x_a + 22*x_b.\n\nConstraints:\n1. The site needs 40 tonnes: x_a + x_b >= 40? \n   However, the problem says \"The site needs 40 tonnes\", mean\n[... 29096 characters omitted ...]\n      \"value\": 40.0,\n      \"description\": \"the site needs 40 tonnes\",\n      \"span\": {\"start\": 45, \"end\": 50, \"text\": \"40 tonnes\"}   # but wait, the problem says \"40 tonnes\", so we take the substring \"40 tonnes\"?\n    },\n    {\n      \"name\": \"c_a\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"USD/t\", \"exponents\": {\"currency\": \"1\", \"mass\": \"-1\"}},\n      \"domain\": \"real\",\n      \"lower\": 15.0,\n      \"upper\": null,\n      \"value\": 15.0,\n      \"description\": \"cost per tonne for north warehouse\",\n      \"span\": {\"start\": 25, \"end\": 30, \"text\": \"15 USD\"}\n    },\n    {\n      \"name\": \"c_b\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"USD/t\", \"exponents\": {\"currency\": \"1\", \"mass\": \"-1\"}},\n      \"domain\": \"real\",\n      \"lower\": 22.0,\n      \"upper\": null,\n      \"value\": 22.0,\n      \"description\": \"cost per tonne for south warehouse\",\n      \"span\": {\"start\": 40, \"end\": 45, \"text\": \"22 USD\"}\n    },\n    {\n      \"name\": \"max_north\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the document carries no schema_version; expected '1.0'",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -1159,6 +1358,27 @@
    },
    {
     "cost_usd": 0.0,
+    "failure_class": "a name used but never declared",
+    "input_tokens": 951,
+    "latency_ms": 40778.2,
+    "model": "ollama/deepseek-r1:8b",
+    "model_id": "deepseek-r1:8b",
+    "model_version": "deepseek-r1:8b@6995872bfe4c",
+    "output_tokens": 1694,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "<think>\nOkay, let's tackle this problem step by step. The user wants me to formalize a problem statement into a JSON document following specific rules. The problem statement is about a lab buying reagent from two suppliers with different pricing and constraints.\n\nFirst, I need to identify all the quantities in the statement. There's Supplier A with a cost of 4.50 USD per kilogram, a maximum delivery of 1200 kilograms, and Supplier B with a cost of 4200 USD per tonne. The lab needs 3 tonnes, and the goal is to minimize the purchase cost.\n\nNext, dimensions are crucial. The base dimensions include mass and currency. For Supplier A, the cost is per kilogram, so the dimension should be USD/kg. Similarly, Supplier B's cost is USD/tonne. The demand is 3 tonnes, so that's mass with a symbol 'tonne' and exponent '1'. The total cost will be a product of the cost per unit and the quantity purchased, so its dimension will be USD * kg or USD * tonne depending on the supplier.\n\nI need to check if ev\n[... 4667 characters omitted ...]\n     \"name\": \"x_A\"\n              }\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\n                \"tag\": \"ref\",\n                \"name\": \"USD_per_tonne\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"x_B\"\n              }\n            ]\n          }\n        ]\n      },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"The problem statement does not explicitly define the decision variables (amounts purchased from each supplier) or the total amount required.\",\n      \"span\": {\n        \"start\": 92,\n        \"end\": 105,\n        \"text\": \"Minimise the purchase cost.\"\n      },\n      \"resolution\": \"The decision variables are the amounts purchased from each supplier (x_A and x_B). The total amount required is the sum of x_A and x_B, which must equal the demand (3 tonnes).\",\n      \"affects\": [\n        \"total_cost\"\n      ]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "error: closure [x_A]: referenced but never declared; error: closure [x_B]: referenced but never declared; error: family [optimization]: an optimization problem needs at least one decision variable",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
     "failure_class": "fabricated provenance: words not in the statement",
     "input_tokens": 977,
     "latency_ms": 22123.1,
@@ -1257,6 +1477,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: the JSON object is not closed",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 958,
+    "latency_ms": 131002.6,
+    "model": "ollama/qwen3:4b",
+    "model_id": "qwen3:4b",
+    "model_version": "qwen3:4b@359d7dd4bcda",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "We are given the problem statement: \"A lab buys reagent from two suppliers. Supplier A charges 4.50 USD per kilogram and supplier B charges 4200 USD per tonne. The lab needs 3 tonnes this month. Supplier A can deliver at most 1200 kilograms. Minimise the purchase cost.\"\n\nWe need to formalize it into the JSON document.\n\nStep 1: Understand the problem and define quantities.\n\nWe have two suppliers: A and B.\n\nQuantities:\n\n1. We have two decision variables: \n   - x_a: amount of reagent from supplier A (in kilograms)\n   - x_b: amount of reagent from supplier B (in tonnes)\n\nBut note: the problem says the lab needs 3 tonnes. Also, supplier A is in kilograms and supplier B in tonnes.\n\nWe must be consistent in units.\n\nLet's convert everything to tonnes to avoid confusion.\n\nNote: 1 tonne = 1000 kilograms.\n\nThe problem states:\n  - Supplier A: 4.50 USD per kilogram -> 4.50 USD per 0.001 tonne = 4500 USD per tonne? \n    But wait, we don't have to convert the prices to the same unit? Actually, we can\n[... 25878 characters omitted ...]\n the problem says \"Minimise the purchase cost\", but the solver might not know what the cost is? \n\n          However, the problem says: \"the statement does not determine\" -> so we have to find something.\n\n          Let me read the problem: \"Minimise the purchase cost\" -> this is the objective.\n\n          But the problem statement does not specify the cost function? It does: it gives the cost per unit.\n\n          So what is not determined? \n\n          The problem says: \"the lab needs 3 tonnes\" -> so the total demand is determined.\n\n          And the constraint on supplier A: at most 1200 kg.\n\n          So everything is determined.\n\n          But the problem says: \"if the statement does not determine something material, record it in open_questions\"\n\n          In this problem, the problem statement does not determine the cost per unit for A and B? But it does.\n\n          Alternatively, the problem might not determine the units? \n\n          However, the problem says: \"the statement does not",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the document carries no schema_version; expected '1.0'",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -1391,6 +1632,37 @@
    },
    {
     "cost_usd": 0.0,
+    "failure_class": "ran, then REFUTED: a metamorphic relation failed",
+    "input_tokens": 966,
+    "latency_ms": 42046.2,
+    "model": "ollama/deepseek-r1:8b",
+    "model_id": "deepseek-r1:8b",
+    "model_version": "deepseek-r1:8b@6995872bfe4c",
+    "output_tokens": 1762,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "<think>\nOkay, let's tackle this problem step by step. The user wants me to formalize a problem statement into a JSON document following specific rules. The problem statement involves contractors, crews, costs, and shifts. \n\nFirst, I need to identify all the quantities in the statement. There are day crew costs, night crew costs, demand (minimum shifts), and the total wage bill. Each of these needs to have a dimension assigned. For example, USD is a currency, so that would be a symbol with \"currency\": \"1\". Shifts are a count, so that's a dimension with \"count\": \"1\". \n\nNext, the relations. The statement says they must complete at least 30 shifts, so that's a comparison between the sum of day and night shifts and the demand. Also, the total wage bill must not exceed 64000 USD, which is another comparison. \n\nFor objectives, the goal is to maximize the number of night shifts. So I need to define an objective that maximizes the night shifts variable. \n\nNow, checking the rules: Every quantity\n[... 4629 characters omitted ...]\n \"product\",\n        \"factors\": [\n          {\n            \"tag\": \"ref\",\n            \"name\": \"c_b\"\n          },\n          {\n            \"tag\": \"ref\",\n            \"name\": \"x_b\"\n          }\n        ]\n      },\n      \"name\": \"wage_constraint\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"maximise\",\n      \"expression\": {\n        \"tag\": \"ref\",\n        \"name\": \"x_b\"\n      },\n      \"name\": \"max_night_shifts\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"The problem statement does not explicitly define the total number of shifts available or any other constraints.\",\n      \"span\": {\n        \"start\": 80,\n        \"end\": 88,\n        \"text\": \"Maximise the number of night shifts\"\n      },\n      \"resolution\": \"The problem statement does not specify an upper bound on the total shifts or the wage bill beyond the maximum allowed. The maximization objective is assumed to be subject to the given constraints.\",\n      \"affects\": [\"max_night_shifts\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "unbounded",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "objective-scaling: no shared variables to compare",
+      "layer": "property",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
     "failure_class": "dimensional mismatch",
     "input_tokens": 992,
     "latency_ms": 24357.5,
@@ -1489,6 +1761,27 @@
     "verdicts": [
      {
       "detail": "error: dimensions [wage_bill_constraint]: wage_bill_constraint: left side is USD/t but right side is USD; they cannot be compared; error: dimensions [demand_constraint]: demand_constraint: left side is USD/t but right side is t; they cannot be compared; error: determinacy [wage_bill]: is derived but no relation defines it (under-determined)",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 973,
+    "latency_ms": 131131.8,
+    "model": "ollama/qwen3:4b",
+    "model_id": "qwen3:4b",
+    "model_version": "qwen3:4b@359d7dd4bcda",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "We are given a problem statement to formalize. We must return a JSON document that adheres to the provided schema and rules.\n\n Steps:\n 1. Understand the problem statement: \n    \"A contractor hires two crews. The day crew costs 1800 USD per shift and the night crew costs 2400 USD per shift. Together they must complete at least 30 shifts of work this month. The total wage bill must not exceed 64000 USD. Maximise the number of night shifts, because they free the site during the day.\"\n\n 2. Identify the quantities and their roles:\n    - We have two types of shifts: day and night.\n    - Let x_a = number of night shifts (we'll call this \"night shifts\")\n    - Let x_b = number of day shifts\n\n    However, note the problem says: \"Maximise the number of night shifts\". So we are to maximize x_a.\n\n    But the problem also says: \"Together they must complete at least 30 shifts\". So: x_a + x_b >= 30.\n\n    The cost: \n        day crew: 1800 USD per shift -> so cost for day shifts = 1800 * x_b\n        nig\n[... 30806 characters omitted ...]\n      We have to find a span that is in the problem statement.\n\n              The problem says: \"Maximise the number of night shifts\". \n\n              We can set the span for the open question to be the phrase that is the objective? \n\n              But the problem says: \"the reading you took\". \n\n              We'll set:\n\n                \"question\": \"Are the shifts discrete (integer) or continuous?\",\n                \"span\": {\"start\": 0, \"end\": 10, \"text\": \"Maximise\"},   -> but this is arbitrary\n\n              However, the problem says: \"the span's 'text' must be an EXACT substring of THIS problem statement\"\n\n              We can pick a substring that is in the problem statement.\n\n              The problem statement has the word \"Maximise\". \n\n              We'll set:\n\n                span: {\"start\": 100, \"end\": 112, \"text\": \"Maximise\"}   -> but this is arbitrary.\n\n              But the problem says: \"the problem statement to formalize, copied verbatim\". \n\n              We'll set the span",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the document carries no schema_version; expected '1.0'",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -1613,6 +1906,27 @@
    },
    {
     "cost_usd": 0.0,
+    "failure_class": "truncated output",
+    "input_tokens": 953,
+    "latency_ms": 210880.6,
+    "model": "ollama/deepseek-r1:8b",
+    "model_id": "deepseek-r1:8b",
+    "model_version": "deepseek-r1:8b@6995872bfe4c",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "<think>\nOkay, let's tackle this problem step by step. The user wants me to formalize a problem statement into a JSON document following specific rules. They've provided a schema and rules that the document must adhere to, and they want me to return ONLY the JSON document without any commentary.\n\nFirst, I need to understand the problem statement: \"A quarry ships aggregate by rail and by road. Rail costs 6 USD per tonne, road costs 11 USD per tonne. The quarry employs 34 people. Rail capacity is 500 tonnes per week. The customer wants 700 tonnes this week. Minimise the shipping cost.\"\n\nNow, looking at the schema, I need to create a JSON object with specific fields: schema_version, family, narrative, quantities, relations, objectives, open_questions, and feasibility_only.\n\nBreaking down the narrative field: It should contain the problem statement exactly as provided, with the text copied character for character. The source is \"inline\" and the language is \"en\".\n\nFor quantities, I need to d\n[... 31414 characters omitted ...]\n\"tag\": \"ref\",\n                \"name\": \"rail_cost\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"x_a\"\n              }\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\n                \"tag\": \"ref\",\n                \"name\": \"road_cost\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"x_b\"\n              }\n            ]\n          }\n        ]\n      },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"The maximum tonnage that can be shipped by road is not specified in the problem statement.\",\n      \"span\": {\n        \"start\": 78,\n        \"end\": 92,\n        \"text\": \"customer wants 700 tonnes\"\n      },\n      \"resolution\": \"Assuming road capacity is unbounded unless specified otherwise, as it is not mentioned in the statement. This is a reasonable default for minimisation problems where only one capacity is given.\",\n      \"",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the JSON object is not closed",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
     "failure_class": "fabricated provenance: words not in the statement",
     "input_tokens": 979,
     "latency_ms": 20935.2,
@@ -1711,6 +2025,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: 'objective' is not a valid Role",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 960,
+    "latency_ms": 132866.3,
+    "model": "ollama/qwen3:4b",
+    "model_id": "qwen3:4b",
+    "model_version": "qwen3:4b@359d7dd4bcda",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "We are given a problem statement: \"A quarry ships aggregate by rail and by road. Rail costs 6 USD per tonne, road costs 11 USD per tonne. The quarry employs 34 people. Rail capacity is 500 tonnes per week. The customer wants 700 tonnes this week. Minimise the shipping cost.\"\n\nWe need to formalize it into the specified JSON.\n\nStep 1: Understand the problem and identify quantities.\n\nThe problem has:\n- Two shipping methods: rail and road.\n- Rail cost: 6 USD per tonne\n- Road cost: 11 USD per tonne\n- Quarry employs 34 people (this might be a constraint but note: the problem says \"the quarry employs 34 people\" - but we don't have a direct use for this in the cost minimization? However, the problem says \"Minimise the shipping cost\", so we focus on the shipping cost. The 34 people might be a red herring or a constraint on the capacity? But note: the problem states \"Rail capacity is 500 tonnes per week\" and \"The customer wants 700 tonnes this week\". Also, the problem says \"Minimise the shipping\n[... 27313 characters omitted ...]\n\"text\": \"6\"} -> but the problem says \"6 USD\", so the number 6 is there.\n\n      c_b: span: {\"start\": 25, \"end\": 26, \"text\": \"11\"} -> but the problem says \"11 USD\", so the number 11.\n\n      demand: span: {\"start\": 61, \"end\": 68, \"text\": \"700\"} -> because \"700 tonnes\" -> the number 700.\n\n  But the problem says: \"the customer wants 700 tonnes this week.\" -> so the substring \"700\" is there.\n\n  However, the problem statement: \n      \"A quarry ships aggregate by rail and by road. Rail costs 6 USD per tonne, road costs 11 USD per tonne. The quarry employs 34 people. Rail capacity is 500 tonnes per week. The customer wants 700 tonnes this week. Minimise the shipping cost.\"\n\n  We'll assume the following offsets (we can use approximate):\n\n      \"rail\": starts at index 34 (if we count from 0) -> but we don't know exactly. We'll use the example numbers from the problem.\n\n  Alternatively, we can use the span for the number 34 for the open question.\n\n  For open_questions:\n\n      question: \"The number",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -1825,6 +2160,27 @@
    },
    {
     "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 983,
+    "latency_ms": 210679.3,
+    "model": "ollama/deepseek-r1:8b",
+    "model_id": "deepseek-r1:8b",
+    "model_version": "deepseek-r1:8b@6995872bfe4c",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "<think>\nOkay, let's tackle this problem step by step. The user wants me to formalize a given problem statement into a JSON document following specific rules. The problem statement is about a mill processing feed and optimizing the daily margin between two circuits.\n\nFirst, I need to identify all the quantities mentioned. The statement includes \"900 tonnes of feed a day,\" which is a parameter with a fixed value. Then there are costs for the fine and coarse circuits: 3 USD per tonne and 1.20 USD per tonne. The recovery rates are 88% and 71%, and the value of recovered metal is 40 USD per tonne. The goal is to maximize the daily margin.\n\nNext, I have to assign dimensions to each quantity. \"Feed\" is mass, so {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}}. The costs are in USD per tonne, so their dimension is {\"symbol\": \"USD/t\", \"exponents\": {\"currency\": \"1\", \"mass\": \"-1\"}}. Recovery rates are percentages, which are dimensionless, so {\"symbol\": \"1\", \"exponents\": {}}. The value of metal is 40 U\n[... 33607 characters omitted ...]\n However, the problem statement doesn't explicitly state that the feed must be split between the two circuits. Maybe the solver can choose to send all to one circuit. But the statement says \"Feed sent to the fine circuit\" and \"Whatever is not sent to the fine circuit goes to coarse.\" So, the feed is split. Therefore, the variables are x_f and x_c, with x_f + x_c = 900. But the problem statement doesn't mention that the feed is split, so maybe the solver needs to consider that as a variable. Wait, the problem statement says \"Maximise the daily margin.\" The margin is the revenue from recovered metal minus the processing costs. The recovered metal depends on the split. So, the decision variables are how much is sent to each circuit. But the total feed is fixed, so x_f + x_c = 900. However, the problem statement doesn't explicitly state that the feed must be split between the two circuits. Maybe the solver can choose to send all to one circuit. But the statement says \"Feed sent to the fine",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the document carries no schema_version; expected '1.0'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
     "failure_class": "fabricated provenance: words not in the statement",
     "input_tokens": 1009,
     "latency_ms": 36881.0,
@@ -1923,6 +2279,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains 'Minimise the cost', and it does not",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 990,
+    "latency_ms": 132032.9,
+    "model": "ollama/qwen3:4b",
+    "model_id": "qwen3:4b",
+    "model_version": "qwen3:4b@359d7dd4bcda",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "We are given a problem statement to formalize. We must return a JSON document that adheres to the provided schema and rules.\n\n Steps:\n 1. Understand the problem statement: \n    \"A mill processes 900 tonnes of feed a day. Feed sent to the fine circuit recovers 88 per cent of the metal and costs 3 USD per tonne to process. Whatever is not sent to the fine circuit goes to the coarse circuit, which recovers 71 per cent and costs 1.20 USD per tonne. Recovered metal is worth 40 USD per tonne of feed recovered. Maximise the daily margin.\"\n\n 2. We need to define:\n    - Quantities: variables, parameters, derived, sets.\n    - Relations: constraints (comparators, etc.)\n    - Objectives: the goal (maximise the daily margin)\n\n 3. Let's break down:\n\n    We have:\n      - Total feed processed per day: 900 tonnes (a constant)\n      - Let x_a = amount of feed sent to the fine circuit (in tonnes per day)\n      - Then, the amount sent to the coarse circuit = 900 - x_a (tonnes per day)\n\n    For the fine ci\n[... 29566 characters omitted ...]\n to the fine circuit per day\", span: {\"start\": 34, \"end\": 45, \"text\": \"fine circuit\"}\n\n          But note: the problem says \"the fine circuit\", so we take \"fine circuit\" (without the article).\n\n          However, the problem statement has \"the fine circuit\", so the substring \"fine circuit\" appears.\n\n          We'll use start=34, end=45 (so 11 characters) for \"fine circuit\".\n\n          But the problem says: \"the problem statement to formalize, copied verbatim into narrative.text\" -> we have to use the exact string.\n\n          Let me write the problem statement and count the first 45 characters:\n\n            \"A mill processes 900 tonnes of feed a day. Feed sent to the fine circuit recovers 88 per cent of the metal and costs 3 USD per tonne to process.\"\n\n          I'll do a quick count:\n\n            A (1) space (2) m (3) i (4) l (5) l (6) space (7) p (8) r (9) o (10) c (11) e (12) s (13) s (14) e (15) s (16) space (17) 9 (18) 0 (19) 0 (20) space (21) t (22) o (23) n (24) n (25) e (26) s (",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the document carries no schema_version; expected '1.0'",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -2037,6 +2414,27 @@
    },
    {
     "cost_usd": 0.0,
+    "failure_class": "a parameter left without a value",
+    "input_tokens": 1001,
+    "latency_ms": 78991.9,
+    "model": "ollama/deepseek-r1:8b",
+    "model_id": "deepseek-r1:8b",
+    "model_version": "deepseek-r1:8b@6995872bfe4c",
+    "output_tokens": 3226,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "<think>\nOkay, let's tackle this problem step by step. The user wants me to formalize a problem statement into a JSON document following specific rules. The problem involves a depot planning purchases over three weeks with changing demand and costs, and there's a constraint on the store capacity.\n\nFirst, I need to parse the problem statement carefully. The depot starts with 20 tonnes. Each week, there's a demand (30, 45, 25 tonnes) that must be met from the store after that week's purchase. The purchase prices are 50, 58, 63 USD per tonne for weeks one to three. The store can't exceed 60 tonnes at the end of any week. The goal is to minimize the total purchase cost.\n\nNow, applying the schema. The narrative should exactly copy the problem statement. For quantities, each variable or parameter needs a dimension. The initial stock is 20 tonnes, so that's mass with a positive value. The demands for each week are given in tonnes, so they're parameters with fixed values. The purchase costs per\n[... 10121 characters omitted ...]\n      \"name\": \"cost_week2\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"x_b\"\n              }\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\n                \"tag\": \"ref\",\n                \"name\": \"cost_week3\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"x_c\"\n              }\n            ]\n          }\n        ]\n      },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"The exact purchase quantities for each week are not specified in the problem statement.\",\n      \"span\": {\n        \"start\": 110,\n        \"end\": 122,\n        \"text\": \"Minimise the total purchase cost.\"\n      },\n      \"resolution\": \"The solver must determine the purchase quantities (x_a, x_b, x_c) that satisfy the constraints and minimize the total cost.\",\n      \"affects\": [\n        \"total_cost\"\n      ]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "solving failed: No value for uninitialized ScalarParam object max_capacity",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
     "failure_class": "fabricated provenance: words not in the statement",
     "input_tokens": 1027,
     "latency_ms": 49632.7,
@@ -2135,6 +2533,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains 'Pit A', and it does not",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 1008,
+    "latency_ms": 131447.4,
+    "model": "ollama/qwen3:4b",
+    "model_id": "qwen3:4b",
+    "model_version": "qwen3:4b@359d7dd4bcda",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "We are given a problem statement to formalize. We must return a JSON document that adheres to the provided schema and rules.\n\n Steps:\n 1. We'll parse the problem statement and create the JSON accordingly.\n\n Problem statement: \n   \"A depot plans three weeks. It starts with 20 tonnes in store. Each week it may buy at a price that rises: 50 USD per tonne in week one, 58 in week two, 63 in week three. Demand is 30 tonnes in week one, 45 in week two, 25 in week three, and must be met from the store after that week's purchase arrives. The store holds at most 60 tonnes at the end of any week. Minimise the total purchase cost.\"\n\n 2. We need to define:\n    - The narrative: the problem statement as a string (exactly as given)\n    - Quantities: we have to identify variables and parameters.\n\n Let's break down:\n\n   We have three weeks (weeks 1, 2, 3).\n\n   Parameters:\n     - Initial stock: 20 tonnes (at the start)\n     - Demand: 30 tonnes in week 1, 45 in week 2, 25 in week 3.\n     - Prices: 50 USD \n[... 30889 characters omitted ...]\ne create one span.\n\n          I will create a span for the string \"20\" with:\n\n            start: 28, end: 30, text: \"20\"\n\n          And for the other quantities, we don't create spans? But the schema has a field \"span\" for each quantity.\n\n          The problem says: \"a span's 'text' must be an EXACT substring of THIS problem statement\". So for the variables, we don't have a substring, so we use {\"inferred_reason\": \"variables are not named in the problem statement\"}.\n\n          Let's do:\n\n            quantities = [\n              {\n                \"name\": \"x1\",\n                \"role\": \"variable\",\n                \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n                \"domain\": \"real\",\n                \"lower\": 0.0, \"upper\": null, \"value\": null,\n                \"description\": \"amount bought in week 1 (tonnes)\",\n                \"span\": {\"inferred_reason\": \"variables are not named in the problem statement\"}\n              },\n              ... similarly for x2, x3\n           ",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the document carries no schema_version; expected '1.0'",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -2259,6 +2678,37 @@
    },
    {
     "cost_usd": 0.0,
+    "failure_class": "ran, then REFUTED: solves to a different optimum",
+    "input_tokens": 969,
+    "latency_ms": 51379.2,
+    "model": "ollama/deepseek-r1:8b",
+    "model_id": "deepseek-r1:8b",
+    "model_version": "deepseek-r1:8b@6995872bfe4c",
+    "output_tokens": 2122,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "<think>\nOkay, let's tackle this problem step by step. The user wants me to formalize a problem statement into a JSON document following specific rules. The problem statement is about a smelter blending two concentrates to meet copper requirements while minimizing cost.\n\nFirst, I need to identify all the quantities mentioned. There are two concentrates, X and Y, each with an assay percentage and a cost per tonne. The furnace needs 500 tonnes of blend with at least 24% copper. The goal is to minimize the cost.\n\nThe quantities here are the amounts of concentrate X (x_a) and concentrate Y (x_b). Both are decision variables, so they should be declared as variables with their dimensions. The assay percentages for X and Y are parameters because they're given fixed values. The demand for the blend is also a parameter, set at 500 tonnes.\n\nNext, the relations. The blend must assay at least 24%. That means the weighted average of the copper percentages from X and Y should be at least 24%. So the \n[... 6365 characters omitted ...]\n {\n            \"tag\": \"ref\",\n            \"name\": \"demand\"\n          },\n          {\n            \"tag\": \"ref\",\n            \"name\": \"assay_x\"\n          }\n        ]\n      },\n      \"name\": \"meet_demand\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\n                \"tag\": \"ref\",\n                \"name\": \"cost_x\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"x_a\"\n              }\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\n                \"tag\": \"ref\",\n                \"name\": \"cost_y\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"x_b\"\n              }\n            ]\n          }\n        ]\n      },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "solves to 103158 where the reference solves to 89444.4; the same case cannot have two optima, so these are different models",
+      "layer": "structural",
+      "outcome": "fail"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
     "failure_class": "a constant with no unit",
     "input_tokens": 995,
     "latency_ms": 27159.6,
@@ -2357,6 +2807,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: Expecting ',' delimiter: line 105 column 101 (char 3658)",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 976,
+    "latency_ms": 130827.8,
+    "model": "ollama/qwen3:4b",
+    "model_id": "qwen3:4b",
+    "model_version": "qwen3:4b@359d7dd4bcda",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "We are given a problem statement: \n \"A smelter blends two concentrates. Concentrate X assays 28 per cent copper and costs 210 USD per tonne. Concentrate Y assays 19 per cent and costs 140 USD per tonne. The furnace needs 500 tonnes of blend, and the blend must assay at least 24 per cent copper. Minimise the cost of the blend.\"\n\n We need to formalize it into a JSON document.\n\n Steps:\n\n 1. Identify the quantities (variables and parameters) and their dimensions.\n\n    We have:\n      - Concentrate X: let's call it x_a (for X) -> variable (decision variable)\n      - Concentrate Y: x_b (for Y) -> variable\n      - Demand: 500 tonnes -> parameter (fixed)\n      - Copper content in blend: must be at least 24% -> but note: we have a constraint on the blend's copper content.\n\n    However, note the problem says: \"the blend must assay at least 24 per cent copper\". So we have a constraint on the blend.\n\n    Also, we have:\n      - The cost of the blend: we want to minimize.\n\n    Let's define:\n\n      x_\n[... 30590 characters omitted ...]\nThe furnace needs 500 tonnes of blend, and the blend must assay at least 24 per cent copper. Minimise the cost of the blend.\"\n\n          We can count the characters:\n\n            A (0) space (1) s (2) m (3) ... \n\n          But it's long.\n\n          Alternatively, we can use the following: \n\n            The problem says: \"the span's 'text' must be an EXACT substring\"\n\n          We'll assume:\n\n            For \"X\": \n                start: 34, end: 35 -> text: \"X\"\n\n            For \"Y\":\n                start: 61, end: 62 -> text: \"Y\"\n\n          But the problem says: \"the example above shows the SHAPE of a span; never copy its contents\". \n\n          The example in the schema: \n            \"span\": {\"start\": 34, \"end\": 39, \"text\": \"Pit A\"}\n\n          So they have a span of 5 characters? \n\n          In our case, we want a span of 1 character.\n\n          How about we do:\n\n            For x_a: \n                span: {\"start\": 34, \"end\": 35, \"text\": \"X\"}\n\n            For x_b:\n                span:",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the document carries no schema_version; expected '1.0'",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -2501,6 +2972,27 @@
    },
    {
     "cost_usd": 0.0,
+    "failure_class": "unparseable output",
+    "input_tokens": 976,
+    "latency_ms": 72947.6,
+    "model": "ollama/deepseek-r1:8b",
+    "model_id": "deepseek-r1:8b",
+    "model_version": "deepseek-r1:8b@6995872bfe4c",
+    "output_tokens": 2996,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "<think>\nOkay, the user wants me to formalize a transportation problem into a JSON document following specific rules. This looks like a classic linear programming problem where we need to minimize transportation costs between mines and plants with given supply and demand constraints.\n\nLet me break down the problem statement first. We have two mines with capacities (300 and 400 tonnes) and two plants with demands (350 and 300 tonnes). There are different freight costs per tonne for each shipping route: from mine1 to plant north ($8), mine1 to plant south ($14), mine2 to plant north ($11), and mine2 to plant south ($6). The goal is to minimize total freight cost.\n\nNow I need to map this to the required JSON schema. The narrative should contain the exact problem statement. For quantities, I'll need to define all the variables and parameters with their dimensions. This includes the mines' capacities, plants' demands, freight rates, and the decision variables for tonnage shipped.\n\nThe capaci\n[... 8618 characters omitted ...]\n\"ref\", \"name\": \"x_b\"}\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\"tag\": \"ref\", \"name\": \"freight_rate_mine2_north\"},\n              {\"tag\": \"ref\", \"name\": \"x_c\"}\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\"tag\": \"ref\", \"name\": \"freight_rate_mine2_south\"},\n              {\"tag\": \"ref\", \"name\": \"x_d\"}\n            ]\n          }\n        ]\n      },\n      \"name\": \"total_freight_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"The problem statement does not explicitly state that the total supply must meet the total demand. However, it is implied by the context of the problem.\",\n      \"span\": {\"start\": 61, \"end\": 78, \"text\": \"Minimise the cost\"},\n      \"resolution\": \"Included as an open question with the understanding that the total supply must meet the total demand.\",\n      \"affects\": [\"total_freight_cost\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: Expecting ',' delimiter: line 26 column 19 (char 977)",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
     "failure_class": "fabricated provenance: words not in the statement",
     "input_tokens": 1002,
     "latency_ms": 38341.6,
@@ -2599,6 +3091,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains '14 USD', and it does not",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 983,
+    "latency_ms": 131414.1,
+    "model": "ollama/qwen3:4b",
+    "model_id": "qwen3:4b",
+    "model_version": "qwen3:4b@359d7dd4bcda",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "We are given a problem statement: \"Two mines feed two plants. Mine one can ship 300 tonnes, mine two can ship 400 tonnes. Plant north needs 350 tonnes and plant south needs 300 tonnes. Freight per tonne is 8 USD from mine one to north, 14 from mine one to south, 11 from mine two to north and 6 from mine two to south. Minimise freight.\"\n\nWe need to formalize it into a JSON document.\n\nStep 1: Understand the problem.\n\nWe have two mines (mine1 and mine2) and two plants (north and south).\n\nConstraints:\n- Mine1 can ship at most 300 tonnes (so x1 <= 300)\n- Mine2 can ship at most 400 tonnes (so x2 <= 400)\n- Plant north needs 350 tonnes (so the total shipped to north must be at least 350? But note: the problem says \"needs\", meaning it must be exactly 350? However, the problem is about minimising freight and we have two mines shipping to two plants. Actually, the problem states the needs as fixed: plant north needs 350 tonnes and plant south needs 300 tonnes. So we have:\n  - Total to north = 350\n[... 27145 characters omitted ...]\n   \"role\": \"variable\",\n      \"dimension\": {\n        \"symbol\": \"t\",\n        \"exponents\": {\n          \"mass\": \"1\"\n        }\n      },\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"tonnes from mine one to south\",\n      \"span\": {\n        \"start\": 120,\n        \"end\": 135,\n        \"text\": \"mine one to south\"\n      }\n    },\n    {\n      \"name\": \"x_c\",\n      \"role\": \"variable\",\n      \"dimension\": {\n        \"symbol\": \"t\",\n        \"exponents\": {\n          \"mass\": \"1\"\n        }\n      },\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"tonnes from mine two to north\",\n      \"span\": {\n        \"start\": 140,\n        \"end\": 155,\n        \"text\": \"mine two to north\"\n      }\n    },\n    {\n      \"name\": \"x_d\",\n      \"role\": \"variable\",\n      \"dimension\": {\n        \"symbol\": \"t\",\n        \"exponents\": {\n          \"mass\": \"1\"\n        }\n      },\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n     ",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the document carries no schema_version; expected '1.0'",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -2724,6 +3237,27 @@
    {
     "cost_usd": 0.0,
     "failure_class": "fabricated provenance: words not in the statement",
+    "input_tokens": 972,
+    "latency_ms": 71171.2,
+    "model": "ollama/deepseek-r1:8b",
+    "model_id": "deepseek-r1:8b",
+    "model_version": "deepseek-r1:8b@6995872bfe4c",
+    "output_tokens": 2933,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "<think>\nOkay, let's tackle this problem step by step. The user wants me to formalize a problem statement into a JSON document following specific rules. The problem statement is about a workshop with limited machining and finishing hours, producing pumps and valves with different resource requirements and margins, and constraints on pump sales.\n\nFirst, I need to identify all the quantities in the problem. The narrative mentions hours of machining and finishing, which are resources. Then there are pumps and valves, each with machining and finishing times, and margins. There's also a constraint on the number of pumps. \n\nNext, dimensions: The rules require every quantity to have a dimension. Hours are time, so machining and finishing hours would be \"time\" with exponent \"1\". Margins are in USD, so that's currency. The pumps and valves are products, so they might be counts. But the problem statement doesn't explicitly define them, so I'll need to infer their nature.\n\nFor the relations, the o\n[... 9337 characters omitted ...]\n    {\n      \"question\": \"The domain of the decision variables x_p and x_v is not specified in the problem statement. Are they integers or real numbers?\",\n      \"span\": {\n        \"start\": 90,\n        \"end\": 99,\n        \"text\": \"pumps and valves\"\n      },\n      \"resolution\": \"Assuming integer values since fractional production of pumps or valves is not practical. This is a common assumption in such production planning problems.\",\n      \"affects\": [\n        \"x_p\",\n        \"x_v\"\n      ]\n    },\n    {\n      \"question\": \"The term 'margin' is used in the problem statement. Does this refer to profit or revenue? The problem does not specify.\",\n      \"span\": {\n        \"start\": 53,\n        \"end\": 78,\n        \"text\": \"margin\"\n      },\n      \"resolution\": \"Assuming 'margin' refers to the profit per unit, as is common in such contexts. If it were revenue, the values would typically be labeled differently.\",\n      \"affects\": [\n        \"total_margin\"\n      ]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains 'valves', and it does not",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "fabricated provenance: words not in the statement",
     "input_tokens": 998,
     "latency_ms": 34643.7,
     "model": "ollama/qwen2.5-coder:7b",
@@ -2821,6 +3355,27 @@
     "verdicts": [
      {
       "detail": "solving failed: No value for uninitialized ScalarParam object machining_hours",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 979,
+    "latency_ms": 131963.0,
+    "model": "ollama/qwen3:4b",
+    "model_id": "qwen3:4b",
+    "model_version": "qwen3:4b@359d7dd4bcda",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "We are given a problem statement: \n \"A workshop has 120 hours of machining and 90 hours of finishing available this month. A pump takes 4 hours machining and 2 hours finishing, and sells for a margin of 260 USD. A valve takes 2 hours machining and 3 hours finishing, with a margin of 180 USD. No more than 20 pumps can be sold. Maximise the margin.\"\n\n We need to formalize it into the JSON document.\n\n Steps:\n\n 1. Identify the quantities (variables and parameters) and their dimensions.\n\n    We have:\n      - machining hours available: 120 hours -> parameter (constant)\n      - finishing hours available: 90 hours -> parameter (constant)\n      - pump: \n          * machining time per pump: 4 hours -> parameter (constant)\n          * finishing time per pump: 2 hours -> parameter (constant)\n          * margin per pump: 260 USD -> parameter (constant)\n      - valve:\n          * machining time per valve: 2 hours -> parameter (constant)\n          * finishing time per valve: 3 hours -> parameter (con\n[... 29262 characters omitted ...]\n     right: { \"tag\": \"ref\", \"name\": \"max_pumps\" }\n\n        However, the problem says: \"No more than 20 pumps\", so we have a parameter \"max_pumps\" = 20.\n\n        But note: the problem does not have a parameter named \"max_pumps\" in the text? \n\n        We'll create a parameter for the maximum pumps: \"max_pumps\" = 20.\n\n        But the problem says: \"No more than 20 pumps\", so we have a constraint on x_pump.\n\n        We'll create a parameter for the maximum pumps: \n\n          \"max_pumps\": { ... }\n\n        However, the problem says: \"20 pumps\", so we have a constant 20.\n\n        We'll define:\n\n          \"max_pumps\": { \n            \"name\": \"max_pumps\",\n            \"role\": \"parameter\",\n            \"dimension\": { \"symbol\": \"count\", \"exponents\": {} },\n            \"lower\": 0,\n            \"upper\": null,\n            \"value\": 20,\n            \"description\": \"maximum number of pumps that can be sold\",\n            \"span\": { \"start\": 150, \"end\": 156, \"text\": \"20\" }   -> but wait, the text is \"20\", not \"",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -2955,6 +3510,37 @@
    },
    {
     "cost_usd": 0.0,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 937,
+    "latency_ms": 36494.3,
+    "model": "ollama/deepseek-r1:8b",
+    "model_id": "deepseek-r1:8b",
+    "model_version": "deepseek-r1:8b@6995872bfe4c",
+    "output_tokens": 1533,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
     "failure_class": "fabricated provenance: words not in the statement",
     "input_tokens": 963,
     "latency_ms": 14879.0,
@@ -3053,6 +3639,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains 'Minimise the cost', and it does not",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 944,
+    "latency_ms": 131815.8,
+    "model": "ollama/qwen3:4b",
+    "model_id": "qwen3:4b",
+    "model_version": "qwen3:4b@359d7dd4bcda",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "We are given a problem statement: \"Reagent is sold only in sealed drums of 55 kilograms, at 340 USD per drum. A plant needs at least 900 kilograms this month. Unused reagent cannot be returned. Minimise the amount spent.\"\n\nWe need to formalize it into the specified JSON.\n\nStep 1: Understand the problem and identify quantities.\n\nThe problem states:\n- Reagent is sold in sealed drums of 55 kg each, at 340 USD per drum.\n- The plant needs at least 900 kg this month.\n- Unused reagent cannot be returned.\n- Minimise the amount spent.\n\nWe are to model the problem.\n\nWe have:\n- The cost per drum: 340 USD per drum (so a parameter: cost per drum)\n- The weight per drum: 55 kg (a parameter: weight per drum)\n- The demand: at least 900 kg (a parameter: demand)\n\nBut note: the plant needs at least 900 kg. Since reagent is sold in drums of 55 kg, we have to buy whole drums.\n\nWe define:\n- Let `x_a` be the number of drums bought (a decision variable). However, note that the problem says \"unused reagent cann\n[... 28611 characters omitted ...]\n in the statement\"}\n  },\n  {\n    \"name\": \"demand\",\n    \"role\": \"parameter\",\n    \"dimension\": {\"symbol\": \"kg\", \"exponents\": {\"mass\": \"1\"}},\n    \"domain\": \"real\",\n    \"lower\": 900.0,\n    \"upper\": null,\n    \"value\": 900.0,\n    \"description\": \"minimum demand in kilograms\",\n    \"span\": {\"inferred_reason\": \"the variable name is not in the statement\"}\n  }\n]\n\nBut wait, the problem says: \"a plant needs at least 900 kilograms\", so the demand is 900 kg. But the problem says \"at least\", so the demand is 900 kg (the minimum required).\n\nSo we set the value for demand as 900.0.\n\nBut the problem says: \"the problem statement does not determine something material\", so we have an open question.\n\nThe open question: \n  {\n    \"question\": \"the problem does not specify that the number of drums must be an integer\",\n    \"span\": {\"start\": 61, \"end\": 78, \"text\": \"Minimise the amount spent.\"},\n    \"resolution\": \"the problem states that reagent is sold only in sealed drums, so it is implied that the number of drums",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the document carries no schema_version; expected '1.0'",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -3177,6 +3784,27 @@
    },
    {
     "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 980,
+    "latency_ms": 212065.7,
+    "model": "ollama/deepseek-r1:8b",
+    "model_id": "deepseek-r1:8b",
+    "model_version": "deepseek-r1:8b@6995872bfe4c",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "<think>\nOkay, let's tackle this problem step by step. The user wants me to formalize a problem statement into a JSON document following specific rules. The problem statement is about a contractor deciding whether to open a temporary crushing station or use the existing plant to minimize total cost, given a season's tonnage of 15000.\n\nFirst, I need to identify all the quantities in the statement. There's \"Opening it costs 40000 USD for the season\" which introduces a fixed cost parameter. Then \"crushing costs 3 USD per tonne\" is a variable cost per tonne at the temporary station. The existing plant has \"9 USD per tonne\" as a variable cost with a capacity limit of \"6000 tonnes\". The season's tonnage is \"15000\" which is a parameter. The objective is to \"Minimise the total cost\".\n\nNext, dimensions. The currency is USD, so I'll use \"USD\" as the symbol. Mass is tonnes, so \"t\". The fixed cost has dimension \"USD\" and no mass. The variable costs are \"USD/t\". The tonnage parameter is \"t\". All qua\n[... 29737 characters omitted ...]\nd to its maximum. It just says \"up to 9000 tonnes\". So perhaps the contractor can choose to use the temporary station for any amount from 0 to 9000, but if they use less, the existing plant would have to process more than 6000, which is not allowed. Therefore, the temporary station must be used for exactly 9000 tonnes, and the existing plant for exactly 6000 tonnes. So the decision variables are fixed, but the problem is to minimize cost, which is fixed. So perhaps the open question is that the problem doesn't specify the fixed cost or variable costs clearly, but they are given.\n\nI think I need to stop and rethink. The key is that the total tonnage is 15000, and the capacities are 9000 for the temporary and 6000 for the existing plant. The temporary station can be used for any amount from 0 to 9000, but if it is used for less than 9000, then the existing plant must process the remaining tonnage, which would be more than 6000 (since 15000 - less than 9000 > 6000). But the existing plant",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: \"<think> Okay, let's tackle this problem step by step. The user wants me to formalize a problem statement into a JSON document following specific rules. The prob\"",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
     "failure_class": "fabricated provenance: words not in the statement",
     "input_tokens": 1006,
     "latency_ms": 25508.8,
@@ -3275,6 +3903,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains '15000 tonnes', and it does not",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 987,
+    "latency_ms": 131446.4,
+    "model": "ollama/qwen3:4b",
+    "model_id": "qwen3:4b",
+    "model_version": "qwen3:4b@359d7dd4bcda",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "We are given a problem statement to formalize. We must return a JSON document that adheres to the provided schema and rules.\n\n Steps:\n 1. Parse the problem statement: \"A contractor may open a temporary crushing station. Opening it costs 40000 USD for the season regardless of use, after which crushing costs 3 USD per tonne there, up to 9000 tonnes. The existing plant charges 9 USD per tonne with no fixed cost and can take at most 6000 tonnes. The season's tonnage is 15000. Minimise the total cost.\"\n\n 2. Identify quantities and their roles:\n    - We have two crushing stations: a temporary one (which we'll call \"x_a\") and the existing plant (which we'll call \"x_b\").\n    - The problem states that the temporary station can take up to 9000 tonnes (so x_a <= 9000) and the existing plant can take at most 6000 tonnes (so x_b <= 6000).\n    - The total tonnage is 15000 tonnes (so x_a + x_b = 15000? But note: the problem says \"the season's tonnage is 15000\", meaning the total amount of tonnage tha\n[... 28248 characters omitted ...]\ns \"the season's tonnage is 15000\", meaning they must crush 15000. So we have x_a + x_b = 15000.\n\n        However, the problem says \"Minimise the total cost\", so we have to have the constraint that the total tonnage is 15000.\n\n        But the problem says: \"the season's tonnage is 15000\", so it's a fixed amount. Therefore, we have:\n\n            x_a + x_b = 15000\n\n        But the problem also says: the temporary station can take up to 9000, and the existing plant up to 6000.\n\n        So we have two constraints:\n\n            x_a <= 9000\n            x_b <= 6000\n\n        And the equality: x_a + x_b = 15000.\n\n        However, the problem says: \"the season's tonnage is 15000\", so it's a fixed amount that must be crushed.\n\n        So the relation for the equality: \n\n            left: {\"tag\": \"sum\", \"terms\": [{\"tag\": \"ref\", \"name\": \"x_a\"}, {\"tag\": \"ref\", \"name\": \"x_b\"}]}\n            comparator: \"=\"\n            right: {\"tag\": \"const\", \"value\": 15000}\n\n        But the schema says: \"comparator\" is",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the document carries no schema_version; expected '1.0'",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -3389,6 +4038,27 @@
    },
    {
     "cost_usd": 0.0,
+    "failure_class": "truncated output",
+    "input_tokens": 972,
+    "latency_ms": 212761.0,
+    "model": "ollama/deepseek-r1:8b",
+    "model_id": "deepseek-r1:8b",
+    "model_version": "deepseek-r1:8b@6995872bfe4c",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "<think>\nOkay, let's tackle this problem step by step. The user wants me to formalize a problem statement into a JSON document following specific rules. The problem statement is about a kiln operation with constraints and an objective to maximize margin.\n\nFirst, I need to identify all the quantities in the statement. The main ones are the kiln's operation (run or idle), the amount of feed available (150 tonnes), and the margin to maximize. But wait, the margin isn't directly defined. The user mentioned that if something isn't determined, it should go into open_questions. So I'll have to infer the margin's components.\n\nThe margin is likely the profit, which is revenue minus cost. Revenue comes from processing feed at 24 USD per tonne, and cost includes the firing up cost (4000 USD) plus possibly other operational costs. However, the problem statement doesn't mention any other costs, so maybe the cost here is just the firing up cost. But the margin might also consider the feed cost, which\n[... 31175 characters omitted ...]\n\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_a\",\n      \"role\": \"variable\",\n      \"dimension\": {\n        \"symbol\": \"t\",\n        \"exponents\": {\n          \"mass\": \"1\"\n        }\n      },\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": 500.0,\n      \"description\": \"Amount of feed processed by the kiln\",\n      \"span\": {\n        \"start\": 34,\n        \"end\": 39,\n        \"text\": \"Pit A\"\n      }\n    },\n    {\n      \"name\": \"c_a\",\n      \"role\": \"parameter\",\n      \"dimension\": {\n        \"symbol\": \"USD\",\n        \"exponents\": {\n          \"currency\": \"1\"\n        }\n      },\n      \"domain\": \"real\",\n      \"value\": 4000.0,\n      \"description\": \"Cost to fire up the kiln\",\n      \"span\": {\n        \"start\": 61,\n        \"end\": 78,\n        \"text\": \"Minimise the cost\"\n      }\n    },\n    {\n      \"name\": \"r_a\",\n      \"role\": \"parameter\",\n      \"dimension\": {\n        \"symbol\": \"USD/t\",\n        \"exponents\": {\n          \"currency\": \"1\",\n          \"mass\": \"-1\"\n        }\n      },\n      \"",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the JSON object is not closed",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
     "failure_class": "a constant with no unit",
     "input_tokens": 998,
     "latency_ms": 23886.6,
@@ -3487,6 +4157,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains 'Maximise the margin', and it does not",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 979,
+    "latency_ms": 130123.5,
+    "model": "ollama/qwen3:4b",
+    "model_id": "qwen3:4b",
+    "model_version": "qwen3:4b@359d7dd4bcda",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "We are given a problem statement: \n \"A kiln can be run or left idle. If it is run at all it must process at least 200 tonnes, and it cannot exceed 500 tonnes. Running it earns 24 USD per tonne but costs 4000 USD to fire up. Only 150 tonnes of feed are available. Decide whether to run the kiln so as to maximise the margin.\"\n\n We need to formalize it into the JSON document.\n\n Steps:\n\n 1. The narrative.text must be the problem statement exactly as given.\n\n 2. We have to define quantities (variables, parameters, derived, sets) and relations and objectives.\n\n Let's break down the problem:\n\n - The kiln can be run or left idle -> so we have a binary decision: run or not? But note: the problem says \"if it is run at all\", meaning we might have a continuous variable for the amount processed? However, the problem states: \"must process at least 200 tonnes\" and \"cannot exceed 500 tonnes\". Also, the feed available is 150 tonnes. This is a key point: the feed available is 150 tonnes, but the kiln mus\n[... 29225 characters omitted ...]\n it starts at index 50? \n\n            But we don't have to be exact.\n\n            Given the time, I will create a JSON with the following:\n\n                quantities: [\n                  {\n                    \"name\": \"x\",\n                    \"role\": \"variable\",\n                    \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n                    \"domain\": \"real\",\n                    \"lower\": 0.0,\n                    \"upper\": null,\n                    \"value\": null,\n                    \"description\": \"amount of feed processed in tonnes\",\n                    \"span\": {\"start\": 50, \"end\": 57, \"text\": \"process\"}\n                  },\n                  {\n                    \"name\": \"r\",\n                    \"role\": \"variable\",\n                    \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n                    \"domain\": \"boolean\",\n                    \"lower\": 0.0,\n                    \"upper\": 1.0,\n                    \"value\": null,\n                    \"description\": \"whether the",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the document carries no schema_version; expected '1.0'",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -3602,6 +4293,27 @@
    {
     "cost_usd": 0.0,
     "failure_class": "fabricated provenance: words not in the statement",
+    "input_tokens": 974,
+    "latency_ms": 62446.7,
+    "model": "ollama/deepseek-r1:8b",
+    "model_id": "deepseek-r1:8b",
+    "model_version": "deepseek-r1:8b@6995872bfe4c",
+    "output_tokens": 2580,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "<think>\nOkay, let's tackle this problem step by step. The user wants me to formalize a problem statement into a JSON document following specific rules. The problem is about assigning three drills to three benches to minimize total hours while ensuring each bench gets one drill and each drill is assigned to one bench.\n\nFirst, I need to parse the problem statement carefully. The narrative text should be a direct copy of the statement. The quantities mentioned are the hours each drill needs on each bench. There are three benches (A, B, C) and three drills (one, two, three). Each drill has three hours values corresponding to the benches. The objective is to minimize the total hours, which suggests that the assignment will determine which hours are used.\n\nNext, I need to define the quantities. The user provided a schema with specific fields like name, role, dimension, domain, etc. The dimensions here are time (hours), so the symbol should be \"h\" with an exponent of \"1\". The domain is real n\n[... 8005 characters omitted ...]\n      \"name\": \"x_d\"\n          },\n          {\n            \"tag\": \"ref\",\n            \"name\": \"x_e\"\n          },\n          {\n            \"tag\": \"ref\",\n            \"name\": \"x_f\"\n          },\n          {\n            \"tag\": \"ref\",\n            \"name\": \"x_g\"\n          },\n          {\n            \"tag\": \"ref\",\n            \"name\": \"x_h\"\n          },\n          {\n            \"tag\": \"ref\",\n            \"name\": \"x_i\"\n          }\n        ]\n      },\n      \"name\": \"total_hours\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"The exact value of the demand is not specified in the statement.\",\n      \"span\": {\n        \"start\": 61,\n        \"end\": 78,\n        \"text\": \"Minimise the total hours.\"\n      },\n      \"resolution\": \"The demand is a parameter that must be met, but its specific value is not provided in the statement. It is inferred to be the minimum total hours required, which is not quantified here.\",\n      \"affects\": [\n        \"meet_demand\"\n      ]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains 'benches B', and it does not",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "fabricated provenance: words not in the statement",
     "input_tokens": 1000,
     "latency_ms": 59361.2,
     "model": "ollama/qwen2.5-coder:7b",
@@ -3699,6 +4411,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains 'Minimise the cost', and it does not",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 981,
+    "latency_ms": 132119.6,
+    "model": "ollama/qwen3:4b",
+    "model_id": "qwen3:4b",
+    "model_version": "qwen3:4b@359d7dd4bcda",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "We are given a problem statement: \n \"Three drills must be assigned to three benches, one drill to each bench and one bench to each drill. The hours each drill needs on each bench are: drill one takes 9, 12 and 7 hours on benches A, B and C; drill two takes 11, 8 and 10; drill three takes 6, 13 and 12. Minimise the total hours.\"\n\n We need to formalize it into a JSON document.\n\n Steps:\n\n 1. Identify the quantities (variables and parameters) and their dimensions.\n\n    The problem is about assigning drills to benches. We have:\n      - Three drills: let's call them drill1, drill2, drill3.\n      - Three benches: A, B, C.\n\n    The problem states: \"one drill to each bench and one bench to each drill\". So it's a bijection.\n\n    The hours each drill takes on each bench are given as:\n        drill1: [9, 12, 7] for benches A, B, C\n        drill2: [11, 8, 10] for benches A, B, C\n        drill3: [6, 13, 12] for benches A, B, C\n\n    We are to minimize the total hours.\n\n    We can model this as an ass\n[... 30233 characters omitted ...]\n                    But the problem says: \"benches A, B and C\" -> so the 'B' is after a comma and space.\n\n                    Let me count:\n\n                        s = \"Three drills must be assigned to three benches, one drill to each bench and one bench to each drill. The hours each drill needs on each bench are: drill one takes 9, 12 and 7 hours on benches A, B and C; drill two takes 11, 8 and 10; drill three takes 6, 13 and 12. Minimise the total hours.\"\n\n                    I'll assume the following (from the problem statement):\n\n                        The string: \n                            ... \"benches A, B and C\" ...\n\n                        The 'A' is at index 55 (0-indexed), 'B' at index 58, 'C' at index 61.\n\n                    But we don't have to be exact. We can use:\n\n                        x_a: span: {\"start\": 55, \"end\": 56, \"text\": \"A\"}\n                        x_b: span: {\"start\": 58, \"end\": 59, \"text\": \"B\"}\n                        x_c: span: {\"start\": 61, \"end\": 62,",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -3813,6 +4546,27 @@
    },
    {
     "cost_usd": 0.0,
+    "failure_class": "unparseable output",
+    "input_tokens": 945,
+    "latency_ms": 47568.5,
+    "model": "ollama/deepseek-r1:8b",
+    "model_id": "deepseek-r1:8b",
+    "model_version": "deepseek-r1:8b@6995872bfe4c",
+    "output_tokens": 1969,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "<think>\nOkay, let's tackle this problem step by step. The user wants me to formalize a problem statement into a JSON document following specific rules. The problem statement is about a depot stocking bolts and nuts with certain constraints and a cost minimization objective.\n\nFirst, I need to identify all the quantities in the statement. There are bolts (x_a) and nuts (x_b), both as items. The demand is mentioned as a constraint, but it's not explicitly defined. The cost is to be minimized, so I'll need to define the total cost (c_total) as the sum of the cost of bolts and nuts.\n\nNext, dimensions: bolts and nuts are items, so they should be counted. The dimension for count is \"count\" with exponent \"1\". The cost is in USD, so the dimension would be \"USD\" with exponent \"1\". The demand constraint requires at least 600 items, so demand (d) is a parameter with a fixed value of 600.\n\nNow, checking the rules: Every quantity must have a dimension. So, x_a and x_b should have the count dimension\n[... 5624 characters omitted ...]\n  \"tag\": \"ref\",\n                \"name\": \"x_a\"\n              }\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\n                \"tag\": \"ref\",\n                \"name\": \"c_nut\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"x_b\"\n              }\n            ]\n          }\n          ]\n        },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"what the statement does not determine\",\n      \"span\": {\n        \"start\": 34,\n        \"end\": 39\",\n        \"text\": \"bolts\"\n      },\n      \"resolution\": \"the reading you took, and why\",\n      \"affects\": [\n        \"x_a\"\n      ]\n    },\n    {\n      \"question\": \"what the statement does not determine\",\n      \"span\": {\n        \"start\": 42,\n        \"end\": 47\",\n        \"text\": \"nuts\"\n      },\n      \"resolution\": \"the reading you took, and why\",\n      \"affects\": [\n        \"x_b\"\n      ]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: Expecting ',' delimiter: line 46 column 18 (char 1116)",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
     "failure_class": "fabricated provenance: words not in the statement",
     "input_tokens": 971,
     "latency_ms": 23090.0,
@@ -3911,6 +4665,27 @@
     "verdicts": [
      {
       "detail": "solving failed: No value for uninitialized ScalarParam object demand",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 952,
+    "latency_ms": 130615.1,
+    "model": "ollama/qwen3:4b",
+    "model_id": "qwen3:4b",
+    "model_version": "qwen3:4b@359d7dd4bcda",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "We are given a problem statement: \"A depot stocks bolts and nuts. It must hold at least twice as many bolts as nuts. Bolts cost 3 USD each and nuts cost 1 USD each, and the depot must hold at least 600 items in total. Minimise the cost of the holding.\"\n\nWe need to formalize it into the specified JSON.\n\nStep 1: Understand the problem and define quantities.\n\nThe problem has:\n- Bolts: let's call the number of bolts `x_b`\n- Nuts: let's call the number of nuts `x_n`\n\nConstraints:\n1. The depot must hold at least twice as many bolts as nuts: `x_b >= 2 * x_n`\n2. The depot must hold at least 600 items in total: `x_b + x_n >= 600`\n3. Costs: bolts cost 3 USD each, nuts cost 1 USD each.\n\nObjective: Minimise the total cost = 3 * x_b + 1 * x_n\n\nWe also note that the problem says \"Minimise the cost of the holding\", so the objective is to minimize the cost.\n\nStep 2: Define the quantities.\n\nWe have two variables: `x_b` (bolts) and `x_n` (nuts).\n\nFor each variable, we need:\n- name: e.g., \"x_b\"\n- role: \"\n[... 28086 characters omitted ...]\nr item? So we don't have a variable for cost per item.\n\n        Given the complexity, and the fact that the problem is a bit long, I will write the JSON with the following:\n\n          narrative.text: the problem statement verbatim.\n\n          quantities: \n            - x_b: \n                name: \"x_b\"\n                role: \"variable\"\n                dimension: {\"symbol\": \"count\", \"exponents\": {\"count\": \"1\"}}\n                domain: \"real\"\n                lower: 0.0\n                upper: null\n                value: null\n                description: \"number of bolts\"\n                span: {\"start\": 15, \"end\": 20, \"text\": \"bolts\"}\n\n            - x_n: \n                name: \"x_n\"\n                role: \"variable\"\n                dimension: {\"symbol\": \"count\", \"exponents\": {\"count\": \"1\"}}\n                domain: \"real\"\n                lower: 0.0\n                upper: null\n                value: null\n                description: \"number of nuts\"\n                span: {\"start\": 25, \"end\": 2",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -4045,6 +4820,27 @@
    },
    {
     "cost_usd": 0.0,
+    "failure_class": "truncated output",
+    "input_tokens": 954,
+    "latency_ms": 45853.9,
+    "model": "ollama/deepseek-r1:8b",
+    "model_id": "deepseek-r1:8b",
+    "model_version": "deepseek-r1:8b@6995872bfe4c",
+    "output_tokens": 1901,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "<think>\nOkay, the user wants me to formalize a problem statement into a JSON document following specific rules. They've provided a schema and rules for creating this document, plus a problem statement to work with.\n\nLet me break down the problem statement: \"A processor can buy ore from a nearby pit at 70 USD per tonne or from a distant pit at 52 USD per tonne. Haulage from the distant pit is quoted separately at 15 USD per tonne. The plant needs 800 tonnes. Minimise what the processor pays.\"\n\nI need to identify quantities, relations, objectives, and open questions. The quantities here are the costs and the demand. The costs are for ore from each pit, and there's an additional haulage cost for the distant pit. The demand is 800 tonnes, which is a parameter with a fixed value.\n\nFor the dimensions, the demand is 800 tonnes, so that's mass with exponent 1. The costs are in USD per tonne, so they're currency divided by mass. The narrative text must be copied exactly, so I'll use the stateme\n[... 5421 characters omitted ...]\n,\n            \"factors\": [\n              {\n                \"tag\": \"ref\",\n                \"name\": \"haulage_distant\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"x_b\"\n              }\n            ]\n          }\n        ]\n      },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"The exact amounts of ore bought from each pit (x_a and x_b) are not specified in the statement.\",\n      \"span\": {\n        \"start\": 76,\n        \"end\": 86,\n        \"text\": \"Minimise what the processor pays.\"\n      },\n      \"resolution\": \"The statement implies minimization of payment, which is the total cost. The payment is determined by the cost per tonne (including haulage for distant) and the quantities bought from each pit. The quantities x_a and x_b are decision variables to be chosen, subject to the constraint that their sum meets the demand.\",\n      \"affects\": [\n        \"total_cost\"\n      ]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the JSON object is not closed",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
     "failure_class": "fabricated provenance: words not in the statement",
     "input_tokens": 980,
     "latency_ms": 24148.1,
@@ -4143,6 +4939,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains 'Pit A', and it does not",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 961,
+    "latency_ms": 133359.4,
+    "model": "ollama/qwen3:4b",
+    "model_id": "qwen3:4b",
+    "model_version": "qwen3:4b@359d7dd4bcda",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "We are given a problem statement: \"A processor can buy ore from a nearby pit at 70 USD per tonne or from a distant pit at 52 USD per tonne. Haulage from the distant pit is quoted separately at 15 USD per tonne. The plant needs 800 tonnes. Minimise what the processor pays.\"\n\nWe need to formalize it into the specified JSON.\n\nStep 1: Understand the problem and identify quantities.\n\nThe problem has:\n- Two pits: nearby and distant.\n- Cost per tonne from nearby pit: 70 USD/t\n- Cost per tonne from distant pit: 52 USD/t (but note: there is haulage cost of 15 USD/t for distant pit)\n- The plant needs 800 tonnes.\n\nWe are to minimize the total cost.\n\nWe define:\n- Let x_a = amount of ore bought from nearby pit (in tonnes)\n- Let x_b = amount of ore bought from distant pit (in tonnes)\n\nConstraints:\n1. Total ore: x_a + x_b = 800 (tonnes)\n2. The cost for nearby: 70 * x_a (USD)\n3. The cost for distant: (52 + 15) * x_b = 67 * x_b (USD)   [because haulage is 15 USD per tonne on top of the 52 USD per tonne\n[... 26191 characters omitted ...]\n \"If the statement does not determine something material, record it\"\n\n  We'll set open_questions: [].\n\n  But the example has one open question.\n\n  Alternatively, the problem does not determine the cost? But we have the numbers.\n\n  I think there is no open question.\n\n  However, the problem says: \"the processor pays\" -> but the problem does not specify the total cost? But we have the objective.\n\n  We'll set open_questions: [].\n\nBut the problem says: \"Minimise what the processor pays.\" -> and the problem does not specify the units? But it says \"USD\", so we assume.\n\n  So we'll have no open question.\n\nBut the rule says: \"the reading you took, and why\" -> so if there is no open question, we skip.\n\nLet's build the JSON.\n\nFirst, the narrative: \n  {\"text\": \"A processor can buy ore from a nearby pit at 70 USD per tonne or from a distant pit at 52 USD per tonne. Haulage from the distant pit is quoted separately at 1:15 USD per tonne. The plant needs 800 tonnes. Minimise what the processor pays.\",",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the document carries no schema_version; expected '1.0'",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -4277,6 +5094,27 @@
    },
    {
     "cost_usd": 0.0,
+    "failure_class": "a parameter left without a value",
+    "input_tokens": 937,
+    "latency_ms": 42006.8,
+    "model": "ollama/deepseek-r1:8b",
+    "model_id": "deepseek-r1:8b",
+    "model_version": "deepseek-r1:8b@6995872bfe4c",
+    "output_tokens": 1755,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "<think>\nOkay, the user wants me to formalize a problem statement into a JSON document following specific rules. They've provided a detailed schema and rules for creating this document, plus a problem statement to work with.\n\nLet me break down the problem statement: \"A crew must work at least 40 shifts this month to cover the roster. Overtime rules cap the crew at 32 shifts a month. Each shift costs 900 USD. Minimise the cost of covering the roster.\"\n\nI need to create a JSON document with specific components: narrative, quantities, relations, objectives, open_questions, and feasibility_only. Each part has strict requirements.\n\nFor the narrative, I'll copy the problem statement exactly as given. The quantities section needs to define all variables, parameters, and derived quantities with proper dimensions. The relations should capture any constraints, and objectives the things to optimize.\n\nLooking at the problem, I can identify:\n- \"demand\" as a parameter representing the minimum shifts \n[... 5037 characters omitted ...]\n\n      \"left\": {\n        \"tag\": \"ref\",\n        \"name\": \"x_a\"\n      },\n      \"comparator\": \"<=\",\n      \"right\": {\n        \"tag\": \"ref\",\n        \"name\": \"max_shifts\"\n      },\n      \"name\": \"cap_shifts\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\n        \"tag\": \"product\",\n        \"factors\": [\n          {\n            \"tag\": \"ref\",\n            \"name\": \"cost_per_shift\"\n          },\n          {\n            \"tag\": \"ref\",\n            \"name\": \"x_a\"\n          }\n        ]\n      },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"The number of shifts the crew works (x_a) is not determined by the statement.\",\n      \"span\": {\n        \"start\": 61,\n        \"end\": 78,\n        \"text\": \"Minimise the cost\"\n      },\n      \"resolution\": \"x_a is the variable to be determined by the solver to meet the demand while respecting the overtime cap.\",\n      \"affects\": [\n        \"total_cost\"\n      ]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "solving failed: No value for uninitialized ScalarParam object demand",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
     "failure_class": "a variable whose lower bound is above its upper",
     "input_tokens": 963,
     "latency_ms": 13572.4,
@@ -4375,6 +5213,27 @@
     "verdicts": [
      {
       "detail": "solving failed: No value for uninitialized ScalarParam object demand",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 944,
+    "latency_ms": 132597.4,
+    "model": "ollama/qwen3:4b",
+    "model_id": "qwen3:4b",
+    "model_version": "qwen3:4b@359d7dd4bcda",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "We are given a problem statement: \"A crew must work at least 40 shifts this month to cover the roster. Overtime rules cap the crew at 32 shifts a month. Each shift costs 900 USD. Minimise the cost of covering the roster.\"\n\nWe need to formalize it into the specified JSON.\n\nStep 1: Understand the problem.\n\nThe problem states:\n- The crew must work at least 40 shifts to cover the roster.\n- Overtime rules cap the crew at 32 shifts a month.\n- Each shift costs 900 USD.\n- Minimise the cost of covering the roster.\n\nBut note: There is a contradiction. The crew must work at least 40 shifts, but the cap is 32 shifts. This is impossible. However, the problem says \"Overtime rules cap the crew at 32 shifts a month\" meaning that the crew cannot work more than 32 shifts? But then how can they work at least 40? \n\nThis is a problem. However, the problem says: \"Minimise the cost of covering the roster.\" and we are to formalize.\n\nBut note: the problem statement says \"Overtime rules cap the crew at 32 shift\n[... 29697 characters omitted ...]\n      }\n        ],\n        \"objectives\": [\n          {\n            \"sense\": \"minimise\",\n            \"expression\": {\n              \"tag\": \"product\",\n              \"factors\": [\n                {\n                  \"tag\": \"ref\",\n                  \"name\": \"c\"\n                },\n                {\n                  \"tag\": \"ref\",\n                  \"name\": \"x\"\n                }\n              ]\n            },\n            \"name\": \"total_cost\"\n          }\n        ],\n        \"open_questions\": [\n          {\n            \"question\": \"The problem is infeasible\",\n            \"span\": {\n              \"start\": 0,\n              \"end\": 0,\n              \"text\": \"inferred\",\n              \"inferred_reason\": \"The problem statement states that the crew must work at least 40 shifts but the overtime rules cap the crew at 32 shifts, making it impossible to cover the roster.\"\n            },\n            \"affects\": [\n              \"total_cost\"\n            ]\n          }\n        ],\n        \"feasibility_only\": false\n     ",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the document carries no schema_version; expected '1.0'",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -4482,6 +5341,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 29724 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "fabricated provenance: words not in the statement",
+    "input_tokens": 959,
+    "latency_ms": 55379.2,
+    "model": "ollama/deepseek-r1:8b",
+    "model_id": "deepseek-r1:8b",
+    "model_version": "deepseek-r1:8b@6995872bfe4c",
+    "output_tokens": 2352,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "<think>\nOkay, let's tackle this problem step by step. The user wants me to formalize a problem statement into a JSON document following specific rules. They've provided a schema and rules that the document must adhere to, and they want me to return ONLY the JSON document without any commentary.\n\nFirst, I need to understand the problem statement: \"A pipeline can move 18 of product A or 25 of product B per hour, and runs 10 hours a day. Product A is worth 340 per unit moved and product B is worth 210. A customer contract requires at least 60 of product A each day. Maximise the daily value moved.\"\n\nNow, looking at the schema, I need to create a JSON object with several components: schema_version, family, narrative, quantities, relations, objectives, open_questions, and feasibility_only.\n\nBreaking down the narrative part, I need to copy the problem statement exactly as the text. The source is \"inline\" and the language is \"en\".\n\nFor quantities, I need to define each variable or parameter wi\n[... 6969 characters omitted ...]\n: [\n              {\n                \"tag\": \"ref\",\n                \"name\": \"price_b\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"x_b\"\n              }\n            ]\n          }\n        ]\n      },\n      \"name\": \"daily_value\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"The problem statement does not explicitly state whether the pipeline can move both product A and product B simultaneously or if it must choose one or the other. This ambiguity affects the interpretation of the rates.\",\n      \"span\": {\n        \"start\": 61,\n        \"end\": 78,\n        \"text\": \"Maximise the daily value moved\"\n      },\n      \"resolution\": \"Assuming the pipeline can move both products simultaneously, as the rates are given separately and the total hours are fixed. The rates are interpreted as maximum rates for each product individually, allowing for combinations.\",\n      \"affects\": [\n        \"daily_value\"\n      ]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains 'Pit A', and it does not",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -4597,6 +5477,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains 'Minimise the cost', and it does not",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 966,
+    "latency_ms": 132377.5,
+    "model": "ollama/qwen3:4b",
+    "model_id": "qwen3:4b",
+    "model_version": "qwen3:4b@359d7dd4bcda",
+    "output_tokens": 8192,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "We are given a problem statement: \"A pipeline can move 18 of product A or 25 of product B per hour, and runs 10 hours a day. Product A is worth 340 per unit moved and product B is worth 210. A customer contract requires at least 60 of product A each day. Maximise the daily value moved.\"\n\nWe need to formalize it into the specified JSON.\n\nStep 1: Understand the problem.\n\nWe have:\n- A pipeline that can move 18 units of product A per hour OR 25 units of product B per hour.\n- The pipeline runs 10 hours a day.\n- Product A: 340 per unit (so cost per unit? but note: we are maximizing value, so it's value per unit)\n- Product B: 210 per unit\n- Customer contract: at least 60 units of product A per day.\n\nWe are to maximize the daily value moved.\n\nStep 2: Define variables and quantities.\n\nWe'll define:\n- Let x_a = amount of product A (in units) moved per day.\n- Let x_b = amount of product B (in units) moved per day.\n\nBut note: the pipeline runs 10 hours a day. In each hour, it can move either 18 un\n[... 24226 characters omitted ...]\ntraint: the pipeline runs 10 hours a day, and the time constraint.\n\nWe have two variables: x_a and x_b.\n\nThe constraint: (x_a / 18) + (x_b / 25) <= 10\n\nBut also: x_a >= 60\n\nWe can write the constraint as:\n\n  (x_a / 18) + (x_b / 25) <= 10\n\nBut note: the problem says \"runs 10 hours a day\", so the total time is 10 hours.\n\nAlso, the constraint on A: x_a >= 60.\n\nWe have to express in the JSON.\n\nThe relations:\n\nWe have two relations:\n\n1. The time constraint: (x_a / 18) + (x_b / 25) <= 10\n2. x_a >= 60\n\nBut the problem says: \"A customer contract requires at least 60 of product A each day.\" -> so x_a >= 60.\n\nAlso, the pipeline runs 10 hours a day -> so the time constraint.\n\nWe'll define:\n\n- For the time constraint: \n   left: {\"tag\": \"sum\", \"terms\": [{\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"x_a\"}, {\"tag\": \"const\", \"value\": 1/18}]} ...] -> but the rule says: expression nodes are only: const, ref, sum, product, power, bigsum, conditional.\n\nWe can write the time constraint as:\n\n  (x_a",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
       "layer": "executable",
       "outcome": "fail"
      }
