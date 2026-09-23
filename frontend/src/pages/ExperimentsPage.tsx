@@ -250,6 +250,15 @@ function Corpus({ lang }: { lang: "en" | "es" }) {
           : "The conclusion is direct: the corpus must be authored with ground truth by construction. Every case is written with its reference formalization beside it, and that reference is executed before the case enters the artifact. It is more work per case and far fewer cases, and it buys the one property that makes the measurement mean anything."}
       </p>
 
+      <Equation
+        tex={String.raw`\Prigl[	ext{a sampled item is wrong}igr] \;\geq\; 0.081 \ 	ext{(EasyLP)} \quad	ext{to}\quad 0.540 \ 	ext{(IndustryOR)}`}
+        caption={
+          es
+            ? "Las tasas de error minimas que la encuesta ancla encontro al auditar los bancos del campo. Con 0,54, mas de la mitad de los items de IndustryOR estan mal, de modo que una puntuacion contra el conjunto tal como se publica mide sobre todo el acuerdo con sus errores."
+            : "The minimum error rates the anchor survey found when auditing the field's benchmarks. At 0.540 more than half of IndustryOR's items are wrong, so a score against the set as published mostly measures agreement with its mistakes."
+        }
+      />
+
       <h3>{es ? "La escalera de dificultad" : "The difficulty ladder"}</h3>
       <table className="finding-table">
         <thead>
@@ -489,6 +498,12 @@ function Taxonomy({ lang }: { lang: "en" | "es" }) {
           : "A rate says how often something went wrong. The taxonomy says what went wrong, and it is the more useful half: a model that truncates its output and a model that writes a constant with no unit score the same and need completely different fixes. The classification is derived from the recorded verdict, never assigned by hand."}
       </p>
 
+      <p className="measure">
+        {es
+          ? "La regla que gobierna la tabla es que cada clase corresponde a una comprobacion concreta que produjo un mensaje concreto, y que la clase se deriva de ese mensaje en lugar de asignarse leyendo la respuesta. Esa disciplina tiene un costo y conviene nombrarlo: un fallo interesante que ninguna comprobacion detecta no aparece aqui, y la tabla por tanto describe lo que el instrumento puede ver antes que lo que el modelo hizo. Tambien tiene una consecuencia util: la derivacion se puede volver a ejecutar sobre el libro mayor versionado, de modo que si manana se anade una comprobacion, los conteos de ayer se recalculan sin volver a llamar a ningun modelo."
+          : "The rule governing the table is that each class corresponds to one concrete check that produced one concrete message, and that the class is derived from that message rather than assigned by reading the response. That discipline has a cost worth naming: an interesting failure that no check detects does not appear here, so the table describes what the instrument can see before it describes what the model did. It also has a useful consequence: the derivation can be re-run over the committed ledger, so if a check is added tomorrow, yesterday's counts are recomputed without calling any model again."}
+      </p>
+
       <table className="finding-table">
         <thead>
           <tr>
@@ -636,6 +651,15 @@ function Threats({ lang }: { lang: "en" | "es" }) {
           ? "N = 20 con una repeticion. Los intervalos de Wilson al 95% ocupan alrededor de 0,40 de ancho, y los de los dos modelos medidos se solapan casi por completo. La consecuencia esta dicha en todas partes de este sitio: esta medicion puede ver que existe una brecha y no puede ordenar dos modelos. Una segunda pasada sobre el corpus identico movio una tasa de 0,350 a 0,250 sin que cambiara nada salvo el muestreo."
           : "N = 20 with one repeat. The 95% Wilson intervals span about 0.40, and those of the two models measured overlap almost entirely. The consequence is stated everywhere on this site: this measurement can see that a gap exists and cannot rank two models. A second pass over the identical corpus moved one rate from 0.350 to 0.250 with nothing changed but the sampling."}
       </p>
+
+      <Equation
+        tex={String.raw`w_{95}(\hat{p} = 0.5,\ n = 20) \;pprox\; 0.40, \qquad n \ 	ext{needed for}\ w_{95} \leq 0.10 \;pprox\; 384`}
+        caption={
+          es
+            ? "El ancho del intervalo de Wilson a este tamano de muestra, y el tamano que haria falta para reducirlo a diez puntos. Es la razon aritmetica por la que esta pagina no ordena modelos, y tambien el numero que dice cuanto costaria poder hacerlo."
+            : "The Wilson interval's width at this sample size, and the size needed to bring it to ten points. It is the arithmetic reason this page does not rank models, and also the number that says what being able to would cost."
+        }
+      />
 
       <h3>{es ? "Validez externa" : "External validity"}</h3>
       <p className="measure">
