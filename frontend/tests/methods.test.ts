@@ -10,6 +10,7 @@
  *   - a one-percent change to one coefficient changes it
  *   - a permutation leaves the Weisfeiler-Lehman signature unchanged
  *   - dropping a constraint changes it
+ *   - relaxing integrality changes it on every integer case, and on no continuous one
  *   - a row and its negation normalise to the same representative
  *
  * The transforms are imported from the library the panels use, so this proves the code on screen
@@ -22,8 +23,16 @@ import { test } from "node:test";
 
 import { canonicalise, perturb, restyle } from "../src/lib/canonical";
 import type { CaseRecord } from "../src/lib/contract.types";
-import { linearRows, type LinearRow } from "../src/lib/live-solver";
-import { buildGraph, graphVariant, normaliseRow, refine, signature } from "../src/lib/model-graph";
+import { integerVariables, linearRows, type LinearRow } from "../src/lib/live-solver";
+import {
+  buildGraph,
+  columnKinds,
+  graphVariant,
+  normaliseRow,
+  refine,
+  signature,
+  type ColumnKinds,
+} from "../src/lib/model-graph";
 
 const cases: CaseRecord[] = JSON.parse(
   readFileSync(new URL("../../data/artifacts/cases.json", import.meta.url), "utf8"),
@@ -43,7 +52,8 @@ const graphSignature = (
   rows: LinearRow[],
   objective: Map<string, number>,
   sense: string,
-) => signature(refine(buildGraph(columns, rows, objective, sense), 4)[4]);
+  kinds?: ColumnKinds,
+) => signature(refine(buildGraph(columns, rows, objective, sense, kinds), 4)[4]);
 
 test("most of the corpus is linear in the browser lane's sense", () => {
   // If this drops, the structural tabs silently stop covering cases they used to cover.
@@ -90,6 +100,25 @@ test("dropping a constraint changes the Weisfeiler-Lehman signature", () => {
     })
     .map(({ record }) => record.case_id);
   assert.deepEqual(blind, [], `a dropped constraint went unseen in ${blind.join(", ")}`);
+});
+
+test("relaxing integrality changes the signature exactly when there is an integer to relax", () => {
+  // Variables are seeded with their domain, so the LP relaxation of an integer model is a
+  // different graph. A continuous model has nothing to relax, and its relaxed copy must be itself.
+  const wrong: string[] = [];
+  let integerCases = 0;
+  for (const { record, model } of linear) {
+    const kinds = columnKinds(record.reference);
+    const relaxed = graphVariant(model.columns, model.rows, "relaxed", kinds);
+    const moved =
+      graphSignature(model.columns, model.rows, model.objective, model.sense, kinds) !==
+      graphSignature(relaxed.columns, relaxed.rows, model.objective, model.sense, relaxed.kinds);
+    const integer = integerVariables(record.reference).length > 0;
+    if (integer) integerCases += 1;
+    if (moved !== integer) wrong.push(`${record.case_id} (integer ${integer}, moved ${moved})`);
+  }
+  assert.ok(integerCases >= 3, `only ${integerCases} integer cases`);
+  assert.deepEqual(wrong, [], wrong.join(", "));
 });
 
 test("a row and its negation normalise to the same representative", () => {

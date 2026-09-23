@@ -100,10 +100,14 @@ export function twoVariableModel(
   record: CaseRecord,
   overrides: Record<string, number> = {},
 ): Model | null {
-  const variables = record.reference.quantities
-    .filter((q) => q.role === "variable" && q.domain !== "boolean")
-    .map((q) => q.name);
-  if (variables.length !== 2) return null;
+  const decisions = record.reference.quantities.filter(
+    (q) => q.role === "variable" && q.domain !== "boolean",
+  );
+  // The shaded polygon is the feasible set only when both axes are continuous. With an integer
+  // axis the feasible set is the lattice points inside it, and shading the polygon would present
+  // the LP relaxation as the problem, which is the integrality trap drawn as a picture.
+  if (decisions.length !== 2 || decisions.some((q) => q.domain === "integer")) return null;
+  const variables = decisions.map((q) => q.name);
 
   const known: Record<string, number> = {};
   for (const q of record.reference.quantities) {

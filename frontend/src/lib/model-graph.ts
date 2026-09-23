@@ -12,13 +12,38 @@
  * does not depend on names or ordering.
  *
  * The same asymmetry as the canonical form applies, and it is kept in the code and on screen:
- * isomorphic graphs ALWAYS get equal signatures, so different signatures prove different models;
- * equal signatures do not prove the graphs isomorphic, because WL cannot separate every pair of
- * regular graphs. That is why ORGEval adds symmetric-decomposable detection, and why this
- * implementation, which does not, only ever reports "not distinguished" rather than "equal".
+ * isomorphic graphs ALWAYS get equal signatures, so different signatures prove the graphs are not
+ * isomorphic, meaning one model is not a renaming or reordering of the other; equal signatures do
+ * not prove the graphs isomorphic, because WL cannot separate every pair of non-isomorphic graphs
+ * (Cai, Fürer and Immerman, 1992). That is why ORGEval adds symmetric-decomposable detection, and
+ * why this implementation, which does not, only ever reports "not distinguished" rather than
+ * "equal". Nor does a difference prove the models inequivalent: a row scaled by two is the same
+ * constraint and a different graph.
  */
 
+import type { Problem } from "./contract.types";
 import type { LinearRow } from "./live-solver";
+
+/**
+ * What each variable is before any refinement: its domain and its bounds, keyed by name.
+ *
+ * Without it every variable starts from one colour, and a model that differs from another only in
+ * whether a decision must be whole, which is the integrality trap, is invisible to the graph. With
+ * it, the LP relaxation of an integer model is a different graph from round zero.
+ */
+export type ColumnKinds = Map<string, string>;
+
+export function columnKinds(problem: Problem): ColumnKinds {
+  const kinds: ColumnKinds = new Map();
+  for (const q of problem.quantities) {
+    if (q.role === "variable") {
+      kinds.set(q.name, `${q.domain}|${q.lower ?? 0}|${q.upper ?? "inf"}`);
+    } else if (q.role === "derived") {
+      kinds.set(q.name, "derived");
+    }
+  }
+  return kinds;
+}
 
 export type NodeKind = "variable" | "constraint" | "objective";
 
@@ -82,12 +107,14 @@ export function buildGraph(
   rows: LinearRow[],
   objective: Map<string, number>,
   sense: string,
+  kinds?: ColumnKinds,
 ): ModelGraph {
   const nodes: GraphNode[] = [];
   const edges: GraphEdge[] = [];
 
   for (const column of columns) {
-    nodes.push({ id: `v:${column}`, kind: "variable", seed: "var" });
+    const kind = kinds?.get(column);
+    nodes.push({ id: `v:${column}`, kind: "variable", seed: kind === undefined ? "var" : `var|${kind}` });
   }
   for (const raw of rows) {
     const row = normaliseRow(raw);
@@ -173,25 +200,37 @@ export function classCount(colours: Map<string, string>): number {
   return new Set(colours.values()).size;
 }
 
-export type GraphVariant = "permuted" | "dropped" | "perturbed";
+export type GraphVariant = "permuted" | "dropped" | "perturbed" | "relaxed";
 
 /**
  * The comparisons the graph panel offers, exported so the test proves the same transforms the panel
  * demonstrates. A permutation must leave the signature unchanged; dropping a row or changing a
- * coefficient should change it.
+ * coefficient should change it; relaxing integrality should change it exactly when the model has an
+ * integer variable to relax.
  */
 export function graphVariant(
   columns: string[],
   rows: LinearRow[],
   variant: GraphVariant,
-): { columns: string[]; rows: LinearRow[] } {
-  if (variant === "permuted") return { rows: [...rows].reverse(), columns: [...columns].reverse() };
-  if (variant === "dropped") return { rows: rows.slice(0, Math.max(0, rows.length - 1)), columns };
+  kinds?: ColumnKinds,
+): { columns: string[]; rows: LinearRow[]; kinds?: ColumnKinds } {
+  if (variant === "permuted") {
+    return { rows: [...rows].reverse(), columns: [...columns].reverse(), kinds };
+  }
+  if (variant === "dropped") return { rows: rows.slice(0, Math.max(0, rows.length - 1)), columns, kinds };
+  if (variant === "relaxed") {
+    const relaxed: ColumnKinds = new Map();
+    for (const [name, kind] of kinds ?? []) {
+      const [domain, ...rest] = kind.split("|");
+      relaxed.set(name, domain === "integer" || domain === "boolean" ? ["real", ...rest].join("|") : kind);
+    }
+    return { rows, columns, kinds: relaxed };
+  }
   const copy = rows.map((r) => ({ ...r, terms: new Map(r.terms) }));
   const target = copy.find((r) => r.terms.size > 0);
   if (target) {
     const [name, coefficient] = [...target.terms][0];
     target.terms.set(name, coefficient * 1.01);
   }
-  return { rows: copy, columns };
+  return { rows: copy, columns, kinds };
 }

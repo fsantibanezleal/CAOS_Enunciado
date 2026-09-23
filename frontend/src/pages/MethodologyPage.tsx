@@ -3,19 +3,23 @@
  *
  * Each tab states what the method does, the exact rule the build implements, the equation that rule
  * is, the figure that makes it legible, and the honest limit. Content transcribed from the persisted
- * dossiers `wip/enunciado/01`, `04`, `05`, `07`.
+ * dossiers `wip/enunciado/01`, `04`, `05`, `07`, from the code of planteo, copela and this site, and
+ * from the numbers the method tests and the solver probes produced, never from memory.
  */
 
 import { Callout, Cite, Equation, InlineMath, Refs, SubTabs, useShellLang } from "@fasl-work/caos-app-shell";
 
-import { FigureRow } from "../components/layout";
+import { FigureRow, WideFigure } from "../components/layout";
 
 import {
   CanonicalDiagram,
-  ProviderSeamDiagram,
   DimensionDiagram,
+  DualityGeometryDiagram,
+  IntegralityDiagram,
   JudgeDiagram,
   MetamorphicDiagram,
+  ProviderSeamDiagram,
+  RefinementDiagram,
   SamplingDiagram,
   SpanDiagram,
 } from "../components/diagrams";
@@ -31,9 +35,9 @@ export function MethodologyPage() {
       content: <Representation lang={lang} />,
     },
     {
-      id: "canonical",
-      label: es ? "Equivalencia canonica" : "Canonical equivalence",
-      content: <CanonicalEquivalence lang={lang} />,
+      id: "structural",
+      label: es ? "La capa estructural" : "The structural layer",
+      content: <StructuralLayer lang={lang} />,
     },
     {
       id: "metamorphic",
@@ -41,9 +45,9 @@ export function MethodologyPage() {
       content: <Metamorphic lang={lang} />,
     },
     {
-      id: "refutation",
-      label: es ? "Refutacion por respuesta" : "Answer refutation",
-      content: <Refutation lang={lang} />,
+      id: "duality",
+      label: es ? "Dualidad e integralidad" : "Duality and integrality",
+      content: <DualityIntegrality lang={lang} />,
     },
     {
       id: "model-lane",
@@ -64,21 +68,25 @@ export function MethodologyPage() {
         <p className="lede">
           {es ? (
             <>
-              Seis familias de metodo, cada una con la regla exacta que el build implementa. Tres
-              deciden si una formalizacion es el modelo que el enunciado describio; dos son las
-              componentes aprendidas (el formalizador y el juez) y una es el muestreo que impide leer
-              ruido como resultado. Ninguna produce por si sola un veredicto de correccion, y el
-              producto no lo finge: la unica direccion concluyente que existe aqui es{" "}
-              <InlineMath tex="\text{refutar}" />.
+              Seis familias de metodo, cada una con la regla exacta que el build implementa. La
+              representacion tipada es lo que todas las demas leen. Dos deciden si una formalizacion es
+              el modelo que el enunciado describio: la capa estructural, que puede probar equivalencia y
+              puede refutar, y las relaciones metamorficas, que solo pueden refutar. Una explica por que
+              la respuesta es la respuesta, y dos son las componentes aprendidas, el formalizador y el
+              juez. Las direcciones concluyentes son estrechas y el producto no finge otras: formas
+              canonicas iguales prueban equivalencia, y un optimo distinto o una relacion violada{" "}
+              <InlineMath tex="\text{refutan}" />; todo lo demas se informa como indeciso.
             </>
           ) : (
             <>
-              Six method families, each with the exact rule the build implements. Three decide
-              whether a formalization is the model the statement described; two are the learned
-              components (the formalizer and the judge) and one is the sampling that keeps noise from
-              reading as a result. None of them alone produces a verdict of correctness, and the
-              product does not pretend otherwise: the only conclusive direction available here is{" "}
-              <InlineMath tex="\text{refute}" />.
+              Six method families, each with the exact rule the build implements. The typed
+              representation is what every other method reads. Two decide whether a formalization is
+              the model the statement described: the structural layer, which can prove equivalence and
+              can refute, and the metamorphic relations, which can only refute. One explains why the
+              answer is the answer, and two are the learned components, the formalizer and the judge.
+              The conclusive directions are narrow and the product does not pretend to others: equal
+              canonical forms prove equivalence, and a different optimum or a violated relation{" "}
+              <InlineMath tex="\text{refutes}" />; everything else is reported as undecided.
             </>
           )}
         </p>
@@ -181,89 +189,222 @@ function Representation({ lang }: { lang: "en" | "es" }) {
 
 /* ------------------------------------------------------------------ 2 */
 
-function CanonicalEquivalence({ lang }: { lang: "en" | "es" }) {
+function StructuralLayer({ lang }: { lang: "en" | "es" }) {
   const es = lang === "es";
   return (
     <section>
-      <h2>{es ? "Equivalencia canonica" : "Canonical equivalence"}</h2>
+      <h2>{es ? "La capa estructural: el mismo modelo, o refutado" : "The structural layer: the same model, or refuted"}</h2>
 
       <div className="two-col">
         <p>
-        {es
-          ? "Dos personas que formalizan el mismo enunciado no escriben el mismo texto. Una maximiza el beneficio, otra minimiza su negativo; una escribe x + y <= 10, otra 10 >= y + x; una ordena las restricciones como aparecen en el texto, otra las agrupa por variable. Los tres pares significan lo mismo. Una comparacion que los llame distintos no esta midiendo fidelidad, esta midiendo estilo."
-          : "Two people formalizing the same statement do not write the same text. One maximises profit, the other minimises its negative; one writes x + y <= 10, the other 10 >= y + x; one orders constraints as the text presents them, the other groups them by variable. All three pairs mean the same thing. A comparison calling them different is not measuring faithfulness, it is measuring style."}
+          {es
+            ? "Dos personas que formalizan el mismo enunciado no escriben el mismo texto. Una maximiza el beneficio, otra minimiza su negativo; una escribe x + y <= 10, otra 10 >= y + x; una ordena las restricciones como aparecen en el texto, otra las agrupa por variable. Los tres pares significan lo mismo. Una comparacion que los llame distintos no mide fidelidad, mide estilo, y la capa estructural existe para comparar significado una vez quitado el estilo."
+            : "Two people formalizing the same statement do not write the same text. One maximises profit, the other minimises its negative; one writes x + y <= 10, the other 10 >= y + x; one orders constraints as the text presents them, the other groups them by variable. All three pairs mean the same thing. A comparison calling them different is not measuring faithfulness, it is measuring style, and the structural layer exists to compare meaning once style is removed."}
         </p>
         <p>
-        {es
-          ? "La canonizacion quita ese grado de libertad antes de comparar. El sentido del objetivo se fija a minimizar, negando la expresion cuando hace falta; cada comparacion se voltea al operador canonico moviendo los terminos; las sumas y los productos se ordenan por una clave estable sobre sus nodos; los nombres de las cantidades se sustituyen por su posicion en un orden inducido por la estructura, de modo que renombrar una variable no cambie la forma. Dos documentos que reducen a la misma forma son equivalentes, y eso si es una prueba."
-          : "Canonicalisation removes that freedom before comparing. The objective sense is fixed to minimise, negating the expression where needed; every comparison is flipped to the canonical operator by moving terms; sums and products are ordered by a stable key over their nodes; quantity names are replaced by their position in a structurally induced order, so renaming a variable does not change the form. Two documents that reduce to the same form are equivalent, and that is a proof."}
+          {es
+            ? "Aplica dos pruebas en orden, y el codigo de copela fija ese orden. Primero las formas canonicas: formas iguales prueban equivalencia y la capa devuelve PASA. Cuando difieren, lo que por si solo no prueba nada, se resuelven ambos modelos y se comparan sus optimos: optimos distintos prueban modelos distintos y la capa devuelve FALLA. Cuando los optimos coinciden devuelve INDECISO, nunca PASA, porque errores que se compensan llegan al numero correcto."
+            : "It runs two tests in order, and copela's code fixes the order. First the canonical forms: equal forms prove equivalence and the layer returns PASS. When they differ, which proves nothing on its own, both models are solved and their optima compared: different optima prove different models and the layer returns FAIL. When the optima agree it returns UNDECIDED, never PASS, because compensating errors reach the right number."}
         </p>
       </div>
 
       <Equation
-        tex={String.raw`\kappa(P_{1}) = \kappa(P_{2}) \;\Longrightarrow\; P_{1} \equiv P_{2}`}
+        tex={String.raw`\kappa(P_{1}) = \kappa(P_{2}) \;\Longrightarrow\; P_{1} \equiv P_{2}, \qquad \kappa(P_{1}) \neq \kappa(P_{2}) \;\nRightarrow\; P_{1} \not\equiv P_{2}`}
         caption={
           es
-            ? "La direccion que concluye. La igualdad de formas canonicas implica equivalencia, y el veredicto se llama EQUIVALENTE."
-            : "The direction that concludes. Equality of canonical forms implies equivalence, and the verdict is named EQUIVALENT."
+            ? "La forma canonica. La igualdad concluye y el veredicto se llama EQUIVALENTE; la desigualdad no, y por eso el otro veredicto se llama NO_PROBADO_EQUIVALENTE y no DISTINTO."
+            : "The canonical form. Equality concludes, and the verdict is named EQUIVALENT; inequality does not, which is why the other verdict is named NOT_PROVEN_EQUIVALENT and not DIFFERENT."
         }
       />
 
       <Equation
-        tex={String.raw`\kappa(P_{1}) \neq \kappa(P_{2}) \;\nRightarrow\; P_{1} \not\equiv P_{2}`}
+        tex={String.raw`\hat{z}(P) = s(P)\, z^{\star}(P), \;\; s = \begin{cases} +1 & \text{${es ? "minimizar" : "minimise"}} \\ -1 & \text{${es ? "maximizar" : "maximise"}} \end{cases} \qquad \hat{z}(P_{\text{cand}}) \neq \hat{z}(P_{\text{ref}}) \;\Longrightarrow\; P_{\text{cand}} \not\equiv P_{\text{ref}}`}
         caption={
           es
-            ? "La direccion que no concluye, y por eso el unico otro veredicto disponible se llama NO_PROBADO_EQUIVALENTE, no DISTINTO."
-            : "The direction that does not conclude, which is why the only other verdict available is named NOT_PROVEN_EQUIVALENT, not DIFFERENT."
+            ? "La refutacion. Cada optimo se lee en el sentido de minimizar, para que max f y min -f sean la misma respuesta; un caso no puede tener dos optimos, asi que optimos distintos prueban modelos distintos."
+            : "The refutation. Each optimum is read in the minimising sense, so max f and min -f are the same answer; one case cannot have two optima, so different optima prove different models."
         }
       />
 
-      <FigureRow
-        figure={<CanonicalDiagram lang={lang} />}
+      <Equation
+        tex={String.raw`\hat{z}(P_{\text{cand}}) = \hat{z}(P_{\text{ref}}) \;\nRightarrow\; P_{\text{cand}} \equiv P_{\text{ref}}`}
         caption={
           es
-            ? "Figura 1. Dos modelos que se ven distintos y reducen a la misma forma. La flecha inversa no existe."
-            : "Figure 1. Two models that look different and reduce to the same form. The reverse arrow does not exist."
+            ? "La direccion prohibida. Un optimo que coincide nunca asciende un veredicto: es la limitacion que la encuesta ancla documenta, y la capa la respeta en el codigo, no en un comentario."
+            : "The forbidden direction. A matching optimum never promotes a verdict: it is the limitation the anchor survey documents, and the layer honours it in code, not in a comment."
         }
-        reverse
-      >
-        <p className="measure">
-          {es ? (
-            <>
-              El estado del arte en esta direccion es ORGEval <Cite id="orgeval2025" paren />, que
-              convierte el modelo en un grafo y reduce la equivalencia a isomorfismo, con un test de
-              Weisfeiler-Lehman adaptado mas deteccion de descomponibles simetricos. Informa veredictos
-              100% consistentes sobre configuraciones de parametros aleatorias, alli donde la
-              comprobacion basada en solucionador es inconsistente, topa con infactibilidad y cuesta
-              mas tiempo de ejecucion, sobre todo en instancias duras. Introduce ademas el conjunto
-              Bench4Opt.
-            </>
-          ) : (
-            <>
-              The state of the art in this direction is ORGEval <Cite id="orgeval2025" paren />, which
-              converts the model to a graph and reduces equivalence to isomorphism through a customised
-              Weisfeiler-Lehman test plus symmetric-decomposable detection. It reports 100% consistent
-              verdicts across random parameter configurations, where solver-based checking is
-              inconsistent, hits infeasibility, and costs more runtime, especially on hard instances. It
-              also introduces the Bench4Opt dataset.
-            </>
-          )}
-        </p>
+      />
 
-        <p className="measure">
-          {es
-            ? "Lo que aqui se implementa es la forma canonica, no el isomorfismo de grafos, y la diferencia importa: la canonizacion es mas barata y mas debil. Reconoce las reescrituras que enumera y nada mas. Un modelo equivalente por una sustitucion que la canonizacion no conoce sale como no probado, y sale correctamente: el veredicto dice lo que sabe, no lo que quisiera saber."
-            : "What is implemented here is the canonical form, not graph isomorphism, and the difference matters: canonicalisation is cheaper and weaker. It recognises the rewrites it enumerates and nothing else. A model equivalent through a substitution the canonicaliser does not know comes out as not proven, and it comes out correctly: the verdict says what it knows, not what it would like to know."}
-        </p>
-      </FigureRow>
-
-      <Callout variant="honest" title={es ? "Por que esto no basta solo" : "Why this alone is not enough"}>
+      <p className="measure">
         {es
-          ? "Medido sobre este corpus, la capa estructural devolvio INDECISO en cada candidato que llego a ejecutarse. Ni uno solo reprodujo la forma canonica de la referencia. Una capa que solo puede decir PASA o encogerse de hombros no sostiene una tasa, y la primera version de esta medicion informo una brecha de +0,000 por exactamente eso. La pestana siguiente y la de refutacion son lo que faltaba."
-          : "Measured on this corpus, the structural layer returned UNDECIDED on every candidate that ran. Not one reproduced the reference's canonical form. A layer that can only say PASS or shrug does not carry a rate, and the first version of this measurement reported a gap of +0.000 for exactly that reason. The next tab and the refutation tab are what was missing."}
+          ? "El producto tiene dos formas canonicas, y importa cual decide. El veredicto publicado usa la de planteo, calculada sobre el documento tipado: las cantidades se renombran por su posicion estructural (papel, dimension, dominio, cotas, valor y cuantas veces se usan), los terminos de cada suma y los factores de cada producto se ordenan, las relaciones y los objetivos se ordenan, y los dos lados de cada comparacion se ponen en un orden fijo. Conserva el sentido del objetivo y no mueve terminos a traves del comparador, asi que max f frente a min -f, o x + y <= 10 frente a x <= 10 - y, salen NO_PROBADO_EQUIVALENTE."
+          : "The product has two canonical forms, and it matters which one decides. The published verdict uses planteo's, computed over the typed document: quantities are renamed by their structural position (role, dimension, domain, bounds, value, and how often each is used), the terms of every sum and the factors of every product are sorted, relations and objectives are sorted, and the two sides of each comparison are put in a fixed order. It keeps the objective sense and it does not move terms across a comparator, so max f against min -f, or x + y <= 10 against x <= 10 - y, come out NOT_PROVEN_EQUIVALENT."}
+      </p>
+
+      <WideFigure
+        full
+        caption={
+          es
+            ? "Figura 1. El mismo par ante las dos formas: la del documento, que decide el veredicto publicado, no puede probarlo; la forma lineal del banco de trabajo si."
+            : "Figure 1. One pair under both forms: the document form, which decides the published verdict, cannot prove it; the workbench's linear form can."
+        }
+      >
+        <CanonicalDiagram lang={lang} />
+      </WideFigure>
+
+      <div className="two-col">
+      <p>
+        {es
+          ? "La pestana Forma canonica del banco de trabajo calcula una mas fuerte, sobre las filas lineales con cada parametro ya sustituido: el sentido se fija en minimizar, todo termino pasa a la izquierda, cada fila se pone en una sola orientacion con el signo de las igualdades fijado, y las columnas se ordenan por su clase de color de Weisfeiler-Lehman. Reconoce mas reescrituras y no es la que usan las tasas. Las dos se equivocan solo hacia lo seguro: cada reescritura que aplican conserva el conjunto de soluciones, asi que ninguna puede llamar equivalentes a dos modelos distintos."
+          : "The workbench's Canonical form tab computes a stronger one, over the linear rows with every parameter folded in: the sense is fixed to minimise, every term is moved to the left, each row is put in one orientation with the sign of an equality fixed, and the columns are ordered by their Weisfeiler-Lehman colour class. It recognises more rewrites, and it is not the one the rates use. Both err only in the safe direction: every rewrite either applies keeps the solution set, so neither can call two different models equivalent."}
+      </p>
+      <p>
+        {es ? (
+          <>
+            El estado del arte en esta direccion es ORGEval <Cite id="orgeval2025" paren />, que
+            convierte el modelo en un grafo y reduce la equivalencia a isomorfismo, con un test de
+            Weisfeiler-Lehman adaptado mas deteccion de descomponibles simetricos. Informa veredictos
+            100% consistentes sobre configuraciones de parametros aleatorias, alli donde la
+            comprobacion basada en solucionador es inconsistente, topa con infactibilidad y cuesta mas
+            tiempo, sobre todo en instancias duras. Lo que se implementa aqui es mas barato y mas
+            debil, y el veredicto dice lo que sabe, no lo que quisiera saber.
+          </>
+        ) : (
+          <>
+            The state of the art in this direction is ORGEval <Cite id="orgeval2025" paren />, which
+            converts the model to a graph and reduces equivalence to isomorphism through a customised
+            Weisfeiler-Lehman test plus symmetric-decomposable detection. It reports 100% consistent
+            verdicts across random parameter configurations, where solver-based checking is
+            inconsistent, hits infeasibility and costs more runtime, especially on hard instances.
+            What is implemented here is cheaper and weaker, and the verdict says what it knows, not
+            what it would like to know.
+          </>
+        )}
+      </p>
+    
+      </div>
+
+      <p className="measure">
+        {es
+          ? "La primera version de la forma lineal fallo su propia comprobacion, y solo mirar la pantalla lo mostro. Una fila a·x = b y su negacion -a·x = -b son la misma restriccion, y voltear >= a <= no toca una igualdad, asi que las dos sobrevivian como filas distintas y la reescritura de estilo cambiaba el digest, en rojo, en el caso con que se abria la pestana. La correccion elige el unico signo con el que la tupla ordenada de coeficientes es mayor que su negacion, y el lado derecho desempata. Las pruebas de metodo prueban hoy, en los veinte casos, que una reescritura de estilo deja el digest igual y que un cambio del 1% en un coeficiente no; deshacer la correccion hace fallar siete."
+          : "The linear form's first version failed its own check, and only looking at the screen showed it. A row a·x = b and its negation -a·x = -b are the same constraint, and flipping >= to <= does not touch an equality, so the two survived as different rows and the style rewrite changed the digest, in red, on the case the tab opened with. The fix picks the one sign under which the row's sorted coefficient tuple is greater than its negation, with the right-hand side breaking a tie. The method tests now prove on all twenty cases that a style rewrite leaves the digest unchanged and a one-percent change to one coefficient does not; undoing the fix fails seven of them."}
+      </p>
+
+      <h3>{es ? "El grafo y el refinamiento de colores" : "The graph, and colour refinement"}</h3>
+
+      <p className="measure">
+        {es ? (
+          <>
+            El banco de trabajo dibuja ademas cada modelo como un grafo, la representacion que usa el
+            estado del arte: un nodo por variable, uno por restriccion y uno para el objetivo, y una
+            arista donde una variable aparece en una fila, con su coeficiente como peso. El
+            refinamiento de colores, la version unidimensional del procedimiento de Weisfeiler-Lehman{" "}
+            <Cite id="shervashidze2011" paren />, recolorea cada nodo con su propio color y el
+            multiconjunto de colores de sus vecinos y pesos de sus aristas, ronda tras ronda, hasta que
+            ninguna clase se divide. El histograma de la coloracion estable es una firma que no depende
+            de nombres ni de orden.
+          </>
+        ) : (
+          <>
+            The workbench also draws each model as a graph, the representation the state of the art
+            uses: one node per variable, one per constraint and one for the objective, and an edge
+            wherever a variable appears in a row, weighted by its coefficient. Colour refinement, the
+            one-dimensional Weisfeiler-Lehman procedure <Cite id="shervashidze2011" paren />, recolours
+            every node from its own colour and the multiset of its neighbours' colours and edge
+            weights, round after round, until no class splits. The histogram of the stable colouring
+            is a signature that depends on neither names nor order.
+          </>
+        )}
+      </p>
+
+      <Equation
+        tex={String.raw`c^{(t+1)}(v) \;=\; \operatorname{hash}\Bigl(c^{(t)}(v),\; \{\!\{\, \bigl(w_{uv},\, c^{(t)}(u)\bigr) : u \in N(v) \,\}\!\}\Bigr)`}
+        caption={
+          es
+            ? "Una ronda de refinamiento. Las llaves dobles son un multiconjunto: cuantos vecinos de cada color, por aristas de cada peso."
+            : "One round of refinement. The double braces are a multiset: how many neighbours of each colour, through edges of each weight."
+        }
+      />
+
+      <Equation
+        tex={String.raw`\operatorname{sig}(G_{1}) \neq \operatorname{sig}(G_{2}) \;\Longrightarrow\; G_{1} \not\cong G_{2}, \qquad \operatorname{sig}(G_{1}) = \operatorname{sig}(G_{2}) \;\nRightarrow\; G_{1} \cong G_{2}`}
+        caption={
+          es
+            ? "La misma asimetria otra vez. Una firma distinta prueba que un modelo no es el otro renombrado y reordenado; una firma igual no prueba nada."
+            : "The same asymmetry again. A different signature proves one model is not the other renamed and reordered; an equal signature proves nothing."
+        }
+      />
+
+      <WideFigure
+        full
+        caption={
+          es
+            ? "Figura 2. Una ronda basta para separar y, la variable que esta en las dos filas. x y z no se separan nunca: intercambiarlas es una simetria del modelo."
+            : "Figure 2. One round is enough to separate y, the variable in both rows. x and z never separate: swapping them is a symmetry of the model."
+        }
+      >
+        <RefinementDiagram lang={lang} />
+      </WideFigure>
+
+      <div className="two-col">
+      <p>
+        {es ? (
+          <>
+            Que una firma igual no pruebe nada es un teorema y no una cautela. El refinamiento no
+            separa un ciclo de seis nodos de dos triangulos, porque en ambos cada nodo tiene dos vecinos
+            del mismo color, y Cai, Fürer e Immerman <Cite id="cfi1992" paren /> construyeron pares de
+            grafos no isomorfos que la version k-dimensional no separa para ningun k fijo. ORGEval
+            agrega deteccion de descomponibles simetricos sobre su test de Weisfeiler-Lehman
+            exactamente por esto. El banco de trabajo no la agrega, y por eso solo dice no distinguido.
+          </>
+        ) : (
+          <>
+            That an equal signature proves nothing is a theorem, not a caution. Refinement cannot
+            separate a six-cycle from two triangles, because in both every node has two neighbours of
+            one colour, and Cai, Fürer and Immerman <Cite id="cfi1992" paren /> constructed pairs of
+            non-isomorphic graphs that the k-dimensional version cannot separate for any fixed k.
+            ORGEval adds symmetric-decomposable detection on top of its Weisfeiler-Lehman test for
+            exactly this reason. The workbench does not add it, and so it only ever says not
+            distinguished.
+          </>
+        )}
+      </p>
+      <p>
+        {es
+          ? "Tampoco una firma distinta prueba que dos modelos no son equivalentes: una fila multiplicada por dos es la misma restriccion y otro grafo. Lo que prueba es mas estrecho y sigue siendo util: un modelo no es el otro renombrado y reordenado. Las variables se siembran con su dominio y sus cotas, asi que un modelo y su relajacion lineal son grafos distintos desde la ronda cero, y la trampa de integralidad queda a la vista del grafo. Las pruebas de metodo lo prueban en los veinte casos: una permutacion no mueve la firma; una fila quitada, un coeficiente cambiado y, en los cuatro casos enteros, la relajacion, si."
+          : "Nor does a different signature prove two models inequivalent: a row scaled by two is the same constraint and a different graph. What it proves is narrower and still useful: one model is not the other renamed and reordered. Variables are seeded with their domain and bounds, so a model and its LP relaxation are different graphs from round zero, and the integrality trap is visible to the graph. The method tests prove it on all twenty cases: a permutation leaves the signature alone; a dropped row, a changed coefficient and, on the four integer cases, the relaxation each move it."}
+      </p>
+    
+      </div>
+
+      <h3>{es ? "La comparacion de respuestas, en detalle" : "The answer comparison, in detail"}</h3>
+
+      <div className="two-col">
+        <p>
+          {es
+            ? "La comparacion usa una tolerancia relativa de 1e-6 sobre el optimo de la referencia, no igualdad exacta, porque dos modelos identicos resueltos por caminos distintos difieren en el ultimo bit y llamar a eso una refutacion seria informar ruido numerico como defecto del modelo. Y cuando no se puede hacer, porque alguno de los dos no resuelve, no devuelve nada: una comparacion no realizada no puede leerse como fallo, igual que no puede leerse como aprobado. Un caso infactible a proposito se compara por factibilidad y no por valor."
+            : "The comparison uses a relative tolerance of 1e-6 against the reference optimum rather than exact equality, because two identical models solved by different paths differ in the last bit and calling that a refutation would report numerical noise as a model defect. And when it cannot be made, because one of the two does not solve, it returns nothing: an unmade comparison must not read as a failure any more than it may read as a pass. A deliberately infeasible case is compared on feasibility, not on value."}
+        </p>
+        <p>
+          {es
+            ? "Leer ambos optimos en el sentido de minimizar llego en copela 0.2.1. La version 0.2.0, que califico la medicion publicada, los comparaba en crudo, y eso refutaria una reescritura de estilo: un candidato que minimiza el negativo del beneficio resuelve a -z donde la referencia resuelve a z. Las dos refutaciones del libro mayor comparan valores del mismo signo y siguen en pie con la correccion; los candidatos que no fallaron no guardan su documento, asi que para ellos no se puede volver a comprobar."
+            : "Reading both optima in the minimising sense arrived in copela 0.2.1. Version 0.2.0, which scored the published measurement, compared them raw, and that would refute a style rewrite: a candidate minimising negative profit solves to -z where the reference solves to z. Both refutations in the ledger compare values of the same sign and stand under the fix; the candidates that did not fail keep no document in the ledger, so for them it cannot be re-checked."}
+        </p>
+      </div>
+
+      <p className="measure">
+        {es
+          ? "Una distincion mas, que costo su propio error: un modelo que el solucionador configurado no puede expresar no es un modelo defectuoso. Es un limite del instrumento. Un candidato de Sonnet quedo registrado como fallo de resolucion cuando lo cierto es que el solucionador lineal no expresaba su modelo; ahora esos casos se excluyen de ambas tasas y se cuentan como no medidos. Cargar una limitacion del arnes al sujeto es exactamente el error que este producto entero existe para exponer."
+          : "One more distinction, which cost its own error: a model the configured solver cannot express is not a defective model. It is a limit of the instrument. One Sonnet candidate was logged as a solve failure when the truth is that the linear solver could not express its model; those cases are now excluded from both rates and counted as unmeasured. Charging a limitation of the harness to the subject is exactly the error this entire product exists to expose."}
+      </p>
+
+      <Callout variant="honest" title={es ? "Lo que la capa decidio, medido" : "What the layer decided, measured"}>
+        {es
+          ? "En la medicion publicada la capa estructural decidio 2 de los 16 candidatos que corrieron, los dos por refutacion: uno resolvio a 16 donde su referencia resuelve a 16,667, el otro a 8.080 frente a 8.200. No devolvio PASA en ninguno, porque ningun candidato reprodujo la forma del documento de su referencia. Los otros 14 son INDECISOS, asi que los veredictos de fidelidad que llevan descansan solo en la capa de propiedades. El libro mayor guarda un extracto de 2.000 caracteres y no el documento, de modo que la forma lineal, mas fuerte, no se les puede aplicar despues; un barrido que guarde el documento si podria."
+          : "In the published measurement the structural layer decided 2 of the 16 candidates that ran, both by refutation: one solved to 16 where its reference solves to 16.667, the other to 8,080 against 8,200. It returned PASS on none, because not one candidate reproduced its reference's document form. The other 14 are UNDECIDED, so the faithful verdicts they carry rest on the property layer alone. The ledger keeps a 2,000-character excerpt rather than the document, so the stronger linear form cannot be applied to them after the fact; a sweep that stored the document could."}
       </Callout>
 
-      <Refs ids={["orgeval2025", "survey2025", "barr2015"]} label={es ? "Referencias" : "Refs"} />
+      <Refs ids={["orgeval2025", "shervashidze2011", "cfi1992", "survey2025"]} label={es ? "Referencias" : "Refs"} />
     </section>
   );
 }
@@ -362,92 +503,193 @@ function Metamorphic({ lang }: { lang: "en" | "es" }) {
 
 /* ------------------------------------------------------------------ 4 */
 
-function Refutation({ lang }: { lang: "en" | "es" }) {
+function DualityIntegrality({ lang }: { lang: "en" | "es" }) {
   const es = lang === "es";
   return (
     <section>
-      <h2>{es ? "Refutacion por respuesta" : "Answer refutation"}</h2>
+      <h2>{es ? "Dualidad e integralidad: por que la respuesta es la respuesta" : "Duality and integrality: why the answer is the answer"}</h2>
 
       <div className="two-col">
         <p>
-        {es
-          ? "Este es el metodo que la primera medicion no tenia, y su ausencia hacia que la cifra publicada fuera falsa en la direccion comoda. La capa estructural comparaba formas canonicas, las formas nunca coincidian, y el veredicto era INDECISO en todos los casos. Una tasa de fidelidad sostenida por una comprobacion que no puede fallar es un sello de goma con un intervalo impreso encima."
-          : "This is the method the first measurement did not have, and its absence made the published figure wrong in the comfortable direction. The structural layer compared canonical forms, the forms never matched, and the verdict was UNDECIDED every time. A faithfulness rate carried by a check that cannot fail is a rubber stamp with an interval printed on it."}
+          {es
+            ? "Las capas anteriores preguntan si una formalizacion es el modelo que el enunciado describio. Las pestanas de la respuesta preguntan lo que un lector usa: que restricciones deciden el optimo, cuanto cuesta cada una, cuanto puede moverse un numero antes de que la respuesta cambie, y cuanto de la respuesta es integralidad. Cada una se calcula en el navegador volviendo a resolver la referencia con HiGHS, ninguna entra en las tasas publicadas, y cada una se comprueba a si misma en vez de mostrar lo que dijo el solucionador."
+            : "The layers above ask whether a formalization is the model the statement described. The answer tabs ask what a reader acts on: which constraints decide the optimum, what each one is costing, how far a number can move before the answer changes, and how much of the answer is integrality. Each is computed in the browser by re-solving the reference with HiGHS, none of them enters the published rates, and each one checks itself rather than displaying what the solver said."}
         </p>
         <p>
-        {es
-          ? "La direccion que faltaba es esta: dos formalizaciones del mismo caso que resuelven a optimos distintos no son el mismo modelo. No hace falta saber cual esta bien. El enunciado tiene una respuesta, no dos, asi que un candidato que resuelve a 16 donde la referencia resuelve a 16,667 queda refutado sin mas argumento. Esa direccion es concluyente y es barata: el solucionador ya esta ahi."
-          : "The missing direction is this: two formalizations of the same case that solve to different optima are not the same model. Which one is right does not need to be known. The statement has one answer, not two, so a candidate solving to 16 where the reference solves to 16.667 is refuted with no further argument. That direction is conclusive and it is cheap: the solver is already there."}
+          {es ? (
+            <>
+              Todo programa lineal tiene un dual cuyas variables ponen precio a las restricciones{" "}
+              <Cite id="wolsey2020" paren />. La dualidad debil hace de cualquier solucion dual factible
+              una cota del optimo primal; la dualidad fuerte dice que en un optimo los dos objetivos son
+              iguales. Un precio sombra es la derivada del optimo respecto del lado derecho de una fila:
+              cuanto vale una unidad mas de una capacidad, o cuanto cuesta una tonelada mas de una
+              demanda exigida. HiGHS <Cite id="highs" paren /> devuelve los precios con la misma
+              resolucion, y una prueba fija su convencion: el valor informado es dz*/db en ambos
+              sentidos.
+            </>
+          ) : (
+            <>
+              Every linear program has a dual whose variables price the constraints{" "}
+              <Cite id="wolsey2020" paren />. Weak duality makes any feasible dual solution a bound on
+              the primal optimum; strong duality says that at an optimum the two objectives are equal. A
+              shadow price is the derivative of the optimum with respect to a row's right-hand side: how
+              much one more unit of a capacity is worth, or what one more tonne of a required demand
+              costs. HiGHS <Cite id="highs" paren /> returns the prices with the same solve, and a test
+              pins its convention: the reported value is dz*/db in both senses.
+            </>
+          )}
         </p>
       </div>
 
       <Equation
-        tex={String.raw`z^{\star}(P_{\text{cand}}) \neq z^{\star}(P_{\text{ref}}) \;\Longrightarrow\; P_{\text{cand}} \not\equiv P_{\text{ref}}`}
+        tex={String.raw`\min_{x}\,\bigl\{\, c^{\top}x : Ax \ge b,\ x \ge 0 \,\bigr\} \;=\; \max_{y}\,\bigl\{\, b^{\top}y : A^{\top}y \le c,\ y \ge 0 \,\bigr\}`}
         caption={
           es
-            ? "La refutacion. Un caso no puede tener dos optimos, de modo que optimos distintos prueban modelos distintos."
-            : "The refutation. One case cannot have two optima, so different optima prove different models."
+            ? "El primal y su dual, en la forma de manual. La dualidad fuerte es el signo igual: en un optimo los dos objetivos coinciden."
+            : "The primal and its dual, in textbook form. Strong duality is the equals sign: at an optimum the two objectives agree."
         }
       />
 
       <Equation
-        tex={String.raw`z^{\star}(P_{\text{cand}}) = z^{\star}(P_{\text{ref}}) \;\nRightarrow\; P_{\text{cand}} \equiv P_{\text{ref}}`}
+        tex={String.raw`Ax^{\star} \ge b,\; x^{\star} \ge 0; \qquad y^{\star} \ge 0,\; d = c - A^{\top}y^{\star} \ge 0; \qquad y_{i}^{\star}\,\bigl(a_{i}^{\top}x^{\star} - b_{i}\bigr) = 0,\; d_{j}\,x_{j}^{\star} = 0`}
         caption={
           es
-            ? "La direccion prohibida. Un optimo que coincide nunca asciende un veredicto: los errores que se compensan llegan al numero correcto, que es la limitacion que la encuesta ancla documenta."
-            : "The forbidden direction. A matching optimum never promotes a verdict: compensating errors reach the right number, which is the limitation the anchor survey documents."
+            ? "El certificado: factibilidad primal, factibilidad dual con estacionariedad, y holgura complementaria. Las cuatro en cero prueban que el par es optimo sin creerle al estado que informa el solucionador."
+            : "The certificate: primal feasibility, dual feasibility with stationarity, and complementary slackness. All four at zero prove the pair optimal without trusting the status the solver reports."
+        }
+      />
+
+      <WideFigure
+        full
+        caption={
+          es
+            ? "Figura 1. max 2x + 3y sobre tres filas, resuelto con el mismo HiGHS que usa el sitio: los precios son 1,5, 0,5 y 0, y los dos objetivos valen 9."
+            : "Figure 1. max 2x + 3y over three rows, solved with the same HiGHS build the site ships: the prices are 1.5, 0.5 and 0, and both objectives are 9."
+        }
+      >
+        <DualityGeometryDiagram lang={lang} />
+      </WideFigure>
+
+      <div className="two-col">
+      <p>
+        {es
+          ? "La pestana Dualidad evalua esas cuatro condiciones desde los numeros: el modelo tal como lo escribio la via del navegador y los valores que devolvio HiGHS, decidiendo el lado activo de cada fila por su actividad frente a sus cotas y no por la etiqueta de estado del solucionador. Cada residuo se muestra contra una tolerancia de una millonesima de la mayor magnitud en juego, con el objetivo dual junto al primal. Dos mutaciones prueban que la comprobacion no es decorativa: una regla de signo que ignora el sentido y un emparejamiento de filas corrido en uno fallan en cada caso que tocan."
+          : "The Duality tab evaluates those four conditions from the numbers: the model as the browser lane wrote it and the values HiGHS returned, with each row's active side decided from its activity against its bounds rather than from the solver's status label. Each residual is shown against a tolerance of one millionth of the largest magnitude involved, with the dual objective beside the primal one. Two mutations prove the check is not decorative: a sign rule that ignores the sense and a row pairing that is off by one each fail it on every case they touch."}
+      </p>
+      <p>
+        {es
+          ? "Una fila activa puede llevar precio cero, y la pestana lo dice en vez de llamar irrelevante a la fila. Es degeneracion: en el vertice se juntan mas filas de las que la dimension necesita, el dual no es unico, y el precio que informa HiGHS vale solo hacia un lado. Apretar la fila todavia puede mover el optimo aunque relajarla no lo mueva, que es exactamente la distincion que un solo numero no puede llevar. En el caso de la estacion de chancado, por ejemplo, relajar la capacidad antigua no cambia nada y apretarla deja el problema sin solucion."
+          : "A binding row can carry a zero price, and the tab says so rather than calling the row irrelevant. That is degeneracy: more rows meet at the vertex than the dimension needs, the dual is not unique, and the price HiGHS reports holds in one direction only. Tightening the row may still move the optimum even though relaxing it does not, which is exactly the distinction a single number cannot carry. On the crushing-station case, for instance, relaxing the old plant's capacity changes nothing and tightening it leaves the problem with no solution."}
+      </p>
+    
+      </div>
+
+      <h3>{es ? "Integralidad" : "Integrality"}</h3>
+
+      <p className="measure">
+        {es
+          ? "Un programa entero no tiene dual en este sentido, y HiGHS no devuelve ninguno: Dual queda indefinido en cada fila y columna de una resolucion entera mixta. La primera version de la pestana leyo los valores ausentes como cero, dibujo todo precio como 0 en los cuatro casos enteros e informo que la holgura complementaria se cumplia, lo que con precios todos nulos se cumple trivialmente. Hoy valora un caso entero a traves de un programa lineal elegido de forma explicita y rotulado en pantalla: su relajacion lineal, o el programa lineal que queda cuando las decisiones enteras se fijan en sus valores optimos."
+          : "An integer program has no dual in this sense, and HiGHS returns none: Dual is undefined on every row and column of a mixed-integer solve. The first version of the tab read the missing values as zero, drew every price as 0 on the four integer cases, and reported complementary slackness as holding, which on all-zero prices it trivially does. It now prices an integer case through a linear program chosen explicitly and labelled on screen: its LP relaxation, or the linear program left when the integer decisions are held at their optimal values."}
+      </p>
+
+      <Equation
+        tex={String.raw`z_{\text{LP}} \;\le\; z_{\text{IP}} \;\;\text{(${es ? "al minimizar" : "minimising"})}, \qquad \operatorname{gap} \;=\; \frac{z_{\text{IP}} - z_{\text{LP}}}{\lvert z_{\text{IP}} \rvert}`}
+        caption={
+          es
+            ? "Quitar la integralidad solo puede agrandar el conjunto factible, asi que la relajacion acota el optimo entero. La brecha es cuanto de la respuesta es integralidad."
+            : "Dropping integrality can only enlarge the feasible set, so the relaxation bounds the integer optimum. The gap is how much of the answer is integrality."
+        }
+      />
+
+      <WideFigure
+        full
+        caption={
+          es
+            ? "Figura 2. La relajacion se detiene en un vertice; los optimos enteros no son vertices, y redondear la respuesta relajada sale del conjunto. Resuelto con HiGHS."
+            : "Figure 2. The relaxation stops at a vertex; the integer optima are not vertices, and rounding the relaxed answer leaves the feasible set. Solved with HiGHS."
+        }
+      >
+        <IntegralityDiagram lang={lang} />
+      </WideFigure>
+
+      <div className="two-col">
+      <p>
+        {es ? (
+          <>
+            La relajacion acota y no ubica <Cite id="wolsey2020" paren />. En el ejemplo se detiene en
+            el vertice (1,8; 2,8), mientras los optimos enteros, (1, 2) y (2, 2), no son vertices del
+            poligono, y redondear la respuesta relajada a (2, 3) sale del conjunto factible. Un modelo
+            que olvida que una decision debe ser entera informa la cota como si fuera la respuesta:
+            esa es la trampa de integralidad, los casos del nivel 4 estan construidos en torno a ella, y
+            la pestana Brecha de integralidad muestra los dos optimos de cada caso lado a lado.
+          </>
+        ) : (
+          <>
+            The relaxation bounds and does not locate <Cite id="wolsey2020" paren />. In the example it
+            stops at the vertex (1.8, 2.8), while the integer optima, (1, 2) and (2, 2), are not
+            vertices of the polygon at all, and rounding the relaxed answer to (2, 3) leaves the
+            feasible set. A model that forgets a decision must be whole reports the bound as the
+            answer: that is the integrality trap, the tier-4 cases are built around it, and the
+            Integrality gap tab shows each case's two optima side by side.
+          </>
+        )}
+      </p>
+      <p>
+        {es
+          ? "En un caso continuo no hay integralidad que quitar, y la misma pestana corre la sonda contraria, rotulada como tal: toda decision forzada a ser entera. Responde otra pregunta, si el optimo se moveria si el enunciado hubiera querido decir unidades enteras, y es una sonda sobre la lectura del enunciado, no una propiedad del modelo que el enunciado plantea. Mostrarla como brecha de integralidad de un modelo continuo seria inventar una trampa que el caso no tiene."
+          : "On a continuous case there is no integrality to drop, and the same tab runs the opposite probe, labelled as such: every decision forced to be whole. It answers a different question, whether the optimum would move if the statement had meant whole units, and it is a probe of the statement's reading rather than a property of the model the statement poses. Presenting it as the integrality gap of a continuous model would invent a trap the case does not have."}
+      </p>
+    
+      </div>
+
+      <p className="measure">
+        {es ? (
+          <>
+            Fijar las decisiones enteras en su optimo deja un programa lineal que reproduce exactamente
+            el optimo entero, y sus duales son los precios de O'Neill y coautores{" "}
+            <Cite id="oneill2005" paren />: el costo reducido de cada decision fijada es el precio que
+            asignan a esa decision, y el resto de las filas se valora como siempre. Las pruebas de metodo
+            prueban, en los dos casos enteros mixtos, que el programa fijado reproduce el optimo entero y
+            lleva el certificado, y en los cuatro casos enteros, que la relajacion lo lleva y acota el
+            optimo. En un caso entero puro fijarlo todo no deja nada que valorar, y el boton se
+            desactiva diciendo por que.
+          </>
+        ) : (
+          <>
+            Holding the integer decisions at their optimum leaves a linear program that reproduces the
+            integer optimum exactly, and its duals are the prices of O'Neill and co-authors{" "}
+            <Cite id="oneill2005" paren />: each fixed decision's reduced cost is the price they attach
+            to that decision, and the remaining rows are priced as usual. The method tests prove, on
+            both mixed-integer cases, that the fixed program reproduces the integer optimum and carries
+            the certificate, and on all four integer cases that the relaxation carries it and bounds the
+            optimum. On a pure integer case fixing everything leaves nothing to price, and the control
+            is disabled with the reason on it.
+          </>
+        )}
+      </p>
+
+      <Equation
+        tex={String.raw`z^{\star}(b + \theta\, e_{i}) \;=\; z^{\star}(b) + \theta\, y_{i}^{\star} \qquad \text{${es ? "mientras la base optima no cambie" : "while the optimal basis does not change"}}`}
+        caption={
+          es
+            ? "El precio es una pendiente. Cuando un parametro entra solo en lados derechos, el optimo es lineal por tramos en el, y el precio vale hasta el siguiente quiebre."
+            : "A price is a slope. When a parameter enters only right-hand sides, the optimum is piecewise linear in it, and the price holds until the next kink."
         }
       />
 
       <p className="measure">
         {es
-          ? "La comparacion se hace con una tolerancia relativa de 1e-6 sobre el optimo de la referencia, no con igualdad exacta, porque dos modelos identicos resueltos por caminos distintos difieren en el ultimo bit y llamar a eso una refutacion seria informar ruido numerico como un defecto del modelo. Y cuando la comparacion no se puede hacer, porque alguno de los dos no resuelve, devuelve nada: una comparacion no realizada no puede leerse como fallo, igual que no puede leerse como aprobado."
-          : "The comparison uses a relative tolerance of 1e-6 against the reference optimum rather than exact equality, because two identical models solved by different paths differ in the last bit and calling that a refutation would report numerical noise as a model defect. And when the comparison cannot be made, because one of the two does not solve, it returns nothing: an unmade comparison must not read as a failure any more than it may read as a pass."}
+          ? "Eso une la pestana Dualidad con la de Sensibilidad, que vuelve a resolver a lo largo del rango de un parametro. Cuando el parametro entra solo en lados derechos, la curva es lineal por tramos, convexa al minimizar y concava al maximizar, la pendiente entre dos quiebres es el precio sombra de la fila en que entra, y cada quiebre es un cambio de base. Los precios de la pestana Dualidad son esa pendiente en el valor actual, y por eso valen solo hasta el siguiente quiebre. Cuando el parametro multiplica una variable, entra en la matriz y la curva ya no tiene esa forma garantizada."
+          : "That ties the Duality tab to the Sensitivity tab, which re-solves across a parameter's range. When the parameter enters only right-hand sides the curve is piecewise linear, convex when minimising and concave when maximising, the slope between two kinks is the shadow price of the row it enters, and every kink is a change of basis. The prices on the Duality tab are that slope at the current value, which is why they hold only until the next kink. When the parameter multiplies a variable it enters the matrix, and the curve no longer has that guaranteed shape."}
       </p>
 
-      <p className="measure">
+      <Callout variant="honest" title={es ? "Lo que estas vistas no pueden decir" : "What these views cannot say"}>
         {es
-          ? "Una distincion mas, que costo su propio error: un modelo que el solucionador configurado no puede expresar no es un modelo defectuoso. Es un limite del instrumento. Un candidato de Sonnet quedo registrado como fallo de resolucion cuando lo cierto es que el solucionador lineal no expresaba su modelo; ahora esos casos se excluyen de ambas tasas y se cuentan como no medidos. Cargar una limitacion del arnes al sujeto es exactamente el error que este producto entero existe para exponer."
-          : "One more distinction, which cost its own error: a model the configured solver cannot express is not a defective model. It is a limit of the instrument. One Sonnet candidate was logged as a solve failure when the truth is that the linear solver could not express its model; those cases are now excluded from both rates and counted as unmeasured. Charging a limitation of the harness to the subject is exactly the error this entire product exists to expose."}
-      </p>
-
-      <FigureRow
-        figure={<SamplingDiagram lang={lang} />}
-        caption={
-          es
-            ? "Figura 1. Dos pasadas sobre el corpus identico, sin cambiar nada salvo el muestreo. La distancia entre las dos tasas puntuales cabe entera dentro del solape de sus intervalos."
-            : "Figure 1. Two passes over the identical corpus, with nothing changed but the sampling. The distance between the two point rates fits entirely inside the overlap of their intervals."
-        }
-        reverse
-      >
-        <p className="measure">
-          {es ? (
-            <>
-              Por eso cada tasa se publica con su intervalo de Wilson al 95%{" "}
-              <Cite id="wilson1927" paren />, y no con su valor puntual solo. A n = 20 el intervalo
-              ocupa casi la mitad del rango util, y esa anchura es la informacion: dice que este corpus
-              puede ver que existe una brecha y no puede ordenar dos modelos{" "}
-              <Cite id="agresti1998" paren />.
-            </>
-          ) : (
-            <>
-              That is why every rate is published with its 95% Wilson interval{" "}
-              <Cite id="wilson1927" paren />, and never as a point value alone. At n = 20 the interval
-              spans close to half the useful range, and that width is the information: it says this
-              corpus can see that a gap exists and cannot rank two models{" "}
-              <Cite id="agresti1998" paren />.
-            </>
-          )}
-        </p>
-      </FigureRow>
-
-      <Callout variant="honest" title={es ? "Lo que la refutacion cuesta" : "What refutation costs"}>
-        {es
-          ? "Esta capa resuelve dos modelos por candidato en lugar de uno, y solo puede hablar cuando ambos resuelven. Sobre casos infactibles a proposito, donde la respuesta correcta es que no hay respuesta, compara factibilidad en vez de valores. Fuera de familias con un solucionador, no existe: el equivalente en la familia matematica es la comprobacion de una proposicion, no la ejecucion de un modelo."
-          : "This layer solves two models per candidate instead of one, and can only speak when both solve. On deliberately infeasible cases, where the correct answer is that there is no answer, it compares feasibility rather than values. Outside families with a solver it does not exist: the equivalent in the mathematics family is checking a proposition, not executing a model."}
+          ? "Todo precio aqui es local: vale hasta que la base optima cambia, es uno entre muchos en un vertice degenerado, y es el precio de un programa lineal. Un programa entero no tiene ninguno, y los dos programas que lo reemplazan responden dos preguntas distintas. Ninguna de estas vistas entra en las tasas publicadas: explican la respuesta del modelo de referencia, no juzgan a un candidato."
+          : "Every price here is local: it holds until the optimal basis changes, it is one of many at a degenerate vertex, and it is the price of a linear program. An integer program has none, and the two programs standing in for it answer two different questions. None of these views enters the published rates: they explain the reference model's answer, they do not judge a candidate."}
       </Callout>
 
-      <Refs ids={["survey2025", "wilson1927", "agresti1998"]} label={es ? "Referencias" : "Refs"} />
+      <Refs ids={["highs", "wolsey2020", "oneill2005"]} label={es ? "Referencias" : "Refs"} />
     </section>
   );
 }
@@ -521,8 +763,8 @@ function ModelLane({ lang }: { lang: "en" | "es" }) {
 
       <p className="measure">
         {es
-          ? "Ese ultimo punto es literal. La API de Anthropic ya no acepta un parametro de temperatura, y el esfuerzo de razonamiento solo esta disponible en parte de la familia. Una huella que dijera temperature=0 para un proveedor que no lo acepta seria una reproducibilidad afirmada y no ejercida, asi que la huella dice no-temperature y no-effort cuando eso es lo cierto. La primera version de este proveedor enviaba un identificador de modelo con sufijo de fecha que no existe, precios obsoletos y un parametro retirado; se corrigio leyendo la documentacion vigente en lugar de la memoria."
-          : "That last point is literal. The Anthropic API no longer accepts a temperature parameter, and reasoning effort is available on only part of the family. A fingerprint claiming temperature=0 for a provider that does not accept it would be reproducibility asserted and not exercised, so the fingerprint says no-temperature and no-effort when that is the truth. The first version of this provider sent a date-suffixed model id that does not exist, stale pricing, and a retired parameter; it was corrected by reading the current documentation rather than memory."}
+          ? "Una huella que dijera temperature=0 para un proveedor que no lo acepta seria reproducibilidad afirmada y no ejercida, que es peor que no decir nada, porque dos corridas con la misma huella falsa parecerian comparables. La primera version de este proveedor tenia tres errores a la vez: enviaba un identificador de modelo con sufijo de fecha que no existe, usaba precios obsoletos y pasaba un parametro que la API ya habia retirado. Se corrigio leyendo la documentacion vigente en lugar de la memoria, y la huella registra desde entonces los controles que de verdad se ejercieron."
+          : "A fingerprint claiming temperature=0 for a provider that does not accept it would be reproducibility asserted and not exercised, which is worse than saying nothing, because two runs carrying the same false fingerprint would look comparable. The first version of this provider had three errors at once: it sent a date-suffixed model id that does not exist, used pricing that was out of date, and passed a parameter the API had retired. It was corrected by reading the current documentation rather than memory, and the fingerprint has since recorded the controls that were actually exercised."}
       </p>
 
       <Equation
@@ -540,13 +782,47 @@ function ModelLane({ lang }: { lang: "en" | "es" }) {
           : "Two operational details that only appear when it actually runs. First: a token cap set for chat-sized replies truncates a formalization document and turns a capable model into a formatting failure, so the per-call cap is 8192 and truncation is recorded as what it is. Second: two sweeps sharing one ledger interleave two versions of the code in one file, so the ledger opens under an exclusive lock and the second process fails immediately rather than quietly contaminating the record."}
       </p>
 
+      <FigureRow
+        figure={<SamplingDiagram lang={lang} />}
+        caption={
+          es
+            ? "Figura 2. Dos pasadas sobre el corpus identico, sin cambiar nada salvo el muestreo. La distancia entre las dos tasas puntuales cabe entera dentro del solape de sus intervalos."
+            : "Figure 2. Two passes over the identical corpus, with nothing changed but the sampling. The distance between the two point rates fits entirely inside the overlap of their intervals."
+        }
+        reverse
+      >
+        <p className="measure">
+          {es ? (
+            <>
+              La ultima tarea de la via es como se informan sus numeros. La inferencia alojada no es
+              reproducible, asi que dos pasadas sobre el corpus identico, sin cambiar nada salvo el
+              muestreo, dan tasas puntuales distintas, y cada tasa se publica con su intervalo de Wilson
+              al 95% <Cite id="wilson1927" paren /> y no con su valor puntual solo. A n = 20 el
+              intervalo ocupa casi la mitad del rango util, y esa anchura es la informacion: dice que
+              este corpus puede ver que existe una brecha y no puede ordenar dos modelos{" "}
+              <Cite id="agresti1998" paren />.
+            </>
+          ) : (
+            <>
+              The lane's last duty is how its numbers are reported. Hosted inference is not
+              reproducible, so two passes over the identical corpus, with nothing changed but the
+              sampling, give different point rates, and every rate is published with its 95% Wilson
+              interval <Cite id="wilson1927" paren /> rather than as a point value alone. At n = 20 the
+              interval spans close to half the useful range, and that width is the information: it says
+              this corpus can see that a gap exists and cannot rank two models{" "}
+              <Cite id="agresti1998" paren />.
+            </>
+          )}
+        </p>
+      </FigureRow>
+
       <Callout variant="honest" title={es ? "Lo que la via no mide" : "What the lane does not measure"}>
         {es
           ? "Un unico prompt, sin herramientas, sin reintentos, sin reflexion. Eso mide la formalizacion directa, que es una linea base honesta y no es el estado del arte: los sistemas multi-agente del campo (Chain-of-Experts, OptiMUS) construyen la formalizacion en etapas con retroalimentacion de ejecucion. Comparar esta linea base con esos sistemas y llamarlo un ranking seria comparar dos cosas distintas."
           : "One prompt, no tools, no retries, no reflection. That measures direct formalization, which is an honest baseline and is not the state of the art: the field's multi-agent systems (Chain-of-Experts, OptiMUS) build the formalization in stages with execution feedback. Comparing this baseline against those systems and calling it a ranking would be comparing two different things."}
       </Callout>
 
-      <Refs ids={["beams2026", "survey2025", "nl4opt2023"]} label={es ? "Referencias" : "Refs"} />
+      <Refs ids={["beams2026", "survey2025", "nl4opt2023", "wilson1927", "agresti1998"]} label={es ? "Referencias" : "Refs"} />
     </section>
   );
 }

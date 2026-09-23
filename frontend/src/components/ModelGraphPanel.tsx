@@ -5,7 +5,9 @@
  * arXiv:2510.27610). A reader steps through the refinement and watches colour classes split as
  * nodes learn about their neighbourhoods, then compares the signature against a transformed copy of
  * the same model: a permutation must NOT change it, and a dropped constraint or a changed
- * coefficient should.
+ * coefficient should. So should the model's LP relaxation, when it has an integer decision to relax:
+ * variables are seeded with their domain and bounds, so the integrality trap is a different graph
+ * from round zero rather than something refinement never sees.
  *
  * The comparison says "not distinguished" rather than "equal", because WL cannot separate every
  * pair of non-isomorphic graphs. That word is the honest one, and it is the same asymmetry as the
@@ -15,10 +17,11 @@
 import { useMemo, useState } from "react";
 
 import type { CaseRecord } from "../lib/contract.types";
-import { linearRows } from "../lib/live-solver";
+import { integerVariables, linearRows } from "../lib/live-solver";
 import {
   buildGraph,
   classCount,
+  columnKinds,
   graphVariant,
   refine,
   signature,
@@ -56,14 +59,16 @@ export function ModelGraphPanel({
   const [hover, setHover] = useState<string | null>(null);
 
   const linear = useMemo(() => linearRows(record.reference, overrides), [record, overrides]);
+  const kinds = useMemo(() => columnKinds(record.reference), [record]);
+  const hasIntegers = useMemo(() => integerVariables(record.reference).length > 0, [record]);
 
   const analysis = useMemo(() => {
     if (!linear) return null;
-    const graph = buildGraph(linear.columns, linear.rows, linear.objective, linear.sense);
+    const graph = buildGraph(linear.columns, linear.rows, linear.objective, linear.sense, kinds);
     const history = refine(graph, ROUNDS);
 
-    const other = graphVariant(linear.columns, linear.rows, variant);
-    const otherGraph = buildGraph(other.columns, other.rows, linear.objective, linear.sense);
+    const other = graphVariant(linear.columns, linear.rows, variant, kinds);
+    const otherGraph = buildGraph(other.columns, other.rows, linear.objective, linear.sense, other.kinds);
     const otherHistory = refine(otherGraph, ROUNDS);
 
     return {
@@ -72,7 +77,7 @@ export function ModelGraphPanel({
       mine: signature(history[ROUNDS]),
       theirs: signature(otherHistory[ROUNDS]),
     };
-  }, [linear, variant]);
+  }, [linear, variant, kinds]);
 
   if (!linear || !analysis) {
     return (
@@ -118,7 +123,9 @@ export function ModelGraphPanel({
 
   const heaviest = Math.max(1e-9, ...graph.edges.map((e) => Math.abs(e.weight)));
   const distinguished = analysis.mine !== analysis.theirs;
-  const expected = variant === "permuted" ? false : true;
+  // What each comparison MUST do. Relaxing integrality changes the model only when there is an
+  // integer decision to relax; on a continuous case the relaxed copy is the model itself.
+  const expected = variant === "permuted" ? false : variant === "relaxed" ? hasIntegers : true;
 
   const hovered: GraphNode | undefined = graph.nodes.find((n) => n.id === hover);
   const hoveredEdges = graph.edges.filter((e) => e.from === hover || e.to === hover);
@@ -279,13 +286,17 @@ export function ModelGraphPanel({
                 <option value="permuted">{es ? "el mismo, permutado" : "itself, permuted"}</option>
                 <option value="dropped">{es ? "sin su ultima restriccion" : "its last constraint dropped"}</option>
                 <option value="perturbed">{es ? "un coeficiente un 1% distinto" : "one coefficient off by 1%"}</option>
+                <option value="relaxed">{es ? "su relajacion lineal" : "its LP relaxation"}</option>
               </select>
             </label>
             <span className={distinguished === expected ? "ok" : "bad"}>
+              {/* A different signature proves the graphs are not isomorphic, which is "not a renaming
+                  or reordering of it". It is not "inequivalent": a row scaled by two is the same
+                  constraint and a different graph. */}
               {distinguished
                 ? es
-                  ? "DISTINGUIDO: modelos distintos"
-                  : "DISTINGUISHED: different models"
+                  ? "DISTINGUIDO: no es un renombre ni un reordenamiento"
+                  : "DISTINGUISHED: not a renaming or reordering of it"
                 : es
                   ? "no distinguido (no prueba igualdad)"
                   : "not distinguished (does not prove equal)"}
