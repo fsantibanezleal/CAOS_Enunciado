@@ -1,0 +1,223 @@
+/**
+ * The failure taxonomy, once: every class `data-pipeline/report.py` can emit, in the order the
+ * Experiments table lists them, with its name and its exact rule in both languages.
+ *
+ * The key is the string the report writes into the artifacts, so a bar, a table row and a ledger
+ * record name a class the same way. `tests/test_failure_classes.py` holds the keys equal to the set
+ * `report.classify` can return: a class added on one side and not the other fails that test, which
+ * is how the table stops drifting from the classifier. The table used to list nine classes, under
+ * names of its own, while the classifier emitted fourteen.
+ */
+
+export type ClassLayer = "executable" | "structural" | "property" | "none" | "all";
+
+export interface FailureClass {
+  /** Exactly what report.py writes. */
+  key: string;
+  es: string;
+  ruleEn: string;
+  ruleEs: string;
+  layer: ClassLayer;
+  /** The candidate ran, so a solver would have reported success: invisible without the strong layers. */
+  ran: boolean;
+  /** The survivor row, which is not a failure. */
+  survived?: boolean;
+}
+
+export const FAILURE_CLASSES: FailureClass[] = [
+  {
+    key: "unparseable output",
+    es: "salida no parseable",
+    ruleEn: "The returned text contains no complete JSON object, or the object does not load as a document.",
+    ruleEs: "El texto devuelto no contiene un objeto JSON completo, o el objeto no carga como documento.",
+    layer: "executable",
+    ran: false,
+  },
+  {
+    key: "truncated output",
+    es: "salida truncada",
+    ruleEn: "The JSON starts and does not end: the token cap was reached mid-document.",
+    ruleEs: "El JSON empieza y no termina: el tope de tokens se alcanzo a mitad del documento.",
+    layer: "executable",
+    ran: false,
+  },
+  {
+    key: "no answer: the reasoning used the whole cap",
+    es: "sin respuesta: el razonamiento agoto el tope",
+    ruleEn:
+      "The reply is all reasoning and no answer, and it stopped at the token cap. A reasoning model spends the cap on reasoning before it writes anything.",
+    ruleEs:
+      "La respuesta es solo razonamiento, sin respuesta, y se detuvo en el tope de tokens. Un modelo que razona gasta el tope razonando antes de escribir nada.",
+    layer: "executable",
+    ran: false,
+  },
+  {
+    key: "no answer: it reasoned, then stopped",
+    es: "sin respuesta: razono y se detuvo",
+    ruleEn: "The reply is all reasoning and no answer, and it stopped before the token cap.",
+    ruleEs: "La respuesta es solo razonamiento, sin respuesta, y se detuvo antes del tope de tokens.",
+    layer: "executable",
+    ran: false,
+  },
+  {
+    key: "a constant with no unit",
+    es: "una constante sin unidad",
+    ruleEn: "A const node with no unit field appears summed with a dimensioned term.",
+    ruleEs: "Un nodo const sin campo unit aparece sumado a un termino con dimension.",
+    layer: "executable",
+    ran: false,
+  },
+  {
+    key: "a quantity declared derived and never defined",
+    es: "una cantidad declarada derivada y nunca definida",
+    ruleEn: "A quantity is declared with role derived and no relation defines it.",
+    ruleEs: "Una cantidad se declara con papel derived y ninguna relacion la define.",
+    layer: "executable",
+    ran: false,
+  },
+  {
+    key: "dimensional mismatch",
+    es: "desajuste dimensional",
+    ruleEn: "The two sides of a comparison carry different exponent vectors.",
+    ruleEs: "Dos lados de una comparacion tienen vectores de exponentes distintos.",
+    layer: "executable",
+    ran: false,
+  },
+  {
+    key: "a variable whose lower bound is above its upper",
+    es: "una variable con la cota inferior sobre la superior",
+    ruleEn:
+      "A variable is declared with its lower bound above its upper, which the representation refuses. On the contradictory case this is the contradiction, written into one variable.",
+    ruleEs:
+      "Una variable se declara con la cota inferior sobre la superior, lo que la representacion rechaza. En el caso contradictorio esa es la contradiccion, escrita en una sola variable.",
+    layer: "executable",
+    ran: false,
+  },
+  {
+    key: "fabricated provenance: words not in the statement",
+    es: "procedencia fabricada: palabras que no estan en el enunciado",
+    ruleEn: "The text stored in a span does not appear in the statement at those offsets.",
+    ruleEs: "El texto guardado en un span no aparece en el enunciado en esos desplazamientos.",
+    layer: "executable",
+    ran: false,
+  },
+  {
+    key: "the model it produced is infeasible",
+    es: "el modelo que produjo es infactible",
+    ruleEn: "The document validates and its model has no feasible point, on a case that has one.",
+    ruleEs: "El documento valida y su modelo no tiene punto factible, sobre un caso que si lo tiene.",
+    layer: "executable",
+    ran: false,
+  },
+  {
+    key: "infeasible, as the case is",
+    es: "infactible, como el caso",
+    ruleEn:
+      "The case has no feasible point and the solver proves the candidate has none either: the right status. It is still recorded as not having run, because ran means reaching a feasible optimum, so a contradictory case cannot be passed. Counted apart so the table shows it was right.",
+    ruleEs:
+      "El caso no tiene punto factible y el solucionador prueba que el candidato tampoco: el estado correcto. Aun asi queda registrado como no ejecutado, porque corrio significa alcanzar un optimo factible, de modo que un caso contradictorio no se puede aprobar. Se cuenta aparte para que la tabla muestre que acerto.",
+    layer: "executable",
+    ran: false,
+  },
+  {
+    key: "the solver failed on the model it produced",
+    es: "el solucionador fallo sobre el modelo que produjo",
+    ruleEn: "The document validates and the solver raised instead of returning a status.",
+    ruleEs: "El documento valida y el solucionador lanzo un error en vez de devolver un estado.",
+    layer: "executable",
+    ran: false,
+  },
+  {
+    key: "the call itself failed",
+    es: "la llamada misma fallo",
+    ruleEn: "The provider call failed: a timeout, an HTTP error, a refusal. Nothing was formalized.",
+    ruleEs: "La llamada al proveedor fallo: un tiempo de espera, un error HTTP, un rechazo. No se formalizo nada.",
+    layer: "executable",
+    ran: false,
+  },
+  {
+    key: "other executable failure",
+    es: "otro fallo ejecutable",
+    ruleEn: "An executable-layer failure that no rule above names. Listed, never folded into a named class.",
+    ruleEs: "Un fallo de la capa ejecutable que ninguna regla anterior nombra. Se lista, nunca se suma a una clase con nombre.",
+    layer: "executable",
+    ran: false,
+  },
+  {
+    key: "ran, then REFUTED: solves to a different optimum",
+    es: "corrio, y fue REFUTADA: resuelve a otro optimo",
+    ruleEn:
+      "It runs cleanly and, read in the minimising sense, solves to a value differing from the reference's beyond 1e-6 relative.",
+    ruleEs:
+      "Corre limpio y, leido en sentido de minimizacion, resuelve a un valor que difiere del de la referencia mas alla de 1e-6 relativo.",
+    layer: "structural",
+    ran: true,
+  },
+  {
+    key: "ran, then REFUTED: feasible where the case has no feasible point",
+    es: "corrio, y fue REFUTADA: factible donde el caso no tiene punto factible",
+    ruleEn:
+      "It runs cleanly and finds a feasible point on a case whose reference has none: it missed the contradiction the statement was written around.",
+    ruleEs:
+      "Corre limpio y encuentra un punto factible en un caso cuya referencia no tiene ninguno: no vio la contradiccion alrededor de la que se escribio el enunciado.",
+    layer: "structural",
+    ran: true,
+  },
+  {
+    key: "ran, then REFUTED: a metamorphic relation failed",
+    es: "corrio, y fue REFUTADA: fallo una relacion metamorfica",
+    ruleEn:
+      "It runs cleanly and a metamorphic relation fails: scaling the objective moved the argmin, a redundant constraint changed the feasible set, or tightening a constraint improved the optimum.",
+    ruleEs:
+      "Corre limpio y falla una relacion metamorfica: escalar el objetivo movio el argmin, una restriccion redundante cambio el conjunto factible, o ajustar una restriccion mejoro el optimo.",
+    layer: "property",
+    ran: true,
+  },
+  {
+    key: "ran, and no layer decided",
+    es: "corrio, y ninguna capa decidio",
+    ruleEn:
+      "It runs cleanly and neither the structural nor the property layer reached a verdict. It survived nothing, so it is not counted faithful.",
+    ruleEs:
+      "Corre limpio y ni la capa estructural ni la de propiedades llegaron a un veredicto. No supero nada, asi que no cuenta como fiel.",
+    layer: "none",
+    ran: true,
+  },
+  {
+    key: "not measured: the solver cannot express this model",
+    es: "no medido: el solucionador no puede expresar este modelo",
+    ruleEn: "The configured solver cannot express the model. A limit of the instrument, excluded from both rates.",
+    ruleEs: "El solucionador configurado no expresa el modelo. Limite del instrumento, excluido de ambas tasas.",
+    layer: "none",
+    ran: false,
+  },
+  {
+    key: "ran and survived every check",
+    es: "corrio y supero cada comprobacion",
+    ruleEn: "It runs, no strong layer fails, and at least one passes. This is the faithful row, not a failure.",
+    ruleEs: "Corre, ninguna capa fuerte falla y al menos una pasa. Es la fila fiel, no un fallo.",
+    layer: "all",
+    ran: true,
+    survived: true,
+  },
+];
+
+const BY_KEY = new Map(FAILURE_CLASSES.map((c) => [c.key, c]));
+
+/** The class's name in the reader's language. An unknown key is shown as written, never hidden. */
+export function className(key: string, lang: "en" | "es"): string {
+  const found = BY_KEY.get(key);
+  if (!found) return key;
+  return lang === "es" ? found.es : found.key;
+}
+
+export function failureClass(key: string): FailureClass | undefined {
+  return BY_KEY.get(key);
+}
+
+/** The classes whose candidate ran cleanly and was still not faithful: invisible to a solver. */
+export const RAN_FAILURE_CLASSES: ReadonlySet<string> = new Set(
+  FAILURE_CLASSES.filter((c) => c.ran && !c.survived).map((c) => c.key),
+);
+
+export const SURVIVOR_CLASS = FAILURE_CLASSES.find((c) => c.survived)!.key;

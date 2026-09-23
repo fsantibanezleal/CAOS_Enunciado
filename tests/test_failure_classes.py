@@ -58,3 +58,37 @@ def _classify_reply(reply: str, tmp_path: Path) -> str:
 )
 def test_a_reply_is_classified_by_the_check_that_failed_it(reply, expected, tmp_path) -> None:
     assert _classify_reply(reply, tmp_path) == expected
+
+
+def _classes_the_classifier_can_return() -> set[str]:
+    """Every class string `report.classify` can return, read from its source, not restated."""
+    import ast
+
+    import report
+
+    tree = ast.parse(Path(report.__file__).read_text(encoding="utf-8"))
+    found: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.FunctionDef) and node.name == "classify":
+            for inner in ast.walk(node):
+                if isinstance(inner, ast.Return) and isinstance(inner.value, ast.Constant):
+                    found.add(inner.value.value)
+        if isinstance(node, ast.AnnAssign) and getattr(node.target, "id", "") == "_CLASSES":
+            for pair in node.value.elts:
+                found.add(pair.elts[1].value)
+    return found
+
+
+def test_the_site_names_every_class_the_classifier_can_return() -> None:
+    """The Experiments table and the failure bars read `frontend/src/lib/failure-classes.ts`. It must
+    hold exactly the classes the classifier emits: the table once listed nine, under names of its
+    own, while the classifier emitted fourteen."""
+    import re
+
+    source = (ROOT / "frontend" / "src" / "lib" / "failure-classes.ts").read_text(encoding="utf-8")
+    site = set(re.findall(r'^\s+key: "([^"]+)",$', source, flags=re.MULTILINE))
+    emitted = _classes_the_classifier_can_return()
+    assert len(emitted) >= 15, emitted
+    assert site == emitted, (
+        f"only on the site: {sorted(site - emitted)}; only in the classifier: {sorted(emitted - site)}"
+    )

@@ -3,7 +3,9 @@
  *
  * Every number on this page is read from `data/gap-report.json`, which is a pure function of the
  * committed run ledger and the corpus: `python data-pipeline/report.py` rebuilds it, and
- * `--check` fails when the file and the ledger have drifted. Nothing here is typed in.
+ * `--check` fails when the file and the ledger have drifted. Nothing here is typed in: the prose
+ * that states a count computes it, because the first version of this page carried sentences about
+ * two Claude models that stayed true only until a third model ran.
  *
  * If no measurement has been committed, the page says so instead of showing placeholders. A product
  * about unverified claims cannot afford the alternative.
@@ -12,61 +14,24 @@
 import { Callout, Cite, Equation, Refs, useShellLang } from "@fasl-work/caos-app-shell";
 import { useEffect, useMemo, useState } from "react";
 
-import { Chart } from "../components/Chart";
-import { FailureBars } from "../components/FailureBars";
-import { RateIntervals, type RateCell } from "../components/RateIntervals";
-import { TIER_NAME, TRAP_NAME } from "../lib/contract.types";
-import { artifactUrl, orderedCases, useData } from "../lib/data";
+import { ModelMatrix, type MatrixColumn, type Tone } from "../components/ModelMatrix";
+import { RateIntervals } from "../components/RateIntervals";
+import { type GapReport, type ModelRow, type RateJson, TIER_NAME, TRAP_NAME } from "../lib/contract.types";
+import { orderedCases, useData } from "../lib/data";
+import { FAILURE_CLASSES, className, failureClass } from "../lib/failure-classes";
 import { solveLive } from "../lib/live-solver";
-
-interface RateJson {
-  passed: number;
-  total: number;
-  value: number;
-  interval_low: number;
-  interval_high: number;
-}
-
-interface ReportJson {
-  cells: RateCell[];
-  judge: unknown[];
-  note: string;
-  measured_on?: string;
-  corpus?: string;
-  cost_usd?: number;
-  call_count?: number;
-  caveats?: string[];
-  failure_breakdown?: Record<string, Record<string, number>>;
-  by_tier?: Record<string, Record<string, RateJson>>;
-  by_trap?: Record<string, Record<string, RateJson>>;
-  layer_agreement?: Record<string, Record<string, number>>;
-}
+import { providerName, useReport } from "../lib/models";
 
 export function BenchmarkPage() {
   const lang = (useShellLang() ?? "en") as "en" | "es";
   const es = lang === "es";
-  const [report, setReport] = useState<ReportJson | null>(null);
-  const [missing, setMissing] = useState(false);
+  const { status, error, report, sensitivity, load } = useReport();
 
   useEffect(() => {
-    let cancelled = false;
-    void fetch(artifactUrl("gap-report.json"), { cache: "no-cache" })
-      .then((response) => {
-        if (!response.ok) throw new Error(String(response.status));
-        return response.json() as Promise<ReportJson>;
-      })
-      .then((json) => {
-        if (!cancelled) setReport(json);
-      })
-      .catch(() => {
-        if (!cancelled) setMissing(true);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+    void load();
+  }, [load]);
 
-  if (missing) {
+  if (status === "missing") {
     return (
       <div className="page-body prose">
         <div className="page-head">
@@ -81,9 +46,50 @@ export function BenchmarkPage() {
     );
   }
 
+  if (status === "error") {
+    return (
+      <div className="page-body prose">
+        <div className="page-head">
+          <h1>{es ? "Comparativa" : "Benchmark"}</h1>
+          <p className="lede">{es ? "La medicion no se pudo leer:" : "The measurement could not be read:"}</p>
+          <pre className="mono small">{error}</pre>
+        </div>
+      </div>
+    );
+  }
+
   if (!report) {
     return <div className="state-panel">{es ? "Cargando la medicion" : "Loading the measurement"}</div>;
   }
+
+  return <Measured report={report} sensitivity={sensitivity} lang={lang} />;
+}
+
+function Measured({
+  report,
+  sensitivity,
+  lang,
+}: {
+  report: GapReport;
+  sensitivity: ReturnType<typeof useReport.getState>["sensitivity"];
+  lang: "en" | "es";
+}) {
+  const es = lang === "es";
+  const models = report.models;
+  const hosted = models.filter((m) => m.lane === "hosted").length;
+  const local = models.length - hosted;
+  const providers = [...new Set(models.map((m) => m.provider))];
+  const span =
+    report.measured_from === report.measured_to
+      ? report.measured_from
+      : es
+        ? `del ${report.measured_from} al ${report.measured_to}`
+        : `${report.measured_from} to ${report.measured_to}`;
+
+  const gaps = report.cells.filter((c) => c.gap_is_defined).map((c) => c.gap);
+  const positive = gaps.filter((g) => g > 1e-9).length;
+  const zero = gaps.filter((g) => Math.abs(g) <= 1e-9).length;
+  const fmt = (g: number) => `${g >= 0 ? "+" : ""}${g.toFixed(3)}`;
 
   return (
     <div className="page-body wide prose">
@@ -91,152 +97,86 @@ export function BenchmarkPage() {
         <h1>{es ? "Comparativa" : "Benchmark"}</h1>
         <p className="lede">
           {es
-            ? `Una medicion, del ${report.measured_on ?? ""}, sobre ${report.corpus ?? ""}. ${report.call_count ?? 0} llamadas registradas, ${(report.cost_usd ?? 0).toFixed(2)} dolares. Las dos tasas se informan por separado porque un solo numero dejaria que una tasa alta de "se ejecuto" escondiera una baja de "era el modelo pedido", que es exactamente la distancia que esta pagina existe para mostrar.`
-            : `One measurement, from ${report.measured_on ?? ""}, over ${report.corpus ?? ""}. ${report.call_count ?? 0} recorded calls, ${(report.cost_usd ?? 0).toFixed(2)} dollars. The two rates are reported separately because a single number would let a high "it ran" rate conceal a low "it was the model asked for" rate, which is exactly the distance this page exists to show.`}
+            ? `Una medicion, ${span}: ${models.length} modelos de ${providers.length} proveedores (${hosted} alojados, ${local} locales) sobre ${report.corpus.cases} casos de optimizacion escritos a mano en ${report.corpus.tiers} niveles, ${report.corpus.repeats} repeticion por caso. ${report.call_count} llamadas registradas, ${report.cost_usd.toFixed(2)} dolares a precio de lista. Las dos tasas se informan por separado porque un solo numero dejaria que una tasa alta de "se ejecuto" escondiera una baja de "era el modelo pedido", que es exactamente la distancia que esta pagina existe para mostrar.`
+            : `One measurement, ${span}: ${models.length} models from ${providers.length} providers (${hosted} hosted, ${local} local) over ${report.corpus.cases} authored optimization cases in ${report.corpus.tiers} tiers, ${report.corpus.repeats} repeat per case. ${report.call_count} recorded calls, ${report.cost_usd.toFixed(2)} dollars at list price. The two rates are reported separately because a single number would let a high "it ran" rate conceal a low "it was the model asked for" rate, which is exactly the distance this page exists to show.`}
         </p>
       </div>
 
       <section>
         <h2>{es ? "Las dos tasas, y la brecha" : "The two rates, and the gap"}</h2>
-        <RateIntervals cells={report.cells} lang={lang} />
+        <RateIntervals models={models} cells={report.cells} lang={lang} />
         <p className="figure-caption">
           {es
-            ? "Figura 1. Cada modelo aporta dos barras: con que frecuencia la formalizacion se ejecuto, y con que frecuencia ademas sobrevivio a las capas de fidelidad. La banda entre ambas es la brecha."
-            : "Figure 1. Each model contributes two bars: how often the formalization ran, and how often it also survived the faithfulness layers. The band between them is the gap."}
+            ? "Figura 1. Cada modelo aporta dos barras: con que frecuencia la formalizacion se ejecuto, y con que frecuencia ademas sobrevivio a las capas de fidelidad. La banda entre ambas es la brecha, y su valor esta en la columna derecha."
+            : "Figure 1. Each model contributes two bars: how often the formalization ran, and how often it also survived the faithfulness layers. The band between them is the gap, and its value is in the right-hand column."}
         </p>
 
-        <table className="finding-table">
-          <thead>
-            <tr>
-              <th>{es ? "Modelo" : "Model"}</th>
-              <th>{es ? "Proveedor" : "Provider"}</th>
-              <th className="num">{es ? "Corrio" : "Ran"}</th>
-              <th className="num">{es ? "Fiel" : "Faithful"}</th>
-              <th className="num">{es ? "Brecha" : "Gap"}</th>
-              <th className="num">{es ? "No medidos" : "Unmeasured"}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {report.cells.map((cell) => (
-              <tr key={cell.model_id}>
-                <td className="mono">{cell.model_id}</td>
-                <td>{cell.provider}</td>
-                <td className="num">{describeRate(cell.ran)}</td>
-                <td className="num">{describeRate(cell.faithful)}</td>
-                <td className="num">
-                  <strong>
-                    {cell.gap_is_defined
-                      ? `${cell.gap >= 0 ? "+" : ""}${cell.gap.toFixed(3)}`
-                      : es
-                        ? "INDEFINIDA"
-                        : "UNDEFINED"}
-                  </strong>
-                </td>
-                <td className="num">{cell.unmeasured}</td>
+        <div className="table-scroll">
+          <table className="finding-table">
+            <thead>
+              <tr>
+                <th>{es ? "Modelo" : "Model"}</th>
+                <th>{es ? "Proveedor" : "Provider"}</th>
+                <th className="num">{es ? "Corrio" : "Ran"}</th>
+                <th className="num">{es ? "Fiel" : "Faithful"}</th>
+                <th className="num">{es ? "Brecha" : "Gap"}</th>
+                <th className="num">{es ? "En el tope" : "At the cap"}</th>
+                <th className="num">{es ? "Mediana s" : "Median s"}</th>
+                <th className="num">USD</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {models.map((model) => {
+                const cell = report.cells.find((c) => c.model === model.key);
+                if (!cell) return null;
+                return (
+                  <tr key={model.key} data-model={model.key}>
+                    <td className="mono" title={`${model.model_versions.join(", ")}\n${model.fingerprints.join("\n")}`}>
+                      {model.model_id}
+                    </td>
+                    <td>{providerName(model.provider, lang)}</td>
+                    <td className="num">{describeRate(cell.ran)}</td>
+                    <td className="num">{describeRate(cell.faithful)}</td>
+                    <td className="num">
+                      <strong>{cell.gap_is_defined ? fmt(cell.gap) : es ? "INDEFINIDA" : "UNDEFINED"}</strong>
+                    </td>
+                    <td className="num">
+                      {model.at_cap}/{model.calls}
+                    </td>
+                    <td className="num">{model.median_latency_s.toFixed(0)}</td>
+                    <td className="num">{model.cost_usd.toFixed(2)}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
         <p className="figure-caption">
           {es
-            ? "Tabla 1. Procedencia de cada fila: libro mayor data/runs/optimization.jsonl, corpus escrito para este producto, solucionador HiGHS via Pyomo, intervalos de Wilson al 95%."
-            : "Table 1. Provenance of every row: ledger data/runs/optimization.jsonl, corpus authored for this product, solver HiGHS through Pyomo, 95% Wilson intervals."}
+            ? "Tabla 1. Procedencia de cada fila: libro mayor data/runs/optimization.jsonl, corpus escrito para este producto, solucionador HiGHS via Pyomo, intervalos de Wilson al 95%. En el tope cuenta las llamadas que facturaron exactamente el tope de salida del protocolo. El costo de los modelos locales es cero; el de Z.AI es el equivalente a precio de lista de una cuota. La version del modelo y la huella del proveedor estan en el titulo de cada fila."
+            : "Table 1. Provenance of every row: ledger data/runs/optimization.jsonl, corpus authored for this product, solver HiGHS through Pyomo, 95% Wilson intervals. At the cap counts the calls that billed exactly the protocol's output cap. Local models cost nothing; Z.AI's cost is the list-price equivalent of a quota. Each row's model version and provider fingerprint are in its title."}
         </p>
 
         <Equation
-          tex={String.raw`\Delta_{\text{sonnet}} = 0.550 - 0.500 = +0.050, \qquad \Delta_{\text{haiku}} = 0.250 - 0.200 = +0.050`}
+          tex={String.raw`\Delta_m = R_{\text{ran}}(m) - R_{\text{faithful}}(m) \qquad ${gaps.length ? String.raw`\min_m \Delta_m = ${fmt(Math.min(...gaps))}, \quad \max_m \Delta_m = ${fmt(Math.max(...gaps))}` : ""}`}
           caption={
             es
-              ? "Las dos brechas medidas. Ambas son positivas: en cada modelo hubo formalizaciones que se ejecutaron y no eran el modelo descrito."
-              : "The two measured gaps. Both are positive: in each model there were formalizations that executed and were not the model described."
+              ? `La brecha por modelo, y su rango sobre los ${gaps.length} modelos con brecha definida. ${positive} son positivas: en esos modelos hubo formalizaciones que se ejecutaron y no eran el modelo descrito. ${zero} son cero: todo lo que se ejecuto sobrevivio a las capas de fidelidad, lo que a una repeticion por caso es un resultado sobre ${report.corpus.cases} casos y no una propiedad del modelo.`
+              : `The gap per model, and its range over the ${gaps.length} models with a defined gap. ${positive} are positive: those models produced formalizations that executed and were not the model described. ${zero} are zero: everything that executed survived the faithfulness layers, which at one repeat per case is a result on ${report.corpus.cases} cases rather than a property of the model.`
           }
         />
         <Refs ids={["wilson1927", "lean2026"]} label={es ? "Referencias" : "Refs"} />
       </section>
 
-      {report.by_tier && (
-        <section>
-          <h2>{es ? "Degradacion con la dificultad" : "Degradation against difficulty"}</h2>
-          <p className="measure">
-            {es
-              ? "El corpus esta ordenado en cinco niveles, del enunciado donde toda cantidad esta dicha al enunciado que deja algo esencial sin determinar. Esta es la curva de fidelidad contra ese orden, y es la vista que dice si un modelo se rompe en lo dificil o en todo por igual."
-              : "The corpus is ordered into five tiers, from the statement where every quantity is stated to the statement that leaves something material undetermined. This is the faithfulness curve against that order, and it is the view that says whether a model breaks on the hard cases or uniformly."}
-          </p>
-          <TierCurve byTier={report.by_tier} lang={lang} />
-          <p className="figure-caption">
-            {es
-              ? "Figura 2. Tasa de fidelidad por nivel. Cada punto descansa sobre cuatro casos, asi que la curva indica donde mirar y no sostiene una afirmacion sobre un nivel concreto."
-              : "Figure 2. Faithfulness rate per tier. Each point rests on four cases, so the curve indicates where to look and does not support a claim about any one tier."}
-          </p>
-          <Callout variant="honest" title={es ? "Cuatro casos por punto" : "Four cases per point"}>
-            {es
-              ? "Un punto de esta curva es una proporcion sobre cuatro observaciones. Su intervalo de Wilson cubre casi todo el rango. La forma general (mas alto a la izquierda, mas bajo a la derecha en el modelo mayor) es consistente con lo que el campo informa, y con estos datos es una pista."
-              : "A point on this curve is a proportion over four observations. Its Wilson interval covers nearly the whole range. The overall shape (higher on the left, lower on the right for the larger model) is consistent with what the field reports, and on this data it is a hint."}
-          </Callout>
-          <Refs ids={["scope2026", "agresti1998"]} label={es ? "Referencias" : "Refs"} />
-        </section>
-      )}
+      <CapSection report={report} sensitivity={sensitivity} lang={lang} />
 
-      {report.failure_breakdown && (
-        <section>
-          <h2>{es ? "Que salio mal" : "What went wrong"}</h2>
-          <p className="measure">
-            {es
-              ? "La clase de cada fallo se deriva del mensaje que produjo la comprobacion, no se asigna a mano. La regla vive en data-pipeline/report.py y se puede volver a ejecutar sobre el libro mayor versionado."
-              : "Each failure's class is derived from the message the check produced, never assigned by hand. The rule lives in data-pipeline/report.py and can be re-run over the committed ledger."}
-          </p>
-          <FailureBars breakdown={report.failure_breakdown} lang={lang} />
-          <p className="figure-caption">
-            {es
-              ? "Figura 3. La distribucion de fallos. La primera fila no es un fallo; todo lo que sigue si lo es."
-              : "Figure 3. The failure distribution. The first row is not a failure; everything below it is."}
-          </p>
-          <p className="measure">
-            {es
-              ? "El fallo dominante en ambos modelos es una constante sin unidad: la representacion rechazando un numero desnudo donde corresponde una dimension. Solo una clase es invisible para un solucionador, la refutacion; todo lo demas falla ruidosamente. Esa proporcion es en si misma un resultado, y a este tamano de muestra es una pista."
-              : "The dominant failure in both models is a constant with no unit: the representation refusing a bare number where a dimension belongs. Only one class is invisible to a solver, the refutation; everything else fails loudly. That ratio is itself a finding, and at this sample size it is a hint."}
-          </p>
-          <Refs ids={["survey2025", "segura2016"]} label={es ? "Referencias" : "Refs"} />
-        </section>
-      )}
+      <TierSection report={report} lang={lang} />
 
-      {report.layer_agreement && (
-        <section>
-          <h2>{es ? "Acuerdo entre capas" : "Agreement between layers"}</h2>
-          <p className="measure">
-            {es
-              ? "La comprobacion barata y la cara sobre los mismos casos. La casilla que importa es la de arriba a la derecha: formalizaciones que se ejecutaron limpiamente y aun asi no eran el modelo descrito. La casilla de abajo a la derecha esta vacia por construccion, porque fiel exige corrio, y un numero ahi significaria que las definiciones se desalinearon."
-              : "The cheap check and the expensive one over the same cases. The cell that matters is top right: formalizations that ran cleanly and still were not the model described. The bottom-right cell is empty by construction, because faithful requires ran, and a number there would mean the definitions drifted apart."}
-          </p>
-          <div className="two-col">
-            {Object.entries(report.layer_agreement).map(([model, counts]) => (
-              <AgreementMatrix key={model} model={model} counts={counts} lang={lang} />
-            ))}
-          </div>
-          <Equation
-            tex={String.raw`\text{precision}_{\text{ran}} = \frac{\#(\text{ran} \wedge \text{faithful})}{\#(\text{ran})}`}
-            caption={
-              es
-                ? "Que fraccion de lo que se ejecuta es ademas fiel. Es la cifra que el campo informa como si fuera 1, y aqui se mide."
-                : "What fraction of what executes is also faithful. It is the figure the field reports as if it were 1, and here it is measured."
-            }
-          />
-          <Refs ids={["lean2026", "orgeval2025"]} label={es ? "Referencias" : "Refs"} />
-        </section>
-      )}
+      <FailureSection report={report} lang={lang} />
 
-      {report.by_trap && (
-        <section>
-          <h2>{es ? "Por trampa" : "By trap"}</h2>
-          <p className="measure">
-            {es
-              ? "Cada caso se escribio alrededor de una manera concreta de leer mal el enunciado. Esta tabla dice cuales atraparon a cada modelo. Los denominadores son pequenos y estan a la vista en cada celda."
-              : "Each case was written around one concrete way of misreading the statement. This table says which ones caught which model. The denominators are small and are shown in every cell."}
-          </p>
-          <TrapTable byTrap={report.by_trap} lang={lang} />
-          <Refs ids={["survey2025", "nl4opt2023"]} label={es ? "Referencias" : "Refs"} />
-        </section>
-      )}
+      <AgreementSection report={report} lang={lang} />
+
+      <TrapSection report={report} lang={lang} />
 
       <section>
         <h2>{es ? "Verificacion en vivo, en su navegador" : "Live verification, in your browser"}</h2>
@@ -281,17 +221,17 @@ export function BenchmarkPage() {
         <Refs ids={["highs", "pyomo"]} label={es ? "Referencias" : "Refs"} />
       </section>
 
-      {report.caveats && report.caveats.length > 0 && (
+      {report.caveats.length > 0 && (
         <section>
           <h2>{es ? "Salvedades" : "Caveats"}</h2>
           <Callout variant="honest" title={es ? "Lo que esta medicion no sostiene" : "What this measurement does not support"}>
             <ul>
               {report.caveats.map((caveat) => (
-                <li key={caveat}>{caveat}</li>
+                <li key={caveat.en}>{es ? caveat.es : caveat.en}</li>
               ))}
             </ul>
           </Callout>
-          <p className="measure">{report.note}</p>
+          <p className="measure">{es ? report.note_es : report.note}</p>
         </section>
       )}
 
@@ -327,48 +267,130 @@ function describeRate(rate: RateJson): string {
   return `${rate.value.toFixed(3)} [${rate.interval_low.toFixed(3)}, ${rate.interval_high.toFixed(3)}]`;
 }
 
-/* ------------------------------------------------------------- tier curve */
+/* ---------------------------------------------------------- cap sensitivity */
 
-function TierCurve({
-  byTier,
+function CapSection({
+  report,
+  sensitivity,
   lang,
 }: {
-  byTier: Record<string, Record<string, RateJson>>;
+  report: GapReport;
+  sensitivity: ReturnType<typeof useReport.getState>["sensitivity"];
   lang: "en" | "es";
 }) {
   const es = lang === "es";
-  const models = Object.keys(byTier);
-  const tiers = [...new Set(models.flatMap((m) => Object.keys(byTier[m])))]
-    .map(Number)
-    .sort((a, b) => a - b);
-
-  const data = useMemo(
-    () =>
-      [
-        tiers,
-        ...models.map((model) =>
-          tiers.map((tier) => byTier[model][String(tier)]?.value ?? null),
-        ),
-      ] as [number[], ...(number | null)[][]],
-    [byTier, models, tiers],
-  );
+  const capped = report.models.filter((m) => m.at_cap > 0);
+  const totalAtCap = report.models.reduce((sum, m) => sum + m.at_cap, 0);
+  const rows = sensitivity?.rows ?? [];
+  const caps = sensitivity?.caps ?? [];
 
   return (
-    <>
-      <div style={{ height: 300, display: "flex", minWidth: 0 }}>
-        <Chart
-          data={data as never}
-          series={models.map((model, index) => ({
-            label: model,
-            colour: index === 0 ? "accent" : "accent-2",
-            value: (_self, raw) => (raw === null ? "–" : raw.toFixed(3)),
-          }))}
-          xLabel={es ? "nivel de dificultad" : "difficulty tier"}
-          yLabel={es ? "tasa de fidelidad" : "faithfulness rate"}
-          xTicks={tiers}
-          height={300}
-        />
-      </div>
+    <section>
+      <h2>{es ? "El tope de salida, y cuanto de la tasa es el tope" : "The output cap, and how much of a rate is the cap"}</h2>
+      <p className="measure">
+        {es
+          ? `Todos los modelos corren con el mismo tope de salida, y un modelo que razona gasta ese tope razonando antes de escribir nada. ${totalAtCap} de las ${report.call_count} llamadas facturaron exactamente el tope, en ${capped.length} de los ${report.models.length} modelos. Una llamada asi no dice como formaliza el modelo: dice que no alcanzo a terminar.`
+          : `Every model runs under the same output cap, and a reasoning model spends that cap on reasoning before it writes anything. ${totalAtCap} of the ${report.call_count} calls billed exactly the cap, across ${capped.length} of the ${report.models.length} models. Such a call says nothing about how the model formalizes: it says it did not get to finish.`}
+      </p>
+      {rows.length > 0 && (
+        <>
+          <p className="measure">
+            {es
+              ? `Para separar las dos cosas, los modelos que razonan corrieron una segunda vez con el tope a ${caps[caps.length - 1]} tokens, en un libro mayor propio, con todo lo demas igual. La tabla pone las dos corridas lado a lado.`
+              : `To separate the two, the reasoning models ran a second time with the cap at ${caps[caps.length - 1]} tokens, in a ledger of their own, with everything else the same. The table puts the two runs side by side.`}
+          </p>
+          <div className="table-scroll">
+            <table className="finding-table">
+              <thead>
+                <tr>
+                  <th>{es ? "Modelo" : "Model"}</th>
+                  <th className="num">{es ? "Tope" : "Cap"}</th>
+                  <th className="num">{es ? "Corrio" : "Ran"}</th>
+                  <th className="num">{es ? "Fiel" : "Faithful"}</th>
+                  <th className="num">{es ? "Brecha" : "Gap"}</th>
+                  <th className="num">{es ? "En el tope" : "At the cap"}</th>
+                  <th className="num">{es ? "Mediana de tokens" : "Median tokens"}</th>
+                  <th className="num">USD</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.flatMap((row) =>
+                  caps
+                    .filter((cap) => row.by_cap[String(cap)])
+                    .map((cap, index) => {
+                      const at = row.by_cap[String(cap)];
+                      return (
+                        <tr key={`${row.model}-${cap}`} data-model={row.model}>
+                          <td className="mono">{index === 0 ? row.model_id : ""}</td>
+                          <td className="num">{cap}</td>
+                          <td className="num">{describeRate(at.ran)}</td>
+                          <td className="num">{describeRate(at.faithful)}</td>
+                          <td className="num">{`${at.gap >= 0 ? "+" : ""}${at.gap.toFixed(3)}`}</td>
+                          <td className="num">
+                            {at.at_cap}/{at.calls}
+                          </td>
+                          <td className="num">{at.median_output_tokens}</td>
+                          <td className="num">{at.cost_usd.toFixed(2)}</td>
+                        </tr>
+                      );
+                    }),
+                )}
+              </tbody>
+            </table>
+          </div>
+          <p className="figure-caption">
+            {es
+              ? "Tabla 2. El mismo corpus y el mismo protocolo a dos topes. La corrida al tope mayor vive en data/runs/optimization-cap32768.jsonl y no entra en la Figura 1: la clave del libro mayor no incluye el tope, y mezclar las dos cambiaria lo que mide cada fila."
+              : "Table 2. The same corpus and protocol at two caps. The run at the larger cap lives in data/runs/optimization-cap32768.jsonl and is not in Figure 1: the ledger key does not include the cap, and mixing the two would change what each row measures."}
+          </p>
+        </>
+      )}
+    </section>
+  );
+}
+
+/* --------------------------------------------------------------- the tiers */
+
+function TierSection({ report, lang }: { report: GapReport; lang: "en" | "es" }) {
+  const es = lang === "es";
+  const tiers = useMemo(
+    () =>
+      [...new Set(Object.values(report.by_tier).flatMap((row) => Object.keys(row)))]
+        .map(Number)
+        .sort((a, b) => a - b),
+    [report.by_tier],
+  );
+  const columns: MatrixColumn[] = tiers.map((tier) => ({
+    key: String(tier),
+    label: String(tier),
+    title: `${es ? "nivel" : "tier"} ${tier}: ${TIER_NAME[tier]?.[lang] ?? ""}`,
+  }));
+
+  return (
+    <section>
+      <h2>{es ? "Degradacion con la dificultad" : "Degradation against difficulty"}</h2>
+      <p className="measure">
+        {es
+          ? "El corpus esta ordenado en cinco niveles, del enunciado donde toda cantidad esta dicha al enunciado que deja algo esencial sin determinar. Esta es la tasa de fidelidad de cada modelo contra ese orden, y es la vista que dice si un modelo se rompe en lo dificil o en todo por igual."
+          : "The corpus is ordered into five tiers, from the statement where every quantity is stated to the statement that leaves something material undetermined. This is each model's faithfulness rate against that order, and it is the view that says whether a model breaks on the hard cases or uniformly."}
+      </p>
+      <ModelMatrix
+        models={report.models}
+        columns={columns}
+        lang={lang}
+        label={es ? "Tasa de fidelidad por nivel y modelo" : "Faithfulness rate by tier and model"}
+        cornerLabel={es ? "nivel" : "tier"}
+        cell={(model, column) => {
+          const rate = report.by_tier[model.key]?.[column.key];
+          if (!rate || rate.total === 0) return null;
+          return {
+            text: `${rate.passed}/${rate.total}`,
+            share: rate.value,
+            tone: "accent",
+            detail: `${rate.passed}/${rate.total} = ${rate.value.toFixed(2)} [${rate.interval_low.toFixed(2)}, ${rate.interval_high.toFixed(2)}]`,
+          };
+        }}
+      />
       <div className="viz-legend">
         {tiers.map((tier) => (
           <span key={tier}>
@@ -376,122 +398,233 @@ function TierCurve({
           </span>
         ))}
       </div>
-    </>
-  );
-}
-
-/* --------------------------------------------------------- agreement matrix */
-
-function AgreementMatrix({
-  model,
-  counts,
-  lang,
-}: {
-  model: string;
-  counts: Record<string, number>;
-  lang: "en" | "es";
-}) {
-  const es = lang === "es";
-  const get = (key: string) => counts[key] ?? 0;
-  const ranFaithful = get("ran/faithful");
-  const ranNot = get("ran/not-faithful");
-  const notRan = get("did-not-run/not-faithful");
-  const impossible = get("did-not-run/faithful");
-  const ran = ranFaithful + ranNot;
-
-  return (
-    <div>
-      <h4 className="mono">{model}</h4>
-      <table className="finding-table">
-        <thead>
-          <tr>
-            <th />
-            <th className="num">{es ? "fiel" : "faithful"}</th>
-            <th className="num">{es ? "no fiel" : "not faithful"}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th>{es ? "corrio" : "ran"}</th>
-            <td className="num" style={{ color: "var(--color-good)", fontWeight: 600 }}>
-              {ranFaithful}
-            </td>
-            <td className="num" style={{ color: "var(--color-warn)", fontWeight: 600 }}>
-              {ranNot}
-            </td>
-          </tr>
-          <tr>
-            <th>{es ? "no corrio" : "did not run"}</th>
-            <td className="num" style={{ color: impossible ? "var(--color-bad)" : undefined }}>
-              {impossible}
-            </td>
-            <td className="num">{notRan}</td>
-          </tr>
-        </tbody>
-      </table>
-      <p className="small muted">
-        {es ? "de lo que corrio, fiel: " : "of what ran, faithful: "}
-        <strong>{ran ? (ranFaithful / ran).toFixed(3) : "–"}</strong>
-        {" · "}
-        {es ? "imposible por construccion: " : "impossible by construction: "}
-        {impossible}
+      <p className="figure-caption">
+        {es
+          ? "Figura 2. Casos fieles sobre casos medidos, por nivel. El tono es la tasa. Cada celda descansa sobre cuatro casos, asi que la tabla indica donde mirar y no sostiene una afirmacion sobre un nivel concreto."
+          : "Figure 2. Faithful cases over measured cases, per tier. The shade is the rate. Each cell rests on four cases, so the table indicates where to look and does not support a claim about any one tier."}
       </p>
-    </div>
+      <Refs ids={["scope2026", "agresti1998"]} label={es ? "Referencias" : "Refs"} />
+    </section>
   );
 }
 
-/* ------------------------------------------------------------- trap table */
+/* ------------------------------------------------------------ the failures */
 
-function TrapTable({
-  byTrap,
-  lang,
-}: {
-  byTrap: Record<string, Record<string, RateJson>>;
-  lang: "en" | "es";
-}) {
+function toneOf(key: string): Tone {
+  const found = failureClass(key);
+  if (!found) return "bad";
+  if (found.survived) return "good";
+  if (found.ran) return "warn";
+  if (key.startsWith("not measured") || key === "infeasible, as the case is") return "neutral";
+  return "bad";
+}
+
+function FailureSection({ report, lang }: { report: GapReport; lang: "en" | "es" }) {
   const es = lang === "es";
-  const models = Object.keys(byTrap);
-  const traps = [...new Set(models.flatMap((m) => Object.keys(byTrap[m])))].sort();
+  const breakdown = report.failure_breakdown;
+  const total = (key: string) =>
+    Object.values(breakdown).reduce((sum, counts) => sum + (counts[key] ?? 0), 0);
+  // The faithful column first, as the caption says, then the failures in the taxonomy's order.
+  const present = [
+    ...FAILURE_CLASSES.filter((c) => c.survived && total(c.key) > 0),
+    ...FAILURE_CLASSES.filter((c) => !c.survived && total(c.key) > 0),
+  ];
+  const unknown = [...new Set(Object.values(breakdown).flatMap((counts) => Object.keys(counts)))].filter(
+    (key) => !failureClass(key),
+  );
+  const columns: MatrixColumn[] = [...present.map((c) => c.key), ...unknown].map((key) => ({
+    key,
+    label: className(key, lang),
+    title: failureClass(key) ? `${className(key, lang)}: ${es ? failureClass(key)!.ruleEs : failureClass(key)!.ruleEn}` : key,
+    vertical: true,
+  }));
+
+  const failures = present.filter((c) => !c.survived);
+  const dominant = [...failures].sort((a, b) => total(b.key) - total(a.key))[0];
+  const invisible = failures.filter((c) => c.ran).reduce((sum, c) => sum + total(c.key), 0);
+  const failed = failures.reduce((sum, c) => sum + total(c.key), 0);
+  const leading = (model: ModelRow) => {
+    const counts = breakdown[model.key] ?? {};
+    return Object.entries(counts)
+      .filter(([key]) => !failureClass(key)?.survived)
+      .sort((a, b) => b[1] - a[1])[0]?.[0];
+  };
+  const leadingCounts = report.models.reduce<Record<string, number>>((acc, m) => {
+    const key = leading(m);
+    if (key) acc[key] = (acc[key] ?? 0) + 1;
+    return acc;
+  }, {});
 
   return (
-    <table className="finding-table">
-      <thead>
-        <tr>
-          <th>{es ? "Trampa" : "Trap"}</th>
-          <th>{es ? "Que atrapa" : "What it catches"}</th>
-          {models.map((model) => (
-            <th key={model} className="num mono">
-              {model}
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
+    <section>
+      <h2>{es ? "Que salio mal" : "What went wrong"}</h2>
+      <p className="measure">
+        {es
+          ? "La clase de cada fallo se deriva del mensaje que produjo la comprobacion, no se asigna a mano. La regla vive en data-pipeline/report.py y se puede volver a ejecutar sobre el libro mayor versionado. Las reglas exactas de cada clase estan en la taxonomia de Experimentos."
+          : "Each failure's class is derived from the message the check produced, never assigned by hand. The rule lives in data-pipeline/report.py and can be re-run over the committed ledger. Each class's exact rule is in the taxonomy on Experiments."}
+      </p>
+      <ModelMatrix
+        models={report.models}
+        columns={columns}
+        lang={lang}
+        label={es ? "Llamadas por clase de fallo y modelo" : "Calls by failure class and model"}
+        cell={(model, column) => {
+          const count = breakdown[model.key]?.[column.key] ?? 0;
+          return {
+            text: String(count),
+            share: model.calls ? count / model.calls : 0,
+            tone: toneOf(column.key),
+            detail: `${count} ${es ? "de" : "of"} ${model.calls} ${es ? "llamadas" : "calls"} (${model.calls ? Math.round((100 * count) / model.calls) : 0}%)`,
+          };
+        }}
+      />
+      <p className="figure-caption">
+        {es
+          ? `Figura 3. Llamadas por clase, una fila por modelo. La primera columna, en verde, no es un fallo. Las de tono ambar corrieron limpias y aun asi no eran el modelo pedido; las rojas fallaron ruidosamente. Solo se muestran las ${present.length} clases con al menos una llamada.`
+          : `Figure 3. Calls per class, one row per model. The first column, in green, is not a failure. The amber ones ran cleanly and still were not the model asked for; the red ones failed loudly. Only the ${present.length} classes with at least one call are shown.`}
+      </p>
+      {dominant && (
+        <p className="measure">
+          {es
+            ? `La clase mas frecuente en toda la medicion es "${className(dominant.key, lang)}", con ${total(dominant.key)} llamadas, y es la primera clase de fallo en ${leadingCounts[dominant.key] ?? 0} de los ${report.models.length} modelos. ${invisible} de los ${failed} fallos corrieron limpiamente, invisibles para un solucionador; todo lo demas fallo ruidosamente. Esa proporcion es en si misma un resultado, y a este tamano de muestra es una pista.`
+            : `The most frequent class across the whole measurement is "${className(dominant.key, lang)}", with ${total(dominant.key)} calls, and it is the leading failure for ${leadingCounts[dominant.key] ?? 0} of the ${report.models.length} models. ${invisible} of the ${failed} failures ran cleanly, invisible to a solver; everything else failed loudly. That ratio is itself a finding, and at this sample size it is a hint.`}
+        </p>
+      )}
+      <Refs ids={["survey2025", "segura2016"]} label={es ? "Referencias" : "Refs"} />
+    </section>
+  );
+}
+
+/* ----------------------------------------------------------- the agreement */
+
+function AgreementSection({ report, lang }: { report: GapReport; lang: "en" | "es" }) {
+  const es = lang === "es";
+  const columns: MatrixColumn[] = [
+    { key: "ran/faithful", label: es ? "corrio, fiel" : "ran, faithful" },
+    { key: "ran/not-faithful", label: es ? "corrio, no fiel" : "ran, not faithful" },
+    { key: "did-not-run/not-faithful", label: es ? "no corrio" : "did not run" },
+    { key: "did-not-run/faithful", label: es ? "fiel sin correr" : "faithful, did not run" },
+    { key: "precision", label: es ? "fiel de lo que corrio" : "faithful of what ran" },
+  ];
+  const tone: Record<string, Tone> = {
+    "ran/faithful": "good",
+    "ran/not-faithful": "warn",
+    "did-not-run/not-faithful": "neutral",
+    "did-not-run/faithful": "bad",
+  };
+  const impossible = report.models.reduce(
+    (sum, m) => sum + (report.layer_agreement[m.key]?.["did-not-run/faithful"] ?? 0),
+    0,
+  );
+
+  return (
+    <section>
+      <h2>{es ? "Acuerdo entre capas" : "Agreement between layers"}</h2>
+      <p className="measure">
+        {es
+          ? "La comprobacion barata y la cara sobre los mismos casos. La columna que importa es la segunda: formalizaciones que se ejecutaron limpiamente y aun asi no eran el modelo descrito. La cuarta esta vacia por construccion, porque fiel exige corrio, y un numero ahi significaria que las definiciones se desalinearon."
+          : "The cheap check and the expensive one over the same cases. The column that matters is the second: formalizations that ran cleanly and still were not the model described. The fourth is empty by construction, because faithful requires ran, and a number there would mean the definitions drifted apart."}
+      </p>
+      <ModelMatrix
+        models={report.models}
+        columns={columns}
+        lang={lang}
+        label={es ? "Acuerdo entre la capa ejecutable y las de fidelidad" : "Agreement between the executable and faithfulness layers"}
+        cell={(model, column) => {
+          const counts = report.layer_agreement[model.key] ?? {};
+          const measured = Object.values(counts).reduce((a, b) => a + b, 0);
+          if (column.key === "precision") {
+            const ran = (counts["ran/faithful"] ?? 0) + (counts["ran/not-faithful"] ?? 0);
+            if (!ran) return { text: "–", share: 0, tone: "neutral", detail: es ? "nada corrio" : "nothing ran" };
+            const value = (counts["ran/faithful"] ?? 0) / ran;
+            return {
+              text: value.toFixed(2),
+              share: value,
+              tone: "good",
+              detail: `${counts["ran/faithful"] ?? 0}/${ran} = ${value.toFixed(3)}`,
+            };
+          }
+          const count = counts[column.key] ?? 0;
+          return {
+            text: String(count),
+            share: measured ? count / measured : 0,
+            tone: tone[column.key],
+            detail: `${count} ${es ? "de" : "of"} ${measured} ${es ? "medidas" : "measured"}`,
+          };
+        }}
+      />
+      <p className="figure-caption">
+        {es
+          ? `Figura 4. Las cuatro casillas de la confusion entre capas, y la fraccion fiel de lo que corrio. La casilla imposible suma ${impossible} en todos los modelos.`
+          : `Figure 4. The four cells of the confusion between layers, and the faithful fraction of what ran. The impossible cell sums to ${impossible} across every model.`}
+      </p>
+      <Equation
+        tex={String.raw`\text{precision}_{\text{ran}} = \frac{\#(\text{ran} \wedge \text{faithful})}{\#(\text{ran})}`}
+        caption={
+          es
+            ? "Que fraccion de lo que se ejecuta es ademas fiel. Es la cifra que el campo informa como si fuera 1, y aqui se mide."
+            : "What fraction of what executes is also faithful. It is the figure the field reports as if it were 1, and here it is measured."
+        }
+      />
+      <Refs ids={["lean2026", "orgeval2025"]} label={es ? "Referencias" : "Refs"} />
+    </section>
+  );
+}
+
+/* --------------------------------------------------------------- the traps */
+
+function TrapSection({ report, lang }: { report: GapReport; lang: "en" | "es" }) {
+  const es = lang === "es";
+  const traps = useMemo(
+    () => [...new Set(Object.values(report.by_trap).flatMap((row) => Object.keys(row)))].sort(),
+    [report.by_trap],
+  );
+  const columns: MatrixColumn[] = traps.map((trap) => ({
+    key: trap,
+    label: trap,
+    title: `${trap}: ${TRAP_NAME[trap]?.[lang] ?? trap}`,
+    vertical: true,
+  }));
+
+  return (
+    <section>
+      <h2>{es ? "Por trampa" : "By trap"}</h2>
+      <p className="measure">
+        {es
+          ? "Cada caso se escribio alrededor de una manera concreta de leer mal el enunciado. Esta tabla dice cuales atraparon a cada modelo. Los denominadores son pequenos y estan a la vista en cada celda."
+          : "Each case was written around one concrete way of misreading the statement. This table says which ones caught which model. The denominators are small and are shown in every cell."}
+      </p>
+      <ModelMatrix
+        models={report.models}
+        columns={columns}
+        lang={lang}
+        label={es ? "Tasa de fidelidad por trampa y modelo" : "Faithfulness rate by trap and model"}
+        cornerLabel={es ? "trampa" : "trap"}
+        cell={(model, column) => {
+          const rate = report.by_trap[model.key]?.[column.key];
+          if (!rate || rate.total === 0) return null;
+          return {
+            text: `${rate.passed}/${rate.total}`,
+            share: rate.value,
+            tone: "accent",
+            detail: `${rate.passed}/${rate.total} = ${rate.value.toFixed(2)}`,
+          };
+        }}
+      />
+      <div className="viz-legend">
         {traps.map((trap) => (
-          <tr key={trap}>
-            <td className="mono">{trap}</td>
-            <td>{TRAP_NAME[trap]?.[lang] ?? trap}</td>
-            {models.map((model) => {
-              const rate = byTrap[model][trap];
-              return (
-                <td key={model} className="num">
-                  {rate ? (
-                    <>
-                      {rate.value.toFixed(2)}{" "}
-                      <span className="faint">
-                        ({rate.passed}/{rate.total})
-                      </span>
-                    </>
-                  ) : (
-                    "–"
-                  )}
-                </td>
-              );
-            })}
-          </tr>
+          <span key={trap}>
+            <strong className="mono">{trap}</strong> {TRAP_NAME[trap]?.[lang] ?? trap}
+          </span>
         ))}
-      </tbody>
-    </table>
+      </div>
+      <p className="figure-caption">
+        {es
+          ? "Figura 5. Casos fieles sobre casos medidos, por la trampa alrededor de la que se escribio cada caso. Un caso puede llevar mas de una trampa."
+          : "Figure 5. Faithful cases over measured cases, by the trap each case was written around. A case can carry more than one trap."}
+      </p>
+      <Refs ids={["survey2025", "nl4opt2023"]} label={es ? "Referencias" : "Refs"} />
+    </section>
   );
 }
 

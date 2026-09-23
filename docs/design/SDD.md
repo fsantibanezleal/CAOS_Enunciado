@@ -194,7 +194,38 @@ R-029  IF a reply was all reasoning and no answer, THEN THE taxonomy SHALL class
 
 R-030  IF the sweep runner refuses to start, THEN THE runner SHALL leave the ledger unlocked.
        Gate: tests/test_sweep_runner.py::test_a_refused_sweep_leaves_the_ledger_unlocked
+
+R-031  THE report SHALL name every model by its provider and its id, list the models once in one
+       order, and key every breakdown by that name.
+       Gate: tests/test_report_shape.py::test_every_model_is_its_provider_and_id_once_in_one_order
+
+R-032  WHEN the report holds several models, THE Benchmark SHALL draw each of them once in Figure 1,
+       in Table 1 and in every model matrix, and SHALL NOT scroll the page sideways.
+       Gate: tools/visual-verify/verify.mjs
+
+R-033  THE site SHALL show every failure class the classifier can return, in the reader's language,
+       from one list held equal to the classifier.
+       Gate: tests/test_failure_classes.py::test_the_site_names_every_class_the_classifier_can_return
+
+R-034  WHERE a ledger at a second output cap exists, THE report SHALL publish the comparison with the
+       main ledger, and CI SHALL recount both sides from their ledgers.
+       Gate: scripts/check_artifacts.py
+
+R-035  THE report's caveats SHALL be computed from the ledger, and every departure from the stated
+       protocol SHALL be published as a caveat.
+       Gate: tests/test_report_shape.py::test_the_caveats_are_computed_from_the_records
 ```
+
+R-031 to R-035 came with the second, many-model measurement. The site had been drawn for two
+Claude models and nothing failed when a third ran: every view iterated the data, so none broke, and
+every check counted the elements that existed rather than comparing them with the models the report
+held. What broke was quieter. The breakdowns were keyed by the id alone while copela's cells were
+keyed by provider and id; each figure took its own order; the palettes had two and three colours;
+the trap table ran off the page, where the shell clips instead of scrolling; the caveats and a dozen
+sentences went on describing "these two models"; and the failure classes reached the Spanish page in
+English. R-034 exists because the 8192-token cap turned out to decide most of the reasoning models'
+results, which a table at one cap cannot show, and a second cap cannot share the main ledger, whose
+key has no cap in it.
 
 R-029 and R-030 came with the first sweeps outside Anthropic. A reasoning model spends its output
 cap on reasoning first, and copela reports a reply that was all reasoning as one sentence on every

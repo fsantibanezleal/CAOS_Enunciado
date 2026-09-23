@@ -262,15 +262,48 @@
 .diag-top { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.35rem; }
 .diag-top strong { font: 700 1.05rem var(--font-mono); color: var(--color-fg); }
 .diag-top span { font-size: 0.78rem; color: var(--color-fg-subtle); }
+/* One line per attempt: the id takes the space, the three layers sit at the right. The row's left
+   edge carries its failure class, so a dozen rows read without a column of wrapped class names. */
+.diag-rows { max-height: 22rem; overflow-y: auto; scrollbar-width: thin; }
+.diag-provider {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.45rem 0 0.1rem;
+  font-size: 0.66rem;
+  font-weight: 600;
+  color: var(--color-fg-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
 .diag-row {
   display: grid;
-  grid-template-columns: 5.2rem auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 0.45rem;
-  margin: 0.2rem 0;
+  margin: 0.12rem 0;
+  padding-left: 0.4rem;
+  border-left: 3px solid var(--color-border);
   font-size: 0.74rem;
 }
+.diag-row.tone-good { border-left-color: var(--color-good); }
+.diag-row.tone-warn { border-left-color: var(--color-warn); }
+.diag-row.tone-bad { border-left-color: var(--color-bad); }
+.diag-row.tone-neutral { border-left-color: var(--color-fg-faint); }
 .diag-model { color: var(--color-fg); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.diag-classes { display: flex; flex-wrap: wrap; gap: 0.25rem; margin: 0.1rem 0 0.2rem; }
+.diag-class-chip {
+  font-size: 0.66rem;
+  line-height: 1.4;
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  color: var(--color-fg-subtle);
+}
+.diag-class-chip strong { font-family: var(--font-mono); color: var(--color-fg); }
+.diag-class-chip.tone-good { border-color: var(--color-good); }
+.diag-class-chip.tone-warn { border-color: var(--color-warn); }
+.diag-class-chip.tone-bad { border-color: var(--color-bad); }
 .diag-layers { display: inline-flex; gap: 0.15rem; }
 .diag-layer {
   width: 1.15rem;
@@ -287,7 +320,6 @@
 .diag-layer.is-undecided { background: color-mix(in oklab, var(--color-warn) 18%, transparent); border-color: var(--color-warn); color: var(--color-warn); }
 .diag-layer.is-not-reached,
 .diag-layer.is-not-applicable { border-style: dashed; }
-.diag-class { color: var(--color-fg-subtle); line-height: 1.3; }
 .diag-note { margin: 0.35rem 0 0; font-size: 0.68rem; line-height: 1.4; color: var(--color-fg-faint); }
 
 /* ---------- parameter sliders: the continuous parametrization ---------- */
@@ -1005,3 +1037,101 @@ button.chip:disabled:hover {
   color: var(--color-fg-subtle);
 }
 .chip.on:disabled { background: var(--color-surface-2); }
+
+/* ---------- the model matrix (Benchmark, many models) ---------- */
+
+/* The frame scrolls, the page does not: the shell sets overflow-x hidden on html and body, so a
+   table wider than the page is clipped out of reach rather than scrolled to. */
+.matrix-scroll {
+  overflow-x: auto;
+  max-width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  scrollbar-width: thin;
+}
+
+.matrix {
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.8rem;
+  width: max-content;
+  min-width: 100%;
+}
+
+.matrix th,
+.matrix td {
+  padding: 0.28rem 0.5rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.matrix .row-head {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--color-surface);
+  text-align: left;
+  white-space: nowrap;
+  font-weight: 600;
+  color: var(--color-fg);
+  max-width: 16rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.matrix .corner {
+  color: var(--color-fg-faint);
+  font-weight: 500;
+  vertical-align: bottom;
+}
+
+.matrix .col-head {
+  font-weight: 600;
+  color: var(--color-fg-subtle);
+  vertical-align: bottom;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* A long class name wraps into a second vertical line rather than being cut: the name is the
+   column's whole meaning, and an ellipsis made three of them unreadable. */
+.matrix .col-head.vertical span {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  display: inline-block;
+  max-height: 13rem;
+  white-space: normal;
+  line-height: 1.25;
+  text-align: left;
+}
+
+.matrix tr.group .row-head {
+  font-size: 0.74rem;
+  color: var(--color-fg-subtle);
+  padding-top: 0.55rem;
+}
+
+.matrix .group-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.matrix td.cell {
+  text-align: center;
+  font-family: var(--font-mono);
+  min-width: 2.4rem;
+  cursor: help;
+}
+
+.matrix td.cell.empty { color: var(--color-fg-faint); cursor: default; }
+.matrix tbody tr:hover .row-head,
+.matrix tbody tr:hover td.cell { box-shadow: inset 0 1px 0 var(--color-accent), inset 0 -1px 0 var(--color-accent); }
+
+/* A wide table scrolls inside its own frame: the shell's overflow-x hidden on html and body would
+   otherwise clip its last columns out of reach. */
+.table-scroll {
+  overflow-x: auto;
+  max-width: 100%;
+  scrollbar-width: thin;
+}

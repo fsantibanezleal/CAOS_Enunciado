@@ -445,8 +445,8 @@ export function IntroductionPage() {
             <ul className="cross-list">
               <li>
                 {es
-                  ? "Cualquier orden entre modelos a este tamano de muestra: los intervalos se solapan casi por completo."
-                  : "Any ranking between models at this sample size: the intervals overlap almost entirely."}
+                  ? "Cualquier orden entre dos modelos cuyos intervalos se solapan, que a este tamano de muestra es la mayoria de los pares."
+                  : "Any ranking between two models whose intervals overlap, which at this sample size is most pairs."}
               </li>
               <li>
                 {es
@@ -469,8 +469,8 @@ export function IntroductionPage() {
 
         <Callout variant="honest" title={es ? "El tamano de la muestra" : "The sample size"}>
           {es
-            ? "Dos pasadas sobre el corpus identico situaron al mismo modelo en 0,350 y luego en 0,250. No cambio nada salvo el muestreo. Veinte casos con una repeticion pueden ver que existe una brecha; no pueden ordenar dos modelos cuyos intervalos se solapan casi del todo, y esta pagina no lo intenta."
-            : "Two passes over the identical corpus put the same model at 0.350 and then at 0.250. Nothing changed but the sampling. Twenty cases at one repeat can see that a gap exists; they cannot rank two models whose intervals overlap almost entirely, and this page does not try."}
+            ? "Dos pasadas sobre el corpus identico situaron a claude-haiku-4-5 en 0,350 y luego en 0,250. No cambio nada salvo el muestreo. Veinte casos con una repeticion pueden ver que existe una brecha; no pueden ordenar dos modelos cuyos intervalos se solapan, y esta pagina no lo intenta."
+            : "Two passes over the identical corpus put claude-haiku-4-5 at 0.350 and then at 0.250. Nothing changed but the sampling. Twenty cases at one repeat can see that a gap exists; they cannot rank two models whose intervals overlap, and this page does not try."}
         </Callout>
 
         <Refs ids={["beams2026", "highs", "pyomo"]} label={es ? "Referencias" : "Refs"} />
