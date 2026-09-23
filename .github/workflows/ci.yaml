@@ -59,6 +59,18 @@ jobs:
       - name: The SDD gate, every requirement names its verification
         run: python scripts/check_sdd.py
 
+      - name: The docs wiki is present and its links resolve
+        # ADR-0056 makes the wiki binding, and a binding thing with no check is a wish. This catches
+        # the two ways documentation rots that a machine can see: a theme folder that lost its
+        # landing page, and a link to a file that was renamed. Both look fine in a diff.
+        run: python scripts/check_docs.py
+
+      - name: The VERSION file and the version the site shows agree
+        # They drifted the first time the product was versioned after release: VERSION said 0.02.000
+        # and every page footer said 0.01.000. A version a reader can see is a claim about what they
+        # are looking at, and a wrong one points bug reports at the wrong build.
+        run: python scripts/check_version.py
+
       - name: The committed artifacts are present and readable
         # Stdlib only. It checks that the bake was run and committed; it does NOT re-run the bake.
         run: python scripts/check_artifacts.py
