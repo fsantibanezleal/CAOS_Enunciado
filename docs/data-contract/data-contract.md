@@ -10,7 +10,7 @@ versioned.
 | `data/artifacts/cases.json` | `bake.py` | the site, `check_artifacts.py` | yes |
 | `data/artifacts/manifest.json` | `bake.py` | the site, `check_artifacts.py` | yes |
 | `data/artifacts/gap-report.json` | `report.py` | the Benchmark page, `report.py --check` | yes |
-| `data/artifacts/attempts.json` | `report.py` | the workbench's Attempts and Failure anatomy tabs | yes |
+| `data/artifacts/attempts.json` | `report.py` | the workbench sidebar's diagnosis, and its Attempts and Failure anatomy tabs | yes |
 | `data/runs/*.jsonl` | `sweep_run.py` | `report.py` | yes |
 | `frontend/public/data/*` | mirrored | the dev server | **no**, it is a working copy |
 
@@ -101,7 +101,7 @@ of CI.
 
 ## `attempts.json`
 
-The ledger re-keyed by case, for the workbench's two learned-model tabs. Nothing in it is a new
+The ledger re-keyed by case, for the workbench sidebar's per-case diagnosis and its two learned-model tabs. It loads with the workbench, once. Nothing in it is a new
 measurement: each record's failure class is derived by the same rule the report's breakdown uses, so
 the workbench and the Benchmark cannot tell two different stories about one call.
 

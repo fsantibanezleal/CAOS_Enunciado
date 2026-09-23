@@ -75,8 +75,8 @@ oracle.
 .\run.ps1 setup        # venv, requirements.txt, and npm ci in frontend/ and tools/visual-verify/
 .\run.ps1 check        # lint, every guard, report re-derivation, method tests, figure export
 .\run.ps1 dev          # the site at http://localhost:5904
-.\run.ps1 verify       # build, then 165 browser checks against the built site
-.\run.ps1 live         # the same 165 checks against https://enunciado.fasl-work.com
+.\run.ps1 verify       # build, then 171 browser checks against the built site
+.\run.ps1 live         # the same 171 checks against https://enunciado.fasl-work.com
 .\run.ps1 diagrams     # re-export the wiki's figures from the page components
 ```
 
@@ -116,7 +116,9 @@ Four things, and three of them have caught real defects here:
   the anatomy of each failure)
 - method tests that prove the structural and answer methods on all twenty cases, with the HiGHS
   build the site ships, each mutation-checked
-- 165 browser checks in dark, light and Spanish, which also run against the deployed origin
+- a sidebar that diagnoses the selected case from the ledger, layer by layer, and a gauge of how
+  far the reader's parameters have moved the answer from the statement's own
+- 171 browser checks in dark, light and Spanish, which also run against the deployed origin
 - a docs wiki whose figures are exported from the same components the pages draw
 
 Not built, and not claimed: the three other target families (mathematical formulation, experiment

@@ -35,9 +35,12 @@ def _ledger_rates(records: list[dict]) -> dict[str, tuple[int, int, int]]:
     """The two headline counts per model, recomputed from the raw ledger with nothing but json.
 
     ran = the executable layer passed. faithful = it ran AND neither the structural nor the property
-    layer failed. Unmeasured calls (NOT_APPLICABLE at the executable layer) leave both. This is the
-    same definition `report.py` applies through `copela`, restated in twenty lines so CI can check it
-    without installing anything or running a pipeline script (ADR-0074 rules 1 and 3).
+    layer failed AND at least one of them passed. Unmeasured calls (NOT_APPLICABLE at the executable
+    layer) leave both. This is copela's `Verdicts.faithful`, restated so CI can check it without
+    installing anything or running a pipeline script (ADR-0074 rules 1 and 3). The restatement once
+    dropped the "at least one passed" clause and still agreed with every published number, because
+    the ledger holds no candidate on which both strong layers were undecided; agreeing on this data
+    is not the same as being the same rule.
     """
     counts: dict[str, list[int]] = {}
     for record in records:
@@ -45,7 +48,8 @@ def _ledger_rates(records: list[dict]) -> dict[str, tuple[int, int, int]]:
         if verdicts.get("executable") == "not-applicable":
             continue
         ran = verdicts.get("executable") == "pass"
-        faithful = ran and "fail" not in (verdicts.get("structural"), verdicts.get("property"))
+        strong = (verdicts.get("structural"), verdicts.get("property"))
+        faithful = ran and "fail" not in strong and "pass" in strong
         tally = counts.setdefault(record["model_id"], [0, 0, 0])
         tally[0] += int(ran)
         tally[1] += int(faithful)

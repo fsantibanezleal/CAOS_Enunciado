@@ -10,25 +10,34 @@
 
 import type { ArchTab } from "@fasl-work/caos-app-shell";
 
-/** Shared defs: the palette tokens and the text styles every diagram uses. */
+/**
+ * Shared defs: the palette tokens and the text styles every diagram uses.
+ *
+ * The tokens are the shell's own `--color-*` names. These styles once asked for `--surface-2`,
+ * `--border`, `--text` and five more names the shell does not define, so every var() fell through
+ * to its fallback, which was the dark palette: in the light theme the modal drew dark boxes with
+ * light text on a light page, the opposite of the theme-aware figure ADR-0058 requires, and a
+ * gate that only counted the SVGs was green. The fallbacks stay, for a page that renders a string
+ * outside the shell, and the gate now checks that every token the modal names resolves.
+ */
 const DEFS = `
   <style>
-    .bx { fill: var(--surface-2, #1b1f27); stroke: var(--border, #39414f); stroke-width: 1.5; rx: 6; }
-    .bx-accent { fill: var(--accent-soft, #1d2b3a); stroke: var(--accent, #5aa9e6); stroke-width: 1.5; rx: 6; }
-    .bx-warn { fill: var(--surface-2, #1b1f27); stroke: var(--warn, #d8973c); stroke-width: 1.5; rx: 6; }
-    .lbl { fill: var(--text, #e6e9ef); font: 600 12px ui-sans-serif, system-ui, sans-serif; }
-    .sub { fill: var(--text-muted, #97a0af); font: 400 10.5px ui-sans-serif, system-ui, sans-serif; }
-    .mono { fill: var(--text-muted, #97a0af); font: 400 10px ui-monospace, SFMono-Regular, Menlo, monospace; }
-    .arrow { stroke: var(--border-strong, #5b6676); stroke-width: 1.5; fill: none; marker-end: url(#ah); }
-    .arrow-accent { stroke: var(--accent, #5aa9e6); stroke-width: 1.8; fill: none; marker-end: url(#aha); }
+    .bx { fill: var(--color-surface-2, #1c2230); stroke: var(--color-border, #30363d); stroke-width: 1.5; rx: 6; }
+    .bx-accent { fill: var(--color-accent-soft, #132036); stroke: var(--color-accent, #58a6ff); stroke-width: 1.5; rx: 6; }
+    .bx-warn { fill: var(--color-surface-2, #1c2230); stroke: var(--color-warn, #d29922); stroke-width: 1.5; rx: 6; }
+    .lbl { fill: var(--color-fg, #c9d1d9); font: 600 12px ui-sans-serif, system-ui, sans-serif; }
+    .sub { fill: var(--color-fg-subtle, #9aa6b2); font: 400 10.5px ui-sans-serif, system-ui, sans-serif; }
+    .mono { fill: var(--color-fg-subtle, #9aa6b2); font: 400 10px ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .arrow { stroke: var(--color-fg-faint, #6c7785); stroke-width: 1.5; fill: none; marker-end: url(#ah); }
+    .arrow-accent { stroke: var(--color-accent, #58a6ff); stroke-width: 1.8; fill: none; marker-end: url(#aha); }
     .dashed { stroke-dasharray: 4 3; }
   </style>
   <defs>
     <marker id="ah" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
-      <path d="M0 0 L8 4 L0 8 z" fill="var(--border-strong, #5b6676)"/>
+      <path d="M0 0 L8 4 L0 8 z" fill="var(--color-fg-faint, #6c7785)"/>
     </marker>
     <marker id="aha" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
-      <path d="M0 0 L8 4 L0 8 z" fill="var(--accent, #5aa9e6)"/>
+      <path d="M0 0 L8 4 L0 8 z" fill="var(--color-accent, #58a6ff)"/>
     </marker>
   </defs>`;
 
@@ -53,7 +62,7 @@ const WHAT_IT_IS = `<svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg
   ${bi(36, 122, "ambiguous, unit-bearing", "ambiguo, con unidades", "sub")}
 
   <path class="arrow-accent" d="M175 100 L255 100"/>
-  ${bi(185, 90, "a model reads it", "un modelo lo lee", "sub")}
+  ${bi(180, 88, "a model reads it", "un modelo lo lee", "sub")}
 
   <rect class="bx-accent" x="260" y="45" width="170" height="110"/>
   ${bi(276, 72, "A formal document", "Un documento formal")}
@@ -98,11 +107,12 @@ const LANES = `<svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" rol
   ${bi(228, 140, "committed", "versionado", "sub")}
 
   <rect class="bx-accent" x="300" y="95" width="160" height="110"/>
-  ${bi(316, 120, "The artifacts", "Los artefactos")}
-  ${mono(316, 140, "data/artifacts/cases.json")}
-  ${mono(316, 156, "manifest.json")}
-  ${bi(316, 178, "221 KB, versioned", "221 KB, versionados", "sub")}
-  ${bi(316, 194, "the only source of numbers", "unica fuente de numeros", "sub")}
+  ${bi(316, 118, "The artifacts", "Los artefactos")}
+  ${mono(316, 136, "cases.json, manifest")}
+  ${mono(316, 150, "gap-report.json")}
+  ${mono(316, 164, "attempts.json")}
+  ${bi(316, 182, "322 KB, versioned", "322 KB, versionados", "sub")}
+  ${bi(316, 197, "the only source of numbers", "unica fuente de numeros", "sub")}
 
   <path class="arrow" d="M465 150 L535 150"/>
 
@@ -115,9 +125,9 @@ const LANES = `<svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" rol
 
   <rect class="bx" x="540" y="160" width="160" height="120"/>
   ${bi(556, 185, "LIVE, in your browser", "EN VIVO, en su navegador")}
-  ${bi(556, 204, "edit a case and re-solve", "edite un caso y resuelva", "sub")}
+  ${bi(556, 204, "re-solves, sweeps, certifies", "resuelve, barre, certifica", "sub")}
   ${mono(556, 224, "HiGHS compiled to WASM")}
-  ${bi(556, 244, "3.37 MB, loaded on demand", "3.37 MB, bajo demanda", "sub")}
+  ${bi(556, 244, "3.37 MB, fetched on first use", "3.37 MB, en su primer uso", "sub")}
   ${bi(556, 262, "no server, ever", "sin servidor, nunca", "sub")}
 </svg>`;
 
@@ -253,9 +263,9 @@ export const ArchitectureTabs: ArchTab[] = [
     en: "The lanes",
     es: "Los carriles",
     body_en:
-      "Three lanes, and the separation between them is what makes a published number trustworthy.\n\nOFFLINE is the canonical truth. It runs locally, never in continuous integration, and it is the only thing that writes artifacts. It solves every reference, checks every claimed answer against the solver, and runs every property relation against the reference. That last check has already earned its place: three of the twenty claimed optima in this corpus were wrong when first written, and the bake caught all three.\n\nREPLAY is what the page does. It reads committed artifacts and computes nothing, so every number on screen traces back to the bake that produced it.\n\nLIVE is additional and optional. Editing a case re-solves it in your browser with HiGHS compiled to WebAssembly, 3.37 megabytes loaded on demand. It is measured, not assumed: a probe in this repository solves real corpus cases in a real browser.",
+      "Three lanes, and the separation between them is what makes a published number trustworthy.\n\nOFFLINE is the canonical truth. It runs locally, never in continuous integration, and it is the only thing that writes artifacts. It solves every reference, checks every claimed answer against the solver, and runs every property relation against the reference. That last check has already earned its place: three of the twenty claimed optima in this corpus were wrong when first written, and the bake caught all three.\n\nREPLAY is what the page does. It reads committed artifacts and computes nothing, so every number on screen traces back to the bake that produced it.\n\nLIVE explains the answer and publishes nothing. The workbench re-solves the case in your browser with HiGHS compiled to WebAssembly, 3.37 megabytes fetched on first use: across a parameter's range on the landing tab, again on every edit, and for the duality certificate and the integrality gap. It is measured, not assumed: a probe in this repository solves real corpus cases in a real browser.",
     body_es:
-      "Tres carriles, y la separacion entre ellos es lo que hace confiable un numero publicado.\n\nSIN CONEXION es la verdad canonica. Corre localmente, nunca en integracion continua, y es lo unico que escribe artefactos. Resuelve cada referencia, verifica cada respuesta declarada contra el solver, y corre cada relacion de propiedad contra la referencia. Esa ultima verificacion ya se gano su lugar: tres de los veinte optimos declarados en este corpus estaban mal al escribirse, y el calculo los detecto.\n\nREPRODUCCION es lo que hace la pagina. Lee artefactos versionados y no calcula nada, de modo que cada numero en pantalla se remonta al calculo que lo produjo.\n\nEN VIVO es adicional y opcional. Editar un caso lo resuelve en su navegador con HiGHS compilado a WebAssembly, 3,37 megabytes bajo demanda. Esta medido, no supuesto: una sonda en este repositorio resuelve casos reales en un navegador real.",
+      "Tres carriles, y la separacion entre ellos es lo que hace confiable un numero publicado.\n\nSIN CONEXION es la verdad canonica. Corre localmente, nunca en integracion continua, y es lo unico que escribe artefactos. Resuelve cada referencia, verifica cada respuesta declarada contra el solver, y corre cada relacion de propiedad contra la referencia. Esa ultima verificacion ya se gano su lugar: tres de los veinte optimos declarados en este corpus estaban mal al escribirse, y el calculo los detecto.\n\nREPRODUCCION es lo que hace la pagina. Lee artefactos versionados y no calcula nada, de modo que cada numero en pantalla se remonta al calculo que lo produjo.\n\nEN VIVO explica la respuesta y no publica nada. El banco de trabajo vuelve a resolver el caso en su navegador con HiGHS compilado a WebAssembly, 3,37 megabytes descargados en su primer uso: a lo largo del rango de un parametro en la pestana de entrada, de nuevo en cada edicion, y para el certificado de dualidad y la brecha de integralidad. Esta medido, no supuesto: una sonda en este repositorio resuelve casos reales en un navegador real.",
     svg: LANES,
   },
   {
@@ -273,9 +283,9 @@ export const ArchitectureTabs: ArchTab[] = [
     en: "The web flow",
     es: "El flujo web",
     body_en:
-      "A static page with no backend. No published number is computed in the page: the case file is fetched rather than bundled, so the first paint does not wait on 220 kilobytes of JSON, and every rate, interval and verdict shown is replayed from what the bake committed.\n\nThe shell, the header, the footer, the theme and the language toggle all come from a package shared across this line of products, so they are identical by construction and a fix lands once rather than in every app.\n\nThe workbench shows one case at a time, through fourteen methods in four groups: the statement (provenance, open questions, dimensions, coverage), the model (canonical form, the graph and Weisfeiler-Lehman refinement, metamorphic relations), the answer (sensitivity, feasible region, activity, duality, integrality gap) and the models (every attempt, and the anatomy of each failure). A cross-case summary answers 'across all cases' and belongs on Experiments or Benchmark; the workbench answers 'what happened here'.\n\nThe solver is a separate 3.37-megabyte chunk fetched on first use rather than bundled. On the workbench first use is immediate, because the landing tab re-solves the reference across a parameter's range; the five document pages never fetch it. The answer tabs check what it returns rather than display it: the Duality tab evaluates the four optimality conditions from the numbers. The ledger's per-case attempts, attempts.json, are fetched only when a learned-model tab opens.",
+      "A static page with no backend. No published number is computed in the page: the case file is fetched rather than bundled, so the first paint does not wait on 220 kilobytes of JSON, and every rate, interval and verdict shown is replayed from what the bake committed.\n\nThe shell, the header, the footer, the theme and the language toggle all come from a package shared across this line of products, so they are identical by construction and a fix lands once rather than in every app.\n\nThe workbench shows one case at a time, through fourteen methods in four groups: the statement (provenance, open questions, dimensions, coverage), the model (canonical form, the graph and Weisfeiler-Lehman refinement, metamorphic relations), the answer (sensitivity, feasible region, activity, duality, integrality gap) and the models (every attempt, and the anatomy of each failure). A cross-case summary answers 'across all cases' and belongs on Experiments or Benchmark; the workbench answers 'what happened here'.\n\nThe solver is a separate 3.37-megabyte chunk fetched on first use rather than bundled. On the workbench first use is immediate, because the landing tab re-solves the reference across a parameter's range; the five document pages never fetch it. The answer tabs check what it returns rather than display it: the Duality tab evaluates the four optimality conditions from the numbers. The ledger's per-case attempts, attempts.json at 90 kilobytes, load with the workbench, because the sidebar's diagnosis shows how each model fared on the selected case, layer by layer; the two learned-model tabs read the same file.",
     body_es:
-      "Una pagina estatica sin servidor. Ningun numero publicado se calcula en la pagina: el archivo de casos se descarga en vez de empaquetarse, de modo que el primer render no espera 220 kilobytes de JSON, y cada tasa, intervalo y veredicto mostrado se reproduce de lo que el calculo dejo versionado.\n\nEl shell, el encabezado, el pie, el tema y el selector de idioma vienen de un paquete compartido por esta linea de productos, asi que son identicos por construccion y una correccion se aplica una sola vez.\n\nEl banco de trabajo muestra un caso a la vez, con catorce metodos en cuatro grupos: el enunciado (procedencia, preguntas abiertas, dimensiones, cobertura), el modelo (forma canonica, el grafo y el refinamiento de Weisfeiler-Lehman, relaciones metamorficas), la respuesta (sensibilidad, region factible, actividad, dualidad, brecha de integralidad) y los modelos (cada intento, y la anatomia de cada fallo). Un resumen entre casos responde 'en todos los casos' y pertenece a Experimentos o Comparativa; el banco responde 'que paso aqui'.\n\nEl solver es un bloque aparte de 3,37 megabytes que se descarga en su primer uso en vez de empaquetarse. En el banco de trabajo el primer uso es inmediato, porque la pestana de entrada vuelve a resolver la referencia a lo largo del rango de un parametro; las cinco paginas de documentos nunca lo descargan. Las pestanas de la respuesta comprueban lo que devuelve en vez de mostrarlo: la pestana Dualidad evalua las cuatro condiciones de optimalidad desde los numeros. Los intentos por caso del libro mayor, attempts.json, se descargan solo cuando se abre una pestana de los modelos aprendidos.",
+      "Una pagina estatica sin servidor. Ningun numero publicado se calcula en la pagina: el archivo de casos se descarga en vez de empaquetarse, de modo que el primer render no espera 220 kilobytes de JSON, y cada tasa, intervalo y veredicto mostrado se reproduce de lo que el calculo dejo versionado.\n\nEl shell, el encabezado, el pie, el tema y el selector de idioma vienen de un paquete compartido por esta linea de productos, asi que son identicos por construccion y una correccion se aplica una sola vez.\n\nEl banco de trabajo muestra un caso a la vez, con catorce metodos en cuatro grupos: el enunciado (procedencia, preguntas abiertas, dimensiones, cobertura), el modelo (forma canonica, el grafo y el refinamiento de Weisfeiler-Lehman, relaciones metamorficas), la respuesta (sensibilidad, region factible, actividad, dualidad, brecha de integralidad) y los modelos (cada intento, y la anatomia de cada fallo). Un resumen entre casos responde 'en todos los casos' y pertenece a Experimentos o Comparativa; el banco responde 'que paso aqui'.\n\nEl solver es un bloque aparte de 3,37 megabytes que se descarga en su primer uso en vez de empaquetarse. En el banco de trabajo el primer uso es inmediato, porque la pestana de entrada vuelve a resolver la referencia a lo largo del rango de un parametro; las cinco paginas de documentos nunca lo descargan. Las pestanas de la respuesta comprueban lo que devuelve en vez de mostrarlo: la pestana Dualidad evalua las cuatro condiciones de optimalidad desde los numeros. Los intentos por caso del libro mayor, attempts.json con 90 kilobytes, se cargan con el banco de trabajo, porque el diagnostico de la barra lateral muestra como le fue a cada modelo en el caso elegido, capa por capa; las dos pestanas de los modelos aprendidos leen el mismo archivo.",
     svg: WEB_FLOW,
   },
   {

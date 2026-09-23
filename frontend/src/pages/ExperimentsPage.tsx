@@ -417,7 +417,7 @@ function Metrics({ lang }: { lang: "en" | "es" }) {
       </p>
 
       <Equation
-        tex={String.raw`R_{\text{ran}} = \frac{\#\{\mathrm{exec} = \textsf{PASS}\}}{N - u}, \qquad R_{\text{faithful}} = \frac{\#\{\mathrm{exec} = \textsf{PASS} \wedge \mathrm{struct} \neq \textsf{FAIL} \wedge \mathrm{prop} \neq \textsf{FAIL}\}}{N - u}`}
+        tex={String.raw`R_{\text{ran}} = \frac{\#\{\mathrm{exec} = \textsf{PASS}\}}{N - u}, \qquad R_{\text{faithful}} = \frac{\#\{\mathrm{exec} = \textsf{PASS} \wedge \textsf{FAIL} \notin \{\mathrm{struct}, \mathrm{prop}\} \wedge \textsf{PASS} \in \{\mathrm{struct}, \mathrm{prop}\}\}}{N - u}`}
         caption={
           es
             ? "Las dos tasas, sobre el mismo denominador. N = 20 por modelo; u es el numero de casos no medidos."
@@ -427,8 +427,8 @@ function Metrics({ lang }: { lang: "en" | "es" }) {
 
       <p className="measure">
         {es
-          ? "Notese la forma exacta del numerador de la segunda: exige que ninguna de las dos capas FALLE, no que ambas PASEN. La diferencia no es cosmetica. Una capa estructural que devuelve INDECISO no ha encontrado nada en contra, y tratar eso como un fallo penalizaria al modelo por una limitacion del oraculo. Tratarlo como un aprobado, en cambio, es lo que convierte la tasa en un sello de goma, y por eso la capa de propiedades y la refutacion por respuesta tienen que poder fallar de verdad."
-          : "Note the exact shape of the second numerator: it requires that neither layer FAILS, not that both PASS. The difference is not cosmetic. A structural layer returning UNDECIDED has found nothing against, and treating that as a failure would penalise the model for a limit of the oracle. Treating it as a pass, on the other hand, is what turns the rate into a rubber stamp, which is why the property layer and answer refutation have to be able to genuinely fail."}
+          ? "Notese la forma exacta del numerador de la segunda: exige que ninguna de las dos capas FALLE y que al menos una APRUEBE, no que ambas PASEN. La diferencia no es cosmetica. Una capa estructural que devuelve INDECISO no ha encontrado nada en contra, y tratar eso como un fallo penalizaria al modelo por una limitacion del oraculo. Tratarlo como un aprobado, en cambio, es lo que convierte la tasa en un sello de goma: un candidato en que ambas capas quedan indecisas no se probo fiel y no se cuenta como tal, y la capa de propiedades y la refutacion por respuesta tienen que poder fallar de verdad. Asi lo calcula copela; una reformulacion que omitia la segunda condicion coincidia con cada numero publicado solo porque el libro mayor no tiene ese caso."
+          : "Note the exact shape of the second numerator: it requires that neither layer FAILS and that at least one PASSES, not that both PASS. The difference is not cosmetic. A structural layer returning UNDECIDED has found nothing against, and treating that as a failure would penalise the model for a limit of the oracle. Treating it as a pass, on the other hand, is what turns the rate into a rubber stamp: a candidate on which both layers are undecided has not been shown faithful and is not counted as such, and the property layer and answer refutation have to be able to genuinely fail. That is how copela computes it; a restatement that dropped the second condition agreed with every published number only because the ledger holds no such candidate."}
       </p>
 
       <Equation

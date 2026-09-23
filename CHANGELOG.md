@@ -4,6 +4,47 @@ All notable changes to this product are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions are `X.XX.XXX` in this file, in
 `VERSION`, in the git tag and in the site footer; CI checks that the last two agree.
 
+## [0.04.000] - 2026-09-23
+
+The workbench sidebar reaches the product-quality bar's style row, and one rule is stated the same
+way in all three places that compute it.
+
+### Added
+
+- **A live diagnosis of the selected case**, after RotorVitals' `.rv-diag`: each measured model's
+  verdict on the case, layer by layer (executable, structural, property), with the report's failure
+  class, and the card coloured by the case's outcome. It reads `attempts.json`, which now loads with
+  the workbench.
+- **A drift gauge**, ported from RotorVitals' `Gauge`: how far the reader's parameters have moved the
+  optimum from the statement's own, in per cent, with zones at 1% and 10%.
+- `tests/test_faithful_rule.py`: the report's breakdowns and CI's recomputation must count a
+  candidate as faithful exactly when copela does, over all 125 combinations of layer outcomes.
+- Gate checks: the sidebar diagnoses opt-006 with its refutation, the gauge reads zero at the
+  statement and moves with its parameters, and every colour token the architecture modal names
+  resolves. 171 checks.
+
+### Fixed
+
+- **The architecture modal was not theme-aware.** Its diagrams named eight custom properties the
+  shell does not define (`--surface-2`, `--border`, `--text` and five more), so every var() fell to
+  its dark fallback and the light theme drew dark boxes on a light page. A gate that counted the SVGs
+  was green. They use the shell's `--color-*` tokens now, and the modal's live lane and artifact list
+  say what the code does.
+- **`faithful` was stated three ways.** The report's breakdowns and CI's recomputation had dropped
+  "and at least one strong layer passed"; both agreed with every published number only because the
+  ledger has no candidate on which both strong layers were undecided. The formulas on the
+  Introduction and Experiments pages and in the wiki had the same omission. All now state copela's
+  rule, and the consistency test found that copela's own property never required a run (fixed in
+  copela 0.2.3).
+- The failure classifier filed a property-layer refutation, and a run on which no layer decided, as
+  "ran and survived every check". Both classes are empty in the published ledger.
+- The read-out coloured a rise green in a minimisation; it follows the sense now. An untouched case
+  no longer reports last-bit noise (3.6e-15 on opt-006) as a drift.
+
+### Changed
+
+- `requirements.txt` pins `copela==0.2.3`. The report re-derives identically.
+
 ## [0.03.000] - 2026-09-23
 
 The workbench reaches the method floor, fourteen methods in four groups, and the release audits
