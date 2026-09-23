@@ -92,3 +92,39 @@ def test_the_site_names_every_class_the_classifier_can_return() -> None:
     assert site == emitted, (
         f"only on the site: {sorted(site - emitted)}; only in the classifier: {sorted(emitted - site)}"
     )
+
+
+@pytest.mark.parametrize(
+    ("detail", "expected"),
+    [
+        ("error: dimensions [total_cost]: sum term 1 is USD/t*t but term 0 is USD*t", "dimensional mismatch"),
+        ("error: dimensions [meet_demand]: t cannot be compared with USD", "dimensional mismatch"),
+        ("the response did not parse into a problem: quantity 'n' has lower 40.0 above upper 32.0",
+         "a variable whose lower bound is above its upper"),
+        ("solving failed: the solver raised", "the solver failed on the model it produced"),
+        ("solving failed: No value for uninitialized ScalarParam object demand", "a parameter left without a value"),
+        ("error: closure [demand]: referenced but never declared", "a name used but never declared"),
+        ("infeasibleOrUnbounded", "the model it produced is infeasible or unbounded"),
+        ("the response did not parse into a problem: 'span'", "an assumption or open question with no span"),
+        ("the response did not parse into a problem: 'statement'", "a required field left out"),
+        # planteo 0.1.2's form of the same two defects.
+        ("the response did not parse into a problem: an assumption is missing its 'span' field; got keys ['statement']",
+         "an assumption or open question with no span"),
+        ("the response did not parse into a problem: a 'logical' relation is missing its 'connective' field; got keys ['name']",
+         "a required field left out"),
+        ("the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['tag', 'value']",
+         "a constant with no unit"),
+        # A quoted phrase is not a bare key.
+        ("the response did not parse into a problem: 'no quantity named x'", "unparseable output"),
+    ],
+)
+def test_a_validator_message_names_its_class(detail, expected) -> None:
+    """The messages the validator and the solver write, each classed by its own phrase."""
+    from types import SimpleNamespace
+
+    record = SimpleNamespace(
+        verdicts=[{"layer": "executable", "outcome": "fail", "detail": detail}],
+        error="",
+        key=SimpleNamespace(case_id="opt-001"),
+    )
+    assert classify(record) == expected

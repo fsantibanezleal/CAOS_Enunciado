@@ -78,8 +78,8 @@ export const FAILURE_CLASSES: FailureClass[] = [
   {
     key: "dimensional mismatch",
     es: "desajuste dimensional",
-    ruleEn: "The two sides of a comparison carry different exponent vectors.",
-    ruleEs: "Dos lados de una comparacion tienen vectores de exponentes distintos.",
+    ruleEn: "Two things that must share a dimension do not: the two sides of a comparison, or the terms of a sum, carry different exponent vectors.",
+    ruleEs: "Dos cosas que deben compartir dimension no la comparten: los dos lados de una comparacion, o los terminos de una suma, tienen vectores de exponentes distintos.",
     layer: "executable",
     ran: false,
   },
@@ -90,6 +90,26 @@ export const FAILURE_CLASSES: FailureClass[] = [
       "A variable is declared with its lower bound above its upper, which the representation refuses. On the contradictory case this is the contradiction, written into one variable.",
     ruleEs:
       "Una variable se declara con la cota inferior sobre la superior, lo que la representacion rechaza. En el caso contradictorio esa es la contradiccion, escrita en una sola variable.",
+    layer: "executable",
+    ran: false,
+  },
+  {
+    key: "an assumption or open question with no span",
+    es: "un supuesto o pregunta abierta sin span",
+    ruleEn:
+      "The document records an assumption or an open question with no span into the statement, so nothing says where it comes from. The representation requires one.",
+    ruleEs:
+      "El documento registra un supuesto o una pregunta abierta sin span hacia el enunciado, asi que nada dice de donde sale. La representacion exige uno.",
+    layer: "executable",
+    ran: false,
+  },
+  {
+    key: "a required field left out",
+    es: "un campo obligatorio omitido",
+    ruleEn:
+      "An element of the document lacks a field the representation requires, other than a span or a constant's unit: a logical relation with no connective, a quantity with no name.",
+    ruleEs:
+      "Un elemento del documento carece de un campo que la representacion exige, distinto de un span o de la unidad de una constante: una relacion logica sin conectivo, una cantidad sin nombre.",
     layer: "executable",
     ran: false,
   },
@@ -116,6 +136,34 @@ export const FAILURE_CLASSES: FailureClass[] = [
       "The case has no feasible point and the solver proves the candidate has none either: the right status. It is still recorded as not having run, because ran means reaching a feasible optimum, so a contradictory case cannot be passed. Counted apart so the table shows it was right.",
     ruleEs:
       "El caso no tiene punto factible y el solucionador prueba que el candidato tampoco: el estado correcto. Aun asi queda registrado como no ejecutado, porque corrio significa alcanzar un optimo factible, de modo que un caso contradictorio no se puede aprobar. Se cuenta aparte para que la tabla muestre que acerto.",
+    layer: "executable",
+    ran: false,
+  },
+  {
+    key: "the model it produced is infeasible or unbounded",
+    es: "el modelo que produjo es infactible o no acotado",
+    ruleEn:
+      "The solver reports the model infeasible or unbounded without deciding which: a contradiction, or an objective with no bound in its direction.",
+    ruleEs:
+      "El solucionador informa el modelo infactible o no acotado sin decidir cual: una contradiccion, o un objetivo sin cota en su direccion.",
+    layer: "executable",
+    ran: false,
+  },
+  {
+    key: "a name used but never declared",
+    es: "un nombre usado y nunca declarado",
+    ruleEn: "An expression refers to a name the document never declares, so the model has a free symbol.",
+    ruleEs: "Una expresion se refiere a un nombre que el documento nunca declara, asi que el modelo tiene un simbolo libre.",
+    layer: "executable",
+    ran: false,
+  },
+  {
+    key: "a parameter left without a value",
+    es: "un parametro sin valor",
+    ruleEn:
+      "A quantity is declared as a parameter and given no value, so the model cannot be built. It passes the validator and stops the solver.",
+    ruleEs:
+      "Una cantidad se declara parametro y no recibe valor, asi que el modelo no se puede construir. Pasa el validador y detiene al solucionador.",
     layer: "executable",
     ran: false,
   },

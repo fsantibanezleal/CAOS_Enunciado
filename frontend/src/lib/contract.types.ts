@@ -315,6 +315,8 @@ export interface AtCap {
   faithful: RateJson;
   gap: number;
   at_cap: number;
+  /** Calls per failure class at this cap; they add up to `calls`. */
+  failure_breakdown: Record<string, number>;
   cost_usd: number;
   median_output_tokens: number;
 }

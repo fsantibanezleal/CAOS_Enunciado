@@ -317,8 +317,22 @@ def model_key(record) -> str:
 _CLASSES: tuple[tuple[str, str], ...] = (
     ("fabricated provenance", "fabricated provenance: words not in the statement"),
     ("missing its 'unit' field", "a constant with no unit"),
+    # planteo 0.1.2 names the element that lacks a field; before it, the same defect reached the
+    # ledger as a bare key, which _BARE_KEY catches, so both forms land in one class.
+    ("an assumption is missing its 'span' field", "an assumption or open question with no span"),
+    ("an open question is missing its 'span' field", "an assumption or open question with no span"),
+    (" is missing its '", "a required field left out"),
+    # planteo's closure check: "closure [demand]: referenced but never declared".
+    ("referenced but never declared", "a name used but never declared"),
+    # A parameter declared with no value passes validation and stops Pyomo when it builds the
+    # model: "solving failed: No value for uninitialized ScalarParam object demand". The defect is
+    # the formalization's, so it is named for that rather than filed as a solver failure.
+    ("no value for uninitialized scalarparam", "a parameter left without a value"),
     ("is derived but no relation defines it", "a quantity declared derived and never defined"),
     ("cannot be compared", "dimensional mismatch"),
+    # The same defect inside a sum: "dimensions [total_cost]: sum term 1 is USD/t*t but term 0 is
+    # USD*t". It reached the catch-all the first time a local model wrote one.
+    (": sum term ", "dimensional mismatch"),
     ("the json object is not closed", "truncated output"),
     # planteo's message is "quantity 'x' has lower 40.0 above upper 32.0". It used to fall through
     # to "unparseable output", and on the contradictory case it is not noise: it is the
@@ -343,6 +357,8 @@ def _infeasible_cases() -> frozenset[str]:
 #: from "it began:" means the sentence opened the response rather than appearing somewhere inside
 #: a model's own text. The finish reason separates the cap running out, which is a truncation of a
 #: different kind from a document cut off mid-way, from a model that reasoned and then stopped.
+_BARE_KEY = re.compile(r"did not parse into a problem: '(?P<key>[a-z_]+)'$")
+
 _NO_ANSWER = re.compile(
     r"it began: ['\"]\[no answer: the model emitted \d+ characters of reasoning and stopped "
     r"before answering(?: \(finish_reason (?P<reason>[a-z_]+)\))?"
@@ -363,6 +379,15 @@ def classify(record) -> str:
         # Everything after "; got keys" is data the validator quoted back, not its diagnosis.
         head = raw.split("; got keys")[0].lower()
 
+        # A bare KeyError from planteo, whose message is the missing key alone: "... problem:
+        # 'span'". Only an assumption or an open question requires a span it can lack, so that
+        # key names the element. These read as "unparseable output" until the first model outside
+        # Anthropic left spans out three times.
+        bare = _BARE_KEY.search(head)
+        if bare:
+            if bare.group("key") == "span":
+                return "an assumption or open question with no span"
+            return "a required field left out"
         no_answer = _NO_ANSWER.search(head)
         if no_answer:
             if no_answer.group("reason") == "length":
@@ -380,6 +405,9 @@ def classify(record) -> str:
             if record.key.case_id in _infeasible_cases():
                 return "infeasible, as the case is"
             return "the model it produced is infeasible"
+        if head.strip() == "infeasibleorunbounded":
+            # HiGHS reports the two together when its presolve cannot tell them apart.
+            return "the model it produced is infeasible or unbounded"
         if "solving failed" in head:
             # The solver raised rather than returned a status. That is not infeasibility.
             return "the solver failed on the model it produced"
@@ -625,12 +653,18 @@ def _at_cap(ledger: Ledger, cap: int) -> dict[str, dict[str, object]]:
         cell = cells[key]
         outputs = sorted(r.output_tokens for r in rows)
         middle = len(outputs) // 2
+        failures: dict[str, int] = defaultdict(int)
+        for record in rows:
+            failures[classify(record)] += 1
         out[key] = {
             "calls": len(rows),
             "ran": cell["ran"],
             "faithful": cell["faithful"],
             "gap": cell["gap"],
             "at_cap": sum(1 for tokens in outputs if tokens >= cap),
+            # What the calls failed on at this cap: the reason the comparison exists is that a
+            # binding cap hides the formalization errors behind truncations.
+            "failure_breakdown": dict(sorted(failures.items())),
             "cost_usd": round(sum(r.cost_usd for r in rows), 4),
             "median_output_tokens": int(
                 outputs[middle] if len(outputs) % 2 else (outputs[middle - 1] + outputs[middle]) / 2

@@ -48,6 +48,11 @@ export function providerName(provider: string, lang: "en" | "es"): string {
   return PROVIDER_NAME[provider]?.[lang] ?? provider;
 }
 
+/** The name without its gloss, for a table cell: "Local (Ollama, one 8 GB GPU)" wrapped to four lines. */
+export function providerShort(provider: string): string {
+  return provider === "ollama" ? "Ollama" : (PROVIDER_NAME[provider]?.en ?? provider);
+}
+
 /** Consecutive runs of the same provider, for views that draw a header per group. */
 export function groupByProvider(models: ModelRow[]): { provider: string; models: ModelRow[] }[] {
   const groups: { provider: string; models: ModelRow[] }[] = [];

@@ -50,8 +50,9 @@ s(P_cand) z*(P_cand) == s(P_ref) z*(P_ref)   =>   nothing
 
 The sign `s` arrived in 0.02.001 (R-020). Before it the raw values were compared, so a candidate
 maximising the negative of the cost, the reference's model written the other way round, solved to
-`-z` against `z` and was refuted. The published ledger was scored by 0.02.000; neither of its two
-refutations changes under the fix, because both compare values of the same sign.
+`-z` against `z` and was refuted. The two Claude runs were scored by 0.02.000; neither of their two
+refutations changes under the fix, because both compare values of the same sign, and every later run
+was scored with the fix in place.
 
 The asymmetry is deliberate and stays. A matching optimum never promotes a verdict to PASS, because
 compensating errors reach the right number, which is the limitation the anchor survey documents
@@ -110,6 +111,15 @@ fingerprint = <provider, effort, temperature policy>
 
 Current Claude models accept no temperature parameter and reasoning effort is available on part of
 the family only, so the fingerprint reads `no-temperature` and `no-effort` where that is the truth.
+The other lanes follow the same rule:
+
+| Provider | Fingerprint, as recorded |
+|---|---|
+| `anthropic` | `anthropic#effort=high#no-temperature` where the model takes an effort, `anthropic#no-effort#no-temperature` where it does not |
+| `zai` | `zai#effort=high#do_sample=false#no-seed`: greedy decoding stands in for temperature 0, and effort exists from GLM-5.2 up |
+| `deepseek` | `deepseek#effort=high#temperature-no-effect-in-thinking#no-seed` |
+| `ollama` | `ollama@<host>#think=<False, None or n/a>#num_ctx=<n>`: `n/a` for a model with no reasoning to switch, and the context the call was given |
+
 A fingerprint claiming `temperature=0` for a provider that does not accept it is reproducibility
 asserted and not exercised.
 

@@ -54,8 +54,8 @@ includes them.
 ## The re-groupings, and their denominators
 
 The report also carries per-tier and per-trap rates and the layer-agreement counts. Those are
-re-groupings of the same forty records, so their denominators are four and smaller. They indicate
-where to look next; they do not support a claim about any single tier or trap, and the page prints
+re-groupings of each model's own twenty records, so their denominators run from one to five. They
+indicate where to look next; they do not support a claim about any single tier or trap, and the page prints
 the counts inside every cell so a reader can see that for themselves.
 
 ## The layer agreement is a confusion structure

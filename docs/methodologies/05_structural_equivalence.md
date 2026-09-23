@@ -41,8 +41,8 @@ avoid. Both are now restated in the minimising sense first. A candidate optimisi
 expression the wrong way is still refuted, unless its optimum is exactly the negative of the
 reference's, which reads as `UNDECIDED`, never as `PASS`.
 
-The published ledger was scored by 0.02.000. Neither of its two refutations changes under the fix:
-both compare values of the same sign. The calls that did not fail keep no document, so whether any of
+The two Claude runs were scored by 0.02.000. Neither of their two refutations changes under the fix:
+both compare values of the same sign. Every later run was scored with the fix in place. The calls that did not fail keep no document, so whether any of
 them would now be refuted cannot be re-checked; it would take a candidate that optimises in the
 opposite sense and still lands exactly on the reference's value. `report.py --check` re-derives the
 committed report identically under 0.02.001, because the report reads the verdicts the ledger

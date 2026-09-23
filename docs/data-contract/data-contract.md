@@ -91,13 +91,24 @@ of CI.
 
 | Field | Meaning |
 |---|---|
-| `cells[]` | One per model: `ran` and `faithful` rates with Wilson intervals, `gap`, `gap_is_defined`, `unmeasured` |
+| `schema` | `enunciado-gap-report/2.0`, checked before the page renders anything |
+| `models[]` | Every model once, in the order every view draws: `key` (`provider/model_id`), `provider`, `model_id`, `lane` (hosted or local), `calls`, `cost_usd`, `median_latency_s`, `median_output_tokens`, `at_cap`, `model_versions`, `fingerprints`, `measured_from`, `measured_to` |
+| `cells[]` | One per provider, model and family, in the `models` order, named by `model`: `ran` and `faithful` rates with Wilson intervals, `gap`, `gap_is_defined`, `unmeasured` |
 | `gap` | `null` when undefined. Never zero-for-undefined |
-| `by_tier`, `by_trap` | Re-groupings of the same records; denominators of four and smaller |
-| `layer_agreement` | The four-quadrant counts. `did-not-run/faithful` must be 0 by construction |
-| `failure_breakdown` | Counts per failure class, derived from the verdict message |
-| `caveats[]` | What the measurement does not support. Facts about the run, not disclaimers |
-| `cost_usd`, `call_count`, `measured_on`, `corpus` | Provenance of the run |
+| `by_tier`, `by_trap` | Keyed by `models[].key`. Re-groupings of each model's own records; the denominators are small and every cell carries its own |
+| `layer_agreement` | Keyed by `models[].key`. The four-quadrant counts. `did-not-run/faithful` must be 0 by construction |
+| `failure_breakdown` | Keyed by `models[].key`. Counts per failure class, derived from the verdict message; each model's counts add up to its calls |
+| `caveats[]` | `{en, es}` pairs: what the measurement does not support, computed from the records, including every departure from the protocol |
+| `note`, `note_es` | copela's statement that the layers are never combined |
+| `corpus` | `{family, cases, tiers, repeats}` |
+| `cost_usd`, `call_count`, `protocol_cap`, `measured_from`, `measured_to` | Provenance of the run |
+
+## `cap-sensitivity.json`
+
+Written only when a ledger named `optimization-cap<N>.jsonl` exists: the same protocol at a second
+output cap, for the models that ran at both. Each row is `{model, provider, model_id, by_cap}`, and
+`by_cap` maps a cap to `{calls, ran, faithful, gap, at_cap, cost_usd, median_output_tokens}`. CI
+recounts both sides from their ledgers.
 
 ## `attempts.json`
 
@@ -107,9 +118,9 @@ the workbench and the Benchmark cannot tell two different stories about one call
 
 ```
 {
-  "schema": "enunciado-attempts/1.0",
+  "schema": "enunciado-attempts/1.1",
   "cases": {
-    "<case_id>": [ Attempt, ... ]     sorted by model_id, then repeat
+    "<case_id>": [ Attempt, ... ]     in the report's model order, then by repeat
   }
 }
 ```

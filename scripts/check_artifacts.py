@@ -181,6 +181,8 @@ def check_sensitivity(problems: list[str], main: dict[str, tuple[int, int, int]]
                 if entry is None:
                     problems.append(f"cap-sensitivity.json has no {model} at cap {label}")
                     continue
+                if sum((entry.get("failure_breakdown") or {}).values()) != entry.get("calls"):
+                    problems.append(f"{model} at cap {label}: the failure breakdown does not add up to its calls")
                 published = (entry["ran"]["passed"], entry["faithful"]["passed"], entry["ran"]["total"])
                 if published != tuple(expected):
                     problems.append(

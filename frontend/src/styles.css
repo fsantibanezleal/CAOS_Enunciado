@@ -1135,3 +1135,12 @@ button.chip:disabled:hover {
   max-width: 100%;
   scrollbar-width: thin;
 }
+
+/* A figure wider than a phone scrolls inside its own box at a legible width. Scaled to fit, the
+   rates figure set its 12px labels at 4px on a 390-pixel screen. (Display equations already scroll:
+   the shell gives .equation overflow-x auto.) */
+.fig-scroll {
+  overflow-x: auto;
+  max-width: 100%;
+  scrollbar-width: thin;
+}
