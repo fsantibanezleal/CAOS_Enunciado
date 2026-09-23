@@ -126,6 +126,226 @@
     "value": 0.0
    }
   },
+  "ollama/deepseek-r1:8b": {
+   "1": {
+    "confidence": 0.95,
+    "interval_high": 0.9054687942657693,
+    "interval_low": 0.09453120573423074,
+    "passed": 1,
+    "total": 2,
+    "value": 0.5
+   }
+  },
+  "ollama/gemma3:4b": {
+   "1": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "2": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "3": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "4": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "5": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   }
+  },
+  "ollama/llama3.1:8b": {
+   "1": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "2": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "3": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "4": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "5": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   }
+  },
+  "ollama/mistral:7b": {
+   "1": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "2": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "3": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "4": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "5": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   }
+  },
+  "ollama/phi4-mini:latest": {
+   "1": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "2": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "3": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "4": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "5": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   }
+  },
+  "ollama/qwen2.5-coder:7b": {
+   "1": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "2": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "3": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "4": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "5": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   }
+  },
   "ollama/qwen3:8b": {
    "1": {
     "confidence": 0.95,
@@ -137,10 +357,34 @@
    },
    "2": {
     "confidence": 0.95,
-    "interval_high": 0.6576197724933469,
+    "interval_high": 0.4898908364545973,
     "interval_low": 0.0,
     "passed": 0,
-    "total": 2,
+    "total": 4,
+    "value": 0.0
+   },
+   "3": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "4": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "5": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
     "value": 0.0
    }
   },
@@ -420,8 +664,8 @@
     "value": 0.0
    }
   },
-  "ollama/qwen3:8b": {
-   "derived-bound": {
+  "ollama/deepseek-r1:8b": {
+   "none": {
     "confidence": 0.95,
     "interval_high": 0.7934506856227626,
     "interval_low": 0.0,
@@ -429,7 +673,41 @@
     "total": 1,
     "value": 0.0
    },
-   "none": {
+   "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 1.0,
+    "interval_low": 0.20654931437723745,
+    "passed": 1,
+    "total": 1,
+    "value": 1.0
+   }
+  },
+  "ollama/gemma3:4b": {
+   "ambiguity": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "derived-bound": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "droppable-constraint": {
+    "confidence": 0.95,
+    "interval_high": 0.43448246478317476,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 5,
+    "value": 0.0
+   },
+   "implicit-quantity": {
     "confidence": 0.95,
     "interval_high": 0.5614970317550455,
     "interval_low": 0.0,
@@ -437,7 +715,31 @@
     "total": 3,
     "value": 0.0
    },
+   "integrality": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "none": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
    "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "red-herring": {
     "confidence": 0.95,
     "interval_high": 0.7934506856227626,
     "interval_low": 0.0,
@@ -447,10 +749,380 @@
    },
    "unit-mismatch": {
     "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   }
+  },
+  "ollama/llama3.1:8b": {
+   "ambiguity": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "derived-bound": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "droppable-constraint": {
+    "confidence": 0.95,
+    "interval_high": 0.43448246478317476,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 5,
+    "value": 0.0
+   },
+   "implicit-quantity": {
+    "confidence": 0.95,
+    "interval_high": 0.5614970317550455,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 3,
+    "value": 0.0
+   },
+   "integrality": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "none": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "red-herring": {
+    "confidence": 0.95,
     "interval_high": 0.7934506856227626,
     "interval_low": 0.0,
     "passed": 0,
     "total": 1,
+    "value": 0.0
+   },
+   "unit-mismatch": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   }
+  },
+  "ollama/mistral:7b": {
+   "ambiguity": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "derived-bound": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "droppable-constraint": {
+    "confidence": 0.95,
+    "interval_high": 0.43448246478317476,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 5,
+    "value": 0.0
+   },
+   "implicit-quantity": {
+    "confidence": 0.95,
+    "interval_high": 0.5614970317550455,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 3,
+    "value": 0.0
+   },
+   "integrality": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "none": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "red-herring": {
+    "confidence": 0.95,
+    "interval_high": 0.7934506856227626,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 1,
+    "value": 0.0
+   },
+   "unit-mismatch": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   }
+  },
+  "ollama/phi4-mini:latest": {
+   "ambiguity": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "derived-bound": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "droppable-constraint": {
+    "confidence": 0.95,
+    "interval_high": 0.43448246478317476,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 5,
+    "value": 0.0
+   },
+   "implicit-quantity": {
+    "confidence": 0.95,
+    "interval_high": 0.5614970317550455,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 3,
+    "value": 0.0
+   },
+   "integrality": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "none": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "red-herring": {
+    "confidence": 0.95,
+    "interval_high": 0.7934506856227626,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 1,
+    "value": 0.0
+   },
+   "unit-mismatch": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   }
+  },
+  "ollama/qwen2.5-coder:7b": {
+   "ambiguity": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "derived-bound": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "droppable-constraint": {
+    "confidence": 0.95,
+    "interval_high": 0.43448246478317476,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 5,
+    "value": 0.0
+   },
+   "implicit-quantity": {
+    "confidence": 0.95,
+    "interval_high": 0.5614970317550455,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 3,
+    "value": 0.0
+   },
+   "integrality": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "none": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 0.9054687942657693,
+    "interval_low": 0.09453120573423074,
+    "passed": 1,
+    "total": 2,
+    "value": 0.5
+   },
+   "red-herring": {
+    "confidence": 0.95,
+    "interval_high": 0.7934506856227626,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 1,
+    "value": 0.0
+   },
+   "unit-mismatch": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   }
+  },
+  "ollama/qwen3:8b": {
+   "ambiguity": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "derived-bound": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "droppable-constraint": {
+    "confidence": 0.95,
+    "interval_high": 0.43448246478317476,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 5,
+    "value": 0.0
+   },
+   "implicit-quantity": {
+    "confidence": 0.95,
+    "interval_high": 0.5614970317550455,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 3,
+    "value": 0.0
+   },
+   "integrality": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "none": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "red-herring": {
+    "confidence": 0.95,
+    "interval_high": 0.7934506856227626,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 1,
+    "value": 0.0
+   },
+   "unit-mismatch": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
     "value": 0.0
    }
   },
@@ -547,11 +1219,11 @@
    }
   }
  },
- "call_count": 88,
+ "call_count": 204,
  "caveats": [
   {
-   "en": "Each model ran 2/6/20 calls, one repeat per case, which gives a wide interval: at n = 2 a rate of 0.50 carries a Wilson interval from 0.09 to 0.91. Two models whose intervals overlap cannot be ranked against each other from this run.",
-   "es": "Cada modelo corrio 2/6/20 llamadas, una repeticion por caso, lo que da un intervalo ancho: con n = 2 una tasa de 0.50 lleva un intervalo de Wilson de 0.09 a 0.91. Dos modelos cuyos intervalos se solapan no se pueden ordenar entre si con esta corrida."
+   "en": "Each model ran 2/20 calls, one repeat per case, which gives a wide interval: at n = 2 a rate of 0.50 carries a Wilson interval from 0.09 to 0.91. Two models whose intervals overlap cannot be ranked against each other from this run.",
+   "es": "Cada modelo corrio 2/20 llamadas, una repeticion por caso, lo que da un intervalo ancho: con n = 2 una tasa de 0.50 lleva un intervalo de Wilson de 0.09 a 0.91. Dos modelos cuyos intervalos se solapan no se pueden ordenar entre si con esta corrida."
   },
   {
    "en": "Run-to-run variation is real: an earlier pass of the identical corpus put claude-haiku-4-5 at ran 0.350, and the published pass puts it at 0.250, with nothing changed but the sampling. That is what the interval is for.",
@@ -566,8 +1238,8 @@
    "es": "Los proveedores exponen controles distintos, y cada registro declara los que fijo: Claude no admite temperatura ni semilla, asi que no se registra ninguna; GLM corre con decodificacion voraz (do_sample false), esfuerzo alto donde el modelo lo admite, y sin semilla; DeepSeek corre con esfuerzo alto; su modo de razonamiento ignora la temperatura y no tiene semilla; el carril local fija temperatura 0 y una semilla, con el razonamiento apagado donde la plantilla del modelo respeta el interruptor."
   },
   {
-   "en": "One output cap for every model, 8192 tokens. It binds on models that write or reason at length: 29 of the 88 calls reached it, counted as 'truncated output' or 'no answer: the reasoning used the whole cap'. A reasoning model spends the cap on reasoning first, so those are failures under this cap, not evidence about how it formalizes.",
-   "es": "Un solo tope de salida para todos los modelos, 8192 tokens. Muerde en los modelos que escriben o razonan en extenso: 29 de las 88 llamadas lo alcanzaron, contadas como 'salida truncada' o 'sin respuesta: el razonamiento agoto el tope'. Un modelo que razona gasta el tope razonando primero, asi que esos son fallos bajo este tope, no evidencia de como formaliza."
+   "en": "One output cap for every model, 8192 tokens. It binds on models that write or reason at length: 34 of the 204 calls reached it, counted as 'truncated output' or 'no answer: the reasoning used the whole cap'. A reasoning model spends the cap on reasoning first, so those are failures under this cap, not evidence about how it formalizes.",
+   "es": "Un solo tope de salida para todos los modelos, 8192 tokens. Muerde en los modelos que escriben o razonan en extenso: 34 de las 204 llamadas lo alcanzaron, contadas como 'salida truncada' o 'sin respuesta: el razonamiento agoto el tope'. Un modelo que razona gasta el tope razonando primero, asi que esos son fallos bajo este tope, no evidencia de como formaliza."
   },
   {
    "en": "The structural layer passes only when the canonical forms are equal, and refutes when the optima differ. A matching optimum never proves equivalence, because compensating errors reach the right number.",
@@ -594,8 +1266,8 @@
    "es": "El barrido de deepseek-v4-pro alcanzo su criterio de corte, diez fallos seguidos, tras 13 llamadas, y cada uno de los diez fue una respuesta que gasto todo el tope razonando. Se reanudo con el criterio en 20 para completar el corpus, porque esos fallos eran la medicion y no una falla del arnes."
   },
   {
-   "en": "The 2 free models, those with no per-token price, ran with the kill criterion at 20, the corpus size, rather than 10: a free call costs nothing, and a completed corpus keeps their rows comparable with the rest.",
-   "es": "Los 2 modelos gratuitos, los que no tienen precio por token, corrieron con el criterio de corte en 20, el tamano del corpus, y no en 10: una llamada gratuita no cuesta nada, y un corpus completo mantiene sus filas comparables con el resto."
+   "en": "The 8 free models, those with no per-token price, ran with the kill criterion at 20, the corpus size, rather than 10: a free call costs nothing, and a completed corpus keeps their rows comparable with the rest.",
+   "es": "Los 8 modelos gratuitos, los que no tienen precio por token, corrieron con el criterio de corte en 20, el tamano del corpus, y no en 10: una llamada gratuita no cuesta nada, y un corpus completo mantiene sus filas comparables con el resto."
   },
   {
    "en": "The per-tier and per-trap rates are re-groupings of each model's own 2 records, so their denominators run from 1 to 5. They indicate where to look next; they do not support a claim about any single tier or trap.",
@@ -731,10 +1403,160 @@
   {
    "faithful": {
     "confidence": 0.95,
-    "interval_high": 0.39033428790216534,
+    "interval_high": 0.9054687942657693,
+    "interval_low": 0.09453120573423074,
+    "passed": 1,
+    "total": 2,
+    "value": 0.5
+   },
+   "family": "optimization",
+   "gap": 0.0,
+   "gap_is_defined": true,
+   "model": "ollama/deepseek-r1:8b",
+   "model_id": "deepseek-r1:8b",
+   "provider": "ollama",
+   "ran": {
+    "confidence": 0.95,
+    "interval_high": 0.9054687942657693,
+    "interval_low": 0.09453120573423074,
+    "passed": 1,
+    "total": 2,
+    "value": 0.5
+   },
+   "unmeasured": 0
+  },
+  {
+   "faithful": {
+    "confidence": 0.95,
+    "interval_high": 0.23613119344674205,
+    "interval_low": 0.008881448800795402,
+    "passed": 1,
+    "total": 20,
+    "value": 0.05
+   },
+   "family": "optimization",
+   "gap": 0.0,
+   "gap_is_defined": true,
+   "model": "ollama/qwen2.5-coder:7b",
+   "model_id": "qwen2.5-coder:7b",
+   "provider": "ollama",
+   "ran": {
+    "confidence": 0.95,
+    "interval_high": 0.23613119344674205,
+    "interval_low": 0.008881448800795402,
+    "passed": 1,
+    "total": 20,
+    "value": 0.05
+   },
+   "unmeasured": 0
+  },
+  {
+   "faithful": {
+    "confidence": 0.95,
+    "interval_high": 0.16112515805281938,
     "interval_low": 0.0,
     "passed": 0,
-    "total": 6,
+    "total": 20,
+    "value": 0.0
+   },
+   "family": "optimization",
+   "gap": null,
+   "gap_is_defined": false,
+   "model": "ollama/gemma3:4b",
+   "model_id": "gemma3:4b",
+   "provider": "ollama",
+   "ran": {
+    "confidence": 0.95,
+    "interval_high": 0.16112515805281938,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 20,
+    "value": 0.0
+   },
+   "unmeasured": 0
+  },
+  {
+   "faithful": {
+    "confidence": 0.95,
+    "interval_high": 0.16112515805281938,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 20,
+    "value": 0.0
+   },
+   "family": "optimization",
+   "gap": null,
+   "gap_is_defined": false,
+   "model": "ollama/llama3.1:8b",
+   "model_id": "llama3.1:8b",
+   "provider": "ollama",
+   "ran": {
+    "confidence": 0.95,
+    "interval_high": 0.16112515805281938,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 20,
+    "value": 0.0
+   },
+   "unmeasured": 0
+  },
+  {
+   "faithful": {
+    "confidence": 0.95,
+    "interval_high": 0.16112515805281938,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 20,
+    "value": 0.0
+   },
+   "family": "optimization",
+   "gap": null,
+   "gap_is_defined": false,
+   "model": "ollama/mistral:7b",
+   "model_id": "mistral:7b",
+   "provider": "ollama",
+   "ran": {
+    "confidence": 0.95,
+    "interval_high": 0.16112515805281938,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 20,
+    "value": 0.0
+   },
+   "unmeasured": 0
+  },
+  {
+   "faithful": {
+    "confidence": 0.95,
+    "interval_high": 0.16112515805281938,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 20,
+    "value": 0.0
+   },
+   "family": "optimization",
+   "gap": null,
+   "gap_is_defined": false,
+   "model": "ollama/phi4-mini:latest",
+   "model_id": "phi4-mini:latest",
+   "provider": "ollama",
+   "ran": {
+    "confidence": 0.95,
+    "interval_high": 0.16112515805281938,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 20,
+    "value": 0.0
+   },
+   "unmeasured": 0
+  },
+  {
+   "faithful": {
+    "confidence": 0.95,
+    "interval_high": 0.16112515805281938,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 20,
     "value": 0.0
    },
    "family": "optimization",
@@ -745,10 +1567,10 @@
    "provider": "ollama",
    "ran": {
     "confidence": 0.95,
-    "interval_high": 0.39033428790216534,
+    "interval_high": 0.16112515805281938,
     "interval_low": 0.0,
     "passed": 0,
-    "total": 6,
+    "total": 20,
     "value": 0.0
    },
    "unmeasured": 0
@@ -765,12 +1587,13 @@
   "anthropic/claude-haiku-4-5": {
    "a constant with no unit": 5,
    "a quantity declared derived and never defined": 4,
+   "a required field left out": 2,
+   "an assumption or open question with no span": 1,
    "dimensional mismatch": 1,
    "fabricated provenance: words not in the statement": 1,
    "infeasible, as the case is": 1,
    "ran and survived every check": 4,
-   "ran, then REFUTED: solves to a different optimum": 1,
-   "unparseable output": 3
+   "ran, then REFUTED: solves to a different optimum": 1
   },
   "anthropic/claude-sonnet-5": {
    "a constant with no unit": 4,
@@ -786,8 +1609,52 @@
    "ran and survived every check": 2,
    "truncated output": 3
   },
+  "ollama/deepseek-r1:8b": {
+   "a name used but never declared": 1,
+   "ran and survived every check": 1
+  },
+  "ollama/gemma3:4b": {
+   "a constant with no unit": 1,
+   "a name used but never declared": 2,
+   "dimensional mismatch": 1,
+   "fabricated provenance: words not in the statement": 16
+  },
+  "ollama/llama3.1:8b": {
+   "a constant with no unit": 1,
+   "a variable whose lower bound is above its upper": 1,
+   "dimensional mismatch": 3,
+   "fabricated provenance: words not in the statement": 14,
+   "truncated output": 1
+  },
+  "ollama/mistral:7b": {
+   "a constant with no unit": 1,
+   "a name used but never declared": 1,
+   "a quantity declared derived and never defined": 1,
+   "a variable whose lower bound is above its upper": 1,
+   "dimensional mismatch": 1,
+   "fabricated provenance: words not in the statement": 10,
+   "truncated output": 2,
+   "unparseable output": 3
+  },
+  "ollama/phi4-mini:latest": {
+   "a parameter left without a value": 3,
+   "a quantity declared derived and never defined": 1,
+   "fabricated provenance: words not in the statement": 11,
+   "truncated output": 2,
+   "unparseable output": 3
+  },
+  "ollama/qwen2.5-coder:7b": {
+   "a constant with no unit": 2,
+   "a variable whose lower bound is above its upper": 1,
+   "dimensional mismatch": 1,
+   "fabricated provenance: words not in the statement": 14,
+   "ran and survived every check": 1,
+   "the model it produced is infeasible or unbounded": 1
+  },
   "ollama/qwen3:8b": {
-   "fabricated provenance: words not in the statement": 5,
+   "a constant with no unit": 2,
+   "dimensional mismatch": 1,
+   "fabricated provenance: words not in the statement": 16,
    "unparseable output": 1
   },
   "zai/glm-4.5-flash": {
@@ -819,8 +1686,28 @@
    "did-not-run/not-faithful": 18,
    "ran/faithful": 2
   },
+  "ollama/deepseek-r1:8b": {
+   "did-not-run/not-faithful": 1,
+   "ran/faithful": 1
+  },
+  "ollama/gemma3:4b": {
+   "did-not-run/not-faithful": 20
+  },
+  "ollama/llama3.1:8b": {
+   "did-not-run/not-faithful": 20
+  },
+  "ollama/mistral:7b": {
+   "did-not-run/not-faithful": 20
+  },
+  "ollama/phi4-mini:latest": {
+   "did-not-run/not-faithful": 20
+  },
+  "ollama/qwen2.5-coder:7b": {
+   "did-not-run/not-faithful": 19,
+   "ran/faithful": 1
+  },
   "ollama/qwen3:8b": {
-   "did-not-run/not-faithful": 6
+   "did-not-run/not-faithful": 20
   },
   "zai/glm-4.5-flash": {
    "did-not-run/not-faithful": 2
@@ -930,7 +1817,121 @@
   },
   {
    "at_cap": 0,
-   "calls": 6,
+   "calls": 2,
+   "cost_usd": 0.0,
+   "fingerprints": [
+    "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288"
+   ],
+   "key": "ollama/deepseek-r1:8b",
+   "lane": "local",
+   "measured_from": "2026-09-23",
+   "measured_to": "2026-09-23",
+   "median_latency_s": 53.6,
+   "median_output_tokens": 1713,
+   "model_id": "deepseek-r1:8b",
+   "model_versions": [
+    "deepseek-r1:8b@6995872bfe4c"
+   ],
+   "provider": "ollama"
+  },
+  {
+   "at_cap": 0,
+   "calls": 20,
+   "cost_usd": 0.0,
+   "fingerprints": [
+    "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288"
+   ],
+   "key": "ollama/qwen2.5-coder:7b",
+   "lane": "local",
+   "measured_from": "2026-09-23",
+   "measured_to": "2026-09-23",
+   "median_latency_s": 24.3,
+   "median_output_tokens": 1139,
+   "model_id": "qwen2.5-coder:7b",
+   "model_versions": [
+    "qwen2.5-coder:7b@dae161e27b0e"
+   ],
+   "provider": "ollama"
+  },
+  {
+   "at_cap": 0,
+   "calls": 20,
+   "cost_usd": 0.0,
+   "fingerprints": [
+    "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288"
+   ],
+   "key": "ollama/gemma3:4b",
+   "lane": "local",
+   "measured_from": "2026-09-23",
+   "measured_to": "2026-09-23",
+   "median_latency_s": 14.6,
+   "median_output_tokens": 928,
+   "model_id": "gemma3:4b",
+   "model_versions": [
+    "gemma3:4b@a2af6cc3eb7f"
+   ],
+   "provider": "ollama"
+  },
+  {
+   "at_cap": 1,
+   "calls": 20,
+   "cost_usd": 0.0,
+   "fingerprints": [
+    "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288"
+   ],
+   "key": "ollama/llama3.1:8b",
+   "lane": "local",
+   "measured_from": "2026-09-23",
+   "measured_to": "2026-09-23",
+   "median_latency_s": 27.3,
+   "median_output_tokens": 1185,
+   "model_id": "llama3.1:8b",
+   "model_versions": [
+    "llama3.1:8b@46e0c10c039e"
+   ],
+   "provider": "ollama"
+  },
+  {
+   "at_cap": 0,
+   "calls": 20,
+   "cost_usd": 0.0,
+   "fingerprints": [
+    "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288"
+   ],
+   "key": "ollama/mistral:7b",
+   "lane": "local",
+   "measured_from": "2026-09-23",
+   "measured_to": "2026-09-23",
+   "median_latency_s": 24.3,
+   "median_output_tokens": 1119,
+   "model_id": "mistral:7b",
+   "model_versions": [
+    "mistral:7b@6577803aa9a0"
+   ],
+   "provider": "ollama"
+  },
+  {
+   "at_cap": 0,
+   "calls": 20,
+   "cost_usd": 0.0,
+   "fingerprints": [
+    "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288"
+   ],
+   "key": "ollama/phi4-mini:latest",
+   "lane": "local",
+   "measured_from": "2026-09-23",
+   "measured_to": "2026-09-23",
+   "median_latency_s": 13.9,
+   "median_output_tokens": 982,
+   "model_id": "phi4-mini:latest",
+   "model_versions": [
+    "phi4-mini:latest@78fad5d182a7"
+   ],
+   "provider": "ollama"
+  },
+  {
+   "at_cap": 0,
+   "calls": 20,
    "cost_usd": 0.0,
    "fingerprints": [
     "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288"
@@ -939,8 +1940,8 @@
    "lane": "local",
    "measured_from": "2026-09-23",
    "measured_to": "2026-09-23",
-   "median_latency_s": 27.0,
-   "median_output_tokens": 1150,
+   "median_latency_s": 30.2,
+   "median_output_tokens": 1284,
    "model_id": "qwen3:8b",
    "model_versions": [
     "qwen3:8b@500a1f067a9f"
