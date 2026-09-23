@@ -477,11 +477,15 @@ for (const route of ["introduction", "methodology", "implementation", "experimen
     const page = await context.newPage();
     await page.goto(`${origin}/${route}`, { waitUntil: "networkidle" });
     await page.waitForTimeout(1200);
-    const text = (await page.textContent("#root")) ?? "";
+    // `.page-body`, not `#root`. The header nav and the footer's provenance run to about 500
+    // characters on their own, so a 400-char floor on #root passes a page whose CONTENT is empty.
+    // That is exactly what /benchmark did: its artifact fetch used a document-relative URL, which
+    // resolves under /benchmark/ on a deep link, 404s, and renders the "no measurement" state.
+    const text = (await page.textContent(".page-body")) ?? "";
     check(
-      text.trim().length > 400,
-      `deep link /${route} mounts in a browser`,
-      `${text.trim().length} chars at ${page.url()}`,
+      text.trim().length > 900,
+      `deep link /${route} mounts its content`,
+      `${text.trim().length} chars of page body at ${page.url()}`,
     );
     await context.close();
   }

@@ -18,6 +18,18 @@ export interface DataState {
   load: () => Promise<void>;
 }
 
+/**
+ * Where the artifacts live, resolved against the build's base rather than the current URL.
+ *
+ * A bare "data/cases.json" is relative to the DOCUMENT, so it resolves to /benchmark/data/... on a
+ * deep link and 404s. The workbench at "/" happened to work, which is why this shipped: every
+ * manual check starts at the root. `import.meta.env.BASE_URL` is the one value that is correct
+ * under a domain root, a project subpath and a local preview alike.
+ */
+export function artifactUrl(name: string): string {
+  return `${import.meta.env.BASE_URL.replace(/\/$/, "")}/data/${name}`;
+}
+
 async function fetchJson<T>(path: string): Promise<T> {
   const response = await fetch(path, { cache: "no-cache" });
   if (!response.ok) {
@@ -36,8 +48,8 @@ export const useData = create<DataState>((set, get) => ({
     set({ status: "loading", error: "" });
     try {
       const [manifest, cases] = await Promise.all([
-        fetchJson<Manifest>("data/manifest.json"),
-        fetchJson<CaseRecord[]>("data/cases.json"),
+        fetchJson<Manifest>(artifactUrl("manifest.json")),
+        fetchJson<CaseRecord[]>(artifactUrl("cases.json")),
       ]);
 
       if (manifest.schema !== SCHEMA) {
