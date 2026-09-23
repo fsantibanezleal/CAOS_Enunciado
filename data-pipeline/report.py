@@ -129,6 +129,15 @@ def classify(record) -> str:
     if structural and structural["outcome"] == Outcome.FAIL.value:
         return "ran, then REFUTED: solves to a different optimum"
 
+    # The property layer can refute too, and a candidate on which neither strong layer decided has
+    # not survived anything: it was never tested in a way that could have failed it. Both classes
+    # are empty in the published ledger, and both used to fall through to "survived every check".
+    prop = verdicts.get(Layer.PROPERTY.value)
+    if prop and prop["outcome"] == Outcome.FAIL.value:
+        return "ran, then REFUTED: a metamorphic relation failed"
+    if not any(v is not None and v["outcome"] == Outcome.PASS.value for v in (structural, prop)):
+        return "ran, and no layer decided"
+
     return "ran and survived every check"
 
 
@@ -138,13 +147,24 @@ def _ran(record) -> bool:
 
 
 def _faithful(record) -> bool:
+    """copela's rule, restated for the breakdowns: it ran, neither strong layer FAILED, and at least
+    one of them PASSED.
+
+    An earlier version dropped the last clause, so the breakdowns counted a candidate on which both
+    strong layers were undecided as faithful while the headline rate, computed by copela, did not.
+    The published ledger has no such candidate, so every published number is unchanged; the two
+    definitions would have parted on the first one.
+    """
     if not _ran(record):
         return False
+    decided = False
     for layer in (Layer.STRUCTURAL.value, Layer.PROPERTY.value):
         found = next((v for v in record.verdicts if v["layer"] == layer), None)
         if found is not None and found["outcome"] == Outcome.FAIL.value:
             return False
-    return True
+        if found is not None and found["outcome"] == Outcome.PASS.value:
+            decided = True
+    return decided
 
 
 def _unmeasured(record) -> bool:

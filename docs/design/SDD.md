@@ -174,7 +174,28 @@ R-023  THE tracked text SHALL contain no control character other than a line fee
 
 R-024  THE figures in the docs wiki SHALL match the diagram components the pages draw.
        Gate: frontend/export-diagrams.mjs
+
+R-025  WHEN a case is selected, THE workbench sidebar SHALL show each measured model's verdict on it,
+       layer by layer, from the ledger.
+       Gate: tools/visual-verify/verify.mjs
+
+R-026  THE architecture modal SHALL name only colour tokens the shell defines.
+       Gate: tools/visual-verify/verify.mjs
+
+R-027  THE report's breakdowns SHALL count a candidate as faithful exactly when copela does.
+       Gate: tests/test_faithful_rule.py::test_the_report_breakdowns_use_copelas_rule
+
+R-028  THE CI recomputation of the rates SHALL count a candidate as faithful exactly when copela does.
+       Gate: tests/test_faithful_rule.py::test_the_ci_recomputation_uses_copelas_rule
 ```
+
+R-025 and R-026 came with 0.04.000. R-026 exists because the modal's diagrams named eight tokens the
+shell does not define and fell through to their dark fallbacks, so the light theme drew dark boxes on
+a light page while a check that counted the SVGs stayed green. R-027 and R-028 exist because two
+restatements of `faithful` had dropped the clause "and at least one strong layer passed" and still
+agreed with every published number, the ledger holding no candidate on which both strong layers were
+undecided; comparing the three over every combination of layer outcomes also found that copela's own
+property never required a run, fixed in copela 0.2.3 (its R-021).
 
 R-013 to R-024 were added with 0.03.000, when the workbench reached fourteen methods. Each gate was
 mutation-checked, not only run: removing the rule it protects makes it fail. R-015's gate pins the
@@ -216,7 +237,8 @@ Recorded 2026-09-22 for the corpus, and 2026-09-23 for the web surface (0.03.000
 | The bake | 20 cases, every reference solves, every claim agrees, every relation holds |
 | R-013 to R-022 | all pass, 14 method tests, each mutation-checked |
 | R-023, R-024 | pass: no control character in 124 tracked files; 17 figures match their components |
-| The UI gate | 165 checks pass against the built site, in dark, light and Spanish |
+| R-025 to R-028 | pass: the sidebar diagnosis and modal-token checks in the gate; 2 rule tests over all 125 outcome combinations |
+| The UI gate | 171 checks pass against the built site, in dark, light and Spanish (0.04.000) |
 
 Out of scope and not claimed: the three other target families (mathematical formulation,
 experiment design, machine-learning framing), which are designed and unmeasured, and the judge

@@ -187,11 +187,11 @@ export function IntroductionPage() {
         </p>
 
         <Equation
-          tex={String.raw`R_{\text{ran}} = \frac{\bigl|\{\, c \in C : \mathrm{exec}(c) = \textsf{PASS} \,\}\bigr|}{|C| - u}, \qquad R_{\text{faithful}} = \frac{\bigl|\{\, c \in C : \mathrm{exec}(c) = \textsf{PASS} \;\wedge\; \mathrm{struct}(c) \neq \textsf{FAIL} \;\wedge\; \mathrm{prop}(c) \neq \textsf{FAIL} \,\}\bigr|}{|C| - u}`}
+          tex={String.raw`R_{\text{ran}} = \frac{\bigl|\{\, c \in C : \mathrm{exec}(c) = \textsf{PASS} \,\}\bigr|}{|C| - u}, \qquad R_{\text{faithful}} = \frac{\bigl|\{\, c \in C : \mathrm{exec}(c) = \textsf{PASS} \;\wedge\; \textsf{FAIL} \notin \{\mathrm{struct}(c), \mathrm{prop}(c)\} \;\wedge\; \textsf{PASS} \in \{\mathrm{struct}(c), \mathrm{prop}(c)\} \,\}\bigr|}{|C| - u}`}
           caption={
             es
-              ? "Las dos tasas. El denominador excluye los u casos no medidos: aquellos donde el instrumento, no el modelo, fue el limite."
-              : "The two rates. The denominator excludes the u unmeasured cases: the ones where the instrument, not the model, was the limit."
+              ? "Las dos tasas. Fiel exige que corra, que ninguna capa fuerte falle y que al menos una apruebe. El denominador excluye los u casos no medidos: aquellos donde el instrumento, no el modelo, fue el limite."
+              : "The two rates. Faithful requires that it ran, that no strong layer failed and that at least one passed. The denominator excludes the u unmeasured cases: the ones where the instrument, not the model, was the limit."
           }
         />
 
