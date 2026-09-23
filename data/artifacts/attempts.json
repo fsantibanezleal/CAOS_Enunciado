@@ -2737,6 +2737,27 @@
    },
    {
     "cost_usd": 0.0,
+    "failure_class": "a constant with no unit",
+    "input_tokens": 996,
+    "latency_ms": 386118.4,
+    "model": "ollama/phi4:latest",
+    "model_id": "phi4:latest",
+    "model_version": "phi4:latest@ac896e5b8b34",
+    "output_tokens": 2468,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A depot plans three weeks. It starts with 20 tonnes in store. Each week it may buy at a price that rises: 50 USD per tonne in week one, 58 in week two, 63 in week three. Demand is 30 tonnes in week one, 45 in week two, 25 in week three, and must be met from the store after that week's purchase arrives. The store holds at most 60 tonnes at the end of any week. Minimise the total purchase cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"initial_stock\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": 20.0,\n      \"description\": \"Initial stock in tonnes\",\n      \"span\": {\"start\": 34, \"end\": 54, \"text\": \"It starts with 20 tonnes in store.\"}\n    },\n    {\n      \"name\": \"price_week_1\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"s\n[... 5767 characters omitted ...]\nt\": {\"tag\": \"const\", \"value\": 60.0},\n      \"name\": \"week_3_max_stock\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"price_week_1\"}, {\"tag\": \"ref\", \"name\": \"purchase_week_1\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"price_week_2\"}, {\"tag\": \"ref\", \"name\": \"purchase_week_2\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"price_week_3\"}, {\"tag\": \"ref\", \"name\": \"purchase_week_3\"}]}\n        ]\n      },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"Initial stock level at the start of each week\",\n      \"span\": {\"start\": 208, \"end\": 228, \"text\": \"The store holds at most 60 tonnes\"},\n      \"resolution\": \"Assumed to be the stock at the end of the previous week\",\n      \"affects\": [\"stock_week_1\", \"stock_week_2\", \"stock_week_3\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['tag', 'value']",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
     "failure_class": "a parameter left without a value",
     "input_tokens": 1001,
     "latency_ms": 78991.9,
@@ -3015,6 +3036,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 30977 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "a constant with no unit",
+    "input_tokens": 963,
+    "latency_ms": 211145.2,
+    "model": "ollama/phi4:latest",
+    "model_id": "phi4:latest",
+    "model_version": "phi4:latest@ac896e5b8b34",
+    "output_tokens": 1283,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A smelter blends two concentrates. Concentrate X assays 28 per cent copper and costs 210 USD per tonne. Concentrate Y assays 19 per cent and costs 140 USD per tonne. The furnace needs 500 tonnes of blend, and the blend must assay at least 24 per cent copper. Minimise the cost of the blend.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_a\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"amount of Concentrate X in tonnes\",\n      \"span\": {\"start\": 34, \"end\": 39, \"text\": \"Concentrate X\"}\n    },\n    {\n      \"name\": \"x_b\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"de\n[... 2217 characters omitted ...]\nroduct\",\n        \"factors\": [\n          {\"tag\": \"ref\", \"name\": \"demand\"},\n          {\"tag\": \"const\", \"value\": 0.24}\n        ]\n      },\n      \"name\": \"copper_content\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"c_a\"}, {\"tag\": \"ref\", \"name\": \"x_a\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"c_b\"}, {\"tag\": \"ref\", \"name\": \"x_b\"}]}\n        ]\n      },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"The problem statement does not specify the exact proportions of Concentrate X and Y to be used.\",\n      \"span\": {\"start\": 178, \"end\": 204, \"text\": \"Minimise the cost of the blend\"},\n      \"resolution\": \"The solver must determine the proportions of Concentrate X and Y that minimize cost while meeting the constraints.\",\n      \"affects\": [\"total_cost\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['tag', 'value']",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -3337,6 +3379,37 @@
    },
    {
     "cost_usd": 0.0,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 969,
+    "latency_ms": 334204.5,
+    "model": "ollama/phi4:latest",
+    "model_id": "phi4:latest",
+    "model_version": "phi4:latest@ac896e5b8b34",
+    "output_tokens": 2050,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
     "failure_class": "unparseable output",
     "input_tokens": 976,
     "latency_ms": 72947.6,
@@ -3617,6 +3690,37 @@
       "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 31918 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
       "layer": "executable",
       "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "ran, then REFUTED: solves to a different optimum",
+    "input_tokens": 967,
+    "latency_ms": 238386.0,
+    "model": "ollama/phi4:latest",
+    "model_id": "phi4:latest",
+    "model_version": "phi4:latest@ac896e5b8b34",
+    "output_tokens": 1637,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A workshop has 120 hours of machining and 90 hours of finishing available this month. A pump takes 4 hours machining and 2 hours finishing, and sells for a margin of 260 USD. A valve takes 2 hours machining and 3 hours finishing, with a margin of 180 USD. No more than 20 pumps can be sold. Maximise the margin.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"machining_hours\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"time\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": 0,\n      \"upper\": null,\n      \"value\": 120,\n      \"description\": \"Total machining hours available\",\n      \"span\": {\"start\": 3, \"end\": 27, \"text\": \"120 hours of machining\"}\n    },\n    {\n      \"name\": \"finishing_hours\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"time\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": \n[... 3389 characters omitted ...]\ng\": \"ref\", \"name\": \"finishing_time_pump\"}, {\"tag\": \"ref\", \"name\": \"x_a\"}]}, {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"finishing_time_valve\"}, {\"tag\": \"ref\", \"name\": \"x_b\"}]}]},\n      \"comparator\": \"<=\",\n      \"right\": {\"tag\": \"ref\", \"name\": \"finishing_hours\"},\n      \"name\": \"finishing_constraint\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"maximise\",\n      \"expression\": {\"tag\": \"sum\", \"terms\": [{\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"c_a\"}, {\"tag\": \"ref\", \"name\": \"x_a\"}]}, {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"c_b\"}, {\"tag\": \"ref\", \"name\": \"x_b\"}]}]},\n      \"name\": \"total_margin\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"The problem statement does not specify the maximum number of valves that can be sold.\",\n      \"span\": {\"inferred_reason\": \"The statement does not limit the number of valves.\"},\n      \"resolution\": \"Assumed no upper limit on valves.\",\n      \"affects\": [\"x_b\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "solves to 8080 where the reference solves to 8200; the same case cannot have two optima, so these are different models",
+      "layer": "structural",
+      "outcome": "fail"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
      }
     ]
    },
@@ -3918,6 +4022,37 @@
    {
     "cost_usd": 0.0,
     "failure_class": "ran and survived every check",
+    "input_tokens": 935,
+    "latency_ms": 104061.9,
+    "model": "ollama/phi4:latest",
+    "model_id": "phi4:latest",
+    "model_version": "phi4:latest@ac896e5b8b34",
+    "output_tokens": 760,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "ran and survived every check",
     "input_tokens": 937,
     "latency_ms": 36494.3,
     "model": "ollama/deepseek-r1:8b",
@@ -4212,6 +4347,27 @@
    },
    {
     "cost_usd": 0.0,
+    "failure_class": "a constant with no unit",
+    "input_tokens": 973,
+    "latency_ms": 154043.2,
+    "model": "ollama/phi4:latest",
+    "model_id": "phi4:latest",
+    "model_version": "phi4:latest@ac896e5b8b34",
+    "output_tokens": 1119,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A contractor may open a temporary crushing station. Opening it costs 40000 USD for the season regardless of use, after which crushing costs 3 USD per tonne there, up to 9000 tonnes. The existing plant charges 9 USD per tonne with no fixed cost and can take at most 6000 tonnes. The season's tonnage is 15000. Minimise the total cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_a\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": 0,\n      \"upper\": 9000,\n      \"value\": null,\n      \"description\": \"tonnes crushed at temporary station\",\n      \"span\": {\"start\": 34, \"end\": 39, \"text\": \"9000 tonnes\"}\n    },\n    {\n      \"name\": \"x_b\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": 0,\n      \n[... 1715 characters omitted ...]\n=\",\n      \"right\": {\"tag\": \"ref\", \"name\": \"demand\"},\n      \"name\": \"meet_demand\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"fixed_cost\"}, {\"tag\": \"const\", \"value\": 1}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"c_a\"}, {\"tag\": \"ref\", \"name\": \"x_a\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"c_b\"}, {\"tag\": \"ref\", \"name\": \"x_b\"}]}\n        ]\n      },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"whether to open the temporary station\",\n      \"span\": {\"start\": 0, \"end\": 24, \"text\": \"A contractor may open a temporary crushing station.\"},\n      \"resolution\": \"The decision to open the temporary station is based on minimizing the total cost, considering the fixed cost and variable costs.\",\n      \"affects\": [\"total_cost\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['tag', 'value']",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
     "failure_class": "no answer: the reasoning used the whole cap",
     "input_tokens": 980,
     "latency_ms": 212065.7,
@@ -4480,6 +4636,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 32710 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "unparseable output",
+    "input_tokens": 966,
+    "latency_ms": 159159.5,
+    "model": "ollama/phi4:latest",
+    "model_id": "phi4:latest",
+    "model_version": "phi4:latest@ac896e5b8b34",
+    "output_tokens": 1103,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A kiln can be run or left idle. If it is run at all it must process at least 200 tonnes, and it cannot exceed 500 tonnes. Running it earns 24 USD per tonne but costs 4000 USD to fire up. Only 150 tonnes of feed are available. Decide whether to run the kiln so as to maximise the margin.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_k\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": 500.0,\n      \"value\": null,\n      \"description\": \"Amount of feed processed by the kiln in tonnes\",\n      \"span\": {\"start\": 34, \"end\": 43, \"text\": \"process at least 200 tonnes\"}\n    },\n    {\n      \"name\": \"earnings_per_tonne\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"USD/t\", \"exponents\": {\"currency\": \"1\", \"mass\": \"-1\"}},\n      \"domain\": \"real\",\n      \n[... 1728 characters omitted ...]\n_per_tonne\"},\n              {\"tag\": \"ref\", \"name\": \"x_k\"}\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\"tag\": \"const\", \"value\": -1.0},\n              {\n                \"tag\": \"conditional\",\n                \"condition\": {\"tag\": \"compare\", \"left\": {\"tag\": \"ref\", \"name\": \"x_k\"}, \"comparator\": \">=\", \"right\": {\"tag\": \"const\", \"value\": 0.0}},\n                \"then\": {\"tag\": \"const\", \"value\": startup_cost},\n                \"else\": {\"tag\": \"const\", \"value\": 0.0}\n              }\n            ]\n          }\n        ]\n      },\n      \"name\": \"max_margin\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"The problem statement does not specify the decision variable for running the kiln.\",\n      \"span\": {\"start\": 109, \"end\": 123, \"text\": \"Decide whether to run the kiln\"},\n      \"resolution\": \"Assumed that running the kiln is determined by whether x_k > 0.\",\n      \"affects\": [\"max_margin\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: Expecting value: line 98 column 51 (char 3172)",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -4762,6 +4939,27 @@
    },
    {
     "cost_usd": 0.0,
+    "failure_class": "a required field left out",
+    "input_tokens": 972,
+    "latency_ms": 524213.1,
+    "model": "ollama/phi4:latest",
+    "model_id": "phi4:latest",
+    "model_version": "phi4:latest@ac896e5b8b34",
+    "output_tokens": 3431,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"Three drills must be assigned to three benches, one drill to each bench and one bench to each drill. The hours each drill needs on each bench are: drill one takes 9, 12 and 7 hours on benches A, B and C; drill two takes 11, 8 and 10; drill three takes 6, 13 and 12. Minimise the total hours.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_1A\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"time\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": 0,\n      \"upper\": 1,\n      \"value\": null,\n      \"description\": \"Assignment of drill 1 to bench A\",\n      \"span\": {\"start\": 0, \"end\": 15, \"text\": \"drill one takes 9, 12 and 7 hours on benches A, B and C\"}\n    },\n    {\n      \"name\": \"x_1B\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"time\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": 0,\n      \"up\n[... 8386 characters omitted ...]\n: \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_2B\"}, {\"tag\": \"ref\", \"name\": \"x_2B\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_2C\"}, {\"tag\": \"ref\", \"name\": \"x_2C\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_3A\"}, {\"tag\": \"ref\", \"name\": \"x_3A\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_3B\"}, {\"tag\": \"ref\", \"name\": \"x_3B\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_3C\"}, {\"tag\": \"ref\", \"name\": \"x_3C\"}]}\n        ]\n      },\n      \"name\": \"total_hours\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"The problem statement does not specify if there are any constraints on the total hours or other conditions.\",\n      \"span\": {\"start\": 78, \"end\": 95, \"text\": \"Minimise the total hours.\"},\n      \"resolution\": \"Assumed that the only goal is to minimize the total hours without additional constraints.\",\n      \"affects\": [\"total_hours\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: a 'logical' relation is missing its 'connective' field; got keys ['left', 'right', 'tag']",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
     "failure_class": "fabricated provenance: words not in the statement",
     "input_tokens": 974,
     "latency_ms": 62446.7,
@@ -5027,6 +5225,27 @@
     "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
     "repeat": 0,
     "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A depot stocks bolts and nuts. It must hold at least twice as many bolts as nuts. Bolts cost 3 USD each and nuts cost 1 USD each, and the depot must hold at least 600 items in total. Minimise the cost of the holding.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"n_bolts\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"item\", \"exponents\": {\"count\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Number of bolts held in the depot\",\n      \"span\": {\"start\": 15, \"end\": 20, \"text\": \"bolts\"}\n    },\n    {\n      \"name\": \"n_nuts\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"item\", \"exponents\": {\"count\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Number of nuts held in the depot\",\n      \"span\": {\"start\n[... 1394 characters omitted ...]\n\n      \"name\": \"at_least_twice_as_many_bolts_as_nuts\"\n    },\n    {\n      \"tag\": \"compare\",\n      \"left\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\"tag\": \"ref\", \"name\": \"n_bolts\"},\n          {\"tag\": \"ref\", \"name\": \"n_nuts\"}\n        ]\n      },\n      \"comparator\": \">=\",\n      \"right\": {\"tag\": \"ref\", \"name\": \"min_total_items\"},\n      \"name\": \"at_least_600_items_total\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\"tag\": \"ref\", \"name\": \"cost_bolts\"},\n              {\"tag\": \"ref\", \"name\": \"n_bolts\"}\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\"tag\": \"ref\", \"name\": \"cost_nuts\"},\n              {\"tag\": \"ref\", \"name\": \"n_nuts\"}\n            ]\n          }\n        ]\n      },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [],\n  \"feasibility_only\": false\n}",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['tag', 'value']",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "a constant with no unit",
+    "input_tokens": 946,
+    "latency_ms": 214118.8,
+    "model": "ollama/phi4:latest",
+    "model_id": "phi4:latest",
+    "model_version": "phi4:latest@ac896e5b8b34",
+    "output_tokens": 1003,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A depot stocks bolts and nuts. It must hold at least twice as many bolts as nuts. Bolts cost 3 USD each and nuts cost 1 USD each, and the depot must hold at least 600 items in total. Minimise the cost of the holding.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_b\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"integer\",\n      \"lower\": 0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"number of bolts\",\n      \"span\": {\"start\": 17, \"end\": 21, \"text\": \"bolts\"}\n    },\n    {\n      \"name\": \"x_n\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"integer\",\n      \"lower\": 0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"number of nuts\",\n      \"span\": {\"start\": 23, \"end\": 26, \"text\": \"nuts\"}\n    },\n    {\n      \"name\": \"c_b\",\n \n[... 1249 characters omitted ...]\nag\": \"ref\", \"name\": \"x_b\"}, {\"tag\": \"ref\", \"name\": \"x_n\"}]},\n      \"comparator\": \">=\",\n      \"right\": {\"tag\": \"ref\", \"name\": \"demand\"},\n      \"name\": \"meet_demand\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"c_b\"}, {\"tag\": \"ref\", \"name\": \"x_b\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"c_n\"}, {\"tag\": \"ref\", \"name\": \"x_n\"}]}\n        ]\n      },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"what the statement does not determine\",\n      \"span\": {\"start\": 104, \"end\": 121, \"text\": \"Minimise the cost\"},\n      \"resolution\": \"The statement specifies minimising cost but does not provide constraints on the maximum number of bolts or nuts, nor does it specify a preference if multiple solutions have the same cost.\",\n      \"affects\": [\"total_cost\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['tag', 'value']",
@@ -5332,6 +5551,27 @@
    },
    {
     "cost_usd": 0.0,
+    "failure_class": "fabricated provenance: words not in the statement",
+    "input_tokens": 952,
+    "latency_ms": 164936.6,
+    "model": "ollama/phi4:latest",
+    "model_id": "phi4:latest",
+    "model_version": "phi4:latest@ac896e5b8b34",
+    "output_tokens": 1110,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A processor can buy ore from a nearby pit at 70 USD per tonne or from a distant pit at 52 USD per tonne. Haulage from the distant pit is quoted separately at 15 USD per tonne. The plant needs 800 tonnes. Minimise what the processor pays.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_a\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"amount of ore bought from Pit A\",\n      \"span\": {\"start\": 34, \"end\": 39, \"text\": \"Pit A\"}\n    },\n    {\n      \"name\": \"x_b\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"amount of ore bought from Pit B\",\n      \"span\": {\"\n[... 1514 characters omitted ...]\nf\", \"name\": \"x_a\"}, {\"tag\": \"ref\", \"name\": \"x_b\"}]},\n      \"comparator\": \">=\",\n      \"right\": {\"tag\": \"ref\", \"name\": \"demand\"},\n      \"name\": \"meet_demand\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"c_a\"}, {\"tag\": \"ref\", \"name\": \"x_a\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"c_b\"}, {\"tag\": \"ref\", \"name\": \"x_b\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"c_haul\"}, {\"tag\": \"ref\", \"name\": \"x_b\"}]}\n        ]\n      },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"what the statement does not determine\",\n      \"span\": {\"start\": 130, \"end\": 147, \"text\": \"Minimise what the processor pays\"},\n      \"resolution\": \"Assuming the objective is to minimize the total cost of ore and haulage.\",\n      \"affects\": [\"total_cost\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains 'Pit A', and it does not",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
     "failure_class": "truncated output",
     "input_tokens": 954,
     "latency_ms": 45853.9,
@@ -5627,6 +5867,27 @@
    },
    {
     "cost_usd": 0.0,
+    "failure_class": "a variable whose lower bound is above its upper",
+    "input_tokens": 936,
+    "latency_ms": 94629.7,
+    "model": "ollama/phi4:latest",
+    "model_id": "phi4:latest",
+    "model_version": "phi4:latest@ac896e5b8b34",
+    "output_tokens": 624,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A crew must work at least 40 shifts this month to cover the roster. Overtime rules cap the crew at 32 shifts a month. Each shift costs 900 USD. Minimise the cost of covering the roster.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"integer\",\n      \"lower\": 40.0,\n      \"upper\": 32.0,\n      \"value\": null,\n      \"description\": \"number of shifts worked by the crew\",\n      \"span\": {\"start\": 4, \"end\": 9, \"text\": \"work at least 40 shifts\"}\n    },\n    {\n      \"name\": \"c\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"USD\", \"exponents\": {}},\n      \"domain\": \"real\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 900.0,\n      \"description\": \"cost per shift\",\n      \"span\": {\"start\": 64, \"end\": 69, \"text\": \"Each shift costs 900 USD\"}\n    }\n \n[... 75 characters omitted ...]\nef\", \"name\": \"x\"},\n      \"comparator\": \">=\",\n      \"right\": {\"tag\": \"const\", \"value\": 40},\n      \"name\": \"minimum_shifts\"\n    },\n    {\n      \"tag\": \"compare\",\n      \"left\": {\"tag\": \"ref\", \"name\": \"x\"},\n      \"comparator\": \"<=\",\n      \"right\": {\"tag\": \"const\", \"value\": 32},\n      \"name\": \"maximum_shifts\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\n        \"tag\": \"product\",\n        \"factors\": [\n          {\"tag\": \"ref\", \"name\": \"c\"},\n          {\"tag\": \"ref\", \"name\": \"x\"}\n        ]\n      },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"The problem statement contains conflicting constraints on the number of shifts.\",\n      \"span\": {\"start\": 18, \"end\": 32, \"text\": \"Overtime rules cap the crew at 32 shifts a month.\"},\n      \"resolution\": \"The statement requires at least 40 shifts but caps at 32, which is infeasible.\",\n      \"affects\": [\"minimum_shifts\", \"maximum_shifts\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: quantity 'x' has lower 40.0 above upper 32.0",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
     "failure_class": "a parameter left without a value",
     "input_tokens": 937,
     "latency_ms": 42006.8,
@@ -5897,6 +6158,37 @@
       "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 29724 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
       "layer": "executable",
       "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "ran, then REFUTED: solves to a different optimum",
+    "input_tokens": 954,
+    "latency_ms": 213342.1,
+    "model": "ollama/phi4:latest",
+    "model_id": "phi4:latest",
+    "model_version": "phi4:latest@ac896e5b8b34",
+    "output_tokens": 1383,
+    "provider": "ollama",
+    "provider_fingerprint": "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A pipeline can move 18 of product A or 25 of product B per hour, and runs 10 hours a day. Product A is worth 340 per unit moved and product B is worth 210. A customer contract requires at least 60 of product A each day. Maximise the daily value moved.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_a\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"integer\",\n      \"lower\": 0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"units of product A moved per day\",\n      \"span\": {\"start\": 34, \"end\": 39, \"text\": \"product A\"}\n    },\n    {\n      \"name\": \"x_b\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"integer\",\n      \"lower\": 0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"units of product B moved per day\",\n      \"span\": {\"\n[... 2637 characters omitted ...]\n\": \"capacity_b\"}, {\"tag\": \"ref\", \"name\": \"hours_per_day\"}]},\n      \"comparator\": \">=\",\n      \"right\": {\"tag\": \"ref\", \"name\": \"x_b\"},\n      \"name\": \"capacity_limit_b\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"maximise\",\n      \"expression\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"c_a\"}, {\"tag\": \"ref\", \"name\": \"x_a\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"c_b\"}, {\"tag\": \"ref\", \"name\": \"x_b\"}]}\n        ]\n      },\n      \"name\": \"total_value\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"The problem statement does not specify if the pipeline can move both products simultaneously or if it must choose one per hour.\",\n      \"span\": {\"start\": 61, \"end\": 78, \"text\": \"Maximise the daily value moved\"},\n      \"resolution\": \"Assumed that the pipeline can move both products within the total available hours.\",\n      \"affects\": [\"total_value\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "solves to 113700 where the reference solves to 61200; the same case cannot have two optima, so these are different models",
+      "layer": "structural",
+      "outcome": "fail"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
      }
     ]
    },

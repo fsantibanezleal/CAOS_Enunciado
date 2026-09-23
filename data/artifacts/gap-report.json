@@ -394,6 +394,30 @@
     "passed": 1,
     "total": 4,
     "value": 0.25
+   },
+   "3": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "4": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "5": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
    }
   },
   "ollama/qwen2.5-coder:7b": {
@@ -1243,37 +1267,61 @@
    }
   },
   "ollama/phi4:latest": {
-   "derived-bound": {
+   "ambiguity": {
     "confidence": 0.95,
-    "interval_high": 0.7934506856227626,
+    "interval_high": 0.4898908364545973,
     "interval_low": 0.0,
     "passed": 0,
-    "total": 1,
+    "total": 4,
     "value": 0.0
+   },
+   "derived-bound": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "droppable-constraint": {
+    "confidence": 0.95,
+    "interval_high": 0.6244653702374747,
+    "interval_low": 0.036224108632430085,
+    "passed": 1,
+    "total": 5,
+    "value": 0.2
    },
    "implicit-quantity": {
     "confidence": 0.95,
-    "interval_high": 0.7934506856227626,
+    "interval_high": 0.5614970317550455,
     "interval_low": 0.0,
     "passed": 0,
-    "total": 1,
+    "total": 3,
     "value": 0.0
+   },
+   "integrality": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
    },
    "none": {
     "confidence": 0.95,
-    "interval_high": 0.7923403991979523,
-    "interval_low": 0.06149194472039615,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
     "passed": 1,
-    "total": 3,
-    "value": 0.3333333333333333
+    "total": 4,
+    "value": 0.25
    },
    "objective-sense": {
     "confidence": 0.95,
-    "interval_high": 1.0,
-    "interval_low": 0.20654931437723745,
+    "interval_high": 0.9054687942657693,
+    "interval_low": 0.09453120573423074,
     "passed": 1,
-    "total": 1,
-    "value": 1.0
+    "total": 2,
+    "value": 0.5
    },
    "red-herring": {
     "confidence": 0.95,
@@ -1285,10 +1333,10 @@
    },
    "unit-mismatch": {
     "confidence": 0.95,
-    "interval_high": 0.7934506856227626,
+    "interval_high": 0.6576197724933469,
     "interval_low": 0.0,
     "passed": 0,
-    "total": 1,
+    "total": 2,
     "value": 0.0
    }
   },
@@ -1607,11 +1655,11 @@
    }
   }
  },
- "call_count": 270,
+ "call_count": 282,
  "caveats": [
   {
-   "en": "Each model ran 2/8/20 calls, one repeat per case, which gives a wide interval: at n = 2 a rate of 0.50 carries a Wilson interval from 0.09 to 0.91. Two models whose intervals overlap cannot be ranked against each other from this run.",
-   "es": "Cada modelo corrio 2/8/20 llamadas, una repeticion por caso, lo que da un intervalo ancho: con n = 2 una tasa de 0.50 lleva un intervalo de Wilson de 0.09 a 0.91. Dos modelos cuyos intervalos se solapan no se pueden ordenar entre si con esta corrida."
+   "en": "Each model ran 2/20 calls, one repeat per case, which gives a wide interval: at n = 2 a rate of 0.50 carries a Wilson interval from 0.09 to 0.91. Two models whose intervals overlap cannot be ranked against each other from this run.",
+   "es": "Cada modelo corrio 2/20 llamadas, una repeticion por caso, lo que da un intervalo ancho: con n = 2 una tasa de 0.50 lleva un intervalo de Wilson de 0.09 a 0.91. Dos modelos cuyos intervalos se solapan no se pueden ordenar entre si con esta corrida."
   },
   {
    "en": "Run-to-run variation is real: an earlier pass of the identical corpus put claude-haiku-4-5 at ran 0.350, and the published pass puts it at 0.250, with nothing changed but the sampling. That is what the interval is for.",
@@ -1626,8 +1674,8 @@
    "es": "Los proveedores exponen controles distintos, y cada registro declara los que fijo: Claude no admite temperatura ni semilla, asi que no se registra ninguna; GLM corre con decodificacion voraz (do_sample false), esfuerzo alto donde el modelo lo admite, y sin semilla; DeepSeek corre con esfuerzo alto; su modo de razonamiento ignora la temperatura y no tiene semilla; el carril local fija temperatura 0 y una semilla, con el razonamiento apagado donde la plantilla del modelo respeta el interruptor."
   },
   {
-   "en": "One output cap for every model, 8192 tokens. It binds on models that write or reason at length: 61 of the 270 calls reached it, counted as 'truncated output' or 'no answer: the reasoning used the whole cap'. A reasoning model spends the cap on reasoning first, so those are failures under this cap, not evidence about how it formalizes.",
-   "es": "Un solo tope de salida para todos los modelos, 8192 tokens. Muerde en los modelos que escriben o razonan en extenso: 61 de las 270 llamadas lo alcanzaron, contadas como 'salida truncada' o 'sin respuesta: el razonamiento agoto el tope'. Un modelo que razona gasta el tope razonando primero, asi que esos son fallos bajo este tope, no evidencia de como formaliza."
+   "en": "One output cap for every model, 8192 tokens. It binds on models that write or reason at length: 61 of the 282 calls reached it, counted as 'truncated output' or 'no answer: the reasoning used the whole cap'. A reasoning model spends the cap on reasoning first, so those are failures under this cap, not evidence about how it formalizes.",
+   "es": "Un solo tope de salida para todos los modelos, 8192 tokens. Muerde en los modelos que escriben o razonan en extenso: 61 de las 282 llamadas lo alcanzaron, contadas como 'salida truncada' o 'sin respuesta: el razonamiento agoto el tope'. Un modelo que razona gasta el tope razonando primero, asi que esos son fallos bajo este tope, no evidencia de como formaliza."
   },
   {
    "en": "The structural layer passes only when the canonical forms are equal, and refutes when the optima differ. A matching optimum never proves equivalence, because compensating errors reach the right number.",
@@ -1795,25 +1843,25 @@
   {
    "faithful": {
     "confidence": 0.95,
-    "interval_high": 0.6942576053973728,
-    "interval_low": 0.13684428582359737,
-    "passed": 3,
-    "total": 8,
-    "value": 0.375
+    "interval_high": 0.468700877618744,
+    "interval_low": 0.11186170140766569,
+    "passed": 5,
+    "total": 20,
+    "value": 0.25
    },
    "family": "optimization",
-   "gap": 0.0,
+   "gap": 0.09999999999999998,
    "gap_is_defined": true,
    "model": "ollama/phi4:latest",
    "model_id": "phi4:latest",
    "provider": "ollama",
    "ran": {
     "confidence": 0.95,
-    "interval_high": 0.6942576053973728,
-    "interval_low": 0.13684428582359737,
-    "passed": 3,
-    "total": 8,
-    "value": 0.375
+    "interval_high": 0.5671457233147638,
+    "interval_low": 0.18119182410108206,
+    "passed": 7,
+    "total": 20,
+    "value": 0.35
    },
    "unmeasured": 0
   },
@@ -2128,10 +2176,14 @@
    "unparseable output": 3
   },
   "ollama/phi4:latest": {
+   "a constant with no unit": 4,
    "a name used but never declared": 1,
-   "fabricated provenance: words not in the statement": 3,
-   "ran and survived every check": 3,
-   "unparseable output": 1
+   "a required field left out": 1,
+   "a variable whose lower bound is above its upper": 1,
+   "fabricated provenance: words not in the statement": 4,
+   "ran and survived every check": 5,
+   "ran, then REFUTED: solves to a different optimum": 2,
+   "unparseable output": 2
   },
   "ollama/qwen2.5-coder:7b": {
    "a constant with no unit": 2,
@@ -2201,8 +2253,9 @@
    "did-not-run/not-faithful": 20
   },
   "ollama/phi4:latest": {
-   "did-not-run/not-faithful": 5,
-   "ran/faithful": 3
+   "did-not-run/not-faithful": 13,
+   "ran/faithful": 5,
+   "ran/not-faithful": 2
   },
   "ollama/qwen2.5-coder:7b": {
    "did-not-run/not-faithful": 19,
@@ -2232,6 +2285,9 @@
    "fingerprints": [
     "anthropic#effort=high#no-temperature"
    ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
+   ],
    "key": "anthropic/claude-sonnet-5",
    "lane": "hosted",
    "measured_from": "2026-09-22",
@@ -2250,6 +2306,9 @@
    "cost_usd": 0.2135,
    "fingerprints": [
     "anthropic#no-effort#no-temperature"
+   ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
    ],
    "key": "anthropic/claude-haiku-4-5",
    "lane": "hosted",
@@ -2270,6 +2329,9 @@
    "fingerprints": [
     "zai#effort=high#do_sample=false#no-seed"
    ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
+   ],
    "key": "zai/glm-5.3",
    "lane": "hosted",
    "measured_from": "2026-09-23",
@@ -2288,6 +2350,9 @@
    "cost_usd": 0.0,
    "fingerprints": [
     "zai#effort=model-decides#do_sample=false#no-seed"
+   ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
    ],
    "key": "zai/glm-4.5-flash",
    "lane": "hosted",
@@ -2308,6 +2373,9 @@
    "fingerprints": [
     "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed"
    ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
+   ],
    "key": "deepseek/deepseek-v4-pro",
    "lane": "hosted",
    "measured_from": "2026-09-23",
@@ -2322,17 +2390,20 @@
   },
   {
    "at_cap": 0,
-   "calls": 8,
+   "calls": 20,
    "cost_usd": 0.0,
    "fingerprints": [
     "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288"
+   ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
    ],
    "key": "ollama/phi4:latest",
    "lane": "local",
    "measured_from": "2026-09-23",
    "measured_to": "2026-09-23",
-   "median_latency_s": 150.9,
-   "median_output_tokens": 986,
+   "median_latency_s": 165.2,
+   "median_output_tokens": 1113,
    "model_id": "phi4:latest",
    "model_versions": [
     "phi4:latest@ac896e5b8b34"
@@ -2345,6 +2416,9 @@
    "cost_usd": 0.0,
    "fingerprints": [
     "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288"
+   ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
    ],
    "key": "ollama/deepseek-r1:8b",
    "lane": "local",
@@ -2365,6 +2439,9 @@
    "fingerprints": [
     "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288"
    ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
+   ],
    "key": "ollama/qwen2.5-coder:7b",
    "lane": "local",
    "measured_from": "2026-09-23",
@@ -2383,6 +2460,9 @@
    "cost_usd": 0.0,
    "fingerprints": [
     "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288"
+   ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
    ],
    "key": "ollama/gemma3:12b",
    "lane": "local",
@@ -2403,6 +2483,9 @@
    "fingerprints": [
     "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288"
    ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
+   ],
    "key": "ollama/gemma3:4b",
    "lane": "local",
    "measured_from": "2026-09-23",
@@ -2421,6 +2504,9 @@
    "cost_usd": 0.0,
    "fingerprints": [
     "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288"
+   ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
    ],
    "key": "ollama/llama3.1:8b",
    "lane": "local",
@@ -2441,6 +2527,9 @@
    "fingerprints": [
     "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288"
    ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
+   ],
    "key": "ollama/mistral:7b",
    "lane": "local",
    "measured_from": "2026-09-23",
@@ -2459,6 +2548,9 @@
    "cost_usd": 0.0,
    "fingerprints": [
     "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288"
+   ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
    ],
    "key": "ollama/phi4-mini:latest",
    "lane": "local",
@@ -2479,6 +2571,9 @@
    "fingerprints": [
     "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288"
    ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
+   ],
    "key": "ollama/qwen3:4b",
    "lane": "local",
    "measured_from": "2026-09-23",
@@ -2497,6 +2592,9 @@
    "cost_usd": 0.0,
    "fingerprints": [
     "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288"
+   ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
    ],
    "key": "ollama/qwen3:8b",
    "lane": "local",
