@@ -900,4 +900,15 @@ button.chip {
   background: var(--color-surface);
 }
 
+button.chip { cursor: pointer; }
 button.chip:hover { border-color: var(--color-accent); color: var(--color-fg); }
+/* A method that does not apply to the selected case stays visible and says why in its title,
+   rather than disappearing and leaving the reader to wonder where it went. */
+button.chip:disabled,
+button.chip:disabled:hover {
+  cursor: not-allowed;
+  opacity: 0.45;
+  border-color: var(--color-border);
+  color: var(--color-fg-subtle);
+}
+.chip.on:disabled { background: var(--color-surface-2); }
