@@ -142,7 +142,10 @@ function Measured({
                 if (!cell) return null;
                 return (
                   <tr key={model.key} data-model={model.key}>
-                    <td className="mono" title={`${model.model_versions.join(", ")}\n${model.fingerprints.join("\n")}`}>
+                    <td
+                      className="mono"
+                      title={`${model.model_versions.join(", ")}\n${model.fingerprints.join("\n")}\n${es ? "calificado por" : "scored by"} ${model.harnesses.join(", ")}`}
+                    >
                       {model.model_id}
                     </td>
                     <td>{providerShort(model.provider)}</td>
@@ -318,6 +321,21 @@ function CapSection({
             {es
               ? `Para separar las dos cosas, los modelos que razonan corrieron una segunda vez con el tope a ${caps[caps.length - 1]} tokens, en un libro mayor propio, con todo lo demas igual. La tabla pone las dos corridas lado a lado.`
               : `To separate the two, the reasoning models ran a second time with the cap at ${caps[caps.length - 1]} tokens, in a ledger of their own, with everything else the same. The table puts the two runs side by side.`}
+          </p>
+          <p className="measure" data-cap-summary>
+            {rows
+              .map((row) => {
+                const [low, high] = [caps[0], caps[caps.length - 1]].map((cap) => row.by_cap[String(cap)]);
+                if (!low || !high) return "";
+                return es
+                  ? `${row.model_id} fue fiel en ${low.faithful.passed} de ${low.faithful.total} casos al tope de ${caps[0]} y en ${high.faithful.passed} de ${high.faithful.total} al de ${caps[caps.length - 1]}, con ${low.at_cap} y ${high.at_cap} llamadas en el tope.`
+                  : `${row.model_id} was faithful on ${low.faithful.passed} of ${low.faithful.total} cases at the ${caps[0]} cap and on ${high.faithful.passed} of ${high.faithful.total} at ${caps[caps.length - 1]}, with ${low.at_cap} and ${high.at_cap} calls at the cap.`;
+              })
+              .filter(Boolean)
+              .join(" ")}{" "}
+            {es
+              ? "Con un solo tope, la tabla principal habria atribuido al modelo lo que era el tope."
+              : "At one cap, the main table would have charged to the model what was the cap's."}
           </p>
           <div className="table-scroll">
             <table className="finding-table">

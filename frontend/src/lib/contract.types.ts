@@ -262,6 +262,8 @@ export interface ModelRow {
   at_cap: number;
   model_versions: string[];
   fingerprints: string[];
+  /** The copela versions that scored the calls; `unrecorded` before ledger schema 1.1. */
+  harnesses: string[];
   measured_from: string;
   measured_to: string;
 }
