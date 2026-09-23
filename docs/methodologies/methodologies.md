@@ -20,16 +20,23 @@ Deep pages:
 
 ```
 R_ran       = #{exec = PASS} / (N - u)
-R_faithful  = #{exec = PASS and struct != FAIL and prop != FAIL} / (N - u)
+R_faithful  = #{exec = PASS and FAIL not in {struct, prop} and PASS in {struct, prop}} / (N - u)
 gap         = R_ran - R_faithful   >= 0
 u           = cases the instrument could not measure, excluded from both
 ```
 
-Note the shape of the second numerator: it requires that neither layer **fails**, not that both
-pass. A structural layer returning UNDECIDED has found nothing against, and treating that as a
-failure would penalise the model for a limit of the oracle. Treating it as a pass is what turns the
-rate into a rubber stamp, which is why the property layer and answer refutation must be able to
-genuinely fail.
+Note the shape of the second numerator: it requires that neither strong layer **fails** and that
+at least one **passes**, not that both pass. A structural layer returning UNDECIDED has found nothing
+against, and treating that as a failure would penalise the model for a limit of the oracle. Treating
+it as a pass is what turns the rate into a rubber stamp: a candidate on which both layers are
+undecided has not been shown faithful and is not counted as such, which is why the property layer
+and answer refutation must be able to genuinely fail.
+
+This is `copela`'s `Verdicts.faithful`. Two restatements of it in this repository, the report's
+breakdowns and CI's standard-library recomputation, had dropped the "at least one passes" clause.
+Both agreed with every published number, because the published ledger holds no candidate on which
+both strong layers were undecided; agreeing on this data is not being the same rule, and both now
+state it in full.
 
 ## Why this is the interesting number
 
