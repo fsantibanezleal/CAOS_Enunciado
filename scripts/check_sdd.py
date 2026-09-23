@@ -116,7 +116,13 @@ def gate_exists(root: Path, gate: str) -> tuple[bool, str]:
 
     if test_part:
         content = path.read_text(encoding="utf-8", errors="replace")
-        if f"def {test_part}" not in content:
+        if path.suffix in {".ts", ".mjs", ".js"}:
+            # A node:test name is a sentence, and a gate target cannot hold spaces, so the gate
+            # spells it with underscores and must match the start of one `test("...")` title.
+            spoken = test_part.replace("_", " ")
+            if f'test("{spoken}' not in content:
+                return False, f"names {test_part!r}, and no test in {path_part} begins {spoken!r}"
+        elif f"def {test_part}" not in content:
             return False, f"names {test_part!r}, which is not defined in {path_part}"
     return True, ""
 

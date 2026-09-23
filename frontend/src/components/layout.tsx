@@ -39,10 +39,24 @@ export function FigureRow({
   );
 }
 
-/** A full-width figure with its caption, for a diagram that needs the whole pane. */
-export function WideFigure({ children, caption }: { children: ReactNode; caption: ReactNode }) {
+/**
+ * A full-width figure with its caption, for a diagram that needs the whole pane.
+ *
+ * `full` lifts the shell's 760px cap for a dense figure. Drawn on a 760-unit viewBox, a two-panel
+ * diagram squeezed into one half of a FigureRow renders at about 0.7 of its size and its labels at
+ * about 8px, which is legible to nobody; at full width it renders at or above its design size.
+ */
+export function WideFigure({
+  children,
+  caption,
+  full = false,
+}: {
+  children: ReactNode;
+  caption: ReactNode;
+  full?: boolean;
+}) {
   return (
-    <figure className="figure">
+    <figure className={full ? "figure full" : "figure"}>
       {children}
       <figcaption className="figure-caption">{caption}</figcaption>
     </figure>

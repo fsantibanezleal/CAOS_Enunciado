@@ -5,8 +5,8 @@
 # nothing. A newer `copela` breaking that check is the correct outcome: it says the artifact needs
 # re-deriving.
 
-planteo==0.1.0
-copela==0.2.0
+planteo==0.1.1
+copela==0.2.1
 
 # The solver lane. `copela[solvers]` would pull these too; they are named here so a clone that only
 # wants to re-run the bake does not have to know that.

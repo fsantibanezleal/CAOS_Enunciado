@@ -1,7 +1,10 @@
 # 03. The browser lane
 
-HiGHS compiled to WebAssembly, loaded on first use and never at page load. It is 3.37 MB, and a
-reader who only reads the statement should not pay for it.
+HiGHS compiled to WebAssembly: a separate 3.37 MB chunk, fetched on first use rather than bundled
+into the first paint. On the workbench first use is immediate, because the landing tab re-solves the
+reference across a parameter's range; the five document pages never fetch it. An earlier version of
+this page, the Implementation page and the site footer said the engine loaded only when a reader
+moved a control, which stopped being true when the workbench started landing on a live sweep.
 
 ## What it accepts
 
@@ -22,14 +25,42 @@ problem, which is the exact failure this product measures, committed by the prod
 
 ## What it draws
 
-| View | Representation | Read-out |
-|---|---|---|
-| Sensitivity | uPlot line, 41 real solves | value at the cursor, average slope, infeasible count |
-| Feasible region | canvas, feasible set sampled per pixel | x, y, objective and feasibility at the pointer |
-| Statement and model | linked provenance spans | the quantity a highlighted phrase produced |
-| Dimensions | exponent vectors per relation | which axis two sides differ by |
-| Properties | four live transforms, both models solved | the pair of optima and the relation between them |
-| Coverage | tier by trap grid | the cases in a cell, and the uncovered combinations |
+Fourteen methods in four groups, one row of tabs per level (ADR-0071). Every one reacts to the case
+selector, and the answer tabs also react to the parameter sliders.
+
+| Group | Method | Representation | Read-out, and what checks it |
+|---|---|---|---|
+| The statement | Provenance | the statement with linked spans | the quantity a highlighted phrase produced |
+| | Open questions | what the text left undecided, and the resolution taken | the elements each resolution affects |
+| | Dimensions | exponent vectors per relation | which axis two sides differ by |
+| | Coverage | tier by trap grid | the cases in a cell, and the uncovered combinations |
+| The model | Canonical form | the model as written beside its linear canonical form | digest before and after a style rewrite or a 1% change; proved on all twenty cases by the method tests |
+| | Graph and Weisfeiler-Lehman | bipartite variable-constraint graph, colour classes per round | "not distinguished" or "distinguished" against a permuted, reduced, perturbed or relaxed copy; proved by the method tests |
+| | Metamorphic relations | four live transforms, both models solved | the pair of optima and the relation between them |
+| The answer | Sensitivity | uPlot line, 41 real solves | value at the cursor, average slope, infeasible count |
+| | Feasible region | canvas, feasible set sampled per pixel | x, y, objective and feasibility at the pointer; refuses an integer axis |
+| | Activity | bullet chart, activity against bound per row | slack per row, which rows bind |
+| | Duality | diverging price bars and a four-residual certificate strip | the price's meaning per row, the certificate, primal against dual objective; proved by the solver tests |
+| | Integrality gap | integer against relaxed optimum, or a labelled discretisation probe | both optima and the gap |
+| The models | Attempts | a models by layers matrix, one card per call | failure class, tokens, latency, cost, and a refutation's two optima |
+| | Failure anatomy | the failing response's excerpt with the defect located | why the validator objected, or that the spot fell in the elided middle |
+
+## The answer tabs check themselves
+
+A panel that shows what the solver returned shows a claim. The Duality tab evaluates the four
+optimality conditions of the linear program from the numbers instead: primal feasibility, dual
+feasibility, stationarity and complementary slackness, each against a tolerance scaled to the
+magnitudes involved, with the dual objective beside the primal one. An integer case is priced
+through a labelled linear program, its relaxation or the one left with the integers held fixed,
+because HiGHS returns no duals for a mixed-integer solve and reading the missing values as zero once
+made the certificate hold vacuously. The theory, the tests and the mutations that prove the check is
+live are in [`../methodologies/06_duality_and_integrality.md`](../methodologies/06_duality_and_integrality.md).
+
+`solveLive` takes its engine as an optional argument. The site never passes it and gets the lazily
+loaded WebAssembly build; `frontend/tests/solver.test.ts` passes the same npm build loaded under
+node, so what the tests prove is the function on screen and not a copy. They also prove that the
+browser lane reproduces the offline bake's optimum on every case, which is what makes a number on
+the workbench the number the measurement used.
 
 ## Derived quantities are substituted, not refused
 

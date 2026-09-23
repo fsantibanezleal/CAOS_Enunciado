@@ -60,7 +60,8 @@ comparison baseline rather than a source to copy.
 Reported separately, never merged into one score:
 
 1. **executable**: it validated and solved
-2. **structural**: the same model as the reference, by canonical form
+2. **structural**: the same model as the reference, proved by equal canonical form, or refuted by a
+   different optimum (both read in the minimising sense); matching optima prove nothing
 3. **property**: the metamorphic relations hold (scaling the objective cannot move the argmin;
    tightening cannot improve the optimum; a redundant row cannot change the feasible set)
 
@@ -71,11 +72,12 @@ oracle.
 ## Run it
 
 ```powershell
-.un.ps1 setup        # venv, requirements.txt, and npm ci in frontend/ and tools/visual-verify/
-.un.ps1 check        # lint, artifacts, SDD gate, version agreement, report re-derivation
-.un.ps1 dev          # the site at http://localhost:5173
-.un.ps1 verify       # build, then 130 browser checks against the built site
-.un.ps1 live         # the same 130 checks against https://enunciado.fasl-work.com
+.\run.ps1 setup        # venv, requirements.txt, and npm ci in frontend/ and tools/visual-verify/
+.\run.ps1 check        # lint, every guard, report re-derivation, method tests, figure export
+.\run.ps1 dev          # the site at http://localhost:5904
+.\run.ps1 verify       # build, then 165 browser checks against the built site
+.\run.ps1 live         # the same 165 checks against https://enunciado.fasl-work.com
+.\run.ps1 diagrams     # re-export the wiki's figures from the page components
 ```
 
 Without PowerShell, the same four setup commands:
@@ -107,8 +109,15 @@ Four things, and three of them have caught real defects here:
 - `planteo` and `copela`, both published to PyPI and usable independently of this product
 - the model sweep, its exclusive resumable ledger, and the report derived from it
 - the six-page web surface, live at [enunciado.fasl-work.com](https://enunciado.fasl-work.com),
-  with HiGHS running in the page
-- 130 browser checks in dark, light and Spanish, which also run against the deployed origin
+  with HiGHS running in the page and a workbench of fourteen methods in four groups: the statement
+  (provenance, open questions, dimensions, coverage), the model (canonical form, the graph and
+  Weisfeiler-Lehman refinement, metamorphic relations), the answer (sensitivity, feasible region,
+  activity, a four-part duality certificate, the integrality gap) and the models (every attempt, and
+  the anatomy of each failure)
+- method tests that prove the structural and answer methods on all twenty cases, with the HiGHS
+  build the site ships, each mutation-checked
+- 165 browser checks in dark, light and Spanish, which also run against the deployed origin
+- a docs wiki whose figures are exported from the same components the pages draw
 
 Not built, and not claimed: the three other target families (mathematical formulation, experiment
 design, machine-learning framing) are designed and unmeasured, and the judge layer is typed and

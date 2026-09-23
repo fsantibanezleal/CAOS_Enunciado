@@ -3,6 +3,8 @@
 Reported separately, always. There is no combined score and a test fails if one is added, because a
 single number lets a high "it ran" rate conceal a low "it was right" rate.
 
+![What each layer can conclude, and what it cannot](../assets/oracle-layers.svg)
+
 ## 1. Executable
 
 **Concludes:** it parsed into a document, the document validated, and the emitted model solved.
@@ -20,7 +22,8 @@ difference between measuring the subject and measuring the instrument.
 **Concludes, in two directions:**
 
 - equal canonical forms means equivalent
-- different optima on the same case means different models
+- different optima on the same case means different models, with each optimum read in the
+  minimising sense so that `max f` and `min -f` are the same answer (copela 0.02.001, R-020)
 
 **Does not conclude:** different canonical forms mean different models, or matching optima mean the
 same model.
@@ -28,6 +31,15 @@ same model.
 That second refutation direction is what makes the layer able to fail at all. Without it, measured
 over this corpus, the layer returned UNDECIDED on every candidate that ran, and the whole
 faithfulness rate rested on internal invariants that had never failed anything.
+
+**Which canonical form decides.** The published verdict uses planteo's, over the typed document: it
+renames by structural position, sorts terms, relations and objectives, orients comparator sides, and
+keeps the objective sense. The workbench's Canonical form tab computes a stronger one over the linear
+rows, and it decides nothing. [`05_structural_equivalence.md`](05_structural_equivalence.md) sets
+the two side by side.
+
+**What it decided.** In the published measurement it decided 2 of the 16 candidates that ran, both
+by refutation, and returned PASS on none. The other 14 faithful verdicts rest on the property layer.
 
 ## 3. Property
 
@@ -43,6 +55,8 @@ permutation, and the browser runs four of them live on the current case.
 ## 4. Judge
 
 **Concludes:** a calibrated aggregate, useful for comparison with the literature.
+
+![The judge's standing: a calibrated aggregate, bounded by its own agreement figure](../assets/judge.svg)
 
 **Does not conclude:** equivalence. Its own authors say so.
 

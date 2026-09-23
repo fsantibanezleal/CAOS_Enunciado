@@ -10,6 +10,7 @@ versioned.
 | `data/artifacts/cases.json` | `bake.py` | the site, `check_artifacts.py` | yes |
 | `data/artifacts/manifest.json` | `bake.py` | the site, `check_artifacts.py` | yes |
 | `data/artifacts/gap-report.json` | `report.py` | the Benchmark page, `report.py --check` | yes |
+| `data/artifacts/attempts.json` | `report.py` | the workbench's Attempts and Failure anatomy tabs | yes |
 | `data/runs/*.jsonl` | `sweep_run.py` | `report.py` | yes |
 | `frontend/public/data/*` | mirrored | the dev server | **no**, it is a working copy |
 
@@ -83,7 +84,10 @@ value is absent, and the reader of the contract must handle absence.
 
 ## `gap-report.json`
 
-Derived from the ledger and the corpus by `report.py`, and re-derived by CI.
+Derived from the ledger and the corpus by `report.py`. `report.py --check` re-derives it locally
+(`run.ps1 check`); CI recomputes each model's `ran` and `faithful` counts from the raw ledger with
+the standard library (`scripts/check_artifacts.py`), because ADR-0074 keeps pipeline scripts out
+of CI.
 
 | Field | Meaning |
 |---|---|
@@ -94,6 +98,39 @@ Derived from the ledger and the corpus by `report.py`, and re-derived by CI.
 | `failure_breakdown` | Counts per failure class, derived from the verdict message |
 | `caveats[]` | What the measurement does not support. Facts about the run, not disclaimers |
 | `cost_usd`, `call_count`, `measured_on`, `corpus` | Provenance of the run |
+
+## `attempts.json`
+
+The ledger re-keyed by case, for the workbench's two learned-model tabs. Nothing in it is a new
+measurement: each record's failure class is derived by the same rule the report's breakdown uses, so
+the workbench and the Benchmark cannot tell two different stories about one call.
+
+```
+{
+  "schema": "enunciado-attempts/1.0",
+  "cases": {
+    "<case_id>": [ Attempt, ... ]     sorted by model_id, then repeat
+  }
+}
+```
+
+| `Attempt` field | Meaning |
+|---|---|
+| `model_id`, `provider`, `repeat` | the call's key in the ledger |
+| `failure_class` | `classify()` in `report.py`: the executable verdict's message matched against a fixed list of heads, `ran, then REFUTED` for a structural FAIL, `ran and survived every check` otherwise |
+| `verdicts[]` | `{layer, outcome, detail}` per layer, exactly as recorded |
+| `cost_usd`, `latency_ms`, `input_tokens`, `output_tokens` | the call's cost, rounded for display |
+| `response_excerpt` | present only when something failed; at most 2000 characters, middle elided |
+| `model_version`, `provider_fingerprint` | what was actually called, and which controls were exercised |
+
+The site checks `schema` on load and refuses an artifact it does not understand, with a message
+rather than blanks. `report.py --check` verifies the file against the ledger with the report, and
+`check_artifacts.py` checks that it holds one attempt per ledger call.
+
+**Missing data.** A case no model attempted has no key. A passing call has an empty
+`response_excerpt` by design, and the Failure anatomy tab says so rather than showing nothing. When
+a defect falls in the elided middle of an excerpt, the tab says that too instead of highlighting
+something nearby.
 
 ## `data/runs/*.jsonl`
 
