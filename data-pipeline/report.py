@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from collections import defaultdict
 from pathlib import Path
@@ -100,6 +101,16 @@ _CLASSES: tuple[tuple[str, str], ...] = (
     ("the json object is not closed", "truncated output"),
 )
 
+#: A reply that was all reasoning and no answer. copela's providers return one sentence for it on
+#: every lane (copela R-022), and the parser quotes the reply back as "It began: ...", so matching
+#: from "it began:" means the sentence opened the response rather than appearing somewhere inside
+#: a model's own text. The finish reason separates the cap running out, which is a truncation of a
+#: different kind from a document cut off mid-way, from a model that reasoned and then stopped.
+_NO_ANSWER = re.compile(
+    r"it began: ['\"]\[no answer: the model emitted \d+ characters of reasoning and stopped "
+    r"before answering(?: \(finish_reason (?P<reason>[a-z_]+)\))?"
+)
+
 
 def classify(record) -> str:
     """The failure class for one record, derived from its verdicts rather than assigned by hand."""
@@ -115,6 +126,11 @@ def classify(record) -> str:
         # Everything after "; got keys" is data the validator quoted back, not its diagnosis.
         head = raw.split("; got keys")[0].lower()
 
+        no_answer = _NO_ANSWER.search(head)
+        if no_answer:
+            if no_answer.group("reason") == "length":
+                return "no answer: the reasoning used the whole cap"
+            return "no answer: it reasoned, then stopped"
         for needle, name in _CLASSES:
             if needle in head:
                 return name

@@ -94,21 +94,22 @@ def main(argv: list[str] | None = None) -> int:
     think = {"on": True, "off": False, "default": None}[args.think]
     try:
         provider = get(args.provider, think=think) if args.provider == "ollama" else get(args.provider)
+        pricing = provider.models().get(args.model)
     except ProviderError as error:
         print(f"provider unavailable: {error}", file=sys.stderr)
         return 2
 
-    # Exclusive for a writing run. Two sweeps sharing one ledger interleave records from whatever
-    # code each happened to start with, and the file stops meaning one thing. Taken after the
-    # provider check so an unavailable provider does not leave a lock behind.
-    try:
-        ledger = Ledger(args.ledger, exclusive=True)
-    except LedgerBusy as error:
-        print(error, file=sys.stderr)
-        return 3
-
-    pricing = provider.models().get(args.model)
-    free = pricing is None or (pricing.input_per_mtok == 0 and pricing.output_per_mtok == 0)
+    # Every refusal comes before the lock. The lock is a file, and an early return after taking it
+    # left it behind, so the next run failed for a reason that had nothing to do with it.
+    if pricing is None:
+        print(
+            f"{args.provider} has no price for {args.model!r}, so the budget guard cannot bound "
+            "it (copela refuses such a sweep). A hosted model needs a price in the provider's "
+            "table; a local one needs pulling first",
+            file=sys.stderr,
+        )
+        return 2
+    free = pricing.input_per_mtok == 0 and pricing.output_per_mtok == 0
 
     if args.budget_usd is None:
         if not free:
@@ -118,12 +119,20 @@ def main(argv: list[str] | None = None) -> int:
                 file=sys.stderr,
             )
             return 2
-        # A local model costs nothing per token, so the ceiling is nominal. It still exists,
+        # A free model costs nothing per token, so the ceiling is nominal. It still exists,
         # because the kill criterion rides on the same object.
         budget = Budget(limit_usd=0.0001, max_consecutive_failures=10)
         budget.limit_usd = float("inf")
     else:
         budget = Budget(limit_usd=args.budget_usd, max_consecutive_failures=10)
+
+    # Exclusive for a writing run. Two sweeps sharing one ledger interleave records from whatever
+    # code each happened to start with, and the file stops meaning one thing.
+    try:
+        ledger = Ledger(args.ledger, exclusive=True)
+    except LedgerBusy as error:
+        print(error, file=sys.stderr)
+        return 3
 
     corpus = to_harness_cases()
     if args.limit_cases:
@@ -147,7 +156,7 @@ def main(argv: list[str] | None = None) -> int:
         f"sweeping {len(corpus)} case(s) x 1 model x {args.repeats} repeat(s) "
         f"= {len(corpus) * args.repeats} call(s) at most"
     )
-    print(f"  budget: {'no per-token cost (local)' if free else budget.describe()}")
+    print(f"  budget: {'no per-token cost' if free else budget.describe()}")
     if args.provider == "ollama":
         print(f"  reasoning: {args.think}, max_tokens {args.max_tokens}")
 
