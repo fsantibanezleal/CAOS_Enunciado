@@ -1,0 +1,62 @@
+{
+ "caps": [
+  8192,
+  32768
+ ],
+ "rows": [
+  {
+   "by_cap": {
+    "32768": {
+     "at_cap": 0,
+     "calls": 19,
+     "cost_usd": 0.7411,
+     "faithful": {
+      "confidence": 0.95,
+      "interval_high": 0.6628358435795723,
+      "interval_low": 0.24559518127005633,
+      "passed": 8,
+      "total": 18,
+      "value": 0.4444444444444444
+     },
+     "gap": 0.0,
+     "median_output_tokens": 8898,
+     "ran": {
+      "confidence": 0.95,
+      "interval_high": 0.6628358435795723,
+      "interval_low": 0.24559518127005633,
+      "passed": 8,
+      "total": 18,
+      "value": 0.4444444444444444
+     }
+    },
+    "8192": {
+     "at_cap": 8,
+     "calls": 20,
+     "cost_usd": 0.6427,
+     "faithful": {
+      "confidence": 0.95,
+      "interval_high": 0.5671457233147638,
+      "interval_low": 0.18119182410108206,
+      "passed": 7,
+      "total": 20,
+      "value": 0.35
+     },
+     "gap": 0.0,
+     "median_output_tokens": 7362,
+     "ran": {
+      "confidence": 0.95,
+      "interval_high": 0.5671457233147638,
+      "interval_low": 0.18119182410108206,
+      "passed": 7,
+      "total": 20,
+      "value": 0.35
+     }
+    }
+   },
+   "model": "zai/glm-5.3",
+   "model_id": "glm-5.3",
+   "provider": "zai"
+  }
+ ],
+ "schema": "enunciado-cap-sensitivity/1.0"
+}
