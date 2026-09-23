@@ -323,7 +323,7 @@ export function BenchmarkPage() {
 }
 
 function describeRate(rate: RateJson): string {
-  if (rate.total === 0) return "—";
+  if (rate.total === 0) return "–";
   return `${rate.value.toFixed(3)} [${rate.interval_low.toFixed(3)}, ${rate.interval_high.toFixed(3)}]`;
 }
 
@@ -361,7 +361,7 @@ function TierCurve({
           series={models.map((model, index) => ({
             label: model,
             colour: index === 0 ? "accent" : "accent-2",
-            value: (_self, raw) => (raw === null ? "—" : raw.toFixed(3)),
+            value: (_self, raw) => (raw === null ? "–" : raw.toFixed(3)),
           }))}
           xLabel={es ? "nivel de dificultad" : "difficulty tier"}
           yLabel={es ? "tasa de fidelidad" : "faithfulness rate"}
@@ -431,7 +431,7 @@ function AgreementMatrix({
       </table>
       <p className="small muted">
         {es ? "de lo que corrio, fiel: " : "of what ran, faithful: "}
-        <strong>{ran ? (ranFaithful / ran).toFixed(3) : "—"}</strong>
+        <strong>{ran ? (ranFaithful / ran).toFixed(3) : "–"}</strong>
         {" · "}
         {es ? "imposible por construccion: " : "impossible by construction: "}
         {impossible}
@@ -483,7 +483,7 @@ function TrapTable({
                       </span>
                     </>
                   ) : (
-                    "—"
+                    "–"
                   )}
                 </td>
               );
@@ -594,7 +594,7 @@ function LiveVerification({ lang }: { lang: "en" | "es" }) {
                   <td className="num">
                     {row.published !== null && row.live !== null
                       ? Math.abs(row.published - row.live).toExponential(1)
-                      : "—"}
+                      : "–"}
                   </td>
                   <td style={{ color: row.agrees ? "var(--color-good)" : "var(--color-bad)", fontWeight: 600 }}>
                     {row.agrees ? (es ? "coincide" : "agrees") : es ? "difiere" : "differs"}

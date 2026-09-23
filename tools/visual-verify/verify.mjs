@@ -269,12 +269,16 @@ for (const theme of ["dark", "light"]) {
   // Provenance highlighting is the one view that makes the product's point, so it is measured.
   // It lives on its own tab, so the gate opens that tab first: a check that reads zero because it
   // never navigated to its subject reports a product failure that belongs to the gate.
-  await page.getByRole("tab", { name: /statement and model|enunciado y modelo/i }).click();
+  await page.locator('.enunciado-main > .tabs > .tablist [role="tab"]', { hasText: /statement|enunciado/i }).first().click();
+  await page.waitForTimeout(250);
+  await page.getByRole("tab", { name: /provenance|procedencia/i }).click();
   await page.waitForTimeout(350);
   const spans = await page.locator(".narrative-span").count();
   check(spans > 0, `[${theme}] the statement shows its provenance spans`, `${spans} spans`);
 
   // Back to the landing tab, so the area measurement below sees what a visitor sees.
+  await page.locator('.enunciado-main > .tabs > .tablist [role="tab"]', { hasText: /answer|respuesta/i }).click();
+  await page.waitForTimeout(250);
   await page.getByRole("tab", { name: /sensitivity|sensibilidad/i }).click();
   await page.waitForTimeout(700);
 
@@ -297,27 +301,51 @@ for (const theme of ["dark", "light"]) {
     readoutAfter.slice(0, 54).replace(/\s+/g, " "),
   );
 
-  // EVERY tab is opened, screenshotted and checked for content, in both themes. Counting tabs is
-  // not verifying them: a panel that throws, renders empty, or renders the previous tab's content
-  // still leaves the tab strip looking correct.
-  const tabIds = await page.locator('.tablist [role="tab"]').count();
-  for (let index = 0; index < tabIds; index += 1) {
-    const tab = page.locator('.tablist [role="tab"]').nth(index);
-    const name = ((await tab.textContent()) ?? `tab-${index}`).trim();
-    await tab.click();
-    await page.waitForTimeout(900);
-    const panel = page.locator('[role="tabpanel"]:not([hidden])');
-    const text = ((await panel.textContent()) ?? "").trim();
-    const drawn = await panel.locator("canvas, svg, table, .heat-cell, .narrative-span").count();
-    check(
-      text.length > 80 && drawn > 0,
-      `[${theme}] the "${name}" panel drew something`,
-      `${text.length} chars, ${drawn} drawn element(s)`,
-    );
-    await page.screenshot({
-      path: join(SHOTS, `${theme}-tab-${name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.png`),
-    });
+  // EVERY method in EVERY group is opened, screenshotted and checked, in both themes.
+  //
+  // The workbench is two levels deep, groups and then methods, and an earlier version of this loop
+  // clicked only the first level: four checks, while fourteen methods sat behind them unopened.
+  // Counting tabs is not verifying them, and neither is opening the parents of the tabs.
+  const groupCount = await page.locator('.enunciado-main > .tabs > .tablist [role="tab"]').count();
+  let methodsSeen = 0;
+  for (let g = 0; g < groupCount; g += 1) {
+    const group = page.locator('.enunciado-main > .tabs > .tablist [role="tab"]').nth(g);
+    const groupName = ((await group.textContent()) ?? `group-${g}`).trim();
+    await group.click();
+    await page.waitForTimeout(400);
+
+    const methods = page.locator('.tabpanel:not([hidden]) .subtablist [role="tab"]');
+    const methodCount = await methods.count();
+    for (let m = 0; m < methodCount; m += 1) {
+      const method = methods.nth(m);
+      const name = ((await method.textContent()) ?? `method-${m}`).trim();
+      await method.click();
+      // The learned tabs fetch the ledger on first use and the answer tabs solve; give both time.
+      await page.waitForTimeout(1100);
+      const panel = page.locator('.tabpanel:not([hidden]) .subtabpanel:not([hidden])');
+      const text = ((await panel.textContent()) ?? "").trim();
+      const drawn = await panel
+        .locator("canvas, svg, table, .heat-cell, .narrative-span, pre, mark")
+        .count();
+      check(
+        text.length > 80 && drawn > 0,
+        `[${theme}] ${groupName} / "${name}" drew something`,
+        `${text.length} chars, ${drawn} drawn element(s)`,
+      );
+      methodsSeen += 1;
+      await page.screenshot({
+        path: join(
+          SHOTS,
+          `${theme}-method-${`${groupName}-${name}`.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.png`,
+        ),
+      });
+    }
   }
+  // product-quality-bar.md: at least ten to twelve methods, each a real working tab.
+  check(methodsSeen >= 12, `[${theme}] the workbench carries at least 12 methods`, `${methodsSeen} methods`);
+
+  await page.locator('.enunciado-main > .tabs > .tablist [role="tab"]', { hasText: /answer|respuesta/i }).click();
+  await page.waitForTimeout(400);
   await page.getByRole("tab", { name: /sensitivity|sensibilidad/i }).click();
   await page.waitForTimeout(600);
 

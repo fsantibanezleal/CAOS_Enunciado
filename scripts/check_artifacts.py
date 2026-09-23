@@ -15,6 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ARTIFACTS = ROOT / "data" / "artifacts"
+LEDGER = ROOT / "data" / "runs" / "optimization.jsonl"
 
 REQUIRED_CASE_FIELDS = (
     "case_id",
@@ -28,6 +29,76 @@ REQUIRED_CASE_FIELDS = (
     "property_check",
     "emitted_pyomo",
 )
+
+
+def _ledger_rates(records: list[dict]) -> dict[str, tuple[int, int, int]]:
+    """The two headline counts per model, recomputed from the raw ledger with nothing but json.
+
+    ran = the executable layer passed. faithful = it ran AND neither the structural nor the property
+    layer failed. Unmeasured calls (NOT_APPLICABLE at the executable layer) leave both. This is the
+    same definition `report.py` applies through `copela`, restated in twenty lines so CI can check it
+    without installing anything or running a pipeline script (ADR-0074 rules 1 and 3).
+    """
+    counts: dict[str, list[int]] = {}
+    for record in records:
+        verdicts = {v["layer"]: v["outcome"] for v in record.get("verdicts", [])}
+        if verdicts.get("executable") == "not-applicable":
+            continue
+        ran = verdicts.get("executable") == "pass"
+        faithful = ran and "fail" not in (verdicts.get("structural"), verdicts.get("property"))
+        tally = counts.setdefault(record["model_id"], [0, 0, 0])
+        tally[0] += int(ran)
+        tally[1] += int(faithful)
+        tally[2] += 1
+    return {model: (a, b, n) for model, (a, b, n) in counts.items()}
+
+
+def check_derived(problems: list[str]) -> str:
+    """The published report and the attempts artifact agree with the committed ledger."""
+    report_path = ARTIFACTS / "gap-report.json"
+    attempts_path = ARTIFACTS / "attempts.json"
+    for path in (report_path, attempts_path, LEDGER):
+        if not path.is_file():
+            problems.append(f"missing: {path.relative_to(ROOT)}")
+    if problems:
+        return ""
+
+    records = [
+        json.loads(line)
+        for line in LEDGER.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    attempts = json.loads(attempts_path.read_text(encoding="utf-8"))
+
+    if report.get("call_count") != len(records):
+        problems.append(
+            f"gap-report.json says {report.get('call_count')} calls, the ledger holds {len(records)}"
+        )
+
+    expected = _ledger_rates(records)
+    for cell in report.get("cells", []):
+        model = cell["model_id"]
+        if model not in expected:
+            problems.append(f"gap-report.json has a cell for {model}, which the ledger never ran")
+            continue
+        ran, faithful, total = expected[model]
+        if (cell["ran"]["passed"], cell["faithful"]["passed"], cell["ran"]["total"]) != (
+            ran,
+            faithful,
+            total,
+        ):
+            problems.append(
+                f"{model}: the report publishes ran {cell['ran']['passed']}/{cell['ran']['total']} "
+                f"faithful {cell['faithful']['passed']}, and the ledger gives ran {ran}/{total} "
+                f"faithful {faithful}"
+            )
+
+    in_attempts = sum(len(rows) for rows in attempts.get("cases", {}).values())
+    if in_attempts != len(records):
+        problems.append(f"attempts.json holds {in_attempts} attempts, the ledger {len(records)}")
+
+    return f", the report and {in_attempts} attempts agree with the ledger"
 
 
 def main() -> int:
@@ -77,6 +148,8 @@ def main() -> int:
         if (case.get("property_check") or {}).get("outcome") == "fail":
             problems.append(f"{label}: a property relation fails on the reference in the artifact")
 
+    derived = check_derived(problems)
+
     if problems:
         print("artifact check failed:")
         for problem in problems:
@@ -85,7 +158,7 @@ def main() -> int:
 
     print(
         f"artifacts ok: {len(cases)} case(s), coverage complete, every committed claim agrees "
-        "with its recorded solution"
+        f"with its recorded solution{derived}"
     )
     return 0
 

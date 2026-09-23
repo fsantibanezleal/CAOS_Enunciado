@@ -14,7 +14,7 @@
   build    build the site into frontend/dist
   verify   build, then run the UI gate against it
   live     run the UI gate against the deployed origin
-  check    the cheap checks CI runs: lint, artifacts, report re-derivation, version agreement
+  check    everything: lint, every guard, the ledger re-derivation, and the method tests
   bake     re-verify the corpus and rewrite data/artifacts/ (solves twenty models; a few seconds)
   report   re-derive data/artifacts/gap-report.json from the committed ledger
 
@@ -95,6 +95,14 @@ switch ($Task) {
         Invoke-Step 'the report agrees with the ledger' {
             $env:PYTHONPATH = 'data-pipeline'
             & $python data-pipeline\report.py --check
+        }
+        Invoke-Step 'the CI budget (ADR-0074)' { & $python scripts\check_ci_budget.py }
+        Invoke-Step 'no em-dash, no emoji (ADR-0067)' { & $python scripts\check_content_standards.py }
+        Invoke-Step 'the docs wiki is complete' { & $python scripts\check_docs.py }
+        # The structural methods, proved over all twenty cases. Local only: ADR-0074 rule 3 keeps a
+        # product's test suite out of CI, and this is the validation of record for those methods.
+        Invoke-Step 'the structural methods hold on every case' {
+            Push-Location (Join-Path $root 'frontend'); node tests\run.mjs; Pop-Location
         }
     }
 
