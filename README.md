@@ -70,16 +70,30 @@ oracle.
 
 ## Run it
 
-```bash
-python -m venv .venv
-./.venv/Scripts/python -m pip install -e ../CAOS_Planteo[pyomo] -e ../CAOS_Copela[solvers]
-./.venv/Scripts/python -m pip install pytest ruff
-
-./.venv/Scripts/python data-pipeline/bake.py      # sandbox bake
-./.venv/Scripts/python -m pytest -rs              # the corpus gates
+```powershell
+.un.ps1 setup        # venv, requirements.txt, and npm ci in frontend/ and tools/visual-verify/
+.un.ps1 check        # lint, artifacts, SDD gate, version agreement, report re-derivation
+.un.ps1 dev          # the site at http://localhost:5173
+.un.ps1 verify       # build, then 130 browser checks against the built site
+.un.ps1 live         # the same 130 checks against https://enunciado.fasl-work.com
 ```
 
-The bake verifies four things, and three of them have caught real defects here:
+Without PowerShell, the same four setup commands:
+
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+(cd frontend && npm ci)
+(cd tools/visual-verify && npm ci)
+```
+
+Nothing above calls a model and nothing above costs money. The measurement is committed and the site
+replays it. Taking a NEW measurement needs a key and a declared budget and is driven directly, on
+purpose: see [`docs/guides/03_run_a_sweep.md`](docs/guides/03_run_a_sweep.md).
+
+## What the bake verifies
+
+Four things, and three of them have caught real defects here:
 
 - every reference validates
 - every reference solves
@@ -89,13 +103,24 @@ The bake verifies four things, and three of them have caught real defects here:
 
 ## What is built
 
-- the twenty-case corpus with its coverage matrix
-- the bake and its artifacts (221 KB for the optimization family)
-- the corpus gates, 106 tests
-- the design document, with every requirement naming its test
+- the twenty-case corpus with its coverage matrix, and the bake that verifies it
+- `planteo` and `copela`, both published to PyPI and usable independently of this product
+- the model sweep, its exclusive resumable ledger, and the report derived from it
+- the six-page web surface, live at [enunciado.fasl-work.com](https://enunciado.fasl-work.com),
+  with HiGHS running in the page
+- 130 browser checks in dark, light and Spanish, which also run against the deployed origin
 
-Not yet built, and not claimed: the web surface, the model sweep, and the three other target
-families.
+Not built, and not claimed: the three other target families (mathematical formulation, experiment
+design, machine-learning framing) are designed and unmeasured, and the judge layer is typed and
+ledgered but has not been run.
+
+## Documentation
+
+- [`docs/`](docs/README.md) is the internal wiki: architecture, frameworks, methodologies, guides,
+  the corpus, and the data contract.
+- [`docs/design/SDD.md`](docs/design/SDD.md) is the design document, with every requirement naming
+  the gate that verifies it.
+- [`CHANGELOG.md`](CHANGELOG.md) is newest first, per release.
 
 ## Built on
 

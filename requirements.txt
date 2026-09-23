@@ -1,0 +1,22 @@
+# The offline lane. Nothing here runs in CI and nothing here runs in a reader's browser.
+#
+# The versions are PINNED for the two packages that produce the published measurement, because the
+# report is a function of that code and a floating dependency makes `report.py --check` mean
+# nothing. A newer `copela` breaking that check is the correct outcome: it says the artifact needs
+# re-deriving.
+
+planteo==0.1.0
+copela==0.2.0
+
+# The solver lane. `copela[solvers]` would pull these too; they are named here so a clone that only
+# wants to re-run the bake does not have to know that.
+pyomo>=6.7
+highspy>=1.7
+
+# The sweep's providers. `anthropic` is only needed to CALL a model; replaying the committed
+# measurement does not need it.
+anthropic>=1.8
+
+# Checks.
+ruff>=0.6
+pytest>=8.0
