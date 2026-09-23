@@ -10,13 +10,14 @@
 
 .PARAMETER Task
   setup    create the venv, install the offline lane, install the frontend and the gate
-  dev      run the dev server at http://localhost:5173
+  dev      run the dev server at http://localhost:5904
   build    build the site into frontend/dist
   verify   build, then run the UI gate against it
   live     run the UI gate against the deployed origin
   check    everything: lint, every guard, the ledger re-derivation, and the method tests
   bake     re-verify the corpus and rewrite data/artifacts/ (solves twenty models; a few seconds)
   report   re-derive data/artifacts/gap-report.json from the committed ledger
+  diagrams re-export the wiki's figures (docs/assets/*.svg) from the page components
 
 .EXAMPLE
   .\run.ps1 setup
@@ -26,7 +27,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Position = 0)]
-    [ValidateSet('setup', 'dev', 'build', 'verify', 'live', 'check', 'bake', 'report')]
+    [ValidateSet('setup', 'dev', 'build', 'verify', 'live', 'check', 'bake', 'report', 'diagrams')]
     [string]$Task = 'check'
 )
 
@@ -98,11 +99,17 @@ switch ($Task) {
         }
         Invoke-Step 'the CI budget (ADR-0074)' { & $python scripts\check_ci_budget.py }
         Invoke-Step 'no em-dash, no emoji (ADR-0067)' { & $python scripts\check_content_standards.py }
+        Invoke-Step 'no control character where a backslash was lost' { & $python scripts\check_control_chars.py }
         Invoke-Step 'the docs wiki is complete' { & $python scripts\check_docs.py }
         # The structural methods, proved over all twenty cases. Local only: ADR-0074 rule 3 keeps a
         # product's test suite out of CI, and this is the validation of record for those methods.
-        Invoke-Step 'the structural methods hold on every case' {
+        Invoke-Step 'the structural and answer methods hold on every case' {
             Push-Location (Join-Path $root 'frontend'); node tests\run.mjs; Pop-Location
+        }
+        # The wiki's figures are exported from the same components the pages draw. A diagram edited
+        # without re-exporting leaves the wiki showing the old one, so a stale export fails here.
+        Invoke-Step 'the docs figures match the components' {
+            Push-Location (Join-Path $root 'frontend'); node export-diagrams.mjs --check; Pop-Location
         }
     }
 
@@ -117,5 +124,9 @@ switch ($Task) {
         Assert-Venv
         $env:PYTHONPATH = 'data-pipeline'
         & $python data-pipeline\report.py
+    }
+
+    'diagrams' {
+        Push-Location (Join-Path $root 'frontend'); node export-diagrams.mjs; Pop-Location
     }
 }

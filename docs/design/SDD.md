@@ -132,7 +132,57 @@ R-011  THE registry SHALL report coverage gaps rather than hiding them behind a 
 
 R-012  THE why-hard statement of every case SHALL be substantive.
        Gate: tests/test_corpus.py::test_every_case_states_what_makes_it_hard
+
+R-013  THE browser lane SHALL reproduce the baked optimum of every linear case.
+       Gate: frontend/tests/solver.test.ts::the_browser_lane_reproduces_the_baked_optimum
+
+R-014  WHEN the Duality view shows prices, THE view SHALL evaluate primal feasibility, dual
+       feasibility, stationarity and complementary slackness from the numbers, and every continuous
+       optimum SHALL satisfy all four.
+       Gate: frontend/tests/solver.test.ts::every_continuous_optimum_carries_an_optimality_certificate
+
+R-015  IF a case has integer variables, THEN THE Duality view SHALL NOT read the solver's absent
+       duals as zero prices.
+       Gate: frontend/tests/solver.test.ts::an_integer_solve_returns_no_duals
+
+R-016  WHEN an integer case is priced through its LP relaxation, THE relaxation SHALL carry the
+       certificate and SHALL bound the integer optimum.
+       Gate: frontend/tests/solver.test.ts::the_LP_relaxation_of_every_integer_case
+
+R-017  WHEN the integer decisions are held at their optimal values, THE remaining LP SHALL reproduce
+       the integer optimum and carry the certificate.
+       Gate: frontend/tests/solver.test.ts::with_the_integers_fixed
+
+R-018  THE linear canonical form SHALL be unchanged by a style rewrite on every case.
+       Gate: frontend/tests/methods.test.ts::a_style_rewrite_leaves_the_canonical_form_unchanged
+
+R-019  THE linear canonical form SHALL change when one coefficient changes by one percent.
+       Gate: frontend/tests/methods.test.ts::a_one-percent_coefficient_change_changes_the_canonical_form
+
+R-020  THE Weisfeiler-Lehman signature SHALL be unchanged by a permutation of rows and columns.
+       Gate: frontend/tests/methods.test.ts::a_permutation_leaves_the_Weisfeiler-Lehman_signature_unchanged
+
+R-021  THE Weisfeiler-Lehman signature SHALL change when a constraint is dropped.
+       Gate: frontend/tests/methods.test.ts::dropping_a_constraint_changes_the_Weisfeiler-Lehman_signature
+
+R-022  WHERE a case has an integer variable, THE Weisfeiler-Lehman signature SHALL change under its
+       LP relaxation, and SHALL NOT change for a case with none.
+       Gate: frontend/tests/methods.test.ts::relaxing_integrality_changes_the_signature
+
+R-023  THE tracked text SHALL contain no control character other than a line feed.
+       Gate: scripts/check_control_chars.py
+
+R-024  THE figures in the docs wiki SHALL match the diagram components the pages draw.
+       Gate: frontend/export-diagrams.mjs
 ```
+
+R-013 to R-024 were added with 0.03.000, when the workbench reached fourteen methods. Each gate was
+mutation-checked, not only run: removing the rule it protects makes it fail. R-015's gate pins the
+premise (HiGHS returns no duals for a mixed-integer solve) and the UI gate pins the behaviour, by
+opening opt-014 in both pricing modes; the first Duality view read the absent duals as zero and
+showed a certificate that held vacuously on all four integer cases. R-023 exists because two
+equations on the Experiments page and every README run command shipped with a backslash turned into
+a control character, and a check on the typeset output could not see it.
 
 ## 8. The deploy driver
 
@@ -144,29 +194,34 @@ and adding a sweep ledger of roughly cases times models times repeats, the artif
 digit megabytes. That is comfortably inside static hosting limits, so payload does not force a
 server.
 
-**Portability, not yet measured:** HiGHS, MiniZinc and GLPK have verified WASM builds, so LP, MILP
-and CP are portable to a browser. OR-Tools CP-SAT, SCIP and the nonlinear classes are not known to
-be. The live lane's method list has to be probed, engine by engine, with a runnable check rather
-than a citation.
+**Portability, measured 2026-09-22** by `tools/portability/`, which solves real corpus cases in a
+real browser: HiGHS (3.37 MB WASM, 44 ms to load), glpk.js and MiniZinc (CP) all run. CP-SAT, SCIP
+and IPOPT have no portable build this product relies on.
 
-**Remaining question:** whether a live lane calls a language model at all. That is the only thing
-that would need a server-held secret, and it has alternatives.
+**The model call** runs offline inside the sweep, whose ledger is committed, so no lane needs a
+server-held secret.
 
-Until portability is measured, the deployment decision is **UNDECIDED**, and the plan records it
-that way rather than asserting a preference. An earlier draft of this work asserted a VPS target
-before any research existed and it collapsed under one question.
+**Decision:** static hosting, GitHub Pages at https://enunciado.fasl-work.com, publishing only
+committed artifacts. The live lane re-solves in the reader's browser and publishes nothing. An
+earlier draft of this work asserted a VPS target before any research existed, and it collapsed under
+one question; the decision was recorded as UNDECIDED until the two measurements above existed.
 
 ## 9. Convergence
 
-Recorded 2026-09-22 for the corpus.
+Recorded 2026-09-22 for the corpus, and 2026-09-23 for the web surface (0.03.000).
 
 | Requirement | Result |
 |---|---|
 | R-001 to R-012 | all pass, 106 tests, 2 skips with stated reasons (two cases claim no optimum) |
 | The bake | 20 cases, every reference solves, every claim agrees, every relation holds |
+| R-013 to R-022 | all pass, 14 method tests, each mutation-checked |
+| R-023, R-024 | pass: no control character in 124 tracked files; 17 figures match their components |
+| The UI gate | 165 checks pass against the built site, in dark, light and Spanish |
 
-Out of scope and not claimed: the web surface, the model sweep, and the three other target families.
-None has requirements here, which is the honest state rather than requirements marked pending.
+Out of scope and not claimed: the three other target families (mathematical formulation,
+experiment design, machine-learning framing), which are designed and unmeasured, and the judge
+layer, which is typed and ledgered and has not been run. Neither has requirements here, which is the
+honest state rather than requirements marked pending.
 
 ## 10. Risks
 

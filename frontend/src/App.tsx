@@ -21,7 +21,7 @@ import { CITATIONS } from "./data/citations";
 import { useData } from "./lib/data";
 import i18n from "./lib/i18n";
 
-const VERSION = "0.02.000";
+const VERSION = "0.03.000";
 
 export function Layout() {
   const load = useData((state) => state.load);
@@ -61,12 +61,16 @@ export function Layout() {
       // Provenance is the honest part of the footer: where the numbers come from and what they
       // are, not a restatement of the header links.
       provenance: {
-        en: "Cases authored for this product; solved offline with HiGHS via Pyomo. Engines: HiGHS (MIT), Pyomo (BSD-3), MiniZinc (MPL-2.0).",
-        es: "Casos escritos para este producto; resueltos sin conexion con HiGHS via Pyomo. Motores: HiGHS (MIT), Pyomo (BSD-3), MiniZinc (MPL-2.0).",
+        en: "Cases authored for this product; solved with HiGHS, offline via Pyomo and in the page as WebAssembly. Engines: HiGHS (MIT), Pyomo (BSD-3).",
+        es: "Casos escritos para este producto; resueltos con HiGHS, sin conexion via Pyomo y en la pagina como WebAssembly. Motores: HiGHS (MIT), Pyomo (BSD-3).",
       },
+      // MiniZinc was listed here as an engine. It appears only in the portability probe under
+      // tools/, and nothing the product ships runs it. Both lines are kept to one row at 1440px:
+      // the workbench sizes to what the chrome leaves, and a second footer row cost the
+      // instrument its half of the viewport (ADR-0071).
       disclaimer: {
-        en: "Every number shown is replayed from a committed artifact produced by a local bake. Nothing is computed at page load except what you change yourself.",
-        es: "Cada numero mostrado se reproduce desde un artefacto versionado producido por un calculo local. Nada se calcula al cargar la pagina salvo lo que usted modifique.",
+        en: "Published numbers replay a committed local bake. What the workbench solves in your browser explains the answer and is never published.",
+        es: "Los numeros publicados reproducen un calculo local versionado. Lo que el banco resuelve en su navegador explica la respuesta y nunca se publica.",
       },
     },
     // The workbench IS the viewport: it sizes to the window and scrolls inside its own container

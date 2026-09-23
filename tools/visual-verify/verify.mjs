@@ -207,7 +207,7 @@ for (const theme of ["dark", "light"]) {
 
     // Two failure modes that render as plausible-looking mathematics.
     //
-    // A `	ext{...}` inside a PLAIN template literal loses its backslash, because `	` is a tab
+    // A `\text{...}` inside a PLAIN template literal loses its backslash, because `\t` is a tab
     // and `\D` is just `D`: the equation then typesets as a tab followed by "ext{ran}". It looks
     // like a spacing quirk, not like a bug. `String.raw` is required for every tex string, and this
     // check is what makes forgetting it visible.
@@ -237,6 +237,30 @@ for (const theme of ["dark", "light"]) {
       leaks.length === 0,
       `[${theme}] ${label}: equations are in the page's language`,
       leaks.length ? `Spanish in the typeset math: ${leaks.join(", ")}` : "clean",
+    );
+
+    // The check above looks at the typeset output, and it missed two broken equations on the
+    // Experiments page. A lost `\t` in `\text{...}` becomes a tab, KaTeX reads the tab as a space,
+    // and "ext{a sampled item is wrong}" typesets as italic letters with no braces, so the text
+    // "ext{" never appears. The TeX SOURCE KaTeX was given survives in the MathML annotation, and a
+    // control character there is certain evidence of a lost backslash. A KaTeX parse error is the
+    // other way an equation dies quietly, as a red fragment of source.
+    const tex = await page.evaluate(() => {
+      const sources = [...document.querySelectorAll('.katex annotation[encoding="application/x-tex"]')].map(
+        (a) => a.textContent ?? "",
+      );
+      return {
+        count: sources.length,
+        mangled: sources.filter((s) => /[\u0000-\u0009\u000b-\u001f\u007f]/.test(s)).map((s) => s.slice(0, 48)),
+        errors: document.querySelectorAll(".katex-error").length,
+      };
+    });
+    check(
+      tex.mangled.length === 0 && tex.errors === 0,
+      `[${theme}] ${label}: every equation's TeX source is intact and parses`,
+      tex.mangled.length || tex.errors
+        ? `${tex.mangled.length} with a control character (${tex.mangled.join(" | ")}), ${tex.errors} parse error(s)`
+        : `${tex.count} equations`,
     );
 
     await page.screenshot({ path: join(SHOTS, `${theme}-${label.toLowerCase()}.png`) });
@@ -463,6 +487,8 @@ for (const theme of ["dark", "light"]) {
     );
 
     const thin = [];
+    const brokenTex = [];
+    let texTabs = 0;
     for (let index = 0; index < count; index += 1) {
       const tab = rail.nth(index);
       const name = ((await tab.textContent()) ?? `tab-${index}`).trim();
@@ -481,7 +507,17 @@ for (const theme of ["dark", "light"]) {
         svgs: node.querySelectorAll("svg.fig-svg").length,
         callouts: node.querySelectorAll(".callout-honest").length,
         refs: node.querySelectorAll(".th-refs, .refs, [class*=refs]").length,
+        // Per TAB, because a panel's equations exist only while it is shown: the per-route check
+        // above sees the first tab's and nothing else, and the two broken equations were not there.
+        texMangled: [...node.querySelectorAll('.katex annotation[encoding="application/x-tex"]')]
+          .map((a) => a.textContent ?? "")
+          .filter((s) => /[\u0000-\u0009\u000b-\u001f\u007f]/.test(s)).length,
+        texErrors: node.querySelectorAll(".katex-error").length,
       }));
+      if (seen.texMangled || seen.texErrors) {
+        brokenTex.push(`${name}: ${seen.texMangled} with a control character, ${seen.texErrors} parse error(s)`);
+      }
+      texTabs += 1;
       const short = [];
       if (seen.paragraphs < floor.paragraphs) short.push(`${seen.paragraphs} dense paragraphs`);
       if (seen.captioned < floor.equations) short.push(`${seen.captioned} captioned equations`);
@@ -494,6 +530,11 @@ for (const theme of ["dark", "light"]) {
       thin.length === 0,
       `${floor.label} tabs all meet the ADR-0017 content floor`,
       thin.length ? thin.join(" | ") : `${count} tabs, all at or above the floor`,
+    );
+    check(
+      brokenTex.length === 0 && texTabs === count,
+      `${floor.label}: every tab's equations have an intact TeX source and parse`,
+      brokenTex.length ? brokenTex.join(" | ") : `${texTabs} tabs checked`,
     );
   }
 

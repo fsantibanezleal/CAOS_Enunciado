@@ -10,6 +10,8 @@ reader changed.
 | Artifact | the git repository | nothing; it is data, and it is reviewed like code |
 | Browser | the reader's machine | re-solve what the reader changed, and draw |
 
+![Where each part runs: the offline bake, the committed artifact, the browser](../assets/architecture.svg)
+
 ## Why the split is a reading and not a preference
 
 Three measurements determined it, and they are recorded in `wip/enunciado/02` in the management
