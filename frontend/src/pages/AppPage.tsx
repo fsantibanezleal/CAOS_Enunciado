@@ -19,12 +19,14 @@ import { ActivityPanel } from "../components/ActivityPanel";
 import { AmbiguityPanel } from "../components/AmbiguityPanel";
 import { AttemptsPanel } from "../components/AttemptsPanel";
 import { CanonicalPanel } from "../components/CanonicalPanel";
+import { CaseDiagnosis } from "../components/CaseDiagnosis";
 import { CoverageMap } from "../components/CoverageMap";
 import { DimensionAudit } from "../components/DimensionAudit";
 import { DualityPanel } from "../components/DualityPanel";
 import { FailureAnatomy } from "../components/FailureAnatomy";
 import { FeasibleRegion } from "../components/FeasibleRegion";
 import { FormalizationView } from "../components/FormalizationView";
+import { Gauge } from "../components/Gauge";
 import { ModelGraphPanel } from "../components/ModelGraphPanel";
 import { collectHighlights, NarrativeView } from "../components/NarrativeView";
 import { ObjectiveSweep } from "../components/ObjectiveSweep";
@@ -97,10 +99,19 @@ export function AppPage() {
 
   const moved = Object.keys(overrides).length > 0;
   const reference = active.solution.objective;
-  const delta =
+  // The browser and the bake solve the same model along different paths, so an untouched case can
+  // differ from the statement's optimum in the last bit (3.6e-15 on opt-006). That is not a drift,
+  // and printing it made the read-out and the gauge report noise as a change.
+  const rawDelta =
     live?.objective !== null && live?.objective !== undefined && reference !== null
       ? live.objective - reference
       : null;
+  const delta =
+    rawDelta === null
+      ? null
+      : Math.abs(rawDelta) <= 1e-9 * Math.max(1, Math.abs(reference ?? 0))
+        ? 0
+        : rawDelta;
 
   const liveValues =
     live?.status === "optimal"
@@ -333,6 +344,11 @@ export function AppPage() {
               </div>
 
               <div className="rail-meta">
+                <h4>{es ? "Los modelos en este caso" : "The models on this case"}</h4>
+                <CaseDiagnosis record={active} lang={lang} />
+              </div>
+
+              <div className="rail-meta">
                 <h4>{t("workbench.whyHard")}</h4>
                 <p className="why-hard">{active.why_hard}</p>
                 {es && (
@@ -429,6 +445,7 @@ export function AppPage() {
           reference={reference}
           delta={delta}
           moved={moved}
+          sense={active.reference.objectives[0]?.sense ?? "minimise"}
           lang={lang}
         />
       </aside>
@@ -449,15 +466,20 @@ function LiveReadout({
   reference,
   delta,
   moved,
+  sense,
   lang,
 }: {
   live: LiveSolution | null;
   reference: number | null;
   delta: number | null;
   moved: boolean;
+  sense: string;
   lang: "en" | "es";
 }) {
   const es = lang === "es";
+  // Whether a change is an improvement depends on the sense: a cost that went up got worse. The
+  // colour used to follow the sign alone, which painted every rise in a minimisation green.
+  const better = delta === null ? null : sense === "maximise" ? delta > 0 : delta < 0;
 
   if (!live) {
     return (
@@ -522,7 +544,7 @@ function LiveReadout({
                 {" · "}
                 <span
                   className={`readout-delta ${
-                    Math.abs(delta) < 1e-9 ? "same" : delta > 0 ? "up" : "down"
+                    Math.abs(delta) < 1e-9 ? "same" : better ? "better" : "worse"
                   }`}
                 >
                   {delta > 0 ? "+" : ""}
@@ -542,6 +564,21 @@ function LiveReadout({
             : "Under the statement's own parameters."}{" "}
         {live.solveMs > 0 && `${live.solveMs.toFixed(1)} ms`}
       </p>
+      {reference !== null && delta !== null && (
+        <Gauge
+          title={es ? "cuanto se alejo del optimo del enunciado" : "drift from the statement's optimum"}
+          // Relative to the statement's optimum, with a floor of one unit so an optimum of zero
+          // does not turn every change into an infinite drift.
+          value={(Math.abs(delta) / Math.max(Math.abs(reference), 1)) * 100}
+          max={25}
+          format={(v) => `${Number(v.toPrecision(3))}%`}
+          zones={[
+            { upTo: 1, color: "var(--color-good)", label: es ? "en el enunciado" : "at the statement" },
+            { upTo: 10, color: "var(--color-warn)", label: es ? "se movio" : "moved" },
+            { upTo: 25, color: "var(--color-bad)", label: es ? "lejos" : "far" },
+          ]}
+        />
+      )}
     </div>
   );
 }

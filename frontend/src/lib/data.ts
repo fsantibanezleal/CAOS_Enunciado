@@ -89,11 +89,13 @@ export function caseById(cases: CaseRecord[], id: string): CaseRecord | undefine
 }
 
 /**
- * The per-case model attempts, loaded on first use.
+ * The per-case model attempts, loaded once and shared.
  *
- * Only the learned-model tabs need it, and it is 90 KB of mostly response excerpts, so a reader who
- * never opens those tabs never fetches it. The schema is checked for the same reason the manifest's
- * is: a shape this build does not understand must be an error, not a panel of blanks.
+ * The sidebar's diagnosis reads it as soon as the workbench opens, and the two learned-model tabs
+ * read the same promise, so the 90 KB is fetched once. It used to be fetched only when a learned
+ * tab opened; the diagnosis made the workbench need it from the start, beside a 3.37 MB engine the
+ * same view already loads. The schema is checked for the same reason the manifest's is: a shape
+ * this build does not understand must be an error, not a panel of blanks.
  */
 let attemptsPromise: Promise<AttemptsArtifact> | null = null;
 

@@ -197,9 +197,98 @@
   font: 600 0.8rem var(--font-mono);
 }
 
-.readout-delta.up { color: var(--color-good); }
-.readout-delta.down { color: var(--color-bad); }
+/* Better and worse, not up and down: in a minimisation a rise is worse. */
+.readout-delta.better { color: var(--color-good); }
+.readout-delta.worse { color: var(--color-bad); }
 .readout-delta.same { color: var(--color-fg-faint); }
+
+/* ---------- the zone gauge, ported from rotorvitals.css (product-quality bar, style row) ---------- */
+
+.gauge { margin-top: 0.55rem; }
+.gauge-title { font-size: 0.72rem; color: var(--color-fg-faint); margin-bottom: 0.3rem; }
+.gauge-track {
+  position: relative;
+  height: 12px;
+  border-radius: 6px;
+  background: var(--color-surface-2);
+  overflow: hidden;
+}
+.gauge-zone { position: absolute; top: 0; height: 100%; opacity: 0.5; }
+.gauge-needle {
+  position: absolute;
+  top: -3px;
+  width: 2px;
+  height: 18px;
+  background: var(--color-fg);
+  transform: translateX(-1px);
+  transition: left 160ms ease;
+}
+.gauge-scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: var(--color-fg-faint);
+  margin-top: 0.2rem;
+}
+.gauge-scale .gauge-val { color: var(--color-fg); font-weight: 700; font-family: var(--font-mono); }
+.gauge-zones-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  color: var(--color-fg-subtle);
+  margin-top: 0.25rem;
+}
+.gauge-zones-legend .dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  margin-right: 0.25rem;
+}
+
+/* ---------- the diagnosis card, after .rv-diag in rotorvitals.css ---------- */
+
+.diag {
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-accent);
+  border-radius: 6px;
+  background: var(--color-surface);
+}
+.diag[data-outcome="held"] { border-left-color: var(--color-good); }
+.diag[data-outcome="mixed"] { border-left-color: var(--color-warn); }
+.diag[data-outcome="none-ran"] { border-left-color: var(--color-bad); }
+.diag-top { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.35rem; }
+.diag-top strong { font: 700 1.05rem var(--font-mono); color: var(--color-fg); }
+.diag-top span { font-size: 0.78rem; color: var(--color-fg-subtle); }
+.diag-row {
+  display: grid;
+  grid-template-columns: 5.2rem auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0.2rem 0;
+  font-size: 0.74rem;
+}
+.diag-model { color: var(--color-fg); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.diag-layers { display: inline-flex; gap: 0.15rem; }
+.diag-layer {
+  width: 1.15rem;
+  height: 1.15rem;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 3px;
+  font: 700 0.64rem var(--font-mono);
+  border: 1px solid var(--color-border);
+  color: var(--color-fg-faint);
+}
+.diag-layer.is-pass { background: color-mix(in oklab, var(--color-good) 22%, transparent); border-color: var(--color-good); color: var(--color-good); }
+.diag-layer.is-fail { background: color-mix(in oklab, var(--color-bad) 22%, transparent); border-color: var(--color-bad); color: var(--color-bad); }
+.diag-layer.is-undecided { background: color-mix(in oklab, var(--color-warn) 18%, transparent); border-color: var(--color-warn); color: var(--color-warn); }
+.diag-layer.is-not-reached,
+.diag-layer.is-not-applicable { border-style: dashed; }
+.diag-class { color: var(--color-fg-subtle); line-height: 1.3; }
+.diag-note { margin: 0.35rem 0 0; font-size: 0.68rem; line-height: 1.4; color: var(--color-fg-faint); }
 
 /* ---------- parameter sliders: the continuous parametrization ---------- */
 

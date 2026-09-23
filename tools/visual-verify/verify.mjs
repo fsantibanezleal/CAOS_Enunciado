@@ -399,6 +399,55 @@ for (const theme of ["dark", "light"]) {
   }
   await page.screenshot({ path: join(SHOTS, `${theme}-duality-integer-case.png`) });
 
+  // The sidebar's live diagnosis and gauge (product-quality bar, style row). The diagnosis must
+  // follow the case, and it must show a refutation where the ledger has one: opt-006's Haiku
+  // candidate solved to 16 where the reference solves to 16.667.
+  await page.getByRole("tab", { name: /^case$|^caso$/i }).click();
+  await page.waitForTimeout(250);
+  await page.selectOption("#case-select", "opt-006");
+  await page.waitForTimeout(900);
+  const diagnosis = await page.evaluate(() => {
+    const card = document.querySelector(".diag");
+    return {
+      present: Boolean(card),
+      outcome: card?.getAttribute("data-outcome") ?? "",
+      refuted: card?.querySelectorAll(".diag-layer.is-fail").length ?? 0,
+      rows: card?.querySelectorAll(".diag-row").length ?? 0,
+    };
+  });
+  check(
+    diagnosis.present && diagnosis.rows >= 2 && diagnosis.refuted >= 1 && diagnosis.outcome === "mixed",
+    `[${theme}] the sidebar diagnoses the selected case from the ledger`,
+    `${diagnosis.rows} attempts, ${diagnosis.refuted} refuted layer(s), outcome ${diagnosis.outcome}`,
+  );
+
+  // The gauge must move when the reader moves the statement's parameters, and read zero before.
+  await page.selectOption("#case-select", "opt-001");
+  await page.waitForTimeout(700);
+  const gaugeBefore = Number((await page.locator(".gauge").first().getAttribute("data-value")) ?? NaN);
+  await page.getByRole("tab", { name: /parameters|parametros/i }).click();
+  await page.waitForTimeout(300);
+  await page.evaluate(() => {
+    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value").set;
+    for (const input of document.querySelectorAll('.knobs input[type="range"]')) {
+      const min = Number(input.min);
+      const max = Number(input.max);
+      setter.call(input, String(min + 0.7 * (max - min)));
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+  });
+  await page.waitForTimeout(900);
+  const gaugeAfter = Number((await page.locator(".gauge").first().getAttribute("data-value")) ?? NaN);
+  check(
+    gaugeBefore === 0 && gaugeAfter > 0,
+    `[${theme}] the drift gauge reads zero at the statement and moves with its parameters`,
+    `${gaugeBefore} before, ${gaugeAfter.toFixed(2)}% after`,
+  );
+  await page.getByRole("button", { name: /back to the statement|volver al enunciado/i }).click();
+  await page.waitForTimeout(400);
+  await page.getByRole("tab", { name: /^case$|^caso$/i }).click();
+  await page.waitForTimeout(250);
+
   await page.locator('.enunciado-main > .tabs > .tablist [role="tab"]', { hasText: /answer|respuesta/i }).click();
   await page.waitForTimeout(400);
   await page.getByRole("tab", { name: /sensitivity|sensibilidad/i }).click();
@@ -443,6 +492,31 @@ for (const theme of ["dark", "light"]) {
     await page.waitForTimeout(500);
     const svgs = await page.locator('[role="dialog"] svg, .arch-modal svg, .modal svg').count();
     check(svgs > 0, `[${theme}] the architecture modal renders its diagrams`, `${svgs} svg`);
+
+    // Counting the SVGs passed a modal whose styles named eight custom properties the shell does
+    // not define: every var() fell through to its dark fallback, so the light theme drew dark
+    // boxes on a light page. Every token each tab's markup names must resolve on the document.
+    const modalTabs = page.locator('[role="dialog"] [role="tab"]');
+    const modalTabCount = await modalTabs.count();
+    const unresolved = new Set();
+    for (let index = 0; index < Math.max(modalTabCount, 1); index += 1) {
+      if (modalTabCount) {
+        await modalTabs.nth(index).click();
+        await page.waitForTimeout(200);
+      }
+      const missing = await page.evaluate(() => {
+        const markup = document.querySelector('[role="dialog"]')?.innerHTML ?? "";
+        const names = [...new Set([...markup.matchAll(/var\(\s*(--[a-z0-9-]+)/g)].map((m) => m[1]))];
+        const root = getComputedStyle(document.documentElement);
+        return names.filter((name) => root.getPropertyValue(name).trim() === "");
+      });
+      for (const name of missing) unresolved.add(name);
+    }
+    check(
+      unresolved.size === 0,
+      `[${theme}] every colour token the architecture modal names resolves`,
+      unresolved.size ? `undefined: ${[...unresolved].join(", ")}` : `${modalTabCount} tabs checked`,
+    );
     await page.screenshot({ path: join(SHOTS, `${theme}-architecture.png`) });
     await page.keyboard.press("Escape");
     await page.waitForTimeout(250);
