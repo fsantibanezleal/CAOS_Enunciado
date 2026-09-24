@@ -111,7 +111,7 @@ const LANES = `<svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" rol
   ${mono(316, 136, "cases.json, manifest")}
   ${mono(316, 150, "gap-report.json")}
   ${mono(316, 164, "attempts.json")}
-  ${bi(316, 182, "322 KB, versioned", "322 KB, versionados", "sub")}
+  ${bi(316, 182, "1.1 MB, versioned", "1,1 MB, versionados", "sub")}
   ${bi(316, 197, "the only source of numbers", "unica fuente de numeros", "sub")}
 
   <path class="arrow" d="M465 150 L535 150"/>

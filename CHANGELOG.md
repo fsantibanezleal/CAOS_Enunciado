@@ -4,6 +4,56 @@ All notable changes to this product are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions are `X.XX.XXX` in this file, in
 `VERSION`, in the git tag and in the site footer; CI checks that the last two agree.
 
+## [0.05.000] - 2026-09-23
+
+The measurement grows from two Claude models to sixteen models from four providers, hosted and
+local, and the site is redrawn for many models. Published while two sweeps were still running: the
+report names both rows and Table 1 marks them.
+
+### Added
+
+- **The many-model measurement.** Claude Sonnet 5 and Haiku 4.5 (Anthropic), GLM-5.3 and
+  GLM-4.5-Flash (Z.AI), DeepSeek-V4-Pro (DeepSeek), and eleven open-weight models on one 8 GB
+  laptop GPU through Ollama: phi4, qwen3:14b, gemma3:12b, deepseek-r1:8b, qwen2.5-coder:7b,
+  gemma3:4b, llama3.1:8b, mistral:7b, phi4-mini, qwen3:4b and qwen3:8b. Each local record carries
+  the context it ran in and the digest of the weights behind its tag.
+- **A second output cap.** The two reasoning models reran at 32768 tokens in a ledger of their own,
+  `data/runs/optimization-cap32768.jsonl`, because the ledger key has no cap in it, and
+  `cap-sensitivity.json` publishes the comparison (R-034). DeepSeek-V4-Pro is faithful on 2 of 20
+  at 8192 and on 11 of 20 at 32768; 17 of its 20 calls at 8192 spent the whole cap reasoning.
+- **Model matrices** for the tier curve, the failure taxonomy, the layer agreement and the traps,
+  one row per model, each scrolling inside its own frame. Figure 1 is redrawn for many rows, grouped
+  by provider or sorted by the faithful rate.
+- **One failure taxonomy**, `frontend/src/lib/failure-classes.ts`, held equal to the classifier by a
+  test that reads `report.classify` (R-033), with classes for a reply that was all reasoning, a
+  reasoning model cut off at the cap, a missing field named or bare, an unbounded model, a variable
+  whose lower bound is above its upper, and the contradictory case answered as infeasible.
+- **Caveats computed from the ledger**, in both languages, including every departure from the
+  protocol (R-035), and a caveat and a Table 1 marker for a row that has not reached every case
+  (R-036, R-037).
+
+### Changed
+
+- Report schema 2.0: a model is `provider/model_id` everywhere, in one order that every view draws
+  (R-031, R-032); `attempts.json` 1.1.
+- The measurement is scored by copela 0.3.2 and planteo 0.1.1, pinned. copela 0.3.3 and 0.4.0 and
+  planteo 0.1.2 are published; the report reads the cap and harness copela 0.4.0 records where a
+  record has them, and shows "unrecorded" otherwise.
+- The sweep runner refuses an unpriced or unbudgeted model before it takes the ledger's lock
+  (R-030), and takes `--max-consecutive-failures`.
+
+### Fixed
+
+- **One candidate scored as a run was unbounded.** copela before 0.3.3 passed an unbounded model at
+  the executable layer, and what read as the ledger's first metamorphic refutation was that. The
+  record keeps its verdicts, the taxonomy classes it as unbounded, and a caveat says so.
+- A reasoning model cut off at the cap read as unparseable output when its reasoning came back in
+  the answer: qwen3:4b's twenty replies and deepseek-r1's unclosed `<think>` blocks.
+- The contradictory case's infeasible answer was filed under "the model it produced is infeasible",
+  a class whose rule is false of it.
+- The first caveat took its sample size from the smallest row, so a sweep two calls in set the
+  interval quoted for every model.
+
 ## [0.04.000] - 2026-09-23
 
 The workbench sidebar reaches the product-quality bar's style row, and one rule is stated the same

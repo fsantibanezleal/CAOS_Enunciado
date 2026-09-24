@@ -41,10 +41,13 @@ function shorten(text: string, max: number): string {
 export function RateIntervals({
   models,
   cells,
+  complete,
   lang,
 }: {
   models: ModelRow[];
   cells: GapCell[];
+  /** The calls in a complete row, the corpus times its repeats; a row with fewer is marked. */
+  complete: number;
   lang: "en" | "es";
 }) {
   const es = lang === "es";
@@ -187,6 +190,11 @@ export function RateIntervals({
                 {`n=${cell.ran.total}`}
                 {model.at_cap > 0 && ` · ${model.at_cap} ${es ? "en el tope" : "at the cap"}`}
                 {cell.unmeasured > 0 && ` · ${cell.unmeasured} ${es ? "no medidos" : "unmeasured"}`}
+                {model.calls < complete && (
+                  <tspan fill="var(--color-warn)" data-short="true">
+                    {` · ${model.calls} ${es ? "de" : "of"} ${complete} ${es ? "llamadas" : "calls"}`}
+                  </tspan>
+                )}
               </text>
 
               {cell.gap_is_defined && (

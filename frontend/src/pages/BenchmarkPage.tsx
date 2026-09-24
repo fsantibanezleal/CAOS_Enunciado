@@ -101,6 +101,10 @@ function Measured({
   const positive = gaps.filter((g) => g > 1e-9).length;
   const zero = gaps.filter((g) => Math.abs(g) <= 1e-9).length;
   const fmt = (g: number) => `${g >= 0 ? "+" : ""}${g.toFixed(3)}`;
+  // A complete row is every case at every repeat. A sweep takes the corpus in tier order, so a
+  // shorter row lacks the hardest cases, and its rates are marked rather than ranked silently.
+  const complete = report.corpus.cases * report.corpus.repeats;
+  const shortRows = models.filter((m) => m.calls < complete).length;
 
   return (
     <div className="page-body wide prose">
@@ -115,7 +119,7 @@ function Measured({
 
       <section>
         <h2>{es ? "Las dos tasas, y la brecha" : "The two rates, and the gap"}</h2>
-        <RateIntervals models={models} cells={report.cells} lang={lang} />
+        <RateIntervals models={models} cells={report.cells} complete={complete} lang={lang} />
         <p className="figure-caption">
           {es
             ? "Figura 1. Cada modelo aporta dos barras: con que frecuencia la formalizacion se ejecuto, y con que frecuencia ademas sobrevivio a las capas de fidelidad. La banda entre ambas es la brecha, y su valor esta en la columna derecha."
@@ -147,6 +151,18 @@ function Measured({
                       title={`${model.model_versions.join(", ")}\n${model.fingerprints.join("\n")}\n${es ? "calificado por" : "scored by"} ${model.harnesses.join(", ")}`}
                     >
                       {model.model_id}
+                      {model.calls < complete && (
+                        <span
+                          className="chip chip-short"
+                          title={
+                            es
+                              ? `Esta fila no llega a todos los casos: ${model.calls} de ${complete} llamadas`
+                              : `This row has not reached every case: ${model.calls} of ${complete} calls`
+                          }
+                        >
+                          {model.calls}/{complete}
+                        </span>
+                      )}
                     </td>
                     <td>{providerShort(model.provider)}</td>
                     <td className="num">{describeRate(cell.ran)}</td>
@@ -167,8 +183,8 @@ function Measured({
         </div>
         <p className="figure-caption">
           {es
-            ? "Tabla 1. Procedencia de cada fila: libro mayor data/runs/optimization.jsonl, corpus escrito para este producto, solucionador HiGHS via Pyomo, intervalos de Wilson al 95%. En el tope cuenta las llamadas que facturaron exactamente el tope de salida del protocolo. El costo de los modelos locales es cero; el de Z.AI es el equivalente a precio de lista de una cuota. La version del modelo y la huella del proveedor estan en el titulo de cada fila."
-            : "Table 1. Provenance of every row: ledger data/runs/optimization.jsonl, corpus authored for this product, solver HiGHS through Pyomo, 95% Wilson intervals. At the cap counts the calls that billed exactly the protocol's output cap. Local models cost nothing; Z.AI's cost is the list-price equivalent of a quota. Each row's model version and provider fingerprint are in its title."}
+            ? `Tabla 1. Procedencia de cada fila: libro mayor data/runs/optimization.jsonl, corpus escrito para este producto, solucionador HiGHS via Pyomo, intervalos de Wilson al 95%. En el tope cuenta las llamadas que facturaron exactamente el tope de salida del protocolo. El costo de los modelos locales es cero; el de Z.AI es el equivalente a precio de lista de una cuota. La version del modelo y la huella del proveedor estan en el titulo de cada fila.${shortRows ? " Un conteo junto al nombre de un modelo marca una fila que no llega a todos los casos: le faltan los mas dificiles, y sus tasas no se comparan con las de una fila completa." : ""}`
+            : `Table 1. Provenance of every row: ledger data/runs/optimization.jsonl, corpus authored for this product, solver HiGHS through Pyomo, 95% Wilson intervals. At the cap counts the calls that billed exactly the protocol's output cap. Local models cost nothing; Z.AI's cost is the list-price equivalent of a quota. Each row's model version and provider fingerprint are in its title.${shortRows ? " A count beside a model's name marks a row that has not reached every case: it lacks the hardest ones, and its rates do not compare with a complete row's." : ""}`}
         </p>
 
         <Equation
