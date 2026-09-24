@@ -232,7 +232,17 @@ R-038  WHEN a structural refutation's candidate solves to its reference's optimu
 R-039  THE bake SHALL record each reference's optimum with every real decision variable made integer,
        and CI SHALL recount the refutations that land on it from the ledger and the bake.
        Gate: scripts/check_artifacts.py
+
+R-040  IF one probe call to the provider fails, THEN THE sweep runner SHALL NOT start, SHALL record
+       nothing and SHALL NOT take the ledger's lock.
+       Gate: tests/test_sweep_runner.py::test_a_provider_that_cannot_be_reached_records_nothing
 ```
+
+R-040 came from starting the second repeat. The launcher passed a key file whole, notes and all, as
+the key, which is an illegal HTTP header, so every call failed before it left the machine; the sweep
+recorded nineteen of them as "the call itself failed" against Haiku 4.5 before it was stopped. They
+were never committed, and they were discarded, because they described the launcher and not the
+model. The kill criterion would have stopped the sweep at twenty, after writing twenty.
 
 R-038 and R-039 came from writing the docs table of refutations for the finished measurement.
 Three models solved opt-012 to 8080 against the reference's 8200, and a matching optimum proves
