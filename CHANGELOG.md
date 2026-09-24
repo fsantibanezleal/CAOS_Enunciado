@@ -4,6 +4,45 @@ All notable changes to this product are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions are `X.XX.XXX` in this file, in
 `VERSION`, in the git tag and in the site footer; CI checks that the last two agree.
 
+## [0.06.000] - 2026-09-23
+
+The measurement is complete, and the page says what its headline gaps rest on: both Claude models'
+only refutations land exactly on the reference's optimum with its decisions made integer, in
+statements that never say whether those decisions are whole numbers.
+
+### Added
+
+- **A class for a refutation that lands on the reference's whole-number optimum** (R-038). The bake
+  now records each reference's optimum with every real decision variable made integer, and it moves
+  in three cases: opt-006 (16.667 to 16 night shifts), opt-010 and opt-012 (8200 to 8080 margin on
+  pumps and valves). Three refutations land exactly on it: Haiku 4.5 on opt-006, and Sonnet 5 and
+  phi4 on opt-012; DeepSeek-V4-Pro does the same on opt-012 at the 32768-token cap. All passed the
+  property layer. The report publishes each model's gap with them read as allowed, Sonnet 5 and
+  Haiku 4.5 at 0.000 instead of +0.050 and phi4 at +0.050 instead of +0.100, and a note beside the
+  gaps says so. The published rates keep the refutations, because a case is not edited after its
+  answers were read. How to score a statement that leaves a decision's domain open is an open
+  decision.
+- CI recounts those refutations from the ledger and the bake with the standard library (R-039).
+- A caveat for a call the provider failed: GLM-4.5-Flash's opt-008 call returned HTTP 500 and never
+  reached the model, and copela counts it against the model.
+- A caveat naming which copela scored which rows, since records before copela 0.4.0 carry no version.
+- `scripts/check_version.py` compares the frontend manifest's semver form too. It sat at the 0.1.0
+  scaffold through five releases; it is 0.6.0 now.
+
+### Changed
+
+- The measurement is complete: GLM-4.5-Flash finished its twenty calls, and every row has all
+  twenty. 320 calls, 2.53 USD at list price.
+- Pinned copela 0.4.0 and planteo 0.1.2, the current releases. The artifacts derive identically
+  under them and under copela 0.3.2 and planteo 0.1.1, apart from the version one caveat names.
+- Report schema 2.1: `whole_number_readings`. The bake adds `integer_solution` to every case and
+  changes no other field.
+- The gap caption says the positive gaps are formalizations that executed and were then refuted,
+  not formalizations that "were not the model described".
+- The docs carry the finished measurement: the structural layer decided 14 of the 45 candidates that
+  ran, 4 by PASS and 10 by refutation, and 30 of the 34 faithful verdicts rest on the property layer
+  alone.
+
 ## [0.05.000] - 2026-09-23
 
 The measurement grows from two Claude models to sixteen models from four providers, hosted and

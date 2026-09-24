@@ -7,11 +7,16 @@ frontend and nothing compared the two. A version a reader can see is a claim abo
 looking at, and a wrong one is worse than none, because it makes a bug report point at the wrong
 build.
 
+The frontend manifest is compared too, in its semver form (0.06.000 is 0.6.0 there, because semver
+forbids leading zeros). It sat at the 0.1.0 scaffold through five releases, which ADR-0068 names as
+the most common drift, and nothing looked at it.
+
 Stdlib only, so it runs as an ordinary CI step with no install.
 """
 
 from __future__ import annotations
 
+import json
 import re
 import sys
 from pathlib import Path
@@ -19,6 +24,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 VERSION_FILE = ROOT / "VERSION"
 APP = ROOT / "frontend" / "src" / "App.tsx"
+MANIFEST = ROOT / "frontend" / "package.json"
 
 #: `X.XX.XXX`, the house format. Two digits of minor and three of patch, zero padded.
 FORMAT = re.compile(r"^\d+\.\d{2}\.\d{3}$")
@@ -52,7 +58,17 @@ def main() -> int:
         )
         return 1
 
-    print(f"version ok: {declared}, and the footer shows the same")
+    semver = ".".join(str(int(part)) for part in declared.split("."))
+    manifest = json.loads(MANIFEST.read_text(encoding="utf-8")).get("version")
+    if manifest != semver:
+        print(
+            f"VERSION says {declared}, so frontend/package.json should say {semver}, and it says "
+            f"{manifest}. Set it with: npm version {semver} --no-git-tag-version (in frontend/)",
+            file=sys.stderr,
+        )
+        return 1
+
+    print(f"version ok: {declared}; the footer shows the same, and the manifest {semver}")
     return 0
 
 
