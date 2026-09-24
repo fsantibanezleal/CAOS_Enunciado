@@ -246,7 +246,26 @@ R-041  WHERE a model ran a case more than once, THE report SHALL compare each la
        first by response, class and faithful verdict, and SHALL name every model whose later repeats
        all returned the first response, and a short row SHALL say which pass it lacks.
        Gate: tests/test_report_shape.py::test_a_model_that_repeats_itself_is_named_and_a_missing_pass_is_described
+
+R-043  WHEN a new copela or planteo is to score part of a recorded measurement, THE pipeline SHALL
+       first rescore every recorded document under it and count each layer outcome and faithful
+       verdict that would change, and SHALL report a change it finds as well as its absence.
+       Gate: tests/test_rescore.py::test_a_changed_rule_is_counted_and_an_unchanged_one_is_not
 ```
+
+The dynamics family has requirements of its own, R-201 onward, in
+[`features/dynamics/requirements.md`](features/dynamics/requirements.md).
+
+R-043 came from the drive that held the local model store going offline in the middle of the second
+repeat. The Ollama server stayed up and answered HTTP 404, "model not found", which copela 0.6.0
+recorded as the model's failure: nine rows against deepseek-r1:8b before the chain stopped. They
+were moved to `data/runs/discarded-2026-09-24-model-store-offline.jsonl`, and copela 0.8.2 stops a
+sweep on a 404 instead (its R-044). The chain could not resume on the copela it started with, which
+records the same rows again, and the release that fixes it also carries planteo 0.2.1, which folds
+nested products in the canonical form. So the rest of the second repeat was held until the new
+release had rescored what was already recorded: all 58 documents in the ledger gave the outcomes
+they were stored with, and none of the 173 responses that did not parse could have parsed into a
+runnable optimization problem under the new planteo, because what it adds is dynamics only.
 
 R-041 came with the second repeat, which BL-037 needed so that new records would carry their
 documents. A repeat is a second sample only if it can differ, and at temperature 0 with a fixed seed
