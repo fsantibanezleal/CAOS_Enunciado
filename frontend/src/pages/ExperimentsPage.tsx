@@ -14,6 +14,8 @@ import { useMemo } from "react";
 import { HoldoutDiagram, SamplingDiagram } from "../components/diagrams";
 import { TIER_NAME, TRAP_NAME } from "../lib/contract.types";
 import { useData } from "../lib/data";
+import { FAILURE_CLASSES, className } from "../lib/failure-classes";
+import { signed, useMeasurement } from "../lib/useMeasurement";
 
 export function ExperimentsPage() {
   const lang = (useShellLang() ?? "en") as "en" | "es";
@@ -343,6 +345,8 @@ function Corpus({ lang }: { lang: "en" | "es" }) {
 
 function Protocol({ lang }: { lang: "en" | "es" }) {
   const es = lang === "es";
+  const facts = useMeasurement();
+  const full = facts !== null && facts.calls === facts.cases * facts.models;
   return (
     <section>
       <h2>{es ? "El protocolo, y el atajo que lo arruina" : "The protocol, and the shortcut that ruins it"}</h2>
@@ -363,14 +367,24 @@ function Protocol({ lang }: { lang: "en" | "es" }) {
         reverse
       >
         <p className="measure">
-          {es
-            ? "Los parametros exactos de la corrida publicada son estos. Veinte casos, dos modelos alojados, una repeticion por par, tope de 8192 tokens por llamada, sin temperatura porque el proveedor ya no la acepta, con esfuerzo de razonamiento donde el modelo lo admite y sin el donde no, presupuesto comprobado antes de cada llamada y costo total de 1,23 dolares. El libro mayor registra las 40 llamadas, incluidas las que fallaron."
-            : "The published run's exact parameters are these. Twenty cases, two hosted models, one repeat per pair, an 8192 token cap per call, no temperature because the provider no longer accepts it, reasoning effort where the model admits it and none where it does not, the budget checked before each call, and a total cost of 1.23 dollars. The ledger records all 40 calls, including the ones that failed."}
+          {facts === null
+            ? es
+              ? "Cargando la medicion publicada..."
+              : "Loading the published measurement..."
+            : es
+              ? `Los parametros exactos de la corrida publicada son estos. ${facts.cases} casos y ${facts.models} modelos de ${facts.providers} proveedores, ${facts.hosted} alojados y ${facts.local} locales, una repeticion por par, un solo tope de salida de ${facts.cap} tokens por llamada para todos los modelos, el presupuesto comprobado antes de cada llamada contra lo maximo que la llamada puede facturar, y un costo total de ${facts.cost.toFixed(2)} dolares a precio de lista. Cada proveedor expone controles distintos, y la huella de cada registro declara los que fijo; las salvedades de la Comparativa los enumeran. El libro mayor registra las ${facts.calls} llamadas, incluidas las que fallaron.${facts.shortRows ? ` ${facts.shortRows} ${facts.shortRows === 1 ? "fila no llega" : "filas no llegan"} a todos los casos, y la Comparativa ${facts.shortRows === 1 ? "la marca" : "las marca"}.` : ""}`
+              : `The published run's exact parameters are these. ${facts.cases} cases and ${facts.models} models from ${facts.providers} providers, ${facts.hosted} hosted and ${facts.local} local, one repeat per pair, one ${facts.cap}-token output cap per call for every model, the budget checked before each call against the most the call can bill, and a total cost of ${facts.cost.toFixed(2)} dollars at list price. Each provider exposes different controls, and each record's fingerprint states the ones it pinned; the Benchmark's caveats list them. The ledger records all ${facts.calls} calls, including the ones that failed.${facts.shortRows ? ` ${facts.shortRows} ${facts.shortRows === 1 ? "row has" : "rows have"} not reached every case, and the Benchmark marks ${facts.shortRows === 1 ? "it" : "them"}.` : ""}`}
         </p>
       </FigureRow>
 
       <Equation
-        tex={String.raw`|\text{calls}| = |C| \times |M| \times n_{\text{repeats}} = 20 \times 2 \times 1 = 40`}
+        tex={
+          facts === null
+            ? String.raw`|\text{calls}| = |C| \times |M| \times n_{\text{repeats}}`
+            : full
+              ? String.raw`|\text{calls}| = |C| \times |M| \times n_{\text{repeats}} = ${facts.cases} \times ${facts.models} \times 1 = ${facts.calls}`
+              : String.raw`|\text{calls}| = \sum_{m \in M} n_m = ${facts.calls}`
+        }
         caption={
           es
             ? "El tamano del barrido publicado. Una repeticion es el minimo defendible y no el deseable: con n = 1 la variacion entre corridas no se puede separar de la diferencia entre modelos."
@@ -380,8 +394,8 @@ function Protocol({ lang }: { lang: "en" | "es" }) {
 
       <p className="measure">
         {es
-          ? "Una repeticion es poco por una razon concreta y medida: dos pasadas sobre el corpus identico, sin cambiar nada salvo el muestreo, situaron al mismo modelo en 0,350 y luego en 0,250. La inferencia alojada no es determinista ni con temperatura cero, y la causa dominante no es la coma flotante sino la dependencia del tamano de lote en los nucleos de reduccion, que es una propiedad del servicio y no del modelo."
-          : "One repeat is few for a concrete and measured reason: two passes over the identical corpus, changing nothing but the sampling, put the same model at 0.350 and then at 0.250. Hosted inference is not deterministic even at temperature zero, and the dominant cause is not floating point but the batch-size dependence of reduction kernels, which is a property of the service rather than of the model."}
+          ? "Una repeticion es poco por una razon concreta y medida: dos pasadas sobre el corpus identico, sin cambiar nada salvo el muestreo, situaron a claude-haiku-4-5 en 0,350 y luego en 0,250. La inferencia alojada no es determinista ni con temperatura cero, y la causa dominante no es la coma flotante sino la dependencia del tamano de lote en los nucleos de reduccion, que es una propiedad del servicio y no del modelo."
+          : "One repeat is few for a concrete and measured reason: two passes over the identical corpus, changing nothing but the sampling, put claude-haiku-4-5 at 0.350 and then at 0.250. Hosted inference is not deterministic even at temperature zero, and the dominant cause is not floating point but the batch-size dependence of reduction kernels, which is a property of the service rather than of the model."}
       </p>
 
       <SamplingDiagram lang={lang} />
@@ -420,8 +434,8 @@ function Metrics({ lang }: { lang: "en" | "es" }) {
         tex={String.raw`R_{\text{ran}} = \frac{\#\{\mathrm{exec} = \textsf{PASS}\}}{N - u}, \qquad R_{\text{faithful}} = \frac{\#\{\mathrm{exec} = \textsf{PASS} \wedge \textsf{FAIL} \notin \{\mathrm{struct}, \mathrm{prop}\} \wedge \textsf{PASS} \in \{\mathrm{struct}, \mathrm{prop}\}\}}{N - u}`}
         caption={
           es
-            ? "Las dos tasas, sobre el mismo denominador. N = 20 por modelo; u es el numero de casos no medidos."
-            : "The two rates, over the same denominator. N = 20 per model; u is the number of unmeasured cases."
+            ? "Las dos tasas, sobre el mismo denominador. N es el numero de llamadas del modelo, un caso por llamada; u es el numero de casos no medidos."
+            : "The two rates, over the same denominator. N is the model's number of calls, one case per call; u is the number of unmeasured cases."
         }
       />
 
@@ -450,8 +464,8 @@ function Metrics({ lang }: { lang: "en" | "es" }) {
         tex={String.raw`\mathrm{CI}_{95}(\hat{p}) = \frac{\hat{p} + \dfrac{z^{2}}{2n} \pm z\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n} + \dfrac{z^{2}}{4n^{2}}}}{1 + \dfrac{z^{2}}{n}}, \qquad z = 1.96,\ n = N - u`}
         caption={
           es
-            ? "El intervalo de Wilson con sus constantes reales. A n = 20 y p = 0,5 mide unos 0,40 de ancho, que es la razon por la que esta pagina no ordena modelos."
-            : "The Wilson interval with its real constants. At n = 20 and p = 0.5 it is about 0.40 wide, which is why this page does not rank models."
+            ? "El intervalo de Wilson con sus constantes reales. A n = 20 y p = 0,5 mide unos 0,40 de ancho, que es la razon por la que esta pagina solo ordena dos modelos cuando sus intervalos no se solapan."
+            : "The Wilson interval with its real constants. At n = 20 and p = 0.5 it is about 0.40 wide, which is why this page ranks two models only where their intervals do not overlap."
         }
       />
 
@@ -488,6 +502,9 @@ function Metrics({ lang }: { lang: "en" | "es" }) {
 
 function Taxonomy({ lang }: { lang: "en" | "es" }) {
   const es = lang === "es";
+  const facts = useMeasurement();
+  const failures = FAILURE_CLASSES.filter((c) => !c.survived);
+  const invisible = failures.filter((c) => c.ran);
   return (
     <section>
       <h2>{es ? "Como se clasifica un fallo" : "How a failure is classified"}</h2>
@@ -513,103 +530,31 @@ function Taxonomy({ lang }: { lang: "en" | "es" }) {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>{es ? "salida no parseable" : "unparseable output"}</td>
-            <td>
-              {es
-                ? "El texto devuelto no contiene un objeto JSON completo, o el objeto no carga como documento."
-                : "The returned text contains no complete JSON object, or the object does not load as a document."}
-            </td>
-            <td className="mono">executable</td>
-          </tr>
-          <tr>
-            <td>{es ? "salida truncada" : "truncated output"}</td>
-            <td>
-              {es
-                ? "El JSON empieza y no termina: el tope de tokens se alcanzo a mitad del documento."
-                : "The JSON starts and does not end: the token cap was reached mid-document."}
-            </td>
-            <td className="mono">executable</td>
-          </tr>
-          <tr>
-            <td>{es ? "constante sin unidad" : "a constant with no unit"}</td>
-            <td>
-              {es
-                ? "Un nodo const sin campo unit aparece sumado a un termino con dimension."
-                : "A const node with no unit field appears summed with a dimensioned term."}
-            </td>
-            <td className="mono">executable</td>
-          </tr>
-          <tr>
-            <td>{es ? "cantidad derivada sin definir" : "derived quantity never defined"}</td>
-            <td>
-              {es
-                ? "Una cantidad se declara con papel derived y ninguna relacion la define."
-                : "A quantity is declared with role derived and no relation defines it."}
-            </td>
-            <td className="mono">executable</td>
-          </tr>
-          <tr>
-            <td>{es ? "desajuste dimensional" : "dimensional mismatch"}</td>
-            <td>
-              {es
-                ? "Dos lados de una comparacion tienen vectores de exponentes distintos."
-                : "The two sides of a comparison carry different exponent vectors."}
-            </td>
-            <td className="mono">executable</td>
-          </tr>
-          <tr>
-            <td>{es ? "procedencia fabricada" : "fabricated provenance"}</td>
-            <td>
-              {es
-                ? "El texto guardado en un span no aparece en el enunciado en esos desplazamientos."
-                : "The text stored in a span does not appear in the statement at those offsets."}
-            </td>
-            <td className="mono">executable</td>
-          </tr>
-          <tr>
-            <td>{es ? "modelo infactible" : "the model is infeasible"}</td>
-            <td>
-              {es
-                ? "El documento valida y su modelo no tiene punto factible, sobre un caso que si lo tiene."
-                : "The document validates and its model has no feasible point, on a case that has one."}
-            </td>
-            <td className="mono">executable</td>
-          </tr>
-          <tr>
-            <td>
-              <strong>{es ? "REFUTADO: otro optimo" : "REFUTED: a different optimum"}</strong>
-            </td>
-            <td>
-              {es
-                ? "Corre limpio y resuelve a un valor que difiere del de la referencia mas alla de 1e-6 relativo."
-                : "It runs cleanly and solves to a value differing from the reference's beyond 1e-6 relative."}
-            </td>
-            <td className="mono">structural</td>
-          </tr>
-          <tr>
-            <td>{es ? "no medido" : "unmeasured"}</td>
-            <td>
-              {es
-                ? "El solucionador configurado no expresa el modelo. Limite del instrumento, excluido de ambas tasas."
-                : "The configured solver cannot express the model. A limit of the instrument, excluded from both rates."}
-            </td>
-            <td className="mono">n/a</td>
-          </tr>
+          {FAILURE_CLASSES.map((c) => (
+            <tr key={c.key}>
+              <td>{c.ran && !c.survived ? <strong>{className(c.key, lang)}</strong> : className(c.key, lang)}</td>
+              <td>{es ? c.ruleEs : c.ruleEn}</td>
+              <td className="mono">{c.layer === "none" ? "n/a" : c.layer}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
       <p className="figure-caption">
         {es
-          ? "Tabla 1. Las nueve clases y su regla. Solo una es invisible para un solucionador: la refutacion. Todo lo demas falla ruidosamente."
-          : "Table 1. The nine classes and their rule. Only one is invisible to a solver: the refutation. Everything else fails loudly."}
+          ? `Tabla 1. Las ${failures.length} clases de fallo y su regla, y la fila fiel al final. ${invisible.length} de ellas, en negrita, son invisibles para un solucionador: la formalizacion corrio limpia. Todas las demas fallan ruidosamente.`
+          : `Table 1. The ${failures.length} failure classes and their rule, with the faithful row last. ${invisible.length} of them, in bold, are invisible to a solver: the formalization ran cleanly. Every other one fails loudly.`}
       </p>
 
       <Equation
         tex={String.raw`\#\{\text{${es ? "invisibles" : "invisible"}}\} \,/\, \#\{\text{${es ? "fallos" : "failures"}}\} \quad\text{${es ? "es en si mismo un resultado" : "is itself a finding"}}`}
         caption={
-          es
-            ? "La proporcion de fallos que un solucionador no habria notado. En esta corrida son 2 de cada distribucion, y a este tamano de muestra es una pista, no un resultado."
-            : "The share of failures a solver would not have noticed. In this run it is 2 in each distribution, and at this sample size that is a hint rather than a result."
+          facts === null
+            ? es
+              ? "La proporcion de fallos que un solucionador no habria notado."
+              : "The share of failures a solver would not have noticed."
+            : es
+              ? `La proporcion de fallos que un solucionador no habria notado. En la medicion publicada son ${facts.invisible} de ${facts.failures}, y a este tamano de muestra es una pista, no un resultado.`
+              : `The share of failures a solver would not have noticed. In the published measurement it is ${facts.invisible} of ${facts.failures}, and at this sample size that is a hint rather than a result.`
         }
       />
 
@@ -628,6 +573,7 @@ function Taxonomy({ lang }: { lang: "en" | "es" }) {
 
 function Threats({ lang }: { lang: "en" | "es" }) {
   const es = lang === "es";
+  const facts = useMeasurement();
   return (
     <section>
       <h2>{es ? "Amenazas a la validez" : "Threats to validity"}</h2>
@@ -648,8 +594,8 @@ function Threats({ lang }: { lang: "en" | "es" }) {
       <h3>{es ? "Validez de conclusion" : "Conclusion validity"}</h3>
       <p className="measure">
         {es
-          ? "N = 20 con una repeticion. Los intervalos de Wilson al 95% ocupan alrededor de 0,40 de ancho, y los de los dos modelos medidos se solapan casi por completo. La consecuencia esta dicha en todas partes de este sitio: esta medicion puede ver que existe una brecha y no puede ordenar dos modelos. Una segunda pasada sobre el corpus identico movio una tasa de 0,350 a 0,250 sin que cambiara nada salvo el muestreo."
-          : "N = 20 with one repeat. The 95% Wilson intervals span about 0.40, and those of the two models measured overlap almost entirely. The consequence is stated everywhere on this site: this measurement can see that a gap exists and cannot rank two models. A second pass over the identical corpus moved one rate from 0.350 to 0.250 with nothing changed but the sampling."}
+          ? `N = 20 con una repeticion. Los intervalos de Wilson al 95% ocupan alrededor de 0,40 de ancho${facts ? `, y en ${facts.overlappingPairs} de los ${facts.pairs} pares de modelos los intervalos de fidelidad se solapan` : ""}. La consecuencia esta dicha en todas partes de este sitio: esta medicion puede ver que existe una brecha, y no puede ordenar dos modelos cuyos intervalos se solapan. Una segunda pasada sobre el corpus identico movio a claude-haiku-4-5 de 0,350 a 0,250 sin que cambiara nada salvo el muestreo.`
+          : `N = 20 with one repeat. The 95% Wilson intervals span about 0.40${facts ? `, and ${facts.overlappingPairs} of the ${facts.pairs} pairs of models have faithful intervals that overlap` : ""}. The consequence is stated everywhere on this site: this measurement can see that a gap exists, and it cannot rank two models whose intervals overlap. A second pass over the identical corpus moved claude-haiku-4-5 from 0.350 to 0.250 with nothing changed but the sampling.`}
       </p>
 
       <Equation
@@ -664,8 +610,8 @@ function Threats({ lang }: { lang: "en" | "es" }) {
       <h3>{es ? "Validez externa" : "External validity"}</h3>
       <p className="measure">
         {es
-          ? "Una sola familia (optimizacion lineal y entera mixta), un solo proveedor alojado, un solo prompt, un solo idioma de enunciado. Las otras tres familias del plan (formulacion matematica, diseno experimental, encuadre de aprendizaje automatico) estan disenadas y no medidas, y nada de lo que esta pagina publica se extiende a ellas. La via local de modelos abiertos esta implementada y no corrida en la medicion publicada."
-          : "One family (linear and mixed-integer optimization), one hosted provider, one prompt, one statement language. The plan's other three families (mathematical formulation, experiment design, machine-learning framing) are designed and not measured, and nothing this page publishes extends to them. The local open-model lane is implemented and was not run in the published measurement."}
+          ? `Una sola familia (optimizacion lineal y entera mixta), ${facts ? `${facts.providers} proveedores` : "varios proveedores"}, un solo prompt, un solo idioma de enunciado, un solo tope de salida. Las otras tres familias del plan (formulacion matematica, diseno experimental, encuadre de aprendizaje automatico) estan disenadas y no medidas, y nada de lo que esta pagina publica se extiende a ellas. Los modelos locales son los que una GPU de portatil de 8 GB puede servir, asi que el carril local dice lo que hacen los modelos abiertos pequenos, no lo que hacen los modelos abiertos.`
+          : `One family (linear and mixed-integer optimization), ${facts ? `${facts.providers} providers` : "several providers"}, one prompt, one statement language, one output cap. The plan's other three families (mathematical formulation, experiment design, machine-learning framing) are designed and not measured, and nothing this page publishes extends to them. The local models are the ones a laptop GPU with 8 GB can serve, so the local lane says what small open models do, not what open models do.`}
       </p>
 
       <h3>{es ? "Validez de constructo" : "Construct validity"}</h3>
@@ -684,8 +630,12 @@ function Threats({ lang }: { lang: "en" | "es" }) {
 
       <Callout variant="honest" title={es ? "El resumen honesto" : "The honest summary"}>
         {es
-          ? "Lo que esta medicion sostiene: sobre veinte casos escritos y verificados, dos modelos alojados produjeron formalizaciones que se ejecutan y no son el modelo descrito, con una brecha de +0,050 en ambos. Lo que no sostiene: cualquier orden entre esos modelos, cualquier extension a las otras tres familias, y cualquier afirmacion de que una formalizacion no refutada sea correcta."
-          : "What this measurement supports: over twenty authored and verified cases, two hosted models produced formalizations that execute and are not the model described, with a gap of +0.050 in both. What it does not support: any ranking between those models, any extension to the other three families, and any claim that an unrefuted formalization is correct."}
+          ? facts
+            ? `Lo que esta medicion sostiene: sobre veinte casos escritos y verificados, ${facts.positiveGaps} de los ${facts.models} modelos produjeron formalizaciones que se ejecutan y no son el modelo descrito, con brechas de ${signed(facts.minGap)} a ${signed(facts.maxGap)}. Lo que no sostiene: cualquier orden entre modelos cuyos intervalos se solapan, cualquier extension a las otras tres familias, y cualquier afirmacion de que una formalizacion no refutada sea correcta.`
+            : "Cargando la medicion publicada..."
+          : facts
+            ? `What this measurement supports: over twenty authored and verified cases, ${facts.positiveGaps} of the ${facts.models} models produced formalizations that execute and are not the model described, with gaps from ${signed(facts.minGap)} to ${signed(facts.maxGap)}. What it does not support: any ranking between models whose intervals overlap, any extension to the other three families, and any claim that an unrefuted formalization is correct.`
+            : "Loading the published measurement..."}
       </Callout>
 
       <Refs ids={["lean2026", "scope2026", "beams2026", "orgeval2025"]} label={es ? "Referencias" : "Refs"} />

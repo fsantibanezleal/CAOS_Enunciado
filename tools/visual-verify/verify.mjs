@@ -106,6 +106,17 @@ await mkdir(SHOTS, { recursive: true });
 
 const browser = await chromium.launch();
 
+// The measurement the pages must show, read from what is SERVED, so a live run checks the deployed
+// artifacts rather than the checkout's.
+async function served(name) {
+  const response = await fetch(`${BASE}/data/${name}`);
+  return response.ok ? response.json() : null;
+}
+const gapReport = await served("gap-report.json");
+const attemptsArtifact = await served("attempts.json");
+const capSensitivity = await served("cap-sensitivity.json");
+check(gapReport !== null && attemptsArtifact !== null, "the gap report and the attempts are served");
+
 for (const theme of ["dark", "light"]) {
   const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await context.newPage();
@@ -400,25 +411,35 @@ for (const theme of ["dark", "light"]) {
   await page.screenshot({ path: join(SHOTS, `${theme}-duality-integer-case.png`) });
 
   // The sidebar's live diagnosis and gauge (product-quality bar, style row). The diagnosis must
-  // follow the case, and it must show a refutation where the ledger has one: opt-006's Haiku
-  // candidate solved to 16 where the reference solves to 16.667.
+  // follow the case, list every attempt the ledger holds for it, and show the refutation where the
+  // ledger has one: opt-006's Haiku candidate solved to 16 where the reference solves to 16.667.
+  //
+  // It checks the STRUCTURAL box of that model's row. An earlier version counted any failed layer
+  // as "refuted", so an executable failure satisfied it, and it would have passed on a ledger with
+  // no refutation in it at all.
   await page.getByRole("tab", { name: /^case$|^caso$/i }).click();
   await page.waitForTimeout(250);
   await page.selectOption("#case-select", "opt-006");
   await page.waitForTimeout(900);
+  const expectedAttempts = (attemptsArtifact.cases["opt-006"] ?? []).length;
   const diagnosis = await page.evaluate(() => {
     const card = document.querySelector(".diag");
+    const haiku = card?.querySelector('.diag-row[data-model="anthropic/claude-haiku-4-5"]');
+    const boxes = haiku ? [...haiku.querySelectorAll(".diag-layer")] : [];
     return {
       present: Boolean(card),
       outcome: card?.getAttribute("data-outcome") ?? "",
-      refuted: card?.querySelectorAll(".diag-layer.is-fail").length ?? 0,
+      structuralFail: boxes[1]?.classList.contains("is-fail") ?? false,
       rows: card?.querySelectorAll(".diag-row").length ?? 0,
     };
   });
   check(
-    diagnosis.present && diagnosis.rows >= 2 && diagnosis.refuted >= 1 && diagnosis.outcome === "mixed",
+    diagnosis.present &&
+      diagnosis.rows === expectedAttempts &&
+      diagnosis.structuralFail &&
+      diagnosis.outcome === "mixed",
     `[${theme}] the sidebar diagnoses the selected case from the ledger`,
-    `${diagnosis.rows} attempts, ${diagnosis.refuted} refuted layer(s), outcome ${diagnosis.outcome}`,
+    `${diagnosis.rows} of ${expectedAttempts} attempts, Haiku's structural layer ${diagnosis.structuralFail ? "FAIL" : "not FAIL"}, outcome ${diagnosis.outcome}`,
   );
 
   // The gauge must move when the reader moves the statement's parameters, and read zero before.
@@ -615,6 +636,139 @@ for (const theme of ["dark", "light"]) {
   await context.close();
 }
 
+// The measurement, for every model it holds.
+//
+// The Benchmark was drawn for two Claude models: bars coloured from a three-entry palette, a line
+// chart with two colours and no legend, one grid per model in two columns, and a trap table that
+// added a column per model until the shell's overflow-x hidden clipped the last ones out of reach.
+// None of that failed a check, because every check counted elements that existed rather than
+// comparing them with the models the report holds. These compare.
+if (gapReport) {
+  const models = gapReport.models.map((m) => m.key);
+  for (const width of [1440, 390]) {
+    const context = await browser.newContext({ viewport: { width, height: 900 } });
+    const page = await context.newPage();
+    await page.goto(`${BASE}/benchmark`, { waitUntil: "networkidle" });
+    await page.waitForTimeout(1200);
+
+    const seen = await page.evaluate(() => {
+      const figure = document.querySelector("svg[data-rows]");
+      const figureModels = [...(figure?.querySelectorAll("g[data-model]") ?? [])].map((g) => g.getAttribute("data-model"));
+      const tableModels = [...document.querySelectorAll(".finding-table tr[data-model]")].map((r) => r.getAttribute("data-model"));
+      const tableChips = [...document.querySelectorAll(".finding-table tr[data-model]")].map(
+        (r) => r.querySelector(".chip-short")?.textContent ?? null,
+      );
+      const figureShort = Object.fromEntries(
+        [...(figure?.querySelectorAll("g[data-model]") ?? [])].map((g) => [
+          g.getAttribute("data-model"),
+          g.querySelector("[data-short]") !== null,
+        ]),
+      );
+      const matrices = [...document.querySelectorAll("table.matrix")].map((t) => ({
+        rows: Number(t.getAttribute("data-rows")),
+        rendered: t.querySelectorAll("tbody tr[data-model]").length,
+      }));
+      const frames = [...document.querySelectorAll(".matrix-scroll")].map((f) => ({
+        overflow: getComputedStyle(f).overflowX,
+        wider: f.scrollWidth > f.clientWidth + 1,
+      }));
+      return {
+        figureModels,
+        tableModels,
+        tableChips,
+        figureShort,
+        matrices,
+        frames,
+        pageOverflow: document.documentElement.scrollWidth - window.innerWidth,
+      };
+    });
+
+    const missingFromFigure = models.filter((m) => !seen.figureModels.includes(m));
+    check(
+      missingFromFigure.length === 0 && seen.figureModels.length === models.length,
+      `[${width}px] Figure 1 draws every model the report holds`,
+      `${seen.figureModels.length} of ${models.length}${missingFromFigure.length ? `; missing ${missingFromFigure.join(", ")}` : ""}`,
+    );
+    // Table 1 lists each model once; the cap table adds rows for the models it compares.
+    const table1 = seen.tableModels.slice(0, models.length);
+    check(
+      JSON.stringify(table1) === JSON.stringify(models),
+      `[${width}px] Table 1 lists every model once, in the report's order`,
+      `${table1.length} rows`,
+    );
+    // R-037. Compared both ways, so it is not vacuous once every sweep is complete: a marker on a
+    // complete row fails it as surely as a short row without one.
+    const complete = gapReport.corpus.cases * gapReport.corpus.repeats;
+    const expectedChips = gapReport.models.map((m) => (m.calls < complete ? `${m.calls}/${complete}` : null));
+    const shortNames = gapReport.models.filter((m) => m.calls < complete).map((m) => `${m.model_id} ${m.calls}/${complete}`);
+    check(
+      JSON.stringify(seen.tableChips.slice(0, models.length)) === JSON.stringify(expectedChips),
+      `[${width}px] Table 1 marks exactly the short rows, with their count`,
+      shortNames.length ? shortNames.join(", ") : "no short row, and none marked",
+    );
+    check(
+      gapReport.models.every((m) => seen.figureShort[m.key] === m.calls < complete),
+      `[${width}px] Figure 1 marks exactly the short rows`,
+      `${Object.values(seen.figureShort).filter(Boolean).length} marked, ${shortNames.length} short`,
+    );
+    check(
+      seen.matrices.length >= 4 && seen.matrices.every((m) => m.rows === models.length && m.rendered === models.length),
+      `[${width}px] every model matrix has one row per model`,
+      seen.matrices.map((m) => `${m.rendered}/${m.rows}`).join(", "),
+    );
+    check(
+      seen.frames.length >= 4 && seen.frames.every((f) => f.overflow === "auto"),
+      `[${width}px] every matrix scrolls inside its own frame rather than being clipped`,
+      `${seen.frames.filter((f) => f.wider).length} of ${seen.frames.length} frames wider than the page scroll`,
+    );
+    check(seen.pageOverflow <= 1, `[${width}px] the Benchmark does not scroll horizontally`, `${seen.pageOverflow}px`);
+
+    if (width === 1440) {
+      // The readouts must answer the pointer, or the figures are pictures of numbers.
+      await page.locator("svg[data-rows] g[data-model]").first().hover();
+      await page.waitForTimeout(150);
+      const rowReadout = (await page.locator(".viz-readout").first().textContent()) ?? "";
+      check(
+        rowReadout.includes(gapReport.models[0].model_id) && /faithful/.test(rowReadout),
+        "hovering a Figure 1 row reads its counts out",
+        rowReadout.slice(0, 120),
+      );
+      const cell = page.locator("table.matrix td.cell:not(.empty)").first();
+      await cell.hover();
+      await page.waitForTimeout(150);
+      const cellReadout = await page.evaluate(() =>
+        [...document.querySelectorAll(".viz-readout")].map((r) => r.textContent ?? "").join(" | "),
+      );
+      check(/ of \d+ calls|\d+\/\d+/.test(cellReadout), "hovering a matrix cell reads its count out", cellReadout.slice(0, 140));
+
+      // Sorting by the faithful rate must reorder EVERY row by that rate. Checking only the first
+      // row was vacuous on the first data it met: the best model was also first by provider.
+      await page.getByRole("button", { name: /by faithful rate/i }).click();
+      await page.waitForTimeout(200);
+      const order = await page.locator("svg[data-rows] g[data-model]").evaluateAll((gs) =>
+        gs.map((g) => g.getAttribute("data-model")),
+      );
+      const rate = new Map(gapReport.cells.map((c) => [c.model, c.faithful.value]));
+      const descending = order.every((m, i) => i === 0 || rate.get(order[i - 1]) >= rate.get(m));
+      const moved = JSON.stringify(order) !== JSON.stringify(models);
+      const sortable = JSON.stringify([...models].sort((a, b) => rate.get(b) - rate.get(a))) !== JSON.stringify(models);
+      check(
+        descending && (moved || !sortable),
+        "sorting Figure 1 by faithful rate reorders every row by that rate",
+        `${order.map((m) => `${m.split("/")[1]} ${rate.get(m)?.toFixed(2)}`).join(", ")}`,
+      );
+
+      if (capSensitivity) {
+        const expected = capSensitivity.rows.reduce((sum, row) => sum + Object.keys(row.by_cap).length, 0);
+        const shown = seen.tableModels.length - models.length;
+        check(shown === expected, "the cap table shows every model at every cap it ran", `${shown} of ${expected} rows`);
+      }
+      await page.screenshot({ path: join(SHOTS, "benchmark-many-models.png"), fullPage: true });
+    }
+    await context.close();
+  }
+}
+
 // The Spanish pass.
 //
 // ADR-0016 asks for bilingual by construction and ADR-0017 makes it a gate item, and every check
@@ -684,6 +838,21 @@ for (const theme of ["dark", "light"]) {
         leaks.length === 0,
         `[es] the workbench chrome is translated`,
         leaks.length ? `English chrome: ${leaks.join(", ")}` : "clean",
+      );
+    }
+
+    // The failure classes come from the artifact in English, and the page must translate them: a
+    // check on the prose cannot see an English class name inside a Spanish table.
+    if (label === "Benchmark" && gapReport) {
+      const keys = new Set(Object.values(gapReport.failure_breakdown).flatMap((counts) => Object.keys(counts)));
+      const headers = await page.evaluate(() =>
+        [...document.querySelectorAll("table.matrix th.col-head")].map((th) => (th.textContent ?? "").trim()),
+      );
+      const raw = headers.filter((text) => keys.has(text));
+      check(
+        raw.length === 0 && headers.length > 0,
+        "[es] the failure classes are shown in Spanish",
+        raw.length ? `untranslated: ${raw.join(", ")}` : `${headers.length} headers checked`,
       );
     }
 

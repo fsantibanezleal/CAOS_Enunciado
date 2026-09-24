@@ -1,0 +1,145 @@
+{
+ "caps": [
+  8192,
+  32768
+ ],
+ "rows": [
+  {
+   "by_cap": {
+    "32768": {
+     "at_cap": 0,
+     "calls": 20,
+     "cost_usd": 0.7999,
+     "failure_breakdown": {
+      "a constant with no unit": 6,
+      "an assumption or open question with no span": 2,
+      "fabricated provenance: words not in the statement": 1,
+      "infeasible, as the case is": 1,
+      "not measured: the solver cannot express this model": 1,
+      "ran and survived every check": 8,
+      "unparseable output": 1
+     },
+     "faithful": {
+      "confidence": 0.95,
+      "interval_high": 0.6372409646574496,
+      "interval_low": 0.23141891282454238,
+      "passed": 8,
+      "total": 19,
+      "value": 0.42105263157894735
+     },
+     "gap": 0.0,
+     "median_output_tokens": 9086,
+     "ran": {
+      "confidence": 0.95,
+      "interval_high": 0.6372409646574496,
+      "interval_low": 0.23141891282454238,
+      "passed": 8,
+      "total": 19,
+      "value": 0.42105263157894735
+     }
+    },
+    "8192": {
+     "at_cap": 8,
+     "calls": 20,
+     "cost_usd": 0.6427,
+     "failure_breakdown": {
+      "a constant with no unit": 2,
+      "a variable whose lower bound is above its upper": 1,
+      "dimensional mismatch": 2,
+      "no answer: the reasoning used the whole cap": 6,
+      "ran and survived every check": 7,
+      "truncated output": 2
+     },
+     "faithful": {
+      "confidence": 0.95,
+      "interval_high": 0.5671457233147638,
+      "interval_low": 0.18119182410108206,
+      "passed": 7,
+      "total": 20,
+      "value": 0.35
+     },
+     "gap": 0.0,
+     "median_output_tokens": 7362,
+     "ran": {
+      "confidence": 0.95,
+      "interval_high": 0.5671457233147638,
+      "interval_low": 0.18119182410108206,
+      "passed": 7,
+      "total": 20,
+      "value": 0.35
+     }
+    }
+   },
+   "model": "zai/glm-5.3",
+   "model_id": "glm-5.3",
+   "provider": "zai"
+  },
+  {
+   "by_cap": {
+    "32768": {
+     "at_cap": 0,
+     "calls": 20,
+     "cost_usd": 0.9757,
+     "failure_breakdown": {
+      "a constant with no unit": 5,
+      "an assumption or open question with no span": 2,
+      "infeasible, as the case is": 1,
+      "ran and survived every check": 11,
+      "ran, then REFUTED: solves to a different optimum": 1
+     },
+     "faithful": {
+      "confidence": 0.95,
+      "interval_high": 0.7418021417443759,
+      "interval_low": 0.34208534245034233,
+      "passed": 11,
+      "total": 20,
+      "value": 0.55
+     },
+     "gap": 0.04999999999999993,
+     "median_output_tokens": 11821,
+     "ran": {
+      "confidence": 0.95,
+      "interval_high": 0.7811934676271829,
+      "interval_low": 0.38658150076225317,
+      "passed": 12,
+      "total": 20,
+      "value": 0.6
+     }
+    },
+    "8192": {
+     "at_cap": 17,
+     "calls": 20,
+     "cost_usd": 0.6636,
+     "failure_breakdown": {
+      "a constant with no unit": 1,
+      "no answer: the reasoning used the whole cap": 14,
+      "ran and survived every check": 2,
+      "truncated output": 3
+     },
+     "faithful": {
+      "confidence": 0.95,
+      "interval_high": 0.3010336452284873,
+      "interval_low": 0.027866481213768224,
+      "passed": 2,
+      "total": 20,
+      "value": 0.1
+     },
+     "gap": 0.0,
+     "median_output_tokens": 8192,
+     "ran": {
+      "confidence": 0.95,
+      "interval_high": 0.3010336452284873,
+      "interval_low": 0.027866481213768224,
+      "passed": 2,
+      "total": 20,
+      "value": 0.1
+     }
+    }
+   },
+   "model": "deepseek/deepseek-v4-pro",
+   "model_id": "deepseek-v4-pro",
+   "provider": "deepseek"
+  }
+ ],
+ "schema": "enunciado-cap-sensitivity/1.0"
+}

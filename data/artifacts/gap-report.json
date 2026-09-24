@@ -1,6 +1,6 @@
 {
  "by_tier": {
-  "claude-haiku-4-5": {
+  "anthropic/claude-haiku-4-5": {
    "1": {
     "confidence": 0.95,
     "interval_high": 0.6993581574175981,
@@ -42,7 +42,7 @@
     "value": 0.0
    }
   },
-  "claude-sonnet-5": {
+  "anthropic/claude-sonnet-5": {
    "1": {
     "confidence": 0.95,
     "interval_high": 1.0,
@@ -83,10 +83,566 @@
     "total": 4,
     "value": 0.25
    }
+  },
+  "deepseek/deepseek-v4-pro": {
+   "1": {
+    "confidence": 0.95,
+    "interval_high": 0.8499610108478505,
+    "interval_low": 0.15003898915214953,
+    "passed": 2,
+    "total": 4,
+    "value": 0.5
+   },
+   "2": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "3": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "4": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "5": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   }
+  },
+  "ollama/deepseek-r1:8b": {
+   "1": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "2": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "3": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "4": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "5": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   }
+  },
+  "ollama/gemma3:12b": {
+   "1": {
+    "confidence": 0.95,
+    "interval_high": 0.5614970317550455,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 3,
+    "value": 0.0
+   },
+   "2": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "3": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "4": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "5": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   }
+  },
+  "ollama/gemma3:4b": {
+   "1": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "2": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "3": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "4": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "5": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   }
+  },
+  "ollama/llama3.1:8b": {
+   "1": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "2": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "3": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "4": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "5": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   }
+  },
+  "ollama/mistral:7b": {
+   "1": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "2": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "3": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "4": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "5": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   }
+  },
+  "ollama/phi4-mini:latest": {
+   "1": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "2": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "3": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "4": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "5": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   }
+  },
+  "ollama/phi4:latest": {
+   "1": {
+    "confidence": 0.95,
+    "interval_high": 0.8499610108478505,
+    "interval_low": 0.15003898915214953,
+    "passed": 2,
+    "total": 4,
+    "value": 0.5
+   },
+   "2": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "3": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "4": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "5": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   }
+  },
+  "ollama/qwen2.5-coder:7b": {
+   "1": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "2": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "3": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "4": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "5": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   }
+  },
+  "ollama/qwen3:14b": {
+   "1": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "2": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "3": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "4": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "5": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   }
+  },
+  "ollama/qwen3:4b": {
+   "1": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "2": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "3": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "4": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "5": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   }
+  },
+  "ollama/qwen3:8b": {
+   "1": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "2": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "3": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "4": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "5": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   }
+  },
+  "zai/glm-4.5-flash": {
+   "1": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   }
+  },
+  "zai/glm-5.3": {
+   "1": {
+    "confidence": 0.95,
+    "interval_high": 1.0,
+    "interval_low": 0.5101091635454027,
+    "passed": 4,
+    "total": 4,
+    "value": 1.0
+   },
+   "2": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "3": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "4": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "5": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   }
   }
  },
  "by_trap": {
-  "claude-haiku-4-5": {
+  "anthropic/claude-haiku-4-5": {
    "ambiguity": {
     "confidence": 0.95,
     "interval_high": 0.4898908364545973,
@@ -160,7 +716,7 @@
     "value": 0.5
    }
   },
-  "claude-sonnet-5": {
+  "anthropic/claude-sonnet-5": {
    "ambiguity": {
     "confidence": 0.95,
     "interval_high": 0.6993581574175981,
@@ -233,19 +789,1077 @@
     "total": 2,
     "value": 0.0
    }
+  },
+  "deepseek/deepseek-v4-pro": {
+   "ambiguity": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "derived-bound": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "droppable-constraint": {
+    "confidence": 0.95,
+    "interval_high": 0.43448246478317476,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 5,
+    "value": 0.0
+   },
+   "implicit-quantity": {
+    "confidence": 0.95,
+    "interval_high": 0.5614970317550455,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 3,
+    "value": 0.0
+   },
+   "integrality": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "none": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 0.9054687942657693,
+    "interval_low": 0.09453120573423074,
+    "passed": 1,
+    "total": 2,
+    "value": 0.5
+   },
+   "red-herring": {
+    "confidence": 0.95,
+    "interval_high": 0.7934506856227626,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 1,
+    "value": 0.0
+   },
+   "unit-mismatch": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   }
+  },
+  "ollama/deepseek-r1:8b": {
+   "ambiguity": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "derived-bound": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "droppable-constraint": {
+    "confidence": 0.95,
+    "interval_high": 0.43448246478317476,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 5,
+    "value": 0.0
+   },
+   "implicit-quantity": {
+    "confidence": 0.95,
+    "interval_high": 0.5614970317550455,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 3,
+    "value": 0.0
+   },
+   "integrality": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "none": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 0.9054687942657693,
+    "interval_low": 0.09453120573423074,
+    "passed": 1,
+    "total": 2,
+    "value": 0.5
+   },
+   "red-herring": {
+    "confidence": 0.95,
+    "interval_high": 0.7934506856227626,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 1,
+    "value": 0.0
+   },
+   "unit-mismatch": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   }
+  },
+  "ollama/gemma3:12b": {
+   "ambiguity": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "derived-bound": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "droppable-constraint": {
+    "confidence": 0.95,
+    "interval_high": 0.43448246478317476,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 5,
+    "value": 0.0
+   },
+   "implicit-quantity": {
+    "confidence": 0.95,
+    "interval_high": 0.5614970317550455,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 3,
+    "value": 0.0
+   },
+   "integrality": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "none": {
+    "confidence": 0.95,
+    "interval_high": 0.5614970317550455,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 3,
+    "value": 0.0
+   },
+   "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "red-herring": {
+    "confidence": 0.95,
+    "interval_high": 0.7934506856227626,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 1,
+    "value": 0.0
+   },
+   "unit-mismatch": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   }
+  },
+  "ollama/gemma3:4b": {
+   "ambiguity": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "derived-bound": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "droppable-constraint": {
+    "confidence": 0.95,
+    "interval_high": 0.43448246478317476,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 5,
+    "value": 0.0
+   },
+   "implicit-quantity": {
+    "confidence": 0.95,
+    "interval_high": 0.5614970317550455,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 3,
+    "value": 0.0
+   },
+   "integrality": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "none": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "red-herring": {
+    "confidence": 0.95,
+    "interval_high": 0.7934506856227626,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 1,
+    "value": 0.0
+   },
+   "unit-mismatch": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   }
+  },
+  "ollama/llama3.1:8b": {
+   "ambiguity": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "derived-bound": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "droppable-constraint": {
+    "confidence": 0.95,
+    "interval_high": 0.43448246478317476,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 5,
+    "value": 0.0
+   },
+   "implicit-quantity": {
+    "confidence": 0.95,
+    "interval_high": 0.5614970317550455,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 3,
+    "value": 0.0
+   },
+   "integrality": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "none": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "red-herring": {
+    "confidence": 0.95,
+    "interval_high": 0.7934506856227626,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 1,
+    "value": 0.0
+   },
+   "unit-mismatch": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   }
+  },
+  "ollama/mistral:7b": {
+   "ambiguity": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "derived-bound": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "droppable-constraint": {
+    "confidence": 0.95,
+    "interval_high": 0.43448246478317476,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 5,
+    "value": 0.0
+   },
+   "implicit-quantity": {
+    "confidence": 0.95,
+    "interval_high": 0.5614970317550455,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 3,
+    "value": 0.0
+   },
+   "integrality": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "none": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "red-herring": {
+    "confidence": 0.95,
+    "interval_high": 0.7934506856227626,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 1,
+    "value": 0.0
+   },
+   "unit-mismatch": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   }
+  },
+  "ollama/phi4-mini:latest": {
+   "ambiguity": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "derived-bound": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "droppable-constraint": {
+    "confidence": 0.95,
+    "interval_high": 0.43448246478317476,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 5,
+    "value": 0.0
+   },
+   "implicit-quantity": {
+    "confidence": 0.95,
+    "interval_high": 0.5614970317550455,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 3,
+    "value": 0.0
+   },
+   "integrality": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "none": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "red-herring": {
+    "confidence": 0.95,
+    "interval_high": 0.7934506856227626,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 1,
+    "value": 0.0
+   },
+   "unit-mismatch": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   }
+  },
+  "ollama/phi4:latest": {
+   "ambiguity": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "derived-bound": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "droppable-constraint": {
+    "confidence": 0.95,
+    "interval_high": 0.6244653702374747,
+    "interval_low": 0.036224108632430085,
+    "passed": 1,
+    "total": 5,
+    "value": 0.2
+   },
+   "implicit-quantity": {
+    "confidence": 0.95,
+    "interval_high": 0.5614970317550455,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 3,
+    "value": 0.0
+   },
+   "integrality": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "none": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 0.9054687942657693,
+    "interval_low": 0.09453120573423074,
+    "passed": 1,
+    "total": 2,
+    "value": 0.5
+   },
+   "red-herring": {
+    "confidence": 0.95,
+    "interval_high": 1.0,
+    "interval_low": 0.20654931437723745,
+    "passed": 1,
+    "total": 1,
+    "value": 1.0
+   },
+   "unit-mismatch": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   }
+  },
+  "ollama/qwen2.5-coder:7b": {
+   "ambiguity": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "derived-bound": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "droppable-constraint": {
+    "confidence": 0.95,
+    "interval_high": 0.43448246478317476,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 5,
+    "value": 0.0
+   },
+   "implicit-quantity": {
+    "confidence": 0.95,
+    "interval_high": 0.5614970317550455,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 3,
+    "value": 0.0
+   },
+   "integrality": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "none": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 0.9054687942657693,
+    "interval_low": 0.09453120573423074,
+    "passed": 1,
+    "total": 2,
+    "value": 0.5
+   },
+   "red-herring": {
+    "confidence": 0.95,
+    "interval_high": 0.7934506856227626,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 1,
+    "value": 0.0
+   },
+   "unit-mismatch": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   }
+  },
+  "ollama/qwen3:14b": {
+   "ambiguity": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "derived-bound": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "droppable-constraint": {
+    "confidence": 0.95,
+    "interval_high": 0.43448246478317476,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 5,
+    "value": 0.0
+   },
+   "implicit-quantity": {
+    "confidence": 0.95,
+    "interval_high": 0.5614970317550455,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 3,
+    "value": 0.0
+   },
+   "integrality": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "none": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "red-herring": {
+    "confidence": 0.95,
+    "interval_high": 1.0,
+    "interval_low": 0.20654931437723745,
+    "passed": 1,
+    "total": 1,
+    "value": 1.0
+   },
+   "unit-mismatch": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   }
+  },
+  "ollama/qwen3:4b": {
+   "ambiguity": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "derived-bound": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "droppable-constraint": {
+    "confidence": 0.95,
+    "interval_high": 0.43448246478317476,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 5,
+    "value": 0.0
+   },
+   "implicit-quantity": {
+    "confidence": 0.95,
+    "interval_high": 0.5614970317550455,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 3,
+    "value": 0.0
+   },
+   "integrality": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "none": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "red-herring": {
+    "confidence": 0.95,
+    "interval_high": 0.7934506856227626,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 1,
+    "value": 0.0
+   },
+   "unit-mismatch": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   }
+  },
+  "ollama/qwen3:8b": {
+   "ambiguity": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "derived-bound": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "droppable-constraint": {
+    "confidence": 0.95,
+    "interval_high": 0.43448246478317476,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 5,
+    "value": 0.0
+   },
+   "implicit-quantity": {
+    "confidence": 0.95,
+    "interval_high": 0.5614970317550455,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 3,
+    "value": 0.0
+   },
+   "integrality": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "none": {
+    "confidence": 0.95,
+    "interval_high": 0.4898908364545973,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 4,
+    "value": 0.0
+   },
+   "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "red-herring": {
+    "confidence": 0.95,
+    "interval_high": 0.7934506856227626,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 1,
+    "value": 0.0
+   },
+   "unit-mismatch": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   }
+  },
+  "zai/glm-4.5-flash": {
+   "none": {
+    "confidence": 0.95,
+    "interval_high": 0.7934506856227626,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 1,
+    "value": 0.0
+   },
+   "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 0.7934506856227626,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 1,
+    "value": 0.0
+   }
+  },
+  "zai/glm-5.3": {
+   "ambiguity": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "derived-bound": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "droppable-constraint": {
+    "confidence": 0.95,
+    "interval_high": 0.6244653702374747,
+    "interval_low": 0.036224108632430085,
+    "passed": 1,
+    "total": 5,
+    "value": 0.2
+   },
+   "implicit-quantity": {
+    "confidence": 0.95,
+    "interval_high": 0.7923403991979523,
+    "interval_low": 0.06149194472039615,
+    "passed": 1,
+    "total": 3,
+    "value": 0.3333333333333333
+   },
+   "integrality": {
+    "confidence": 0.95,
+    "interval_high": 0.6993581574175981,
+    "interval_low": 0.04558726080970055,
+    "passed": 1,
+    "total": 4,
+    "value": 0.25
+   },
+   "none": {
+    "confidence": 0.95,
+    "interval_high": 0.9544127391902995,
+    "interval_low": 0.30064184258240184,
+    "passed": 3,
+    "total": 4,
+    "value": 0.75
+   },
+   "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 1.0,
+    "interval_low": 0.34238022750665303,
+    "passed": 2,
+    "total": 2,
+    "value": 1.0
+   },
+   "red-herring": {
+    "confidence": 0.95,
+    "interval_high": 0.7934506856227626,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 1,
+    "value": 0.0
+   },
+   "unit-mismatch": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   }
   }
  },
- "call_count": 40,
+ "call_count": 302,
  "caveats": [
-  "Twenty cases at ONE repeat gives a wide interval. It is enough to see that a gap exists and not enough to rank these two models against each other: their intervals overlap almost entirely.",
-  "Run-to-run variation is real and visible here. An earlier run of the identical corpus put claude-haiku-4-5 at ran 0.350; this one puts it at 0.250. Nothing changed but the sampling. That is what the interval is for.",
-  "The true statement is substituted before parsing and provenance offsets are recomputed from the quoted text. Both favour the model, and both are stated because the measurement is about formalization rather than transcription.",
-  "Current Claude models accept no temperature and no seed, so those controls are recorded as absent rather than as pinned values.",
-  "The structural layer can only REFUTE. A matching optimum never proves equivalence, because compensating errors reach the right number.",
-  "A candidate the configured solver cannot express is counted as unmeasured and excluded from both rates. Charging a limit of the instrument to the subject is the error this product exists to expose.",
-  "The per-tier and per-trap rates below are re-groupings of the same forty records, so their denominators are four and smaller. They indicate where to look next; they do not support a claim about any single tier."
+  {
+   "en": "Each model with a complete row ran 20 calls, one repeat per case, which gives a wide interval: at n = 20 a rate of 0.50 carries a Wilson interval from 0.30 to 0.70. Two models whose intervals overlap cannot be ranked against each other from this run.",
+   "es": "Cada modelo con fila completa corrio 20 llamadas, una repeticion por caso, lo que da un intervalo ancho: con n = 20 una tasa de 0.50 lleva un intervalo de Wilson de 0.30 a 0.70. Dos modelos cuyos intervalos se solapan no se pueden ordenar entre si con esta corrida."
+  },
+  {
+   "en": "1 row(s) have not reached every case: zai/glm-4.5-flash has 2 of the 20 calls. A sweep takes the cases in corpus order, and the corpus climbs from tier 1 to tier 5, so a short row lacks the hardest cases, and its rates cannot be compared with a complete row's. A resumed sweep completes a row in place, because the ledger skips every call it already holds.",
+   "es": "1 fila(s) no llegan a todos los casos: zai/glm-4.5-flash tiene 2 de las 20 llamadas. Un barrido recorre los casos en el orden del corpus, y el corpus sube del nivel 1 al nivel 5, asi que a una fila incompleta le faltan los casos mas dificiles, y sus tasas no se pueden comparar con las de una fila completa. Un barrido reanudado completa la fila en su lugar, porque el libro mayor omite cada llamada que ya contiene."
+  },
+  {
+   "en": "Run-to-run variation is real: an earlier pass of the identical corpus put claude-haiku-4-5 at ran 0.350, and the published pass puts it at 0.250, with nothing changed but the sampling. That is what the interval is for.",
+   "es": "La variacion entre corridas es real: una pasada anterior del mismo corpus puso a claude-haiku-4-5 en corrio 0.350, y la pasada publicada lo pone en 0.250, sin que cambiara nada salvo el muestreo. Para eso esta el intervalo."
+  },
+  {
+   "en": "The true statement is substituted before parsing and provenance offsets are recomputed from the quoted text. Both favour the model, and both are stated because the measurement is about formalization rather than transcription.",
+   "es": "El enunciado verdadero se sustituye antes de parsear y los desplazamientos de procedencia se recalculan desde el texto citado. Ambas cosas favorecen al modelo, y se declaran porque la medicion es sobre formalizacion y no sobre transcripcion."
+  },
+  {
+   "en": "Providers expose different controls, and each record states the ones it pinned: Claude takes no temperature and no seed, so none is recorded; GLM runs with greedy decoding (do_sample false), effort high where the model takes it, and no seed; DeepSeek runs at effort high; its reasoning mode ignores temperature and it has no seed; the local lane pins temperature 0 and a seed, with reasoning off where the model's template honours the switch.",
+   "es": "Los proveedores exponen controles distintos, y cada registro declara los que fijo: Claude no admite temperatura ni semilla, asi que no se registra ninguna; GLM corre con decodificacion voraz (do_sample false), esfuerzo alto donde el modelo lo admite, y sin semilla; DeepSeek corre con esfuerzo alto; su modo de razonamiento ignora la temperatura y no tiene semilla; el carril local fija temperatura 0 y una semilla, con el razonamiento apagado donde la plantilla del modelo respeta el interruptor."
+  },
+  {
+   "en": "One output cap for every model, 8192 tokens. It binds on models that write or reason at length: 61 of the 302 calls reached it, counted as 'truncated output' or 'no answer: the reasoning used the whole cap'. A reasoning model spends the cap on reasoning first, so those are failures under this cap, not evidence about how it formalizes.",
+   "es": "Un solo tope de salida para todos los modelos, 8192 tokens. Muerde en los modelos que escriben o razonan en extenso: 61 de las 302 llamadas lo alcanzaron, contadas como 'salida truncada' o 'sin respuesta: el razonamiento agoto el tope'. Un modelo que razona gasta el tope razonando primero, asi que esos son fallos bajo este tope, no evidencia de como formaliza."
+  },
+  {
+   "en": "The structural layer passes only when the canonical forms are equal, and refutes when the optima differ. A matching optimum never proves equivalence, because compensating errors reach the right number.",
+   "es": "La capa estructural aprueba solo cuando las formas canonicas son iguales, y refuta cuando los optimos difieren. Un optimo coincidente nunca prueba equivalencia, porque errores que se compensan llegan al numero correcto."
+  },
+  {
+   "en": "opt-019 has no feasible point by design, and ran means reaching a feasible optimum, so it cannot be passed: a candidate that proves it infeasible, the right answer, is recorded as not having run, and is classed 'infeasible, as the case is'. 2 candidate(s) did so. Crediting it needs a structural check that can pass such a case, and is an open decision because it moves the published rates.",
+   "es": "opt-019 no tiene punto factible por diseno, y corrio significa alcanzar un optimo factible, asi que no se puede aprobar: un candidato que prueba que es infactible, la respuesta correcta, queda registrado como no ejecutado, y se clasifica 'infactible, como el caso'. 2 candidato(s) lo hicieron. Acreditarlo requiere una comprobacion estructural capaz de aprobar un caso asi, y es una decision abierta porque mueve las tasas publicadas."
+  },
+  {
+   "en": "A candidate the configured solver cannot express is counted as unmeasured and excluded from both rates. Charging a limit of the instrument to the subject is the error this product exists to expose.",
+   "es": "Un candidato que el solucionador configurado no puede expresar se cuenta como no medido y se excluye de ambas tasas. Cargarle al sujeto un limite del instrumento es el error que este producto existe para exponer."
+  },
+  {
+   "en": "The Z.AI calls were drawn from a GLM Coding Plan quota, so their cost is the list-price equivalent of the tokens, not what was billed.",
+   "es": "Las llamadas a Z.AI salieron de la cuota de un GLM Coding Plan, asi que su costo es el equivalente a precio de lista de los tokens, no lo facturado."
+  },
+  {
+   "en": "The local models ran on one laptop GPU with 8 GB of memory, each in a context that holds the prompt and the whole cap; their records carry that context and the digest of the weights behind each tag.",
+   "es": "Los modelos locales corrieron en una GPU de portatil con 8 GB de memoria, cada uno en un contexto que contiene el prompt y el tope completo; sus registros llevan ese contexto y el digest de los pesos detras de cada etiqueta."
+  },
+  {
+   "en": "The deepseek-v4-pro sweep reached its kill criterion, ten consecutive failures, after 13 calls, and every one of the ten was a reply that spent the whole cap reasoning. It was resumed with the criterion at 20 to complete the corpus, because those failures were the measurement and not a fault of the harness.",
+   "es": "El barrido de deepseek-v4-pro alcanzo su criterio de corte, diez fallos seguidos, tras 13 llamadas, y cada uno de los diez fue una respuesta que gasto todo el tope razonando. Se reanudo con el criterio en 20 para completar el corpus, porque esos fallos eran la medicion y no una falla del arnes."
+  },
+  {
+   "en": "1 candidate(s) (deepseek-r1:8b on opt-006) were unbounded and were recorded as having run: copela before 0.3.3 passed an unbounded model at the executable layer, and its later layers then misread the missing optimum. The records keep the verdicts they were scored with, so each counts as ran and not faithful in its row; the taxonomy classes it as unbounded. copela 0.3.3 fixes it for later sweeps.",
+   "es": "1 candidato(s) (deepseek-r1:8b on opt-006) eran no acotados y quedaron registrados como ejecutados: copela antes de 0.3.3 aprobaba un modelo no acotado en la capa ejecutable, y sus capas siguientes leian mal el optimo ausente. Los registros conservan los veredictos con que se calificaron, asi que cada uno cuenta como corrido y no fiel en su fila; la taxonomia lo clasifica como no acotado. copela 0.3.3 lo corrige para los barridos siguientes."
+  },
+  {
+   "en": "The 12 free models, those with no per-token price, ran with the kill criterion at 20, the corpus size, rather than 10: a free call costs nothing, and a completed corpus keeps their rows comparable with the rest.",
+   "es": "Los 12 modelos gratuitos, los que no tienen precio por token, corrieron con el criterio de corte en 20, el tamano del corpus, y no en 10: una llamada gratuita no cuesta nada, y un corpus completo mantiene sus filas comparables con el resto."
+  },
+  {
+   "en": "The per-tier and per-trap rates are re-groupings of each model's own records, 20 in a complete row, so their denominators run from 1 to 5, and lower in a short row. They indicate where to look next; they do not support a claim about any single tier or trap.",
+   "es": "Las tasas por nivel y por trampa son reagrupaciones de los registros propios de cada modelo, 20 en una fila completa, asi que sus denominadores van de 1 a 5, y menos en una fila incompleta. Indican donde mirar despues; no sostienen una afirmacion sobre ningun nivel ni trampa."
+  }
  ],
  "cells": [
+  {
+   "faithful": {
+    "confidence": 0.95,
+    "interval_high": 0.7007019918017877,
+    "interval_low": 0.2992980081982123,
+    "passed": 10,
+    "total": 20,
+    "value": 0.5
+   },
+   "family": "optimization",
+   "gap": 0.050000000000000044,
+   "gap_is_defined": true,
+   "model": "anthropic/claude-sonnet-5",
+   "model_id": "claude-sonnet-5",
+   "provider": "anthropic",
+   "ran": {
+    "confidence": 0.95,
+    "interval_high": 0.7418021417443759,
+    "interval_low": 0.34208534245034233,
+    "passed": 11,
+    "total": 20,
+    "value": 0.55
+   },
+   "unmeasured": 0
+  },
   {
    "faithful": {
     "confidence": 0.95,
@@ -258,6 +1872,7 @@
    "family": "optimization",
    "gap": 0.04999999999999999,
    "gap_is_defined": true,
+   "model": "anthropic/claude-haiku-4-5",
    "model_id": "claude-haiku-4-5",
    "provider": "anthropic",
    "ran": {
@@ -273,63 +1888,911 @@
   {
    "faithful": {
     "confidence": 0.95,
-    "interval_high": 0.7007019918017877,
-    "interval_low": 0.2992980081982123,
-    "passed": 10,
+    "interval_high": 0.5671457233147638,
+    "interval_low": 0.18119182410108206,
+    "passed": 7,
     "total": 20,
-    "value": 0.5
+    "value": 0.35
    },
    "family": "optimization",
-   "gap": 0.050000000000000044,
+   "gap": 0.0,
    "gap_is_defined": true,
-   "model_id": "claude-sonnet-5",
-   "provider": "anthropic",
+   "model": "zai/glm-5.3",
+   "model_id": "glm-5.3",
+   "provider": "zai",
    "ran": {
     "confidence": 0.95,
-    "interval_high": 0.7418021417443759,
-    "interval_low": 0.34208534245034233,
-    "passed": 11,
+    "interval_high": 0.5671457233147638,
+    "interval_low": 0.18119182410108206,
+    "passed": 7,
     "total": 20,
-    "value": 0.55
+    "value": 0.35
+   },
+   "unmeasured": 0
+  },
+  {
+   "faithful": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "family": "optimization",
+   "gap": null,
+   "gap_is_defined": false,
+   "model": "zai/glm-4.5-flash",
+   "model_id": "glm-4.5-flash",
+   "provider": "zai",
+   "ran": {
+    "confidence": 0.95,
+    "interval_high": 0.6576197724933469,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 2,
+    "value": 0.0
+   },
+   "unmeasured": 0
+  },
+  {
+   "faithful": {
+    "confidence": 0.95,
+    "interval_high": 0.3010336452284873,
+    "interval_low": 0.027866481213768224,
+    "passed": 2,
+    "total": 20,
+    "value": 0.1
+   },
+   "family": "optimization",
+   "gap": 0.0,
+   "gap_is_defined": true,
+   "model": "deepseek/deepseek-v4-pro",
+   "model_id": "deepseek-v4-pro",
+   "provider": "deepseek",
+   "ran": {
+    "confidence": 0.95,
+    "interval_high": 0.3010336452284873,
+    "interval_low": 0.027866481213768224,
+    "passed": 2,
+    "total": 20,
+    "value": 0.1
+   },
+   "unmeasured": 0
+  },
+  {
+   "faithful": {
+    "confidence": 0.95,
+    "interval_high": 0.468700877618744,
+    "interval_low": 0.11186170140766569,
+    "passed": 5,
+    "total": 20,
+    "value": 0.25
+   },
+   "family": "optimization",
+   "gap": 0.09999999999999998,
+   "gap_is_defined": true,
+   "model": "ollama/phi4:latest",
+   "model_id": "phi4:latest",
+   "provider": "ollama",
+   "ran": {
+    "confidence": 0.95,
+    "interval_high": 0.5671457233147638,
+    "interval_low": 0.18119182410108206,
+    "passed": 7,
+    "total": 20,
+    "value": 0.35
+   },
+   "unmeasured": 0
+  },
+  {
+   "faithful": {
+    "confidence": 0.95,
+    "interval_high": 0.3010336452284873,
+    "interval_low": 0.027866481213768224,
+    "passed": 2,
+    "total": 20,
+    "value": 0.1
+   },
+   "family": "optimization",
+   "gap": 0.1,
+   "gap_is_defined": true,
+   "model": "ollama/deepseek-r1:8b",
+   "model_id": "deepseek-r1:8b",
+   "provider": "ollama",
+   "ran": {
+    "confidence": 0.95,
+    "interval_high": 0.4160174322518936,
+    "interval_low": 0.08065766257979809,
+    "passed": 4,
+    "total": 20,
+    "value": 0.2
+   },
+   "unmeasured": 0
+  },
+  {
+   "faithful": {
+    "confidence": 0.95,
+    "interval_high": 0.3010336452284873,
+    "interval_low": 0.027866481213768224,
+    "passed": 2,
+    "total": 20,
+    "value": 0.1
+   },
+   "family": "optimization",
+   "gap": 0.1,
+   "gap_is_defined": true,
+   "model": "ollama/qwen3:14b",
+   "model_id": "qwen3:14b",
+   "provider": "ollama",
+   "ran": {
+    "confidence": 0.95,
+    "interval_high": 0.4160174322518936,
+    "interval_low": 0.08065766257979809,
+    "passed": 4,
+    "total": 20,
+    "value": 0.2
+   },
+   "unmeasured": 0
+  },
+  {
+   "faithful": {
+    "confidence": 0.95,
+    "interval_high": 0.23613119344674205,
+    "interval_low": 0.008881448800795402,
+    "passed": 1,
+    "total": 20,
+    "value": 0.05
+   },
+   "family": "optimization",
+   "gap": 0.0,
+   "gap_is_defined": true,
+   "model": "ollama/qwen2.5-coder:7b",
+   "model_id": "qwen2.5-coder:7b",
+   "provider": "ollama",
+   "ran": {
+    "confidence": 0.95,
+    "interval_high": 0.23613119344674205,
+    "interval_low": 0.008881448800795402,
+    "passed": 1,
+    "total": 20,
+    "value": 0.05
+   },
+   "unmeasured": 0
+  },
+  {
+   "faithful": {
+    "confidence": 0.95,
+    "interval_high": 0.16817922405261626,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 19,
+    "value": 0.0
+   },
+   "family": "optimization",
+   "gap": 0.15789473684210525,
+   "gap_is_defined": true,
+   "model": "ollama/gemma3:12b",
+   "model_id": "gemma3:12b",
+   "provider": "ollama",
+   "ran": {
+    "confidence": 0.95,
+    "interval_high": 0.37565475270329074,
+    "interval_low": 0.05520471638534141,
+    "passed": 3,
+    "total": 19,
+    "value": 0.15789473684210525
+   },
+   "unmeasured": 1
+  },
+  {
+   "faithful": {
+    "confidence": 0.95,
+    "interval_high": 0.16112515805281938,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 20,
+    "value": 0.0
+   },
+   "family": "optimization",
+   "gap": null,
+   "gap_is_defined": false,
+   "model": "ollama/gemma3:4b",
+   "model_id": "gemma3:4b",
+   "provider": "ollama",
+   "ran": {
+    "confidence": 0.95,
+    "interval_high": 0.16112515805281938,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 20,
+    "value": 0.0
+   },
+   "unmeasured": 0
+  },
+  {
+   "faithful": {
+    "confidence": 0.95,
+    "interval_high": 0.16112515805281938,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 20,
+    "value": 0.0
+   },
+   "family": "optimization",
+   "gap": null,
+   "gap_is_defined": false,
+   "model": "ollama/llama3.1:8b",
+   "model_id": "llama3.1:8b",
+   "provider": "ollama",
+   "ran": {
+    "confidence": 0.95,
+    "interval_high": 0.16112515805281938,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 20,
+    "value": 0.0
+   },
+   "unmeasured": 0
+  },
+  {
+   "faithful": {
+    "confidence": 0.95,
+    "interval_high": 0.16112515805281938,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 20,
+    "value": 0.0
+   },
+   "family": "optimization",
+   "gap": null,
+   "gap_is_defined": false,
+   "model": "ollama/mistral:7b",
+   "model_id": "mistral:7b",
+   "provider": "ollama",
+   "ran": {
+    "confidence": 0.95,
+    "interval_high": 0.16112515805281938,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 20,
+    "value": 0.0
+   },
+   "unmeasured": 0
+  },
+  {
+   "faithful": {
+    "confidence": 0.95,
+    "interval_high": 0.16112515805281938,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 20,
+    "value": 0.0
+   },
+   "family": "optimization",
+   "gap": null,
+   "gap_is_defined": false,
+   "model": "ollama/phi4-mini:latest",
+   "model_id": "phi4-mini:latest",
+   "provider": "ollama",
+   "ran": {
+    "confidence": 0.95,
+    "interval_high": 0.16112515805281938,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 20,
+    "value": 0.0
+   },
+   "unmeasured": 0
+  },
+  {
+   "faithful": {
+    "confidence": 0.95,
+    "interval_high": 0.16112515805281938,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 20,
+    "value": 0.0
+   },
+   "family": "optimization",
+   "gap": null,
+   "gap_is_defined": false,
+   "model": "ollama/qwen3:4b",
+   "model_id": "qwen3:4b",
+   "provider": "ollama",
+   "ran": {
+    "confidence": 0.95,
+    "interval_high": 0.16112515805281938,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 20,
+    "value": 0.0
+   },
+   "unmeasured": 0
+  },
+  {
+   "faithful": {
+    "confidence": 0.95,
+    "interval_high": 0.16112515805281938,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 20,
+    "value": 0.0
+   },
+   "family": "optimization",
+   "gap": null,
+   "gap_is_defined": false,
+   "model": "ollama/qwen3:8b",
+   "model_id": "qwen3:8b",
+   "provider": "ollama",
+   "ran": {
+    "confidence": 0.95,
+    "interval_high": 0.16112515805281938,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 20,
+    "value": 0.0
    },
    "unmeasured": 0
   }
  ],
- "corpus": "20 authored optimization cases across 5 complexity tiers, 1 repeat each",
- "cost_usd": 1.2263,
+ "corpus": {
+  "cases": 20,
+  "family": "optimization",
+  "repeats": 1,
+  "tiers": 5
+ },
+ "cost_usd": 2.5325,
  "failure_breakdown": {
-  "claude-haiku-4-5": {
+  "anthropic/claude-haiku-4-5": {
    "a constant with no unit": 5,
    "a quantity declared derived and never defined": 4,
+   "a required field left out": 2,
+   "an assumption or open question with no span": 1,
    "dimensional mismatch": 1,
    "fabricated provenance: words not in the statement": 1,
+   "infeasible, as the case is": 1,
    "ran and survived every check": 4,
-   "ran, then REFUTED: solves to a different optimum": 1,
-   "the model it produced is infeasible": 1,
-   "unparseable output": 3
+   "ran, then REFUTED: solves to a different optimum": 1
   },
-  "claude-sonnet-5": {
+  "anthropic/claude-sonnet-5": {
    "a constant with no unit": 4,
+   "infeasible, as the case is": 1,
    "ran and survived every check": 10,
    "ran, then REFUTED: solves to a different optimum": 1,
-   "the model it produced is infeasible": 1,
    "truncated output": 3,
    "unparseable output": 1
+  },
+  "deepseek/deepseek-v4-pro": {
+   "a constant with no unit": 1,
+   "no answer: the reasoning used the whole cap": 14,
+   "ran and survived every check": 2,
+   "truncated output": 3
+  },
+  "ollama/deepseek-r1:8b": {
+   "a name used but never declared": 2,
+   "a parameter left without a value": 2,
+   "fabricated provenance: words not in the statement": 3,
+   "no answer: the reasoning used the whole cap": 4,
+   "ran and survived every check": 2,
+   "ran, then REFUTED: solves to a different optimum": 1,
+   "the model it produced is unbounded": 1,
+   "truncated output": 3,
+   "unparseable output": 2
+  },
+  "ollama/gemma3:12b": {
+   "a constant with no unit": 3,
+   "a quantity declared derived and never defined": 1,
+   "a variable whose lower bound is above its upper": 1,
+   "dimensional mismatch": 1,
+   "fabricated provenance: words not in the statement": 7,
+   "not measured: the solver cannot express this model": 1,
+   "ran, then REFUTED: solves to a different optimum": 3,
+   "unparseable output": 3
+  },
+  "ollama/gemma3:4b": {
+   "a constant with no unit": 1,
+   "a name used but never declared": 2,
+   "dimensional mismatch": 1,
+   "fabricated provenance: words not in the statement": 16
+  },
+  "ollama/llama3.1:8b": {
+   "a constant with no unit": 1,
+   "a variable whose lower bound is above its upper": 1,
+   "dimensional mismatch": 3,
+   "fabricated provenance: words not in the statement": 14,
+   "truncated output": 1
+  },
+  "ollama/mistral:7b": {
+   "a constant with no unit": 1,
+   "a name used but never declared": 1,
+   "a quantity declared derived and never defined": 1,
+   "a variable whose lower bound is above its upper": 1,
+   "dimensional mismatch": 1,
+   "fabricated provenance: words not in the statement": 10,
+   "truncated output": 2,
+   "unparseable output": 3
+  },
+  "ollama/phi4-mini:latest": {
+   "a parameter left without a value": 3,
+   "a quantity declared derived and never defined": 1,
+   "fabricated provenance: words not in the statement": 11,
+   "truncated output": 2,
+   "unparseable output": 3
+  },
+  "ollama/phi4:latest": {
+   "a constant with no unit": 4,
+   "a name used but never declared": 1,
+   "a required field left out": 1,
+   "a variable whose lower bound is above its upper": 1,
+   "fabricated provenance: words not in the statement": 4,
+   "ran and survived every check": 5,
+   "ran, then REFUTED: solves to a different optimum": 2,
+   "unparseable output": 2
+  },
+  "ollama/qwen2.5-coder:7b": {
+   "a constant with no unit": 2,
+   "a variable whose lower bound is above its upper": 1,
+   "dimensional mismatch": 1,
+   "fabricated provenance: words not in the statement": 14,
+   "ran and survived every check": 1,
+   "the model it produced is infeasible or unbounded": 1
+  },
+  "ollama/qwen3:14b": {
+   "a constant with no unit": 5,
+   "a name used but never declared": 1,
+   "a variable whose lower bound is above its upper": 1,
+   "fabricated provenance: words not in the statement": 6,
+   "ran and survived every check": 2,
+   "ran, then REFUTED: solves to a different optimum": 2,
+   "the solver failed on the model it produced": 1,
+   "unparseable output": 2
+  },
+  "ollama/qwen3:4b": {
+   "no answer: the reasoning used the whole cap": 20
+  },
+  "ollama/qwen3:8b": {
+   "a constant with no unit": 2,
+   "dimensional mismatch": 1,
+   "fabricated provenance: words not in the statement": 16,
+   "unparseable output": 1
+  },
+  "zai/glm-4.5-flash": {
+   "a constant with no unit": 1,
+   "no answer: the reasoning used the whole cap": 1
+  },
+  "zai/glm-5.3": {
+   "a constant with no unit": 2,
+   "a variable whose lower bound is above its upper": 1,
+   "dimensional mismatch": 2,
+   "no answer: the reasoning used the whole cap": 6,
+   "ran and survived every check": 7,
+   "truncated output": 2
   }
  },
  "judge": [],
  "layer_agreement": {
-  "claude-haiku-4-5": {
+  "anthropic/claude-haiku-4-5": {
    "did-not-run/not-faithful": 15,
    "ran/faithful": 4,
    "ran/not-faithful": 1
   },
-  "claude-sonnet-5": {
+  "anthropic/claude-sonnet-5": {
    "did-not-run/not-faithful": 9,
    "ran/faithful": 10,
    "ran/not-faithful": 1
+  },
+  "deepseek/deepseek-v4-pro": {
+   "did-not-run/not-faithful": 18,
+   "ran/faithful": 2
+  },
+  "ollama/deepseek-r1:8b": {
+   "did-not-run/not-faithful": 16,
+   "ran/faithful": 2,
+   "ran/not-faithful": 2
+  },
+  "ollama/gemma3:12b": {
+   "did-not-run/not-faithful": 16,
+   "ran/not-faithful": 3
+  },
+  "ollama/gemma3:4b": {
+   "did-not-run/not-faithful": 20
+  },
+  "ollama/llama3.1:8b": {
+   "did-not-run/not-faithful": 20
+  },
+  "ollama/mistral:7b": {
+   "did-not-run/not-faithful": 20
+  },
+  "ollama/phi4-mini:latest": {
+   "did-not-run/not-faithful": 20
+  },
+  "ollama/phi4:latest": {
+   "did-not-run/not-faithful": 13,
+   "ran/faithful": 5,
+   "ran/not-faithful": 2
+  },
+  "ollama/qwen2.5-coder:7b": {
+   "did-not-run/not-faithful": 19,
+   "ran/faithful": 1
+  },
+  "ollama/qwen3:14b": {
+   "did-not-run/not-faithful": 16,
+   "ran/faithful": 2,
+   "ran/not-faithful": 2
+  },
+  "ollama/qwen3:4b": {
+   "did-not-run/not-faithful": 20
+  },
+  "ollama/qwen3:8b": {
+   "did-not-run/not-faithful": 20
+  },
+  "zai/glm-4.5-flash": {
+   "did-not-run/not-faithful": 2
+  },
+  "zai/glm-5.3": {
+   "did-not-run/not-faithful": 13,
+   "ran/faithful": 7
   }
  },
- "measured_on": "2026-09-22",
- "note": "The layers are reported separately by design. There is no combined score: a single number would let a high 'it ran' rate conceal a low 'it was right' rate, which is the distance this report exists to show. Rates are over repeats with a Wilson interval, because pinning whatever controls a provider exposes does not make hosted inference deterministic, so a single run is not a result."
+ "measured_from": "2026-09-22",
+ "measured_to": "2026-09-24",
+ "models": [
+  {
+   "at_cap": 3,
+   "calls": 20,
+   "cost_usd": 1.0128,
+   "fingerprints": [
+    "anthropic#effort=high#no-temperature"
+   ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
+   ],
+   "key": "anthropic/claude-sonnet-5",
+   "lane": "hosted",
+   "measured_from": "2026-09-22",
+   "measured_to": "2026-09-22",
+   "median_latency_s": 32.1,
+   "median_output_tokens": 4264,
+   "model_id": "claude-sonnet-5",
+   "model_versions": [
+    "claude-sonnet-5"
+   ],
+   "provider": "anthropic"
+  },
+  {
+   "at_cap": 0,
+   "calls": 20,
+   "cost_usd": 0.2135,
+   "fingerprints": [
+    "anthropic#no-effort#no-temperature"
+   ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
+   ],
+   "key": "anthropic/claude-haiku-4-5",
+   "lane": "hosted",
+   "measured_from": "2026-09-22",
+   "measured_to": "2026-09-22",
+   "median_latency_s": 7.2,
+   "median_output_tokens": 1573,
+   "model_id": "claude-haiku-4-5",
+   "model_versions": [
+    "claude-haiku-4-5-20251001"
+   ],
+   "provider": "anthropic"
+  },
+  {
+   "at_cap": 8,
+   "calls": 20,
+   "cost_usd": 0.6427,
+   "fingerprints": [
+    "zai#effort=high#do_sample=false#no-seed"
+   ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
+   ],
+   "key": "zai/glm-5.3",
+   "lane": "hosted",
+   "measured_from": "2026-09-23",
+   "measured_to": "2026-09-23",
+   "median_latency_s": 81.5,
+   "median_output_tokens": 7362,
+   "model_id": "glm-5.3",
+   "model_versions": [
+    "glm-5.3"
+   ],
+   "provider": "zai"
+  },
+  {
+   "at_cap": 1,
+   "calls": 2,
+   "cost_usd": 0.0,
+   "fingerprints": [
+    "zai#effort=model-decides#do_sample=false#no-seed"
+   ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
+   ],
+   "key": "zai/glm-4.5-flash",
+   "lane": "hosted",
+   "measured_from": "2026-09-23",
+   "measured_to": "2026-09-23",
+   "median_latency_s": 170.8,
+   "median_output_tokens": 6671,
+   "model_id": "glm-4.5-flash",
+   "model_versions": [
+    "glm-4.5-flash"
+   ],
+   "provider": "zai"
+  },
+  {
+   "at_cap": 17,
+   "calls": 20,
+   "cost_usd": 0.6636,
+   "fingerprints": [
+    "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed"
+   ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
+   ],
+   "key": "deepseek/deepseek-v4-pro",
+   "lane": "hosted",
+   "measured_from": "2026-09-23",
+   "measured_to": "2026-09-23",
+   "median_latency_s": 97.9,
+   "median_output_tokens": 8192,
+   "model_id": "deepseek-v4-pro",
+   "model_versions": [
+    "deepseek-v4-pro"
+   ],
+   "provider": "deepseek"
+  },
+  {
+   "at_cap": 0,
+   "calls": 20,
+   "cost_usd": 0.0,
+   "fingerprints": [
+    "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288"
+   ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
+   ],
+   "key": "ollama/phi4:latest",
+   "lane": "local",
+   "measured_from": "2026-09-23",
+   "measured_to": "2026-09-23",
+   "median_latency_s": 165.2,
+   "median_output_tokens": 1113,
+   "model_id": "phi4:latest",
+   "model_versions": [
+    "phi4:latest@ac896e5b8b34"
+   ],
+   "provider": "ollama"
+  },
+  {
+   "at_cap": 6,
+   "calls": 20,
+   "cost_usd": 0.0,
+   "fingerprints": [
+    "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288"
+   ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
+   ],
+   "key": "ollama/deepseek-r1:8b",
+   "lane": "local",
+   "measured_from": "2026-09-23",
+   "measured_to": "2026-09-23",
+   "median_latency_s": 61.5,
+   "median_output_tokens": 2466,
+   "model_id": "deepseek-r1:8b",
+   "model_versions": [
+    "deepseek-r1:8b@6995872bfe4c"
+   ],
+   "provider": "ollama"
+  },
+  {
+   "at_cap": 0,
+   "calls": 20,
+   "cost_usd": 0.0,
+   "fingerprints": [
+    "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288"
+   ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
+   ],
+   "key": "ollama/qwen3:14b",
+   "lane": "local",
+   "measured_from": "2026-09-23",
+   "measured_to": "2026-09-24",
+   "median_latency_s": 262.3,
+   "median_output_tokens": 1316,
+   "model_id": "qwen3:14b",
+   "model_versions": [
+    "qwen3:14b@bdbd181c33f2"
+   ],
+   "provider": "ollama"
+  },
+  {
+   "at_cap": 0,
+   "calls": 20,
+   "cost_usd": 0.0,
+   "fingerprints": [
+    "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288"
+   ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
+   ],
+   "key": "ollama/qwen2.5-coder:7b",
+   "lane": "local",
+   "measured_from": "2026-09-23",
+   "measured_to": "2026-09-23",
+   "median_latency_s": 24.3,
+   "median_output_tokens": 1139,
+   "model_id": "qwen2.5-coder:7b",
+   "model_versions": [
+    "qwen2.5-coder:7b@dae161e27b0e"
+   ],
+   "provider": "ollama"
+  },
+  {
+   "at_cap": 0,
+   "calls": 20,
+   "cost_usd": 0.0,
+   "fingerprints": [
+    "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288"
+   ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
+   ],
+   "key": "ollama/gemma3:12b",
+   "lane": "local",
+   "measured_from": "2026-09-23",
+   "measured_to": "2026-09-23",
+   "median_latency_s": 179.6,
+   "median_output_tokens": 1337,
+   "model_id": "gemma3:12b",
+   "model_versions": [
+    "gemma3:12b@f4031aab637d"
+   ],
+   "provider": "ollama"
+  },
+  {
+   "at_cap": 0,
+   "calls": 20,
+   "cost_usd": 0.0,
+   "fingerprints": [
+    "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288"
+   ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
+   ],
+   "key": "ollama/gemma3:4b",
+   "lane": "local",
+   "measured_from": "2026-09-23",
+   "measured_to": "2026-09-23",
+   "median_latency_s": 14.6,
+   "median_output_tokens": 928,
+   "model_id": "gemma3:4b",
+   "model_versions": [
+    "gemma3:4b@a2af6cc3eb7f"
+   ],
+   "provider": "ollama"
+  },
+  {
+   "at_cap": 1,
+   "calls": 20,
+   "cost_usd": 0.0,
+   "fingerprints": [
+    "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288"
+   ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
+   ],
+   "key": "ollama/llama3.1:8b",
+   "lane": "local",
+   "measured_from": "2026-09-23",
+   "measured_to": "2026-09-23",
+   "median_latency_s": 27.3,
+   "median_output_tokens": 1185,
+   "model_id": "llama3.1:8b",
+   "model_versions": [
+    "llama3.1:8b@46e0c10c039e"
+   ],
+   "provider": "ollama"
+  },
+  {
+   "at_cap": 0,
+   "calls": 20,
+   "cost_usd": 0.0,
+   "fingerprints": [
+    "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288"
+   ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
+   ],
+   "key": "ollama/mistral:7b",
+   "lane": "local",
+   "measured_from": "2026-09-23",
+   "measured_to": "2026-09-23",
+   "median_latency_s": 24.3,
+   "median_output_tokens": 1119,
+   "model_id": "mistral:7b",
+   "model_versions": [
+    "mistral:7b@6577803aa9a0"
+   ],
+   "provider": "ollama"
+  },
+  {
+   "at_cap": 0,
+   "calls": 20,
+   "cost_usd": 0.0,
+   "fingerprints": [
+    "ollama@http://127.0.0.1:11435#think=n/a#num_ctx=12288"
+   ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
+   ],
+   "key": "ollama/phi4-mini:latest",
+   "lane": "local",
+   "measured_from": "2026-09-23",
+   "measured_to": "2026-09-23",
+   "median_latency_s": 13.9,
+   "median_output_tokens": 982,
+   "model_id": "phi4-mini:latest",
+   "model_versions": [
+    "phi4-mini:latest@78fad5d182a7"
+   ],
+   "provider": "ollama"
+  },
+  {
+   "at_cap": 20,
+   "calls": 20,
+   "cost_usd": 0.0,
+   "fingerprints": [
+    "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288"
+   ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
+   ],
+   "key": "ollama/qwen3:4b",
+   "lane": "local",
+   "measured_from": "2026-09-23",
+   "measured_to": "2026-09-23",
+   "median_latency_s": 131.4,
+   "median_output_tokens": 8192,
+   "model_id": "qwen3:4b",
+   "model_versions": [
+    "qwen3:4b@359d7dd4bcda"
+   ],
+   "provider": "ollama"
+  },
+  {
+   "at_cap": 0,
+   "calls": 20,
+   "cost_usd": 0.0,
+   "fingerprints": [
+    "ollama@http://127.0.0.1:11435#think=False#num_ctx=12288"
+   ],
+   "harnesses": [
+    "unrecorded (ledger schema 1.0)"
+   ],
+   "key": "ollama/qwen3:8b",
+   "lane": "local",
+   "measured_from": "2026-09-23",
+   "measured_to": "2026-09-23",
+   "median_latency_s": 30.2,
+   "median_output_tokens": 1284,
+   "model_id": "qwen3:8b",
+   "model_versions": [
+    "qwen3:8b@500a1f067a9f"
+   ],
+   "provider": "ollama"
+  }
+ ],
+ "note": "The layers are reported separately by design. There is no combined score: a single number would let a high 'it ran' rate conceal a low 'it was right' rate, which is the distance this report exists to show. Rates are over repeats with a Wilson interval, because pinning whatever controls a provider exposes does not make hosted inference deterministic, so a single run is not a result.",
+ "note_es": "Las capas se informan por separado a proposito. No hay puntaje combinado: un solo numero dejaria que una tasa alta de 'corrio' oculte una tasa baja de 'fue correcto', que es la distancia que este informe existe para mostrar. Las tasas son sobre repeticiones con un intervalo de Wilson, porque fijar los controles que expone un proveedor no hace determinista la inferencia alojada, asi que una corrida sola no es un resultado.",
+ "protocol_cap": 8192,
+ "schema": "enunciado-gap-report/2.0"
 }

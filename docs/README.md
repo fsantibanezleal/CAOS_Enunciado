@@ -18,8 +18,9 @@ and verified rather than inherited from a public benchmark.
 
 ## What this product IS NOT
 
-- It is **not a language-model leaderboard**. At twenty cases and one repeat the intervals overlap
-  almost entirely; the measurement can see that a gap exists and cannot rank two models.
+- It is **not a language-model leaderboard**. At twenty cases and one repeat a Wilson interval spans
+  about 0.40; the measurement can see that a gap exists and cannot rank two models whose intervals
+  overlap, which is most pairs.
 - It is **not a proof of correctness**. The only conclusive direction available is refutation. A
   formalization that survives every layer is unrefuted, not correct.
 - It is **not a formalization service**. There is no live model lane from the site, because that

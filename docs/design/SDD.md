@@ -187,7 +187,68 @@ R-027  THE report's breakdowns SHALL count a candidate as faithful exactly when 
 
 R-028  THE CI recomputation of the rates SHALL count a candidate as faithful exactly when copela does.
        Gate: tests/test_faithful_rule.py::test_the_ci_recomputation_uses_copelas_rule
+
+R-029  IF a reply was all reasoning and no answer, THEN THE taxonomy SHALL classify it as a no-answer
+       class, and SHALL NOT classify it as unparseable output.
+       Gate: tests/test_failure_classes.py::test_a_reply_is_classified_by_the_check_that_failed_it
+
+R-030  IF the sweep runner refuses to start, THEN THE runner SHALL leave the ledger unlocked.
+       Gate: tests/test_sweep_runner.py::test_a_refused_sweep_leaves_the_ledger_unlocked
+
+R-031  THE report SHALL name every model by its provider and its id, list the models once in one
+       order, and key every breakdown by that name.
+       Gate: tests/test_report_shape.py::test_every_model_is_its_provider_and_id_once_in_one_order
+
+R-032  WHEN the report holds several models, THE Benchmark SHALL draw each of them once in Figure 1,
+       in Table 1 and in every model matrix, and SHALL NOT scroll the page sideways.
+       Gate: tools/visual-verify/verify.mjs
+
+R-033  THE site SHALL show every failure class the classifier can return, in the reader's language,
+       from one list held equal to the classifier.
+       Gate: tests/test_failure_classes.py::test_the_site_names_every_class_the_classifier_can_return
+
+R-034  WHERE a ledger at a second output cap exists, THE report SHALL publish the comparison with the
+       main ledger, and CI SHALL recount both sides from their ledgers.
+       Gate: scripts/check_artifacts.py
+
+R-035  THE report's caveats SHALL be computed from the ledger, and every departure from the stated
+       protocol SHALL be published as a caveat.
+       Gate: tests/test_report_shape.py::test_the_caveats_are_computed_from_the_records
+
+R-036  IF a model has fewer calls than the ledger's cases times its repeats, THEN THE report SHALL
+       name the model and its count in a caveat, in both languages, and SHALL state the sample size
+       for the complete rows only.
+       Gate: tests/test_report_shape.py::test_a_short_row_is_named_and_the_sample_size_is_the_complete_rows
+
+R-037  THE Benchmark SHALL mark a short row in Table 1 with its count, and SHALL mark no other row.
+       Gate: tools/visual-verify/verify.mjs
 ```
+
+R-036 and R-037 came with 0.05.000, which was published while two sweeps were still running. The
+first caveat took its sample size from the smallest row, so a sweep two calls in would have set the
+interval quoted for every model, and Table 1 printed a rate over fifteen cases in the same column as
+rates over twenty with nothing to tell them apart. The corpus is ordered by tier and a sweep takes
+it in order, so a short row is not a sample of the corpus: it is missing the hardest cases.
+
+R-031 to R-035 came with the second, many-model measurement. The site had been drawn for two
+Claude models and nothing failed when a third ran: every view iterated the data, so none broke, and
+every check counted the elements that existed rather than comparing them with the models the report
+held. What broke was quieter. The breakdowns were keyed by the id alone while copela's cells were
+keyed by provider and id; each figure took its own order; the palettes had two and three colours;
+the trap table ran off the page, where the shell clips instead of scrolling; the caveats and a dozen
+sentences went on describing "these two models"; and the failure classes reached the Spanish page in
+English. R-034 exists because the 8192-token cap turned out to decide most of the reasoning models'
+results, which a table at one cap cannot show, and a second cap cannot share the main ledger, whose
+key has no cap in it.
+
+R-029 and R-030 came with the first sweeps outside Anthropic. A reasoning model spends its output
+cap on reasoning first, and copela reports a reply that was all reasoning as one sentence on every
+lane (its R-022); the parser quotes that sentence back as the start of a response with no JSON in it,
+so without a rule it read as unparseable output, a formatting failure, when it is a truncation of a
+kind the taxonomy did not have. The gate drives copela's own sentence through the real sweep, parser
+and ledger rather than restating it. R-030 came from reading the runner while adding the refusal
+copela 0.3.0 makes for a model with no price: the runner took the ledger's lock, a file, and then
+returned early for a paid model with no budget, which left the file behind.
 
 R-025 and R-026 came with 0.04.000. R-026 exists because the modal's diagrams named eight tokens the
 shell does not define and fell through to their dark fallbacks, so the light theme drew dark boxes on
@@ -229,7 +290,7 @@ one question; the decision was recorded as UNDECIDED until the two measurements 
 
 ## 9. Convergence
 
-Recorded 2026-09-22 for the corpus, and 2026-09-23 for the web surface (0.03.000).
+Recorded 2026-09-22 for the corpus, and 2026-09-23 for the web surface (0.03.000 to 0.05.000).
 
 | Requirement | Result |
 |---|---|
@@ -238,7 +299,8 @@ Recorded 2026-09-22 for the corpus, and 2026-09-23 for the web surface (0.03.000
 | R-013 to R-022 | all pass, 14 method tests, each mutation-checked |
 | R-023, R-024 | pass: no control character in 124 tracked files; 17 figures match their components |
 | R-025 to R-028 | pass: the sidebar diagnosis and modal-token checks in the gate; 2 rule tests over all 125 outcome combinations |
-| The UI gate | 171 checks pass against the built site, in dark, light and Spanish (0.04.000) |
+| R-029 to R-037 | pass: 141 tests with 2 skips in the Python suite; R-032 and R-037 in the gate, which compares the marked rows with the report both ways |
+| The UI gate | 191 checks pass against the built site, in dark, light and Spanish (0.05.000) |
 
 Out of scope and not claimed: the three other target families (mathematical formulation,
 experiment design, machine-learning framing), which are designed and unmeasured, and the judge

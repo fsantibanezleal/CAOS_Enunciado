@@ -61,8 +61,8 @@ def test_the_ci_recomputation_uses_copelas_rule() -> None:
     for combo, verdicts in _records():
         if combo[0] is Outcome.NOT_APPLICABLE:
             continue  # unmeasured: it leaves both rates, in all three definitions
-        rates = _ledger_rates([{"model_id": "m", "verdicts": verdicts}])
-        _ran, faithful, _n = rates["m"]
+        rates = _ledger_rates([{"provider": "p", "model_id": "m", "verdicts": verdicts}])
+        _ran, faithful, _n = rates["p/m"]
         if bool(faithful) != _copela(verdicts):
             wrong.append(combo)
     assert wrong == [], f"check_artifacts disagrees with copela on {wrong}"

@@ -10,6 +10,9 @@
 import { Callout, Cite, Equation, InlineMath, Refs, SubTabs, useShellLang } from "@fasl-work/caos-app-shell";
 
 import { FigureRow, WideFigure } from "../components/layout";
+import { useEffect, useState } from "react";
+
+import { loadAttempts } from "../lib/data";
 
 import {
   CanonicalDiagram,
@@ -387,8 +390,8 @@ function StructuralLayer({ lang }: { lang: "en" | "es" }) {
         </p>
         <p>
           {es
-            ? "Leer ambos optimos en el sentido de minimizar llego en copela 0.2.1. La version 0.2.0, que califico la medicion publicada, los comparaba en crudo, y eso refutaria una reescritura de estilo: un candidato que minimiza el negativo del beneficio resuelve a -z donde la referencia resuelve a z. Las dos refutaciones del libro mayor comparan valores del mismo signo y siguen en pie con la correccion; los candidatos que no fallaron no guardan su documento, asi que para ellos no se puede volver a comprobar."
-            : "Reading both optima in the minimising sense arrived in copela 0.2.1. Version 0.2.0, which scored the published measurement, compared them raw, and that would refute a style rewrite: a candidate minimising negative profit solves to -z where the reference solves to z. Both refutations in the ledger compare values of the same sign and stand under the fix; the candidates that did not fail keep no document in the ledger, so for them it cannot be re-checked."}
+            ? "Leer ambos optimos en el sentido de minimizar llego en copela 0.2.1. La version 0.2.0, que califico las dos corridas de Claude, los comparaba en crudo, y eso refutaria una reescritura de estilo: un candidato que minimiza el negativo del beneficio resuelve a -z donde la referencia resuelve a z. Las dos refutaciones que califico comparan valores del mismo signo y siguen en pie con la correccion, y las corridas posteriores se calificaron ya con ella; los candidatos que no fallaron no guardan su documento, asi que para ellos no se puede volver a comprobar."
+            : "Reading both optima in the minimising sense arrived in copela 0.2.1. Version 0.2.0, which scored the two Claude runs, compared them raw, and that would refute a style rewrite: a candidate minimising negative profit solves to -z where the reference solves to z. Both refutations it scored compare values of the same sign and stand under the fix, and every later run was scored with the fix in place; the candidates that did not fail keep no document in the ledger, so for them it cannot be re-checked."}
         </p>
       </div>
 
@@ -398,11 +401,7 @@ function StructuralLayer({ lang }: { lang: "en" | "es" }) {
           : "One more distinction, which cost its own error: a model the configured solver cannot express is not a defective model. It is a limit of the instrument. One Sonnet candidate was logged as a solve failure when the truth is that the linear solver could not express its model; those cases are now excluded from both rates and counted as unmeasured. Charging a limitation of the harness to the subject is exactly the error this entire product exists to expose."}
       </p>
 
-      <Callout variant="honest" title={es ? "Lo que la capa decidio, medido" : "What the layer decided, measured"}>
-        {es
-          ? "En la medicion publicada la capa estructural decidio 2 de los 16 candidatos que corrieron, los dos por refutacion: uno resolvio a 16 donde su referencia resuelve a 16,667, el otro a 8.080 frente a 8.200. No devolvio PASA en ninguno, porque ningun candidato reprodujo la forma del documento de su referencia. Los otros 14 son INDECISOS, asi que los veredictos de fidelidad que llevan descansan solo en la capa de propiedades. El libro mayor guarda un extracto de 2.000 caracteres y no el documento, de modo que la forma lineal, mas fuerte, no se les puede aplicar despues; un barrido que guarde el documento si podria."
-          : "In the published measurement the structural layer decided 2 of the 16 candidates that ran, both by refutation: one solved to 16 where its reference solves to 16.667, the other to 8,080 against 8,200. It returned PASS on none, because not one candidate reproduced its reference's document form. The other 14 are UNDECIDED, so the faithful verdicts they carry rest on the property layer alone. The ledger keeps a 2,000-character excerpt rather than the document, so the stronger linear form cannot be applied to them after the fact; a sweep that stored the document could."}
-      </Callout>
+      <StructuralDecided lang={lang} />
 
       <Refs ids={["orgeval2025", "shervashidze2011", "cfi1992", "survey2025"]} label={es ? "Referencias" : "Refs"} />
     </section>
@@ -715,8 +714,9 @@ function ModelLane({ lang }: { lang: "en" | "es" }) {
             <Cite id="beams2026" paren /> informa que <strong>ningun modelo domina</strong> en todos
             los tipos de motor, con compromisos especificos por tarea entre velocidad y precision. Un
             ranking afirmado desde un solo modelo contradice un resultado publicado. La via es por
-            tanto multi-modelo por requisito: un protocolo de proveedor estrecho, una implementacion
-            alojada y una local, y el mismo camino de puntuacion para ambas.
+            tanto multi-modelo por requisito: un protocolo de proveedor estrecho, cinco
+            implementaciones detras de el (Anthropic, Groq, Z.AI y DeepSeek alojadas, Ollama local),
+            y el mismo camino de puntuacion para todas.
           </>
         ) : (
           <>
@@ -724,8 +724,8 @@ function ModelLane({ lang }: { lang: "en" | "es" }) {
             <Cite id="beams2026" paren /> reports that <strong>no single model dominates</strong>{" "}
             across engine types, with task-specific tradeoffs between speed and accuracy. A ranking
             claimed from one model contradicts a published result. The lane is therefore multi-model
-            by requirement: one narrow provider protocol, one hosted implementation and one local, and
-            the same scoring path for both.
+            by requirement: one narrow provider protocol, five implementations behind it (Anthropic,
+            Groq, Z.AI and DeepSeek hosted, Ollama local), and the same scoring path for all of them.
           </>
         )}
         </p>
@@ -747,8 +747,8 @@ function ModelLane({ lang }: { lang: "en" | "es" }) {
       >
         <p>
           {es
-            ? "La consecuencia practica es que la huella describe lo ejercido y no lo pretendido. La API de Anthropic ya no acepta un parametro de temperatura, y el esfuerzo de razonamiento solo esta disponible en parte de la familia, asi que la huella dice no-temperature y no-effort cuando eso es lo cierto, en lugar de registrar un control que no se aplico."
-            : "The practical consequence is that the fingerprint describes what was exercised and not what was intended. The Anthropic API no longer accepts a temperature parameter, and reasoning effort is available on only part of the family, so the fingerprint says no-temperature and no-effort when that is the truth, rather than recording a control that was never applied."}
+            ? "La consecuencia practica es que la huella describe lo ejercido y no lo pretendido. La API de Anthropic ya no acepta un parametro de temperatura, y el esfuerzo de razonamiento solo esta disponible en parte de la familia, asi que la huella dice no-temperature y no-effort cuando eso es lo cierto, en lugar de registrar un control que no se aplico. Los demas carriles siguen la misma regla: el interruptor voraz de Z.AI, el modo de razonamiento de DeepSeek que ignora la temperatura, y un modelo local sin razonamiento que apagar, cada uno queda registrado como lo que se ejercio."
+            : "The practical consequence is that the fingerprint describes what was exercised and not what was intended. The Anthropic API no longer accepts a temperature parameter, and reasoning effort is available on only part of the family, so the fingerprint says no-temperature and no-effort when that is the truth, rather than recording a control that was never applied. The other lanes follow the same rule: Z.AI's greedy switch, DeepSeek's reasoning mode that ignores temperature, and a local model with no reasoning to switch off are each recorded as what was exercised."}
         </p>
       </FigureRow>
 
@@ -763,8 +763,8 @@ function ModelLane({ lang }: { lang: "en" | "es" }) {
 
       <p className="measure">
         {es
-          ? "Una huella que dijera temperature=0 para un proveedor que no lo acepta seria reproducibilidad afirmada y no ejercida, que es peor que no decir nada, porque dos corridas con la misma huella falsa parecerian comparables. La primera version de este proveedor tenia tres errores a la vez: enviaba un identificador de modelo con sufijo de fecha que no existe, usaba precios obsoletos y pasaba un parametro que la API ya habia retirado. Se corrigio leyendo la documentacion vigente en lugar de la memoria, y la huella registra desde entonces los controles que de verdad se ejercieron."
-          : "A fingerprint claiming temperature=0 for a provider that does not accept it would be reproducibility asserted and not exercised, which is worse than saying nothing, because two runs carrying the same false fingerprint would look comparable. The first version of this provider had three errors at once: it sent a date-suffixed model id that does not exist, used pricing that was out of date, and passed a parameter the API had retired. It was corrected by reading the current documentation rather than memory, and the fingerprint has since recorded the controls that were actually exercised."}
+          ? "Una huella que dijera temperature=0 para un proveedor que no lo acepta seria reproducibilidad afirmada y no ejercida, que es peor que no decir nada, porque dos corridas con la misma huella falsa parecerian comparables. La primera version del proveedor de Anthropic tenia tres errores a la vez: enviaba un identificador de modelo con sufijo de fecha que no existe, usaba precios obsoletos y pasaba un parametro que la API ya habia retirado. Se corrigio leyendo la documentacion vigente en lugar de la memoria, y la huella registra desde entonces los controles que de verdad se ejercieron."
+          : "A fingerprint claiming temperature=0 for a provider that does not accept it would be reproducibility asserted and not exercised, which is worse than saying nothing, because two runs carrying the same false fingerprint would look comparable. The first version of the Anthropic provider had three errors at once: it sent a date-suffixed model id that does not exist, used pricing that was out of date, and passed a parameter the API had retired. It was corrected by reading the current documentation rather than memory, and the fingerprint has since recorded the controls that were actually exercised."}
       </p>
 
       <Equation
@@ -799,7 +799,8 @@ function ModelLane({ lang }: { lang: "en" | "es" }) {
               muestreo, dan tasas puntuales distintas, y cada tasa se publica con su intervalo de Wilson
               al 95% <Cite id="wilson1927" paren /> y no con su valor puntual solo. A n = 20 el
               intervalo ocupa casi la mitad del rango util, y esa anchura es la informacion: dice que
-              este corpus puede ver que existe una brecha y no puede ordenar dos modelos{" "}
+              este corpus puede ver que existe una brecha y no puede ordenar dos modelos cuyos
+              intervalos se solapan{" "}
               <Cite id="agresti1998" paren />.
             </>
           ) : (
@@ -809,7 +810,8 @@ function ModelLane({ lang }: { lang: "en" | "es" }) {
               sampling, give different point rates, and every rate is published with its 95% Wilson
               interval <Cite id="wilson1927" paren /> rather than as a point value alone. At n = 20 the
               interval spans close to half the useful range, and that width is the information: it says
-              this corpus can see that a gap exists and cannot rank two models{" "}
+              this corpus can see that a gap exists and cannot rank two models whose intervals
+              overlap{" "}
               <Cite id="agresti1998" paren />.
             </>
           )}
@@ -913,5 +915,52 @@ function Judge({ lang }: { lang: "en" | "es" }) {
 
       <Refs ids={["lean2026", "orgeval2025", "scope2026"]} label={es ? "Referencias" : "Refs"} />
     </section>
+  );
+}
+
+/* ------------------------------------------------ what the layer decided */
+
+/**
+ * The structural layer's decisions over the published ledger, counted from the attempts.
+ *
+ * This callout used to state "2 of the 16 candidates ... PASS on none" as prose, which was true of
+ * the two Claude runs and stopped being true the day GLM-5.3 and DeepSeek-V4-Pro reproduced their
+ * references' canonical forms. It now counts, and names what the counts mean.
+ */
+function StructuralDecided({ lang }: { lang: "en" | "es" }) {
+  const es = lang === "es";
+  const [counts, setCounts] = useState<{ ran: number; pass: number; fail: number; undecided: number } | null>(null);
+
+  useEffect(() => {
+    void loadAttempts().then((artifact) => {
+      let ran = 0;
+      let pass = 0;
+      let fail = 0;
+      let undecided = 0;
+      for (const attempts of Object.values(artifact.cases)) {
+        for (const attempt of attempts) {
+          const outcome = (layer: string) => attempt.verdicts.find((v) => v.layer === layer)?.outcome;
+          if (outcome("executable") !== "pass") continue;
+          ran += 1;
+          const structural = outcome("structural");
+          if (structural === "pass") pass += 1;
+          else if (structural === "fail") fail += 1;
+          else if (structural === "undecided") undecided += 1;
+        }
+      }
+      setCounts({ ran, pass, fail, undecided });
+    });
+  }, []);
+
+  return (
+    <Callout variant="honest" title={es ? "Lo que la capa decidio, medido" : "What the layer decided, measured"}>
+      {counts === null
+        ? es
+          ? "Contando los veredictos del libro mayor..."
+          : "Counting the ledger's verdicts..."
+        : es
+          ? `En la medicion publicada la capa estructural decidio ${counts.pass + counts.fail} de los ${counts.ran} candidatos que corrieron: ${counts.pass} por formas canonicas iguales, que prueban la equivalencia, y ${counts.fail} por refutacion. Las dos refutaciones de las corridas de Claude resolvieron a 16 donde su referencia resuelve a 16,667 y a 8.080 frente a 8.200; ninguno de esos candidatos reprodujo la forma del documento de su referencia, y los primeros PASA llegaron con GLM-5.3 y DeepSeek-V4-Pro. Los otros ${counts.undecided} son INDECISOS, asi que los veredictos de fidelidad que llevan descansan solo en la capa de propiedades. El libro mayor guarda un extracto de 2.000 caracteres de las respuestas fallidas y no el documento, de modo que la forma lineal, mas fuerte, no se les puede aplicar despues; un barrido que guarde el documento si podria.`
+          : `In the published measurement the structural layer decided ${counts.pass + counts.fail} of the ${counts.ran} candidates that ran: ${counts.pass} by equal canonical forms, which prove equivalence, and ${counts.fail} by refutation. The two refutations in the Claude runs solved to 16 where their reference solves to 16.667, and to 8,080 against 8,200; none of those candidates reproduced its reference's document form, and the first PASSes came with GLM-5.3 and DeepSeek-V4-Pro. The other ${counts.undecided} are UNDECIDED, so the faithful verdicts they carry rest on the property layer alone. The ledger keeps a 2,000-character excerpt of a failed response rather than the document, so the stronger linear form cannot be applied after the fact; a sweep that stored the document could.`}
+    </Callout>
   );
 }

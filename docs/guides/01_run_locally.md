@@ -33,8 +33,8 @@ shipped a build that was blank in production while every local check was green.
 
 ```powershell
 .\run.ps1 check        # lint, every guard, report re-derivation, method tests, figure export
-.\run.ps1 verify       # build, then 171 browser checks against the built site
-.\run.ps1 live         # the same 171 checks against https://enunciado.fasl-work.com
+.\run.ps1 verify       # build, then 191 browser checks against the built site
+.\run.ps1 live         # the same 191 checks against https://enunciado.fasl-work.com
 .\run.ps1 diagrams     # re-export docs/assets/*.svg after editing a diagram component
 ```
 
