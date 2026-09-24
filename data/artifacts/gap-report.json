@@ -591,10 +591,18 @@
   "zai/glm-4.5-flash": {
    "1": {
     "confidence": 0.95,
-    "interval_high": 0.6576197724933469,
+    "interval_high": 0.4898908364545973,
     "interval_low": 0.0,
     "passed": 0,
-    "total": 2,
+    "total": 4,
+    "value": 0.0
+   },
+   "2": {
+    "confidence": 0.95,
+    "interval_high": 0.7934506856227626,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 1,
     "value": 0.0
    }
   },
@@ -1681,13 +1689,21 @@
   "zai/glm-4.5-flash": {
    "none": {
     "confidence": 0.95,
+    "interval_high": 0.5614970317550455,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 3,
+    "value": 0.0
+   },
+   "objective-sense": {
+    "confidence": 0.95,
     "interval_high": 0.7934506856227626,
     "interval_low": 0.0,
     "passed": 0,
     "total": 1,
     "value": 0.0
    },
-   "objective-sense": {
+   "unit-mismatch": {
     "confidence": 0.95,
     "interval_high": 0.7934506856227626,
     "interval_low": 0.0,
@@ -1771,15 +1787,15 @@
    }
   }
  },
- "call_count": 302,
+ "call_count": 305,
  "caveats": [
   {
    "en": "Each model with a complete row ran 20 calls, one repeat per case, which gives a wide interval: at n = 20 a rate of 0.50 carries a Wilson interval from 0.30 to 0.70. Two models whose intervals overlap cannot be ranked against each other from this run.",
    "es": "Cada modelo con fila completa corrio 20 llamadas, una repeticion por caso, lo que da un intervalo ancho: con n = 20 una tasa de 0.50 lleva un intervalo de Wilson de 0.30 a 0.70. Dos modelos cuyos intervalos se solapan no se pueden ordenar entre si con esta corrida."
   },
   {
-   "en": "1 row(s) have not reached every case: zai/glm-4.5-flash has 2 of the 20 calls. A sweep takes the cases in corpus order, and the corpus climbs from tier 1 to tier 5, so a short row lacks the hardest cases, and its rates cannot be compared with a complete row's. A resumed sweep completes a row in place, because the ledger skips every call it already holds.",
-   "es": "1 fila(s) no llegan a todos los casos: zai/glm-4.5-flash tiene 2 de las 20 llamadas. Un barrido recorre los casos en el orden del corpus, y el corpus sube del nivel 1 al nivel 5, asi que a una fila incompleta le faltan los casos mas dificiles, y sus tasas no se pueden comparar con las de una fila completa. Un barrido reanudado completa la fila en su lugar, porque el libro mayor omite cada llamada que ya contiene."
+   "en": "1 row(s) have not reached every case: zai/glm-4.5-flash has 5 of the 20 calls. A sweep takes the cases in corpus order, and the corpus climbs from tier 1 to tier 5, so a short row lacks the hardest cases, and its rates cannot be compared with a complete row's. A resumed sweep completes a row in place, because the ledger skips every call it already holds.",
+   "es": "1 fila(s) no llegan a todos los casos: zai/glm-4.5-flash tiene 5 de las 20 llamadas. Un barrido recorre los casos en el orden del corpus, y el corpus sube del nivel 1 al nivel 5, asi que a una fila incompleta le faltan los casos mas dificiles, y sus tasas no se pueden comparar con las de una fila completa. Un barrido reanudado completa la fila en su lugar, porque el libro mayor omite cada llamada que ya contiene."
   },
   {
    "en": "Run-to-run variation is real: an earlier pass of the identical corpus put claude-haiku-4-5 at ran 0.350, and the published pass puts it at 0.250, with nothing changed but the sampling. That is what the interval is for.",
@@ -1794,8 +1810,8 @@
    "es": "Los proveedores exponen controles distintos, y cada registro declara los que fijo: Claude no admite temperatura ni semilla, asi que no se registra ninguna; GLM corre con decodificacion voraz (do_sample false), esfuerzo alto donde el modelo lo admite, y sin semilla; DeepSeek corre con esfuerzo alto; su modo de razonamiento ignora la temperatura y no tiene semilla; el carril local fija temperatura 0 y una semilla, con el razonamiento apagado donde la plantilla del modelo respeta el interruptor."
   },
   {
-   "en": "One output cap for every model, 8192 tokens. It binds on models that write or reason at length: 61 of the 302 calls reached it, counted as 'truncated output' or 'no answer: the reasoning used the whole cap'. A reasoning model spends the cap on reasoning first, so those are failures under this cap, not evidence about how it formalizes.",
-   "es": "Un solo tope de salida para todos los modelos, 8192 tokens. Muerde en los modelos que escriben o razonan en extenso: 61 de las 302 llamadas lo alcanzaron, contadas como 'salida truncada' o 'sin respuesta: el razonamiento agoto el tope'. Un modelo que razona gasta el tope razonando primero, asi que esos son fallos bajo este tope, no evidencia de como formaliza."
+   "en": "One output cap for every model, 8192 tokens. It binds on models that write or reason at length: 64 of the 305 calls reached it, counted as 'truncated output' or 'no answer: the reasoning used the whole cap'. A reasoning model spends the cap on reasoning first, so those are failures under this cap, not evidence about how it formalizes.",
+   "es": "Un solo tope de salida para todos los modelos, 8192 tokens. Muerde en los modelos que escriben o razonan en extenso: 64 de las 305 llamadas lo alcanzaron, contadas como 'salida truncada' o 'sin respuesta: el razonamiento agoto el tope'. Un modelo que razona gasta el tope razonando primero, asi que esos son fallos bajo este tope, no evidencia de como formaliza."
   },
   {
    "en": "The structural layer passes only when the canonical forms are equal, and refutes when the optima differ. A matching optimum never proves equivalence, because compensating errors reach the right number.",
@@ -1820,6 +1836,10 @@
   {
    "en": "The deepseek-v4-pro sweep reached its kill criterion, ten consecutive failures, after 13 calls, and every one of the ten was a reply that spent the whole cap reasoning. It was resumed with the criterion at 20 to complete the corpus, because those failures were the measurement and not a fault of the harness.",
    "es": "El barrido de deepseek-v4-pro alcanzo su criterio de corte, diez fallos seguidos, tras 13 llamadas, y cada uno de los diez fue una respuesta que gasto todo el tope razonando. Se reanudo con el criterio en 20 para completar el corpus, porque esos fallos eran la medicion y no una falla del arnes."
+  },
+  {
+   "en": "Records written before copela 0.4.0 do not name the copela that scored them, so it is stated here, from when each sweep ran and when each version was installed: the code published as copela 0.2.0 scored the two Claude rows, 0.3.0 scored GLM-5.3 and the first 13 DeepSeek-V4-Pro calls, and 0.3.2 scored every other record without a version. The rates apply one rule to all of them, that of copela 0.3.2, which derives this report, to the verdicts each record stored.",
+   "es": "Los registros escritos antes de copela 0.4.0 no nombran el copela que los califico, asi que se declara aqui, a partir de cuando corrio cada barrido y cuando se instalo cada version: el codigo publicado como copela 0.2.0 califico las dos filas de Claude, 0.3.0 califico GLM-5.3 y las primeras 13 llamadas de DeepSeek-V4-Pro, y 0.3.2 califico todos los demas registros sin version. Las tasas aplican una sola regla a todos, la de copela 0.3.2, que deriva este informe, sobre los veredictos que guardo cada registro."
   },
   {
    "en": "1 candidate(s) (deepseek-r1:8b on opt-006) were unbounded and were recorded as having run: copela before 0.3.3 passed an unbounded model at the executable layer, and its later layers then misread the missing optimum. The records keep the verdicts they were scored with, so each counts as ran and not faithful in its row; the taxonomy classes it as unbounded. copela 0.3.3 fixes it for later sweeps.",
@@ -1913,10 +1933,10 @@
   {
    "faithful": {
     "confidence": 0.95,
-    "interval_high": 0.6576197724933469,
+    "interval_high": 0.43448246478317476,
     "interval_low": 0.0,
     "passed": 0,
-    "total": 2,
+    "total": 5,
     "value": 0.0
    },
    "family": "optimization",
@@ -1927,10 +1947,10 @@
    "provider": "zai",
    "ran": {
     "confidence": 0.95,
-    "interval_high": 0.6576197724933469,
+    "interval_high": 0.43448246478317476,
     "interval_low": 0.0,
     "passed": 0,
-    "total": 2,
+    "total": 5,
     "value": 0.0
    },
    "unmeasured": 0
@@ -2359,7 +2379,7 @@
   },
   "zai/glm-4.5-flash": {
    "a constant with no unit": 1,
-   "no answer: the reasoning used the whole cap": 1
+   "no answer: the reasoning used the whole cap": 4
   },
   "zai/glm-5.3": {
    "a constant with no unit": 2,
@@ -2428,7 +2448,7 @@
    "did-not-run/not-faithful": 20
   },
   "zai/glm-4.5-flash": {
-   "did-not-run/not-faithful": 2
+   "did-not-run/not-faithful": 5
   },
   "zai/glm-5.3": {
    "did-not-run/not-faithful": 13,
@@ -2505,8 +2525,8 @@
    "provider": "zai"
   },
   {
-   "at_cap": 1,
-   "calls": 2,
+   "at_cap": 4,
+   "calls": 5,
    "cost_usd": 0.0,
    "fingerprints": [
     "zai#effort=model-decides#do_sample=false#no-seed"
@@ -2517,9 +2537,9 @@
    "key": "zai/glm-4.5-flash",
    "lane": "hosted",
    "measured_from": "2026-09-23",
-   "measured_to": "2026-09-23",
-   "median_latency_s": 170.8,
-   "median_output_tokens": 6671,
+   "measured_to": "2026-09-24",
+   "median_latency_s": 198.6,
+   "median_output_tokens": 8192,
    "model_id": "glm-4.5-flash",
    "model_versions": [
     "glm-4.5-flash"
