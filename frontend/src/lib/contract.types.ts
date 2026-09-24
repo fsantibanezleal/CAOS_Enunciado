@@ -124,6 +124,11 @@ export interface CaseRecord {
   open_questions: OpenQuestion[];
   reference: Problem;
   solution: Solution;
+  /**
+   * The reference solved again with every real decision variable made integer. A statement that
+   * does not say whether a decision is a whole number leaves the choice to the reference.
+   */
+  integer_solution: { feasible: boolean; objective: number | null; made_integer: string[] };
   claimed_optimum: number | null;
   property_check: PropertyCheck;
   emitted_pyomo: string;
@@ -236,7 +241,7 @@ export const ATTEMPTS_SCHEMA = "enunciado-attempts/1.1";
 
 /* ------------------------------------------------------------ the gap report */
 
-export const GAP_REPORT_SCHEMA = "enunciado-gap-report/2.0";
+export const GAP_REPORT_SCHEMA = "enunciado-gap-report/2.1";
 
 export interface RateJson {
   passed: number;
@@ -306,6 +311,24 @@ export interface GapReport {
   measured_from: string;
   measured_to: string;
   judge: unknown[];
+  /** 2.1: the refutations that land on a reference's optimum with its decisions made integer. */
+  whole_number_readings: WholeNumberReadings;
+}
+
+/** A refutation whose candidate solves to the reference's whole-number optimum. */
+export interface WholeNumberRefutation {
+  model: string;
+  case_id: string;
+  candidate: number;
+  reference: number;
+  whole_number_optimum: number;
+  property_passed: boolean;
+}
+
+export interface WholeNumberReadings {
+  refutations: WholeNumberRefutation[];
+  /** Per model: the published gap, and the gap with these refutations read as allowed. */
+  models: Record<string, { refutations: number; gap: number; faithful_if_allowed: RateJson; gap_if_allowed: number }>;
 }
 
 export const CAP_SENSITIVITY_SCHEMA = "enunciado-cap-sensitivity/1.0";

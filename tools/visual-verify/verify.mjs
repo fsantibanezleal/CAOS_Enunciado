@@ -431,8 +431,16 @@ for (const theme of ["dark", "light"]) {
       outcome: card?.getAttribute("data-outcome") ?? "",
       structuralFail: boxes[1]?.classList.contains("is-fail") ?? false,
       rows: card?.querySelectorAll(".diag-row").length ?? 0,
+      haikuText: haiku?.getAttribute("title") ?? "",
     };
   });
+  const haikuClass =
+    (attemptsArtifact.cases["opt-006"] ?? []).find((a) => a.model === "anthropic/claude-haiku-4-5")?.failure_class ?? "";
+  check(
+    haikuClass !== "" && diagnosis.haikuText.includes(haikuClass),
+    `[${theme}] the sidebar names the class of Haiku's opt-006 refutation`,
+    haikuClass || "no Haiku attempt on opt-006",
+  );
   check(
     diagnosis.present &&
       diagnosis.rows === expectedAttempts &&
@@ -672,11 +680,13 @@ if (gapReport) {
         overflow: getComputedStyle(f).overflowX,
         wider: f.scrollWidth > f.clientWidth + 1,
       }));
+      const note = document.querySelector("[data-whole-number]");
       return {
         figureModels,
         tableModels,
         tableChips,
         figureShort,
+        wholeNumber: note ? { count: Number(note.getAttribute("data-whole-number")), text: note.textContent ?? "" } : null,
         matrices,
         frames,
         pageOverflow: document.documentElement.scrollWidth - window.innerWidth,
@@ -710,6 +720,19 @@ if (gapReport) {
       gapReport.models.every((m) => seen.figureShort[m.key] === m.calls < complete),
       `[${width}px] Figure 1 marks exactly the short rows`,
       `${Object.values(seen.figureShort).filter(Boolean).length} marked, ${shortNames.length} short`,
+    );
+    // R-038. The note beside the gaps names every refutation that lands on a reference's
+    // whole-number optimum, and it is absent when there is none, so the check cannot pass vacuously
+    // in either state.
+    const readings = gapReport.whole_number_readings?.refutations ?? [];
+    const idOf = (key) => gapReport.models.find((m) => m.key === key)?.model_id ?? key;
+    const named = seen.wholeNumber
+      ? readings.every((r) => seen.wholeNumber.text.includes(r.case_id) && seen.wholeNumber.text.includes(idOf(r.model)))
+      : false;
+    check(
+      readings.length === 0 ? seen.wholeNumber === null : seen.wholeNumber?.count === readings.length && named,
+      `[${width}px] the gap note names every refutation on a whole-number optimum`,
+      readings.length ? readings.map((r) => `${idOf(r.model)} ${r.case_id}`).join(", ") : "none, and no note",
     );
     check(
       seen.matrices.length >= 4 && seen.matrices.every((m) => m.rows === models.length && m.rendered === models.length),

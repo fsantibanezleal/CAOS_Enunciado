@@ -1924,7 +1924,7 @@
    },
    {
     "cost_usd": 0.008888,
-    "failure_class": "ran, then REFUTED: solves to a different optimum",
+    "failure_class": "ran, then REFUTED: solves to the reference's whole-number optimum",
     "input_tokens": 1058,
     "latency_ms": 7017.5,
     "model": "anthropic/claude-haiku-4-5",
@@ -4061,7 +4061,7 @@
   "opt-012": [
    {
     "cost_usd": 0.04722,
-    "failure_class": "ran, then REFUTED: solves to a different optimum",
+    "failure_class": "ran, then REFUTED: solves to the reference's whole-number optimum",
     "input_tokens": 1375,
     "latency_ms": 32434.7,
     "model": "anthropic/claude-sonnet-5",
@@ -4176,7 +4176,7 @@
    },
    {
     "cost_usd": 0.0,
-    "failure_class": "ran, then REFUTED: solves to a different optimum",
+    "failure_class": "ran, then REFUTED: solves to the reference's whole-number optimum",
     "input_tokens": 967,
     "latency_ms": 238386.0,
     "model": "ollama/phi4:latest",

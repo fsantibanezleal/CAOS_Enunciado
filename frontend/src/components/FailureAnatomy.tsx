@@ -216,6 +216,15 @@ function locate(attempt: Attempt, text: string, es: boolean): { marks: Mark[]; n
     };
   }
 
+  if (attempt.failure_class === "ran, then REFUTED: solves to the reference's whole-number optimum") {
+    return {
+      marks: [],
+      note: es
+        ? "Este documento valido y resolvio al optimo de la referencia con sus decisiones enteras. El enunciado no dice si esas decisiones son numeros enteros y la referencia es continua ahi, asi que la refutacion puede ser de una lectura que el enunciado admite."
+        : "This document validated and solved to the reference's optimum with its decisions made integer. The statement does not say whether those decisions are whole numbers and the reference is continuous there, so the refutation may be of a reading the statement allows.",
+    };
+  }
+
   if (attempt.verdicts.some((v) => v.layer === "structural" && v.outcome === "fail")) {
     return {
       marks: [],

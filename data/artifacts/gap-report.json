@@ -1918,6 +1918,10 @@
    "es": "1 llamada(s) fallaron en el proveedor y nunca llegaron al modelo (zai/glm-4.5-flash en opt-008). copela cuenta una llamada fallida como un candidato que no se ejecuto, asi que baja las tasas de ese modelo. El libro mayor conserva el registro, y un barrido reanudado no la reintenta, porque el libro mayor omite cada llamada que ya contiene."
   },
   {
+   "en": "3 refutation(s) land exactly on the reference's optimum with its decisions made integer: anthropic/claude-haiku-4-5 on opt-006 (16 against 16.6667), anthropic/claude-sonnet-5 on opt-012 (8080 against 8200) and ollama/phi4:latest on opt-012 (8080 against 8200). The statements of opt-006 and opt-012 do not say whether those decisions are whole numbers, and the references are continuous there, so a candidate that counts them in whole units is refuted for a reading the statement allows. These candidates land where such a model lands, and a matching optimum does not prove a candidate is that model. The published rates keep the refutations, because a case is not edited after its answers are read. Read as allowed, the gaps would move: anthropic/claude-haiku-4-5 from +0.050 to +0.000, anthropic/claude-sonnet-5 from +0.050 to +0.000 and ollama/phi4:latest from +0.100 to +0.050. How a statement that leaves a decision's domain open is scored is an open decision.",
+   "es": "3 refutacion(es) caen exactamente en el optimo de la referencia con sus decisiones enteras: anthropic/claude-haiku-4-5 en opt-006 (16 contra 16.6667), anthropic/claude-sonnet-5 en opt-012 (8080 contra 8200) y ollama/phi4:latest en opt-012 (8080 contra 8200). Los enunciados de opt-006 y opt-012 no dicen si esas decisiones son numeros enteros, y las referencias son continuas ahi, asi que un candidato que las cuenta en unidades enteras queda refutado por una lectura que el enunciado admite. Estos candidatos caen donde cae ese modelo, y un optimo coincidente no prueba que el candidato sea ese modelo. Las tasas publicadas conservan las refutaciones, porque un caso no se edita despues de leer sus respuestas. Leidas como admitidas, las brechas se moverian: anthropic/claude-haiku-4-5 de +0.050 a +0.000, anthropic/claude-sonnet-5 de +0.050 a +0.000 y ollama/phi4:latest de +0.100 a +0.050. Como se califica un enunciado que deja abierto el dominio de una decision es una decision abierta."
+  },
+  {
    "en": "The 12 free models, those with no per-token price, ran with the kill criterion at 20, the corpus size, rather than 10: a free call costs nothing, and a completed corpus keeps their rows comparable with the rest.",
    "es": "Los 12 modelos gratuitos, los que no tienen precio por token, corrieron con el criterio de corte en 20, el tamano del corpus, y no en 10: una llamada gratuita no cuesta nada, y un corpus completo mantiene sus filas comparables con el resto."
   },
@@ -2345,13 +2349,13 @@
    "fabricated provenance: words not in the statement": 1,
    "infeasible, as the case is": 1,
    "ran and survived every check": 4,
-   "ran, then REFUTED: solves to a different optimum": 1
+   "ran, then REFUTED: solves to the reference's whole-number optimum": 1
   },
   "anthropic/claude-sonnet-5": {
    "a constant with no unit": 4,
    "infeasible, as the case is": 1,
    "ran and survived every check": 10,
-   "ran, then REFUTED: solves to a different optimum": 1,
+   "ran, then REFUTED: solves to the reference's whole-number optimum": 1,
    "truncated output": 3,
    "unparseable output": 1
   },
@@ -2419,7 +2423,8 @@
    "a variable whose lower bound is above its upper": 1,
    "fabricated provenance: words not in the statement": 4,
    "ran and survived every check": 5,
-   "ran, then REFUTED: solves to a different optimum": 2,
+   "ran, then REFUTED: solves to a different optimum": 1,
+   "ran, then REFUTED: solves to the reference's whole-number optimum": 1,
    "unparseable output": 2
   },
   "ollama/qwen2.5-coder:7b": {
@@ -2892,5 +2897,74 @@
  "note": "The layers are reported separately by design. There is no combined score: a single number would let a high 'it ran' rate conceal a low 'it was right' rate, which is the distance this report exists to show. Rates are over repeats with a Wilson interval, because pinning whatever controls a provider exposes does not make hosted inference deterministic, so a single run is not a result.",
  "note_es": "Las capas se informan por separado a proposito. No hay puntaje combinado: un solo numero dejaria que una tasa alta de 'corrio' oculte una tasa baja de 'fue correcto', que es la distancia que este informe existe para mostrar. Las tasas son sobre repeticiones con un intervalo de Wilson, porque fijar los controles que expone un proveedor no hace determinista la inferencia alojada, asi que una corrida sola no es un resultado.",
  "protocol_cap": 8192,
- "schema": "enunciado-gap-report/2.0"
+ "schema": "enunciado-gap-report/2.1",
+ "whole_number_readings": {
+  "models": {
+   "anthropic/claude-haiku-4-5": {
+    "faithful_if_allowed": {
+     "confidence": 0.95,
+     "interval_high": 0.468700877618744,
+     "interval_low": 0.11186170140766569,
+     "passed": 5,
+     "total": 20,
+     "value": 0.25
+    },
+    "gap": 0.05,
+    "gap_if_allowed": 0.0,
+    "refutations": 1
+   },
+   "anthropic/claude-sonnet-5": {
+    "faithful_if_allowed": {
+     "confidence": 0.95,
+     "interval_high": 0.7418021417443759,
+     "interval_low": 0.34208534245034233,
+     "passed": 11,
+     "total": 20,
+     "value": 0.55
+    },
+    "gap": 0.05,
+    "gap_if_allowed": 0.0,
+    "refutations": 1
+   },
+   "ollama/phi4:latest": {
+    "faithful_if_allowed": {
+     "confidence": 0.95,
+     "interval_high": 0.5189728183535235,
+     "interval_low": 0.1454772448676043,
+     "passed": 6,
+     "total": 20,
+     "value": 0.3
+    },
+    "gap": 0.1,
+    "gap_if_allowed": 0.05,
+    "refutations": 1
+   }
+  },
+  "refutations": [
+   {
+    "candidate": 16.0,
+    "case_id": "opt-006",
+    "model": "anthropic/claude-haiku-4-5",
+    "property_passed": true,
+    "reference": 16.6667,
+    "whole_number_optimum": 16.0
+   },
+   {
+    "candidate": 8080.0,
+    "case_id": "opt-012",
+    "model": "anthropic/claude-sonnet-5",
+    "property_passed": true,
+    "reference": 8200.0,
+    "whole_number_optimum": 8080.0
+   },
+   {
+    "candidate": 8080.0,
+    "case_id": "opt-012",
+    "model": "ollama/phi4:latest",
+    "property_passed": true,
+    "reference": 8200.0,
+    "whole_number_optimum": 8080.0
+   }
+  ]
+ }
 }

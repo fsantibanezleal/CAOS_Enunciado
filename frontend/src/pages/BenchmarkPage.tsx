@@ -191,10 +191,11 @@ function Measured({
           tex={String.raw`\Delta_m = R_{\text{ran}}(m) - R_{\text{faithful}}(m) \qquad ${gaps.length ? String.raw`\min_m \Delta_m = ${fmt(Math.min(...gaps))}, \quad \max_m \Delta_m = ${fmt(Math.max(...gaps))}` : ""}`}
           caption={
             es
-              ? `La brecha por modelo, y su rango sobre los ${gaps.length} modelos con brecha definida. ${positive} son positivas: en esos modelos hubo formalizaciones que se ejecutaron y no eran el modelo descrito. ${zero} son cero: todo lo que se ejecuto sobrevivio a las capas de fidelidad, lo que a una repeticion por caso es un resultado sobre ${report.corpus.cases} casos y no una propiedad del modelo.`
-              : `The gap per model, and its range over the ${gaps.length} models with a defined gap. ${positive} are positive: those models produced formalizations that executed and were not the model described. ${zero} are zero: everything that executed survived the faithfulness layers, which at one repeat per case is a result on ${report.corpus.cases} cases rather than a property of the model.`
+              ? `La brecha por modelo, y su rango sobre los ${gaps.length} modelos con brecha definida. ${positive} son positivas: en esos modelos hubo formalizaciones que se ejecutaron y luego fueron refutadas por una capa de fidelidad. ${zero} son cero: todo lo que se ejecuto sobrevivio a las capas de fidelidad, lo que a una repeticion por caso es un resultado sobre ${report.corpus.cases} casos y no una propiedad del modelo.`
+              : `The gap per model, and its range over the ${gaps.length} models with a defined gap. ${positive} are positive: those models produced formalizations that executed and were then refuted by a faithfulness layer. ${zero} are zero: everything that executed survived the faithfulness layers, which at one repeat per case is a result on ${report.corpus.cases} cases rather than a property of the model.`
           }
         />
+        <WholeNumberNote report={report} lang={lang} />
         <Refs ids={["wilson1927", "lean2026"]} label={es ? "Referencias" : "Refs"} />
       </section>
 
@@ -304,6 +305,59 @@ function leadingFailure(breakdown: Record<string, number>, lang: "en" | "es"): s
 function describeRate(rate: RateJson): string {
   if (rate.total === 0) return "–";
   return `${rate.value.toFixed(3)} [${rate.interval_low.toFixed(3)}, ${rate.interval_high.toFixed(3)}]`;
+}
+
+/* ------------------------------------------------- whole-number refutations */
+
+function joined(parts: string[], lang: "en" | "es"): string {
+  if (parts.length < 2) return parts.join("");
+  return `${parts.slice(0, -1).join(", ")} ${lang === "es" ? "y" : "and"} ${parts[parts.length - 1]}`;
+}
+
+/**
+ * What the positive gaps rest on. A statement that does not say whether a decision is a whole
+ * number leaves the choice to the reference, and the structural layer refutes the other choice.
+ * Both Claude models' only refutations landed exactly on their references' whole-number optima, so
+ * a gap printed without this would read as formalizations that were not the model described, when
+ * the statement allowed them. Every name and number here comes from the report.
+ */
+function WholeNumberNote({ report, lang }: { report: GapReport; lang: "en" | "es" }) {
+  const es = lang === "es";
+  const readings = report.whole_number_readings;
+  if (!readings || readings.refutations.length === 0) return null;
+  const idOf = (key: string) => report.models.find((m) => m.key === key)?.model_id ?? key;
+  const num = (x: number) => String(Number(x.toPrecision(6)));
+  const signed = (g: number) => `${g >= 0 ? "+" : ""}${g.toFixed(3)}`;
+  const landed = readings.refutations.map((r) =>
+    es
+      ? `${idOf(r.model)} en ${r.case_id}, ${num(r.candidate)} contra ${num(r.reference)}`
+      : `${idOf(r.model)} on ${r.case_id}, ${num(r.candidate)} against ${num(r.reference)}`,
+  );
+  const entries = Object.entries(readings.models).filter(([, m]) => m.gap > 1e-9);
+  const closed = entries.filter(([, m]) => Math.abs(m.gap_if_allowed) <= 1e-9).map(([key]) => idOf(key));
+  const moved = entries
+    .filter(([, m]) => Math.abs(m.gap_if_allowed) > 1e-9)
+    .map(([key, m]) => (es ? `la de ${idOf(key)} pasa de ${signed(m.gap)} a ${signed(m.gap_if_allowed)}` : `${idOf(key)}'s moves from ${signed(m.gap)} to ${signed(m.gap_if_allowed)}`));
+  const n = readings.refutations.length;
+  return (
+    <div data-whole-number={n}>
+      <Callout variant="honest" title={es ? "Lo que sostiene la brecha" : "What the gap rests on"}>
+        <p>
+          {es
+            ? `${n === 1 ? "Una refutacion" : `${n} refutaciones`} detras de estas brechas ${n === 1 ? "cae" : "caen"} exactamente en el optimo de la referencia con sus decisiones enteras: ${joined(landed, lang)}. Esos enunciados no dicen si sus decisiones son numeros enteros, y las referencias son continuas ahi, asi que contar en unidades enteras queda refutado aunque el enunciado lo admite.`
+            : `${n === 1 ? "One refutation" : `${n} refutations`} behind these gaps ${n === 1 ? "lands" : "land"} exactly on the reference's optimum with its decisions made integer: ${joined(landed, lang)}. Those statements do not say whether their decisions are whole numbers, and the references are continuous there, so counting in whole units is refuted although the statement allows it.`}
+          {closed.length > 0 &&
+            (es
+              ? ` Para ${joined(closed, lang)} son la brecha entera: leidas como admitidas, ${closed.length === 1 ? "su brecha es" : "sus brechas son"} cero.`
+              : ` For ${joined(closed, lang)} they are the whole gap: read as allowed, ${closed.length === 1 ? "its gap is" : "their gaps are"} zero.`)}
+          {moved.length > 0 && (es ? ` Leidas asi, ${joined(moved, lang)}.` : ` Read that way, ${joined(moved, lang)}.`)}
+          {es
+            ? " Las tasas publicadas conservan las refutaciones, porque un caso no se edita despues de leer sus respuestas, y un optimo coincidente no prueba que el candidato sea ese modelo. Como calificar un enunciado que deja abierto el dominio de una decision es una decision abierta."
+            : " The published rates keep the refutations, because a case is not edited after its answers are read, and a matching optimum does not prove the candidate is that model. How to score a statement that leaves a decision's domain open is an open decision."}
+        </p>
+      </Callout>
+    </div>
+  );
 }
 
 /* ---------------------------------------------------------- cap sensitivity */

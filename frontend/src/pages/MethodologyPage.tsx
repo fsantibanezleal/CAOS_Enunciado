@@ -929,7 +929,13 @@ function Judge({ lang }: { lang: "en" | "es" }) {
  */
 function StructuralDecided({ lang }: { lang: "en" | "es" }) {
   const es = lang === "es";
-  const [counts, setCounts] = useState<{ ran: number; pass: number; fail: number; undecided: number } | null>(null);
+  const [counts, setCounts] = useState<{
+    ran: number;
+    pass: number;
+    fail: number;
+    undecided: number;
+    whole: number;
+  } | null>(null);
 
   useEffect(() => {
     void loadAttempts().then((artifact) => {
@@ -937,6 +943,7 @@ function StructuralDecided({ lang }: { lang: "en" | "es" }) {
       let pass = 0;
       let fail = 0;
       let undecided = 0;
+      let whole = 0;
       for (const attempts of Object.values(artifact.cases)) {
         for (const attempt of attempts) {
           const outcome = (layer: string) => attempt.verdicts.find((v) => v.layer === layer)?.outcome;
@@ -946,9 +953,10 @@ function StructuralDecided({ lang }: { lang: "en" | "es" }) {
           if (structural === "pass") pass += 1;
           else if (structural === "fail") fail += 1;
           else if (structural === "undecided") undecided += 1;
+          if (attempt.failure_class === "ran, then REFUTED: solves to the reference's whole-number optimum") whole += 1;
         }
       }
-      setCounts({ ran, pass, fail, undecided });
+      setCounts({ ran, pass, fail, undecided, whole });
     });
   }, []);
 
@@ -959,8 +967,8 @@ function StructuralDecided({ lang }: { lang: "en" | "es" }) {
           ? "Contando los veredictos del libro mayor..."
           : "Counting the ledger's verdicts..."
         : es
-          ? `En la medicion publicada la capa estructural decidio ${counts.pass + counts.fail} de los ${counts.ran} candidatos que corrieron: ${counts.pass} por formas canonicas iguales, que prueban la equivalencia, y ${counts.fail} por refutacion. Las dos refutaciones de las corridas de Claude resolvieron a 16 donde su referencia resuelve a 16,667 y a 8.080 frente a 8.200; ninguno de esos candidatos reprodujo la forma del documento de su referencia, y los primeros PASA llegaron con GLM-5.3 y DeepSeek-V4-Pro. Los otros ${counts.undecided} son INDECISOS, asi que los veredictos de fidelidad que llevan descansan solo en la capa de propiedades. El libro mayor guarda un extracto de 2.000 caracteres de las respuestas fallidas y no el documento, de modo que la forma lineal, mas fuerte, no se les puede aplicar despues; un barrido que guarde el documento si podria.`
-          : `In the published measurement the structural layer decided ${counts.pass + counts.fail} of the ${counts.ran} candidates that ran: ${counts.pass} by equal canonical forms, which prove equivalence, and ${counts.fail} by refutation. The two refutations in the Claude runs solved to 16 where their reference solves to 16.667, and to 8,080 against 8,200; none of those candidates reproduced its reference's document form, and the first PASSes came with GLM-5.3 and DeepSeek-V4-Pro. The other ${counts.undecided} are UNDECIDED, so the faithful verdicts they carry rest on the property layer alone. The ledger keeps a 2,000-character excerpt of a failed response rather than the document, so the stronger linear form cannot be applied after the fact; a sweep that stored the document could.`}
+          ? `En la medicion publicada la capa estructural decidio ${counts.pass + counts.fail} de los ${counts.ran} candidatos que corrieron: ${counts.pass} por formas canonicas iguales, que prueban la equivalencia, y ${counts.fail} por refutacion. Las dos refutaciones de las corridas de Claude resolvieron a 16 donde su referencia resuelve a 16,667 y a 8.080 frente a 8.200; ninguno de esos candidatos reprodujo la forma del documento de su referencia, y los primeros PASA llegaron con GLM-5.3 y DeepSeek-V4-Pro. ${counts.whole} de las refutaciones, entre ellas esas dos, caen exactamente en el optimo de la referencia con sus decisiones enteras: 16 es el maximo de turnos de noche en turnos enteros, y 8.080 el mejor margen en bombas y valvulas enteras. Los enunciados no dicen si esas decisiones son enteras, asi que la Comparativa declara lo que sostiene cada brecha. Los otros ${counts.undecided} son INDECISOS, asi que los veredictos de fidelidad que llevan descansan solo en la capa de propiedades. El libro mayor guarda un extracto de 2.000 caracteres de las respuestas fallidas y no el documento, de modo que la forma lineal, mas fuerte, no se les puede aplicar despues; un barrido que guarde el documento si podria.`
+          : `In the published measurement the structural layer decided ${counts.pass + counts.fail} of the ${counts.ran} candidates that ran: ${counts.pass} by equal canonical forms, which prove equivalence, and ${counts.fail} by refutation. The two refutations in the Claude runs solved to 16 where their reference solves to 16.667, and to 8,080 against 8,200; none of those candidates reproduced its reference's document form, and the first PASSes came with GLM-5.3 and DeepSeek-V4-Pro. ${counts.whole} of the refutations, those two among them, land exactly on the reference's optimum with its decisions made integer: 16 is the most night shifts in whole shifts, and 8,080 the best margin in whole pumps and valves. The statements do not say whether those decisions are whole numbers, so the Benchmark states what each gap rests on. The other ${counts.undecided} are UNDECIDED, so the faithful verdicts they carry rest on the property layer alone. The ledger keeps a 2,000-character excerpt of a failed response rather than the document, so the stronger linear form cannot be applied after the fact; a sweep that stored the document could.`}
     </Callout>
   );
 }
