@@ -77,3 +77,34 @@ def test_a_provider_that_cannot_be_reached_records_nothing(tmp_path, monkeypatch
     assert unreachable.calls, "no probe call was made"
     assert not ledger.exists() or ledger.read_text(encoding="utf-8") == ""
     assert not ledger.with_suffix(".jsonl.lock").exists()
+
+
+def test_the_dynamics_family_runs_into_its_own_ledger(tmp_path, monkeypatch) -> None:
+    """R-206: with --family dynamics the runner sweeps the dynamics corpus, with the dynamics prompt,
+    into data/runs/dynamics.jsonl, and scores every reply with the dynamics layers. The stub answers
+    each case with its own reference, so every layer passes, and nothing is written to the
+    optimization ledger."""
+    import json
+
+    pytest.importorskip("scipy.integrate")
+    from copela import StubProvider
+    from copela.providers import Pricing
+    from formalize import build_prompt
+
+    corpus = sweep_run.to_harness_cases("dynamics")
+    replies = {build_prompt(case): json.dumps(case.reference.to_json()) for case in corpus}
+    stub = StubProvider(responses=replies, default="ok", pricing=Pricing())
+    monkeypatch.setattr(sweep_run, "get", lambda name, **kwargs: stub)
+    monkeypatch.setattr(sweep_run, "RUNS", tmp_path)
+
+    code = sweep_run.main(["--family", "dynamics", "--provider", "stub", "--model", "stub-small", "--repeats", "1"])
+
+    assert code == 0
+    assert not (tmp_path / "optimization.jsonl").exists()
+    records = [json.loads(line) for line in (tmp_path / "dynamics.jsonl").read_text(encoding="utf-8").splitlines() if line.strip()]
+    assert sorted(r["case_id"] for r in records) == sorted(c.case_id for c in corpus) and len(records) == 20
+    for record in records:
+        assert record["family"] == "dynamics"
+        assert [v["outcome"] for v in record["verdicts"]] == ["pass", "pass", "pass"], (record["case_id"], record["verdicts"])
+        assert record["candidate"]["family"] == "dynamics"
+    assert all('"tag": "rate"' in prompt for prompt, *_ in stub.calls[1:])

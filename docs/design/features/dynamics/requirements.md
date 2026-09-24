@@ -20,6 +20,15 @@ R-203  WHERE a statement invites a unit conversion, THE case SHALL carry a refer
 R-204  THE bake SHALL record, per case, the reference trajectories on a grid, each question's value,
        each question's response to each stated number, and the Jacobian's eigenvalues along the orbit.
        Gate: tests/test_dynamics_corpus.py::test_the_bake_records_what_the_site_draws
+
+R-205  THE dynamics prompt SHALL state the dynamics schema and rules, and SHALL contain no number of
+       two or more digits and no run of four words from any corpus statement of either family.
+       Gate: tests/test_formalize.py::test_the_dynamics_prompt_contains_no_corpus_number
+
+R-206  WHEN the runner is given the dynamics family, THE runner SHALL sweep the dynamics corpus with
+       the dynamics prompt into its own ledger, under the same refusals as optimization, and SHALL
+       leave the optimization prompt unchanged.
+       Gate: tests/test_sweep_runner.py::test_the_dynamics_family_runs_into_its_own_ledger
 ```
 
 R-203 found three defects before any model was measured, two in copela and one in the corpus.

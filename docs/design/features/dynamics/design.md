@@ -70,19 +70,6 @@ bake's LSODA trajectories on every case.
 move there, gate and all, in the commit that builds them.
 
 ```
-R-201  THE dynamics corpus SHALL hold twenty cases, four per tier, each with a valid reference, a
-       stated difficulty and a trap or Trap.NONE.
-R-202  WHEN a case has a closed form, THE bake SHALL fail if a question's integrated value differs
-       from it by more than 1e-7 relative; WHEN it has none, THE bake SHALL fail if two tolerances
-       disagree by more than that.
-R-203  WHERE a statement invites a unit conversion, THE case SHALL carry a reference in the other
-       unit, and copela SHALL find the two agreeing along the whole range.
-R-204  THE bake SHALL record, per case, the reference trajectories on a grid, each question's value,
-       each question's response to each cited number, and the Jacobian's eigenvalues along the orbit.
-R-205  THE dynamics prompt SHALL state the dynamics schema and rules, and SHALL contain no number
-       from any corpus narrative.
-R-206  WHEN the runner is given the dynamics family, THE runner SHALL sweep the dynamics corpus with
-       the dynamics prompt into its own ledger, under the same refusals as optimization.
 R-207  THE report SHALL be built per family, and SHALL classify every dynamics failure into the
        dynamics taxonomy.
 R-208  THE CI recomputation SHALL recount the dynamics rates from the dynamics ledger.
