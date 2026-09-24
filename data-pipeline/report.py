@@ -142,21 +142,71 @@ def caveats(records, models: list[dict[str, object]], failure: dict[str, dict[st
     names a provider appears only when that provider is in it.
     """
     out = []
-    per_model = sorted({int(m["calls"]) for m in models})
-    n = per_model[0]
+    # A complete row is every case the ledger holds, at every repeat. A row with fewer calls is a
+    # sweep that has not reached the end of the corpus, and the sample-size sentence is about the
+    # complete rows, or it would quote the interval of whichever sweep was cut shortest.
+    repeats = max(r.key.repeat for r in records) + 1
+    n = len({r.key.case_id for r in records}) * repeats
+    short = [m for m in models if int(m["calls"]) < n]
+    per_model = sorted({int(m["calls"]) for m in models if int(m["calls"]) >= n}) or [n]
     wilson = Rate(n // 2, n).to_json()
+    who, quien = (
+        ("Each model with a complete row", "Cada modelo con fila completa") if short else ("Each model", "Cada modelo")
+    )
+    per_case = (
+        ("one repeat per case", "una repeticion por caso")
+        if repeats == 1
+        else (f"{repeats} repeats per case", f"{repeats} repeticiones por caso")
+    )
     out.append(
         _caveat(
-            f"Each model ran {'/'.join(str(c) for c in per_model)} calls, one repeat per case, "
+            f"{who} ran {'/'.join(str(c) for c in per_model)} calls, {per_case[0]}, "
             f"which gives a wide interval: at n = {n} a rate of {wilson['value']:.2f} carries a Wilson "
             f"interval from {wilson['interval_low']:.2f} to {wilson['interval_high']:.2f}. Two models "
             "whose intervals overlap cannot be ranked against each other from this run.",
-            f"Cada modelo corrio {'/'.join(str(c) for c in per_model)} llamadas, una repeticion "
-            f"por caso, lo que da un intervalo ancho: con n = {n} una tasa de {wilson['value']:.2f} "
+            f"{quien} corrio {'/'.join(str(c) for c in per_model)} llamadas, {per_case[1]}, "
+            f"lo que da un intervalo ancho: con n = {n} una tasa de {wilson['value']:.2f} "
             f"lleva un intervalo de Wilson de {wilson['interval_low']:.2f} a {wilson['interval_high']:.2f}. "
             "Dos modelos cuyos intervalos se solapan no se pueden ordenar entre si con esta corrida.",
         )
     )
+    if short:
+
+        def listed(parts: list[str], conjunction: str) -> str:
+            return parts[0] if len(parts) == 1 else f"{', '.join(parts[:-1])} {conjunction} {parts[-1]}"
+
+        tiers = [int(case.tier) for case in corpus_cases()]
+        # Said only when it is true of the corpus: the sweep takes the cases in corpus order, so
+        # a short row lacks the hardest ones exactly when the corpus is ordered by tier.
+        climbs = tiers == sorted(tiers)
+        out.append(
+            _caveat(
+                f"{len(short)} row(s) have not reached every case: "
+                + listed([f"{m['key']} has {m['calls']}" for m in short], "and")
+                + f" of the {n} calls. "
+                + (
+                    f"A sweep takes the cases in corpus order, and the corpus climbs from tier "
+                    f"{tiers[0]} to tier {tiers[-1]}, so a short row lacks the hardest cases"
+                    if climbs
+                    else "A short row lacks the cases its sweep had not reached"
+                )
+                + ", and its rates cannot be compared with a complete row's. A resumed sweep "
+                "completes a row in place, because the ledger skips every call it already holds.",
+                f"{len(short)} fila(s) no llegan a todos los casos: "
+                + listed([f"{m['key']} tiene {m['calls']}" for m in short], "y")
+                + f" de las {n} llamadas. "
+                + (
+                    f"Un barrido recorre los casos en el orden del corpus, y el corpus sube del "
+                    f"nivel {tiers[0]} al nivel {tiers[-1]}, asi que a una fila incompleta le faltan "
+                    "los casos mas dificiles"
+                    if climbs
+                    else "A una fila incompleta le faltan los casos que su barrido no alcanzo"
+                )
+                + ", y sus tasas no se pueden comparar con las de una fila completa. Un barrido "
+                "reanudado completa la fila en su lugar, porque el libro mayor omite cada llamada "
+                "que ya contiene.",
+            )
+        )
     if any(m["key"] == "anthropic/claude-haiku-4-5" for m in models):
         out.append(
             _caveat(
@@ -317,12 +367,18 @@ def caveats(records, models: list[dict[str, object]], failure: dict[str, dict[st
     smallest, largest = min(groups.values()), max(groups.values())
     out.append(
         _caveat(
-            f"The per-tier and per-trap rates are re-groupings of each model's own {n} records, so "
-            f"their denominators run from {smallest} to {largest}. They indicate where to look "
-            "next; they do not support a claim about any single tier or trap.",
-            f"Las tasas por nivel y por trampa son reagrupaciones de los {n} registros propios de "
-            f"cada modelo, asi que sus denominadores van de {smallest} a {largest}. Indican donde "
-            "mirar despues; no sostienen una afirmacion sobre ningun nivel ni trampa.",
+            "The per-tier and per-trap rates are re-groupings of each model's own "
+            + (f"records, {n} in a complete row" if short else f"{n} records")
+            + f", so their denominators run from {smallest} to {largest}"
+            + (", and lower in a short row" if short else "")
+            + ". They indicate where to look next; they do not support a claim about any single "
+            "tier or trap.",
+            "Las tasas por nivel y por trampa son reagrupaciones de los "
+            + (f"registros propios de cada modelo, {n} en una fila completa" if short else f"{n} registros propios de cada modelo")
+            + f", asi que sus denominadores van de {smallest} a {largest}"
+            + (", y menos en una fila incompleta" if short else "")
+            + ". Indican donde mirar despues; no sostienen una afirmacion sobre ningun nivel ni "
+            "trampa.",
         )
     )
     return out

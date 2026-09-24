@@ -718,6 +718,7 @@
 .chip-control { border-color: var(--color-good); color: var(--color-good); }
 .chip-tier { background: var(--color-surface-2); }
 .chip-domain { margin-left: 0.25rem; }
+.chip-short { margin-left: 0.4rem; border-color: var(--color-warn); color: var(--color-warn); }
 
 /* ---------- open questions and properties ---------- */
 

@@ -655,6 +655,15 @@ if (gapReport) {
       const figure = document.querySelector("svg[data-rows]");
       const figureModels = [...(figure?.querySelectorAll("g[data-model]") ?? [])].map((g) => g.getAttribute("data-model"));
       const tableModels = [...document.querySelectorAll(".finding-table tr[data-model]")].map((r) => r.getAttribute("data-model"));
+      const tableChips = [...document.querySelectorAll(".finding-table tr[data-model]")].map(
+        (r) => r.querySelector(".chip-short")?.textContent ?? null,
+      );
+      const figureShort = Object.fromEntries(
+        [...(figure?.querySelectorAll("g[data-model]") ?? [])].map((g) => [
+          g.getAttribute("data-model"),
+          g.querySelector("[data-short]") !== null,
+        ]),
+      );
       const matrices = [...document.querySelectorAll("table.matrix")].map((t) => ({
         rows: Number(t.getAttribute("data-rows")),
         rendered: t.querySelectorAll("tbody tr[data-model]").length,
@@ -666,6 +675,8 @@ if (gapReport) {
       return {
         figureModels,
         tableModels,
+        tableChips,
+        figureShort,
         matrices,
         frames,
         pageOverflow: document.documentElement.scrollWidth - window.innerWidth,
@@ -684,6 +695,21 @@ if (gapReport) {
       JSON.stringify(table1) === JSON.stringify(models),
       `[${width}px] Table 1 lists every model once, in the report's order`,
       `${table1.length} rows`,
+    );
+    // R-037. Compared both ways, so it is not vacuous once every sweep is complete: a marker on a
+    // complete row fails it as surely as a short row without one.
+    const complete = gapReport.corpus.cases * gapReport.corpus.repeats;
+    const expectedChips = gapReport.models.map((m) => (m.calls < complete ? `${m.calls}/${complete}` : null));
+    const shortNames = gapReport.models.filter((m) => m.calls < complete).map((m) => `${m.model_id} ${m.calls}/${complete}`);
+    check(
+      JSON.stringify(seen.tableChips.slice(0, models.length)) === JSON.stringify(expectedChips),
+      `[${width}px] Table 1 marks exactly the short rows, with their count`,
+      shortNames.length ? shortNames.join(", ") : "no short row, and none marked",
+    );
+    check(
+      gapReport.models.every((m) => seen.figureShort[m.key] === m.calls < complete),
+      `[${width}px] Figure 1 marks exactly the short rows`,
+      `${Object.values(seen.figureShort).filter(Boolean).length} marked, ${shortNames.length} short`,
     );
     check(
       seen.matrices.length >= 4 && seen.matrices.every((m) => m.rows === models.length && m.rendered === models.length),

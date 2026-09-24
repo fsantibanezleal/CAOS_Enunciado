@@ -214,7 +214,21 @@ R-034  WHERE a ledger at a second output cap exists, THE report SHALL publish th
 R-035  THE report's caveats SHALL be computed from the ledger, and every departure from the stated
        protocol SHALL be published as a caveat.
        Gate: tests/test_report_shape.py::test_the_caveats_are_computed_from_the_records
+
+R-036  IF a model has fewer calls than the ledger's cases times its repeats, THEN THE report SHALL
+       name the model and its count in a caveat, in both languages, and SHALL state the sample size
+       for the complete rows only.
+       Gate: tests/test_report_shape.py::test_a_short_row_is_named_and_the_sample_size_is_the_complete_rows
+
+R-037  THE Benchmark SHALL mark a short row in Table 1 with its count, and SHALL mark no other row.
+       Gate: tools/visual-verify/verify.mjs
 ```
+
+R-036 and R-037 came with 0.05.000, which was published while two sweeps were still running. The
+first caveat took its sample size from the smallest row, so a sweep two calls in would have set the
+interval quoted for every model, and Table 1 printed a rate over fifteen cases in the same column as
+rates over twenty with nothing to tell them apart. The corpus is ordered by tier and a sweep takes
+it in order, so a short row is not a sample of the corpus: it is missing the hardest cases.
 
 R-031 to R-035 came with the second, many-model measurement. The site had been drawn for two
 Claude models and nothing failed when a third ran: every view iterated the data, so none broke, and
@@ -276,7 +290,7 @@ one question; the decision was recorded as UNDECIDED until the two measurements 
 
 ## 9. Convergence
 
-Recorded 2026-09-22 for the corpus, and 2026-09-23 for the web surface (0.03.000).
+Recorded 2026-09-22 for the corpus, and 2026-09-23 for the web surface (0.03.000 to 0.05.000).
 
 | Requirement | Result |
 |---|---|
@@ -285,7 +299,8 @@ Recorded 2026-09-22 for the corpus, and 2026-09-23 for the web surface (0.03.000
 | R-013 to R-022 | all pass, 14 method tests, each mutation-checked |
 | R-023, R-024 | pass: no control character in 124 tracked files; 17 figures match their components |
 | R-025 to R-028 | pass: the sidebar diagnosis and modal-token checks in the gate; 2 rule tests over all 125 outcome combinations |
-| The UI gate | 171 checks pass against the built site, in dark, light and Spanish (0.04.000) |
+| R-029 to R-037 | pass: 141 tests with 2 skips in the Python suite; R-032 and R-037 in the gate, which compares the marked rows with the report both ways |
+| The UI gate | 191 checks pass against the built site, in dark, light and Spanish (0.05.000) |
 
 Out of scope and not claimed: the three other target families (mathematical formulation,
 experiment design, machine-learning framing), which are designed and unmeasured, and the judge

@@ -89,6 +89,38 @@ def test_the_caveats_are_computed_from_the_records(built) -> None:
     assert not any("deepseek-v4-pro" in text for text in english)
     assert any("local models ran on one laptop GPU" in text for text in english)
     assert not any("two models" in text or "forty" in text for text in english)
+    assert not any("have not reached every case" in text for text in english)
+
+
+def test_a_short_row_is_named_and_the_sample_size_is_the_complete_rows(tmp_path, monkeypatch) -> None:
+    """R-036: a sweep that has not reached every case is named with its count, in both languages."""
+    path = tmp_path / "optimization.jsonl"
+    ledger = _ledger(path)
+    Sweep(
+        ledger=ledger,
+        budget=Budget(limit_usd=10.0),
+        # The stub prices two model names; a fourth provider serving one of them is a fourth model.
+        providers={"groq": _Named("groq", default="I cannot formalize this.", pricing=Pricing())},
+        build_prompt=build_prompt,
+        parse_response=parse_for_case,
+        repeats=1,
+    ).run(to_harness_cases()[:2], [Target("groq", "stub-large")])
+    monkeypatch.setattr(report, "_sensitivity_ledgers", list)
+    caveats = report.assemble(path)["caveats"]
+    english = [c["en"] for c in caveats]
+    spanish = [c["es"] for c in caveats]
+    # The interval quoted is the complete rows' one, not the two-call row's.
+    assert english[0].startswith("Each model with a complete row ran 3 calls"), english[0]
+    assert "at n = 3 " in english[0]
+    assert spanish[0].startswith("Cada modelo con fila completa corrio 3 llamadas"), spanish[0]
+    short_en = [t for t in english if "have not reached every case" in t]
+    short_es = [t for t in spanish if "no llegan a todos los casos" in t]
+    assert len(short_en) == len(short_es) == 1
+    assert "groq/stub-large has 2 of the 3 calls" in short_en[0], short_en[0]
+    assert "groq/stub-large tiene 2 de las 3 llamadas" in short_es[0], short_es[0]
+    # The complete rows are not listed as short.
+    for complete in ("anthropic/stub-small", "deepseek/stub-small", "ollama/stub-large"):
+        assert complete not in short_en[0], short_en[0]
 
 
 def test_a_protocol_note_is_published_when_its_model_ran(tmp_path, monkeypatch) -> None:

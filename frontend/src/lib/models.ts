@@ -78,6 +78,8 @@ export interface MeasurementFacts {
   local: number;
   cases: number;
   calls: number;
+  /** Rows with fewer calls than the corpus times its repeats: sweeps that have not reached every case. */
+  shortRows: number;
   cost: number;
   cap: number;
   positiveGaps: number;
@@ -125,6 +127,7 @@ export function measurementFacts(
     local: report.models.filter((m) => m.lane === "local").length,
     cases: report.corpus.cases,
     calls: report.call_count,
+    shortRows: report.models.filter((m) => m.calls < report.corpus.cases * report.corpus.repeats).length,
     cost: report.cost_usd,
     cap: report.protocol_cap,
     positiveGaps: gaps.filter((g) => g > 1e-9).length,
