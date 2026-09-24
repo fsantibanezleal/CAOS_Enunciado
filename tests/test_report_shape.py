@@ -179,3 +179,36 @@ def test_the_scoring_versions_are_published_while_a_record_cannot_name_its_own(t
     # A note naming a model the ledger does not hold is not published.
     monkeypatch.setattr(report, "SCORING_NOTE", {**note, "models": ("zai/absent",)})
     assert {"en": "scored by x", "es": "calificado por x"} not in report.assemble(path)["caveats"]
+
+
+def test_a_model_that_repeats_itself_is_named_and_a_missing_pass_is_described(tmp_path, monkeypatch) -> None:
+    """R-041: later repeats are compared with the first, and a model whose every repeat returned the
+    first response byte for byte is named, because its repeats are the same sample twice.
+
+    The stub answers the same text every time, as a local model at temperature 0 with a fixed seed
+    can. A second model has only its first pass, so its row is short by a whole repeat.
+    """
+    path = tmp_path / "optimization.jsonl"
+    ledger = Ledger(path)
+    cases = to_harness_cases()[:3]
+    for provider, model, repeats in (("ollama", "stub-large", 2), ("anthropic", "stub-small", 1)):
+        Sweep(
+            ledger=ledger,
+            budget=Budget(limit_usd=10.0),
+            providers={provider: _Named(provider, default="I cannot formalize this.", pricing=Pricing())},
+            build_prompt=build_prompt,
+            parse_response=parse_for_case,
+            repeats=repeats,
+        ).run(cases, [Target(provider, model)])
+    monkeypatch.setattr(report, "_sensitivity_ledgers", list)
+    assembled = report.assemble(path)
+
+    assert assembled["repeat_agreement"] == {
+        "ollama/stub-large": {"pairs": 3, "identical_responses": 3, "same_class": 3, "same_faithful": 3}
+    }
+    english = [c["en"] for c in assembled["caveats"]]
+    (copies,) = [t for t in english if "run more than once" in t]
+    assert "For ollama/stub-large, every later repeat returned the first response byte for byte" in copies
+    (short,) = [t for t in english if "have not reached every case at every repeat" in t]
+    assert "anthropic/stub-small has 3 (its second repeat not started) of the 6 calls" in short, short
+    assert "fewer samples, not easier cases" in short and "hardest cases" not in short

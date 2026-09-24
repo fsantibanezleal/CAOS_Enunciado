@@ -13,6 +13,8 @@ import { FigureRow, WideFigure } from "../components/layout";
 import { useEffect, useState } from "react";
 
 import { loadAttempts } from "../lib/data";
+import { wilsonWidth } from "../lib/models";
+import { useMeasurement } from "../lib/useMeasurement";
 
 import {
   CanonicalDiagram,
@@ -697,6 +699,8 @@ function DualityIntegrality({ lang }: { lang: "en" | "es" }) {
 
 function ModelLane({ lang }: { lang: "en" | "es" }) {
   const es = lang === "es";
+  const facts = useMeasurement();
+  const n = facts?.perModel ?? 20;
   return (
     <section>
       <h2>{es ? "La via del modelo: el formalizador aprendido" : "The model lane: the learned formalizer"}</h2>
@@ -797,8 +801,9 @@ function ModelLane({ lang }: { lang: "en" | "es" }) {
               La ultima tarea de la via es como se informan sus numeros. La inferencia alojada no es
               reproducible, asi que dos pasadas sobre el corpus identico, sin cambiar nada salvo el
               muestreo, dan tasas puntuales distintas, y cada tasa se publica con su intervalo de Wilson
-              al 95% <Cite id="wilson1927" paren /> y no con su valor puntual solo. A n = 20 el
-              intervalo ocupa casi la mitad del rango util, y esa anchura es la informacion: dice que
+              al 95% <Cite id="wilson1927" paren /> y no con su valor puntual solo. A n = {n}, las
+              llamadas de una fila completa, el intervalo ocupa unos{" "}
+              {wilsonWidth(n).toFixed(2).replace(".", ",")} del rango util, y esa anchura es la informacion: dice que
               este corpus puede ver que existe una brecha y no puede ordenar dos modelos cuyos
               intervalos se solapan{" "}
               <Cite id="agresti1998" paren />.
@@ -808,8 +813,9 @@ function ModelLane({ lang }: { lang: "en" | "es" }) {
               The lane's last duty is how its numbers are reported. Hosted inference is not
               reproducible, so two passes over the identical corpus, with nothing changed but the
               sampling, give different point rates, and every rate is published with its 95% Wilson
-              interval <Cite id="wilson1927" paren /> rather than as a point value alone. At n = 20 the
-              interval spans close to half the useful range, and that width is the information: it says
+              interval <Cite id="wilson1927" paren /> rather than as a point value alone. At n = {n}, the
+              calls in a complete row, the interval spans about {wilsonWidth(n).toFixed(2)} of the useful
+              range, and that width is the information: it says
               this corpus can see that a gap exists and cannot rank two models whose intervals
               overlap{" "}
               <Cite id="agresti1998" paren />.

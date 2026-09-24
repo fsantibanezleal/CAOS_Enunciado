@@ -236,7 +236,19 @@ R-039  THE bake SHALL record each reference's optimum with every real decision v
 R-040  IF one probe call to the provider fails, THEN THE sweep runner SHALL NOT start, SHALL record
        nothing and SHALL NOT take the ledger's lock.
        Gate: tests/test_sweep_runner.py::test_a_provider_that_cannot_be_reached_records_nothing
+
+R-041  WHERE a model ran a case more than once, THE report SHALL compare each later repeat with the
+       first by response, class and faithful verdict, and SHALL name every model whose later repeats
+       all returned the first response, and a short row SHALL say which pass it lacks.
+       Gate: tests/test_report_shape.py::test_a_model_that_repeats_itself_is_named_and_a_missing_pass_is_described
 ```
+
+R-041 came with the second repeat, which BL-037 needed so that new records would carry their
+documents. A repeat is a second sample only if it can differ, and at temperature 0 with a fixed seed
+a local model can return its first response byte for byte; its rate over forty calls would then rest
+on twenty, with an interval narrowed by nothing. The digest in every record says which, so the report
+counts it. A row that has not started its second pass is short in a different way from one cut off
+mid-pass: it has every case at fewer repeats, not fewer of the hard ones.
 
 R-040 came from starting the second repeat. The launcher passed a key file whole, notes and all, as
 the key, which is an illegal HTTP header, so every call failed before it left the machine; the sweep
