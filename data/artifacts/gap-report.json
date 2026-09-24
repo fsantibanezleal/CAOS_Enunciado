@@ -3,61 +3,61 @@
   "anthropic/claude-haiku-4-5": {
    "1": {
     "confidence": 0.95,
-    "interval_high": 0.6993581574175981,
-    "interval_low": 0.04558726080970055,
-    "passed": 1,
-    "total": 4,
-    "value": 0.25
+    "interval_high": 0.6942576053973728,
+    "interval_low": 0.13684428582359737,
+    "passed": 3,
+    "total": 8,
+    "value": 0.375
    },
    "2": {
     "confidence": 0.95,
-    "interval_high": 0.6993581574175981,
-    "interval_low": 0.04558726080970055,
+    "interval_high": 0.4708881822128535,
+    "interval_low": 0.02241749145005667,
     "passed": 1,
-    "total": 4,
-    "value": 0.25
+    "total": 8,
+    "value": 0.125
    },
    "3": {
     "confidence": 0.95,
-    "interval_high": 0.6993581574175981,
-    "interval_low": 0.04558726080970055,
-    "passed": 1,
-    "total": 4,
+    "interval_high": 0.5907245696898311,
+    "interval_low": 0.071479212752109,
+    "passed": 2,
+    "total": 8,
     "value": 0.25
    },
    "4": {
     "confidence": 0.95,
-    "interval_high": 0.6993581574175981,
-    "interval_low": 0.04558726080970055,
-    "passed": 1,
-    "total": 4,
+    "interval_high": 0.5907245696898311,
+    "interval_low": 0.071479212752109,
+    "passed": 2,
+    "total": 8,
     "value": 0.25
    },
    "5": {
     "confidence": 0.95,
-    "interval_high": 0.4898908364545973,
-    "interval_low": 0.0,
-    "passed": 0,
-    "total": 4,
-    "value": 0.0
+    "interval_high": 0.5907245696898311,
+    "interval_low": 0.071479212752109,
+    "passed": 2,
+    "total": 8,
+    "value": 0.25
    }
   },
   "anthropic/claude-sonnet-5": {
    "1": {
     "confidence": 0.95,
     "interval_high": 1.0,
-    "interval_low": 0.5101091635454027,
-    "passed": 4,
-    "total": 4,
+    "interval_low": 0.6755924351161198,
+    "passed": 8,
+    "total": 8,
     "value": 1.0
    },
    "2": {
     "confidence": 0.95,
-    "interval_high": 0.8499610108478505,
-    "interval_low": 0.15003898915214953,
-    "passed": 2,
-    "total": 4,
-    "value": 0.5
+    "interval_high": 0.9177810759959433,
+    "interval_low": 0.35893445183261935,
+    "passed": 5,
+    "total": 7,
+    "value": 0.7142857142857143
    },
    "3": {
     "confidence": 0.95,
@@ -677,53 +677,61 @@
   "anthropic/claude-haiku-4-5": {
    "ambiguity": {
     "confidence": 0.95,
+    "interval_high": 0.5907245696898311,
+    "interval_low": 0.071479212752109,
+    "passed": 2,
+    "total": 8,
+    "value": 0.25
+   },
+   "derived-bound": {
+    "confidence": 0.95,
     "interval_high": 0.4898908364545973,
     "interval_low": 0.0,
     "passed": 0,
     "total": 4,
     "value": 0.0
    },
-   "derived-bound": {
-    "confidence": 0.95,
-    "interval_high": 0.6576197724933469,
-    "interval_low": 0.0,
-    "passed": 0,
-    "total": 2,
-    "value": 0.0
-   },
    "droppable-constraint": {
     "confidence": 0.95,
-    "interval_high": 0.6244653702374747,
-    "interval_low": 0.036224108632430085,
-    "passed": 1,
-    "total": 5,
+    "interval_high": 0.5098375284633583,
+    "interval_low": 0.05668215145437519,
+    "passed": 2,
+    "total": 10,
     "value": 0.2
    },
    "implicit-quantity": {
     "confidence": 0.95,
-    "interval_high": 0.5614970317550455,
+    "interval_high": 0.39033428790216534,
     "interval_low": 0.0,
     "passed": 0,
-    "total": 3,
+    "total": 6,
     "value": 0.0
    },
    "integrality": {
     "confidence": 0.95,
-    "interval_high": 0.6993581574175981,
-    "interval_low": 0.04558726080970055,
-    "passed": 1,
-    "total": 4,
+    "interval_high": 0.5907245696898311,
+    "interval_low": 0.071479212752109,
+    "passed": 2,
+    "total": 8,
     "value": 0.25
    },
    "none": {
     "confidence": 0.95,
-    "interval_high": 0.6993581574175981,
-    "interval_low": 0.04558726080970055,
-    "passed": 1,
-    "total": 4,
+    "interval_high": 0.5907245696898311,
+    "interval_low": 0.071479212752109,
+    "passed": 2,
+    "total": 8,
     "value": 0.25
    },
    "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 0.8499610108478505,
+    "interval_low": 0.15003898915214953,
+    "passed": 2,
+    "total": 4,
+    "value": 0.5
+   },
+   "red-herring": {
     "confidence": 0.95,
     "interval_high": 0.6576197724933469,
     "interval_low": 0.0,
@@ -731,20 +739,12 @@
     "total": 2,
     "value": 0.0
    },
-   "red-herring": {
-    "confidence": 0.95,
-    "interval_high": 0.7934506856227626,
-    "interval_low": 0.0,
-    "passed": 0,
-    "total": 1,
-    "value": 0.0
-   },
    "unit-mismatch": {
     "confidence": 0.95,
-    "interval_high": 0.9054687942657693,
-    "interval_low": 0.09453120573423074,
-    "passed": 1,
-    "total": 2,
+    "interval_high": 0.8499610108478505,
+    "interval_low": 0.15003898915214953,
+    "passed": 2,
+    "total": 4,
     "value": 0.5
    }
   },
@@ -760,9 +760,9 @@
    "derived-bound": {
     "confidence": 0.95,
     "interval_high": 1.0,
-    "interval_low": 0.34238022750665303,
-    "passed": 2,
-    "total": 2,
+    "interval_low": 0.43850296824495455,
+    "passed": 3,
+    "total": 3,
     "value": 1.0
    },
    "droppable-constraint": {
@@ -791,13 +791,21 @@
    },
    "none": {
     "confidence": 0.95,
-    "interval_high": 0.9544127391902995,
-    "interval_low": 0.30064184258240184,
-    "passed": 3,
-    "total": 4,
-    "value": 0.75
+    "interval_high": 0.9743203756552565,
+    "interval_low": 0.4868721707256811,
+    "passed": 6,
+    "total": 7,
+    "value": 0.8571428571428571
    },
    "objective-sense": {
+    "confidence": 0.95,
+    "interval_high": 1.0,
+    "interval_low": 0.43850296824495455,
+    "passed": 3,
+    "total": 3,
+    "value": 1.0
+   },
+   "red-herring": {
     "confidence": 0.95,
     "interval_high": 1.0,
     "interval_low": 0.34238022750665303,
@@ -805,21 +813,13 @@
     "total": 2,
     "value": 1.0
    },
-   "red-herring": {
-    "confidence": 0.95,
-    "interval_high": 1.0,
-    "interval_low": 0.20654931437723745,
-    "passed": 1,
-    "total": 1,
-    "value": 1.0
-   },
    "unit-mismatch": {
     "confidence": 0.95,
-    "interval_high": 0.6576197724933469,
-    "interval_low": 0.0,
-    "passed": 0,
-    "total": 2,
-    "value": 0.0
+    "interval_high": 0.7923403991979523,
+    "interval_low": 0.06149194472039615,
+    "passed": 1,
+    "total": 3,
+    "value": 0.3333333333333333
    }
   },
   "deepseek/deepseek-v4-pro": {
@@ -1859,11 +1859,15 @@
    }
   }
  },
- "call_count": 320,
+ "call_count": 347,
  "caveats": [
   {
-   "en": "Each model ran 20 calls, one repeat per case, which gives a wide interval: at n = 20 a rate of 0.50 carries a Wilson interval from 0.30 to 0.70. Two models whose intervals overlap cannot be ranked against each other from this run.",
-   "es": "Cada modelo corrio 20 llamadas, una repeticion por caso, lo que da un intervalo ancho: con n = 20 una tasa de 0.50 lleva un intervalo de Wilson de 0.30 a 0.70. Dos modelos cuyos intervalos se solapan no se pueden ordenar entre si con esta corrida."
+   "en": "Each model with a complete row ran 40 calls, 2 repeats per case, which gives a wide interval: at n = 40 a rate of 0.50 carries a Wilson interval from 0.35 to 0.65. Two models whose intervals overlap cannot be ranked against each other from this run.",
+   "es": "Cada modelo con fila completa corrio 40 llamadas, 2 repeticiones por caso, lo que da un intervalo ancho: con n = 40 una tasa de 0.50 lleva un intervalo de Wilson de 0.35 a 0.65. Dos modelos cuyos intervalos se solapan no se pueden ordenar entre si con esta corrida."
+  },
+  {
+   "en": "15 row(s) have not reached every case at every repeat: anthropic/claude-sonnet-5 has 27 (its second repeat at 7 of 20), zai/glm-5.3 has 20 (its second repeat not started), zai/glm-4.5-flash has 20 (its second repeat not started), deepseek/deepseek-v4-pro has 20 (its second repeat not started), ollama/phi4:latest has 20 (its second repeat not started), ollama/deepseek-r1:8b has 20 (its second repeat not started), ollama/qwen3:14b has 20 (its second repeat not started), ollama/qwen2.5-coder:7b has 20 (its second repeat not started), ollama/gemma3:12b has 20 (its second repeat not started), ollama/gemma3:4b has 20 (its second repeat not started), ollama/llama3.1:8b has 20 (its second repeat not started), ollama/mistral:7b has 20 (its second repeat not started), ollama/phi4-mini:latest has 20 (its second repeat not started), ollama/qwen3:4b has 20 (its second repeat not started) and ollama/qwen3:8b has 20 (its second repeat not started) of the 40 calls. A sweep takes the cases in corpus order, and the corpus climbs from tier 1 to tier 5, so a pass it has not finished lacks the hardest cases. A row missing a whole repeat has every case at fewer repeats: its rate is over fewer samples, not easier cases. Its rates cannot be compared with a complete row's. A resumed sweep completes a row in place, because the ledger skips every call it already holds.",
+   "es": "15 fila(s) no llegan a todos los casos en cada repeticion: anthropic/claude-sonnet-5 tiene 27 (su segunda repeticion en 7 de 20), zai/glm-5.3 tiene 20 (su segunda repeticion sin empezar), zai/glm-4.5-flash tiene 20 (su segunda repeticion sin empezar), deepseek/deepseek-v4-pro tiene 20 (su segunda repeticion sin empezar), ollama/phi4:latest tiene 20 (su segunda repeticion sin empezar), ollama/deepseek-r1:8b tiene 20 (su segunda repeticion sin empezar), ollama/qwen3:14b tiene 20 (su segunda repeticion sin empezar), ollama/qwen2.5-coder:7b tiene 20 (su segunda repeticion sin empezar), ollama/gemma3:12b tiene 20 (su segunda repeticion sin empezar), ollama/gemma3:4b tiene 20 (su segunda repeticion sin empezar), ollama/llama3.1:8b tiene 20 (su segunda repeticion sin empezar), ollama/mistral:7b tiene 20 (su segunda repeticion sin empezar), ollama/phi4-mini:latest tiene 20 (su segunda repeticion sin empezar), ollama/qwen3:4b tiene 20 (su segunda repeticion sin empezar) y ollama/qwen3:8b tiene 20 (su segunda repeticion sin empezar) de las 40 llamadas. Un barrido recorre los casos en el orden del corpus, y el corpus sube del nivel 1 al nivel 5, asi que a una pasada sin terminar le faltan los casos mas dificiles. Una fila a la que le falta una repeticion entera tiene todos los casos con menos repeticiones: su tasa es sobre menos muestras, no sobre casos mas faciles. Sus tasas no se pueden comparar con las de una fila completa. Un barrido reanudado completa la fila en su lugar, porque el libro mayor omite cada llamada que ya contiene."
   },
   {
    "en": "Run-to-run variation is real: an earlier pass of the identical corpus put claude-haiku-4-5 at ran 0.350, and the published pass puts it at 0.250, with nothing changed but the sampling. That is what the interval is for.",
@@ -1878,16 +1882,16 @@
    "es": "Los proveedores exponen controles distintos, y cada registro declara los que fijo: Claude no admite temperatura ni semilla, asi que no se registra ninguna; GLM corre con decodificacion voraz (do_sample false), esfuerzo alto donde el modelo lo admite, y sin semilla; DeepSeek corre con esfuerzo alto; su modo de razonamiento ignora la temperatura y no tiene semilla; el carril local fija temperatura 0 y una semilla, con el razonamiento apagado donde la plantilla del modelo respeta el interruptor."
   },
   {
-   "en": "One output cap for every model, 8192 tokens. It binds on models that write or reason at length: 76 of the 320 calls reached it, counted as 'truncated output' or 'no answer: the reasoning used the whole cap'. A reasoning model spends the cap on reasoning first, so those are failures under this cap, not evidence about how it formalizes.",
-   "es": "Un solo tope de salida para todos los modelos, 8192 tokens. Muerde en los modelos que escriben o razonan en extenso: 76 de las 320 llamadas lo alcanzaron, contadas como 'salida truncada' o 'sin respuesta: el razonamiento agoto el tope'. Un modelo que razona gasta el tope razonando primero, asi que esos son fallos bajo este tope, no evidencia de como formaliza."
+   "en": "One output cap for every model, 8192 tokens. It binds on models that write or reason at length: 76 of the 347 calls reached it, counted as 'truncated output' or 'no answer: the reasoning used the whole cap'. A reasoning model spends the cap on reasoning first, so those are failures under this cap, not evidence about how it formalizes.",
+   "es": "Un solo tope de salida para todos los modelos, 8192 tokens. Muerde en los modelos que escriben o razonan en extenso: 76 de las 347 llamadas lo alcanzaron, contadas como 'salida truncada' o 'sin respuesta: el razonamiento agoto el tope'. Un modelo que razona gasta el tope razonando primero, asi que esos son fallos bajo este tope, no evidencia de como formaliza."
   },
   {
    "en": "The structural layer passes only when the canonical forms are equal, and refutes when the optima differ. A matching optimum never proves equivalence, because compensating errors reach the right number.",
    "es": "La capa estructural aprueba solo cuando las formas canonicas son iguales, y refuta cuando los optimos difieren. Un optimo coincidente nunca prueba equivalencia, porque errores que se compensan llegan al numero correcto."
   },
   {
-   "en": "opt-019 has no feasible point by design, and ran means reaching a feasible optimum, so it cannot be passed: a candidate that proves it infeasible, the right answer, is recorded as not having run, and is classed 'infeasible, as the case is'. 2 candidate(s) did so. Crediting it needs a structural check that can pass such a case, and is an open decision because it moves the published rates.",
-   "es": "opt-019 no tiene punto factible por diseno, y corrio significa alcanzar un optimo factible, asi que no se puede aprobar: un candidato que prueba que es infactible, la respuesta correcta, queda registrado como no ejecutado, y se clasifica 'infactible, como el caso'. 2 candidato(s) lo hicieron. Acreditarlo requiere una comprobacion estructural capaz de aprobar un caso asi, y es una decision abierta porque mueve las tasas publicadas."
+   "en": "opt-019 has no feasible point by design, and ran means reaching a feasible optimum, so it cannot be passed: a candidate that proves it infeasible, the right answer, is recorded as not having run, and is classed 'infeasible, as the case is'. 3 candidate(s) did so. Crediting it needs a structural check that can pass such a case, and is an open decision because it moves the published rates.",
+   "es": "opt-019 no tiene punto factible por diseno, y corrio significa alcanzar un optimo factible, asi que no se puede aprobar: un candidato que prueba que es infactible, la respuesta correcta, queda registrado como no ejecutado, y se clasifica 'infactible, como el caso'. 3 candidato(s) lo hicieron. Acreditarlo requiere una comprobacion estructural capaz de aprobar un caso asi, y es una decision abierta porque mueve las tasas publicadas."
   },
   {
    "en": "A candidate the configured solver cannot express is counted as unmeasured and excluded from both rates. Charging a limit of the instrument to the subject is the error this product exists to expose.",
@@ -1918,66 +1922,70 @@
    "es": "1 llamada(s) fallaron en el proveedor y nunca llegaron al modelo (zai/glm-4.5-flash en opt-008). copela cuenta una llamada fallida como un candidato que no se ejecuto, asi que baja las tasas de ese modelo. El libro mayor conserva el registro, y un barrido reanudado no la reintenta, porque el libro mayor omite cada llamada que ya contiene."
   },
   {
-   "en": "3 refutation(s) land exactly on the reference's optimum with its decisions made integer: anthropic/claude-haiku-4-5 on opt-006 (16 against 16.6667), anthropic/claude-sonnet-5 on opt-012 (8080 against 8200) and ollama/phi4:latest on opt-012 (8080 against 8200). The statements of opt-006 and opt-012 do not say whether those decisions are whole numbers, and the references are continuous there, so a candidate that counts them in whole units is refuted for a reading the statement allows. These candidates land where such a model lands, and a matching optimum does not prove a candidate is that model. The published rates keep the refutations, because a case is not edited after its answers are read. Read as allowed, the gaps would move: anthropic/claude-haiku-4-5 from +0.050 to +0.000, anthropic/claude-sonnet-5 from +0.050 to +0.000 and ollama/phi4:latest from +0.100 to +0.050. How a statement that leaves a decision's domain open is scored is an open decision.",
-   "es": "3 refutacion(es) caen exactamente en el optimo de la referencia con sus decisiones enteras: anthropic/claude-haiku-4-5 en opt-006 (16 contra 16.6667), anthropic/claude-sonnet-5 en opt-012 (8080 contra 8200) y ollama/phi4:latest en opt-012 (8080 contra 8200). Los enunciados de opt-006 y opt-012 no dicen si esas decisiones son numeros enteros, y las referencias son continuas ahi, asi que un candidato que las cuenta en unidades enteras queda refutado por una lectura que el enunciado admite. Estos candidatos caen donde cae ese modelo, y un optimo coincidente no prueba que el candidato sea ese modelo. Las tasas publicadas conservan las refutaciones, porque un caso no se edita despues de leer sus respuestas. Leidas como admitidas, las brechas se moverian: anthropic/claude-haiku-4-5 de +0.050 a +0.000, anthropic/claude-sonnet-5 de +0.050 a +0.000 y ollama/phi4:latest de +0.100 a +0.050. Como se califica un enunciado que deja abierto el dominio de una decision es una decision abierta."
+   "en": "5 refutation(s) land exactly on the reference's optimum with its decisions made integer: anthropic/claude-haiku-4-5 on opt-006 (16 against 16.6667), anthropic/claude-haiku-4-5 on opt-006 (16 against 16.6667), anthropic/claude-haiku-4-5 on opt-012 (8080 against 8200), anthropic/claude-sonnet-5 on opt-012 (8080 against 8200) and ollama/phi4:latest on opt-012 (8080 against 8200). The statements of opt-006 and opt-012 do not say whether those decisions are whole numbers, and the references are continuous there, so a candidate that counts them in whole units is refuted for a reading the statement allows. These candidates land where such a model lands, and a matching optimum does not prove a candidate is that model. The published rates keep the refutations, because a case is not edited after its answers are read. Read as allowed, the gaps would move: anthropic/claude-haiku-4-5 from +0.075 to +0.000, anthropic/claude-sonnet-5 from +0.037 to +0.000 and ollama/phi4:latest from +0.100 to +0.050. How a statement that leaves a decision's domain open is scored is an open decision.",
+   "es": "5 refutacion(es) caen exactamente en el optimo de la referencia con sus decisiones enteras: anthropic/claude-haiku-4-5 en opt-006 (16 contra 16.6667), anthropic/claude-haiku-4-5 en opt-006 (16 contra 16.6667), anthropic/claude-haiku-4-5 en opt-012 (8080 contra 8200), anthropic/claude-sonnet-5 en opt-012 (8080 contra 8200) y ollama/phi4:latest en opt-012 (8080 contra 8200). Los enunciados de opt-006 y opt-012 no dicen si esas decisiones son numeros enteros, y las referencias son continuas ahi, asi que un candidato que las cuenta en unidades enteras queda refutado por una lectura que el enunciado admite. Estos candidatos caen donde cae ese modelo, y un optimo coincidente no prueba que el candidato sea ese modelo. Las tasas publicadas conservan las refutaciones, porque un caso no se edita despues de leer sus respuestas. Leidas como admitidas, las brechas se moverian: anthropic/claude-haiku-4-5 de +0.075 a +0.000, anthropic/claude-sonnet-5 de +0.037 a +0.000 y ollama/phi4:latest de +0.100 a +0.050. Como se califica un enunciado que deja abierto el dominio de una decision es una decision abierta."
+  },
+  {
+   "en": "27 case(s) were run more than once by the same model, and the later repeat reached the same faithful verdict as the first in 20 of them. No model returned the same response on every repeat.",
+   "es": "27 caso(s) fueron corridos mas de una vez por el mismo modelo, y la repeticion posterior llego al mismo veredicto de fidelidad que la primera en 20 de ellos. Ningun modelo devolvio la misma respuesta en cada repeticion."
   },
   {
    "en": "The 12 free models, those with no per-token price, ran with the kill criterion at 20, the corpus size, rather than 10: a free call costs nothing, and a completed corpus keeps their rows comparable with the rest.",
    "es": "Los 12 modelos gratuitos, los que no tienen precio por token, corrieron con el criterio de corte en 20, el tamano del corpus, y no en 10: una llamada gratuita no cuesta nada, y un corpus completo mantiene sus filas comparables con el resto."
   },
   {
-   "en": "The per-tier and per-trap rates are re-groupings of each model's own 20 records, so their denominators run from 1 to 5. They indicate where to look next; they do not support a claim about any single tier or trap.",
-   "es": "Las tasas por nivel y por trampa son reagrupaciones de los 20 registros propios de cada modelo, asi que sus denominadores van de 1 a 5. Indican donde mirar despues; no sostienen una afirmacion sobre ningun nivel ni trampa."
+   "en": "The per-tier and per-trap rates are re-groupings of each model's own records, 40 in a complete row, so their denominators run from 1 to 5, and lower in a short row. They indicate where to look next; they do not support a claim about any single tier or trap.",
+   "es": "Las tasas por nivel y por trampa son reagrupaciones de los registros propios de cada modelo, 40 en una fila completa, asi que sus denominadores van de 1 a 5, y menos en una fila incompleta. Indican donde mirar despues; no sostienen una afirmacion sobre ningun nivel ni trampa."
   }
  ],
  "cells": [
   {
    "faithful": {
     "confidence": 0.95,
-    "interval_high": 0.7007019918017877,
-    "interval_low": 0.2992980081982123,
-    "passed": 10,
-    "total": 20,
-    "value": 0.5
+    "interval_high": 0.784674870390344,
+    "interval_low": 0.4422923441210239,
+    "passed": 17,
+    "total": 27,
+    "value": 0.6296296296296297
    },
    "family": "optimization",
-   "gap": 0.050000000000000044,
+   "gap": 0.03703703703703698,
    "gap_is_defined": true,
    "model": "anthropic/claude-sonnet-5",
    "model_id": "claude-sonnet-5",
    "provider": "anthropic",
    "ran": {
     "confidence": 0.95,
-    "interval_high": 0.7418021417443759,
-    "interval_low": 0.34208534245034233,
-    "passed": 11,
-    "total": 20,
-    "value": 0.55
+    "interval_high": 0.8135673850128435,
+    "interval_low": 0.47824760507320074,
+    "passed": 18,
+    "total": 27,
+    "value": 0.6666666666666666
    },
    "unmeasured": 0
   },
   {
    "faithful": {
     "confidence": 0.95,
-    "interval_high": 0.4160174322518936,
-    "interval_low": 0.08065766257979809,
-    "passed": 4,
-    "total": 20,
-    "value": 0.2
+    "interval_high": 0.40193961420768026,
+    "interval_low": 0.14187118639096302,
+    "passed": 10,
+    "total": 40,
+    "value": 0.25
    },
    "family": "optimization",
-   "gap": 0.04999999999999999,
+   "gap": 0.07500000000000001,
    "gap_is_defined": true,
    "model": "anthropic/claude-haiku-4-5",
    "model_id": "claude-haiku-4-5",
    "provider": "anthropic",
    "ran": {
     "confidence": 0.95,
-    "interval_high": 0.468700877618744,
-    "interval_low": 0.11186170140766569,
-    "passed": 5,
-    "total": 20,
-    "value": 0.25
+    "interval_high": 0.47982253810122333,
+    "interval_low": 0.20084502231782697,
+    "passed": 13,
+    "total": 40,
+    "value": 0.325
    },
    "unmeasured": 0
   },
@@ -2335,26 +2343,27 @@
  "corpus": {
   "cases": 20,
   "family": "optimization",
-  "repeats": 1,
+  "repeats": 2,
   "tiers": 5
  },
- "cost_usd": 2.5325,
+ "cost_usd": 3.0549,
  "failure_breakdown": {
   "anthropic/claude-haiku-4-5": {
-   "a constant with no unit": 5,
+   "a constant with no unit": 11,
    "a quantity declared derived and never defined": 4,
    "a required field left out": 2,
-   "an assumption or open question with no span": 1,
+   "an assumption or open question with no span": 2,
    "dimensional mismatch": 1,
-   "fabricated provenance: words not in the statement": 1,
-   "infeasible, as the case is": 1,
-   "ran and survived every check": 4,
-   "ran, then REFUTED: solves to the reference's whole-number optimum": 1
+   "fabricated provenance: words not in the statement": 3,
+   "infeasible, as the case is": 2,
+   "ran and survived every check": 10,
+   "ran, then REFUTED: solves to the reference's whole-number optimum": 3,
+   "unparseable output": 2
   },
   "anthropic/claude-sonnet-5": {
    "a constant with no unit": 4,
    "infeasible, as the case is": 1,
-   "ran and survived every check": 10,
+   "ran and survived every check": 17,
    "ran, then REFUTED: solves to the reference's whole-number optimum": 1,
    "truncated output": 3,
    "unparseable output": 1
@@ -2473,13 +2482,13 @@
  "judge": [],
  "layer_agreement": {
   "anthropic/claude-haiku-4-5": {
-   "did-not-run/not-faithful": 15,
-   "ran/faithful": 4,
-   "ran/not-faithful": 1
+   "did-not-run/not-faithful": 27,
+   "ran/faithful": 10,
+   "ran/not-faithful": 3
   },
   "anthropic/claude-sonnet-5": {
    "did-not-run/not-faithful": 9,
-   "ran/faithful": 10,
+   "ran/faithful": 17,
    "ran/not-faithful": 1
   },
   "deepseek/deepseek-v4-pro": {
@@ -2541,20 +2550,21 @@
  "models": [
   {
    "at_cap": 3,
-   "calls": 20,
-   "cost_usd": 1.0128,
+   "calls": 27,
+   "cost_usd": 1.3182,
    "fingerprints": [
     "anthropic#effort=high#no-temperature"
    ],
    "harnesses": [
+    "copela 0.5.0",
     "unrecorded (ledger schema 1.0)"
    ],
    "key": "anthropic/claude-sonnet-5",
    "lane": "hosted",
    "measured_from": "2026-09-22",
-   "measured_to": "2026-09-22",
-   "median_latency_s": 32.1,
-   "median_output_tokens": 4264,
+   "measured_to": "2026-09-24",
+   "median_latency_s": 31.5,
+   "median_output_tokens": 4042,
    "model_id": "claude-sonnet-5",
    "model_versions": [
     "claude-sonnet-5"
@@ -2563,20 +2573,21 @@
   },
   {
    "at_cap": 0,
-   "calls": 20,
-   "cost_usd": 0.2135,
+   "calls": 40,
+   "cost_usd": 0.4305,
    "fingerprints": [
     "anthropic#no-effort#no-temperature"
    ],
    "harnesses": [
+    "copela 0.5.0",
     "unrecorded (ledger schema 1.0)"
    ],
    "key": "anthropic/claude-haiku-4-5",
    "lane": "hosted",
    "measured_from": "2026-09-22",
-   "measured_to": "2026-09-22",
-   "median_latency_s": 7.2,
-   "median_output_tokens": 1573,
+   "measured_to": "2026-09-24",
+   "median_latency_s": 9.3,
+   "median_output_tokens": 1620,
    "model_id": "claude-haiku-4-5",
    "model_versions": [
     "claude-haiku-4-5-20251001"
@@ -2897,32 +2908,46 @@
  "note": "The layers are reported separately by design. There is no combined score: a single number would let a high 'it ran' rate conceal a low 'it was right' rate, which is the distance this report exists to show. Rates are over repeats with a Wilson interval, because pinning whatever controls a provider exposes does not make hosted inference deterministic, so a single run is not a result.",
  "note_es": "Las capas se informan por separado a proposito. No hay puntaje combinado: un solo numero dejaria que una tasa alta de 'corrio' oculte una tasa baja de 'fue correcto', que es la distancia que este informe existe para mostrar. Las tasas son sobre repeticiones con un intervalo de Wilson, porque fijar los controles que expone un proveedor no hace determinista la inferencia alojada, asi que una corrida sola no es un resultado.",
  "protocol_cap": 8192,
- "schema": "enunciado-gap-report/2.1",
+ "repeat_agreement": {
+  "anthropic/claude-haiku-4-5": {
+   "identical_responses": 0,
+   "pairs": 20,
+   "same_class": 9,
+   "same_faithful": 14
+  },
+  "anthropic/claude-sonnet-5": {
+   "identical_responses": 0,
+   "pairs": 7,
+   "same_class": 6,
+   "same_faithful": 6
+  }
+ },
+ "schema": "enunciado-gap-report/2.2",
  "whole_number_readings": {
   "models": {
    "anthropic/claude-haiku-4-5": {
     "faithful_if_allowed": {
      "confidence": 0.95,
-     "interval_high": 0.468700877618744,
-     "interval_low": 0.11186170140766569,
-     "passed": 5,
-     "total": 20,
-     "value": 0.25
+     "interval_high": 0.47982253810122333,
+     "interval_low": 0.20084502231782697,
+     "passed": 13,
+     "total": 40,
+     "value": 0.325
     },
-    "gap": 0.05,
+    "gap": 0.075,
     "gap_if_allowed": 0.0,
-    "refutations": 1
+    "refutations": 3
    },
    "anthropic/claude-sonnet-5": {
     "faithful_if_allowed": {
      "confidence": 0.95,
-     "interval_high": 0.7418021417443759,
-     "interval_low": 0.34208534245034233,
-     "passed": 11,
-     "total": 20,
-     "value": 0.55
+     "interval_high": 0.8135673850128435,
+     "interval_low": 0.47824760507320074,
+     "passed": 18,
+     "total": 27,
+     "value": 0.6666666666666666
     },
-    "gap": 0.05,
+    "gap": 0.037037,
     "gap_if_allowed": 0.0,
     "refutations": 1
    },
@@ -2948,6 +2973,22 @@
     "property_passed": true,
     "reference": 16.6667,
     "whole_number_optimum": 16.0
+   },
+   {
+    "candidate": 16.0,
+    "case_id": "opt-006",
+    "model": "anthropic/claude-haiku-4-5",
+    "property_passed": true,
+    "reference": 16.6667,
+    "whole_number_optimum": 16.0
+   },
+   {
+    "candidate": 8080.0,
+    "case_id": "opt-012",
+    "model": "anthropic/claude-haiku-4-5",
+    "property_passed": true,
+    "reference": 8200.0,
+    "whole_number_optimum": 8080.0
    },
    {
     "candidate": 8080.0,
