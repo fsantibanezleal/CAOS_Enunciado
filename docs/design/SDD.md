@@ -224,11 +224,12 @@ R-037  THE Benchmark SHALL mark a short row in Table 1 with its count, and SHALL
        Gate: tools/visual-verify/verify.mjs
 ```
 
-R-036 and R-037 came with 0.05.000, which was published while two sweeps were still running. The
-first caveat took its sample size from the smallest row, so a sweep two calls in would have set the
-interval quoted for every model, and Table 1 printed a rate over fifteen cases in the same column as
-rates over twenty with nothing to tell them apart. The corpus is ordered by tier and a sweep takes
-it in order, so a short row is not a sample of the corpus: it is missing the hardest cases.
+R-036 and R-037 came with 0.05.000, which was published while a sweep was still running. The first
+caveat took its sample size from the smallest row, so a sweep two calls in would have set the
+interval quoted for every model, and Table 1 would have printed a rate over two cases in the same
+column as rates over twenty with nothing to tell them apart. The corpus is ordered by tier and a
+sweep takes it in order, so a short row is not a sample of the corpus: it is missing the hardest
+cases.
 
 R-031 to R-035 came with the second, many-model measurement. The site had been drawn for two
 Claude models and nothing failed when a third ran: every view iterated the data, so none broke, and
