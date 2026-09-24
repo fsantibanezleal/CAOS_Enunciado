@@ -2915,6 +2915,27 @@
     ]
    },
    {
+    "cost_usd": 0.033801,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 1031,
+    "latency_ms": 164064.6,
+    "model": "deepseek/deepseek-v4-pro",
+    "model_id": "deepseek-v4-pro",
+    "model_version": "deepseek-v4-pro",
+    "output_tokens": 8192,
+    "provider": "deepseek",
+    "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
+    "repeat": 1,
+    "response_excerpt": "[no answer: the model emitted 33921 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 33921 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.0,
     "failure_class": "ran and survived every check",
     "input_tokens": 950,
@@ -3315,6 +3336,27 @@
     ]
    },
    {
+    "cost_usd": 0.033841,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 1061,
+    "latency_ms": 126827.2,
+    "model": "deepseek/deepseek-v4-pro",
+    "model_id": "deepseek-v4-pro",
+    "model_version": "deepseek-v4-pro",
+    "output_tokens": 8192,
+    "provider": "deepseek",
+    "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
+    "repeat": 1,
+    "response_excerpt": "[no answer: the model emitted 32476 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 32476 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.0,
     "failure_class": "a name used but never declared",
     "input_tokens": 980,
@@ -3699,6 +3741,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 31823 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.033863,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 1078,
+    "latency_ms": 166987.0,
+    "model": "deepseek/deepseek-v4-pro",
+    "model_id": "deepseek-v4-pro",
+    "model_version": "deepseek-v4-pro",
+    "output_tokens": 8192,
+    "provider": "deepseek",
+    "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
+    "repeat": 1,
+    "response_excerpt": "[no answer: the model emitted 33593 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 33593 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -4099,6 +4162,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 30977 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.033816,
+    "failure_class": "truncated output",
+    "input_tokens": 1045,
+    "latency_ms": 143413.7,
+    "model": "deepseek/deepseek-v4-pro",
+    "model_id": "deepseek-v4-pro",
+    "model_version": "deepseek-v4-pro",
+    "output_tokens": 8191,
+    "provider": "deepseek",
+    "provider_fingerprint": "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed",
+    "repeat": 1,
+    "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A smelter blends two concentrates. Concentrate X assays 28 per cent copper and costs 210 USD per tonne. Concentrate Y assays 19 per cent and costs 140 USD per tonne. The furnace needs 500 tonnes of blend, and the blend must assay at least 24 per cent copper. Minimise the cost of the blend.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"amount_X\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": 500.0,\n      \"value\": null,\n      \"description\": \"Amount of concentrate X in the blend, in tonnes.\"\n    },\n    {\n      \"name\": \"amount_Y\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": 500.0,\n      \"value\": null,\n      \"description\": \"Amount of concentrate Y in the bl\n[... 869 characters omitted ...]\nconcentrate X per tonne.\"\n    },\n    {\n      \"name\": \"cost_Y\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"USD/t\", \"exponents\": {\"currency\": \"1\", \"mass\": \"-1\"}},\n      \"domain\": \"real\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 140.0,\n      \"description\": \"Cost of concentrate Y per tonne.\"\n    },\n    {\n      \"name\": \"required_grade\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"real\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 0.24,\n      \"description\": \"Minimum copper grade of the blend as a mass fraction (24 per cent).\"\n    },\n    {\n      \"name\": \"required_blend_mass\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 500.0,\n      \"description\": \"Required mass of the blend, in tonnes.\"\n    }\n  ],\n  \"relations\": [\n    {\n      \"tag\": \"compare\",\n      \"left\": {\n        \"tag",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the JSON object is not closed",
       "layer": "executable",
       "outcome": "fail"
      }

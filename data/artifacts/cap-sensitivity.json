@@ -107,32 +107,32 @@
      }
     },
     "8192": {
-     "at_cap": 21,
-     "calls": 26,
-     "cost_usd": 0.8504,
+     "at_cap": 17,
+     "calls": 20,
+     "cost_usd": 0.6636,
      "failure_breakdown": {
       "a constant with no unit": 1,
-      "no answer: the reasoning used the whole cap": 17,
-      "ran and survived every check": 4,
-      "truncated output": 4
+      "no answer: the reasoning used the whole cap": 14,
+      "ran and survived every check": 2,
+      "truncated output": 3
      },
      "faithful": {
       "confidence": 0.95,
-      "interval_high": 0.33531199328213473,
-      "interval_low": 0.061500337235783575,
-      "passed": 4,
-      "total": 26,
-      "value": 0.15384615384615385
+      "interval_high": 0.3010336452284873,
+      "interval_low": 0.027866481213768224,
+      "passed": 2,
+      "total": 20,
+      "value": 0.1
      },
      "gap": 0.0,
      "median_output_tokens": 8192,
      "ran": {
       "confidence": 0.95,
-      "interval_high": 0.33531199328213473,
-      "interval_low": 0.061500337235783575,
-      "passed": 4,
-      "total": 26,
-      "value": 0.15384615384615385
+      "interval_high": 0.3010336452284873,
+      "interval_low": 0.027866481213768224,
+      "passed": 2,
+      "total": 20,
+      "value": 0.1
      }
     }
    },
