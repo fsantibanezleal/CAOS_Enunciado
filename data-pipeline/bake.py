@@ -208,6 +208,7 @@ def bake(out_dir: Path, release: bool) -> int:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Bake the case corpus.")
+    parser.add_argument("--family", choices=("optimization", "dynamics"), default="optimization")
     parser.add_argument("--out", default=None, help="output directory")
     parser.add_argument(
         "--release",
@@ -217,15 +218,22 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     root = HERE.parent
+    # Optimization's artifacts stay where the published measurement put them; each later family has
+    # a folder of its own.
+    sub = () if args.family == "optimization" else (args.family,)
     if args.out:
         out = Path(args.out)
     elif args.release:
-        out = root / "data" / "artifacts"
+        out = root.joinpath("data", "artifacts", *sub)
     else:
         # A bake writes to a sandbox unless told otherwise. A bake that wrote the committed
         # artifacts by default is how a release gets clobbered.
-        out = root / "build" / "local"
+        out = root.joinpath("build", "local", *sub)
 
+    if args.family == "dynamics":
+        import bake_dynamics
+
+        return bake_dynamics.bake(out, args.release)
     return bake(out, args.release)
 
 
