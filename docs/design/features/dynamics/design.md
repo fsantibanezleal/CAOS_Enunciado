@@ -70,27 +70,27 @@ bake's LSODA trajectories on every case.
 move there, gate and all, in the commit that builds them.
 
 ```
-R-D01  THE dynamics corpus SHALL hold twenty cases, four per tier, each with a valid reference, a
+R-201  THE dynamics corpus SHALL hold twenty cases, four per tier, each with a valid reference, a
        stated difficulty and a trap or Trap.NONE.
-R-D02  WHEN a case has a closed form, THE bake SHALL fail if a question's integrated value differs
+R-202  WHEN a case has a closed form, THE bake SHALL fail if a question's integrated value differs
        from it by more than 1e-7 relative; WHEN it has none, THE bake SHALL fail if two tolerances
        disagree by more than that.
-R-D03  WHERE a statement invites a unit conversion, THE case SHALL carry a reference in the other
+R-203  WHERE a statement invites a unit conversion, THE case SHALL carry a reference in the other
        unit, and copela SHALL find the two agreeing along the whole range.
-R-D04  THE bake SHALL record, per case, the reference trajectories on a grid, each question's value,
+R-204  THE bake SHALL record, per case, the reference trajectories on a grid, each question's value,
        each question's response to each cited number, and the Jacobian's eigenvalues along the orbit.
-R-D05  THE dynamics prompt SHALL state the dynamics schema and rules, and SHALL contain no number
+R-205  THE dynamics prompt SHALL state the dynamics schema and rules, and SHALL contain no number
        from any corpus narrative.
-R-D06  WHEN the runner is given the dynamics family, THE runner SHALL sweep the dynamics corpus with
+R-206  WHEN the runner is given the dynamics family, THE runner SHALL sweep the dynamics corpus with
        the dynamics prompt into its own ledger, under the same refusals as optimization.
-R-D07  THE report SHALL be built per family, and SHALL classify every dynamics failure into the
+R-207  THE report SHALL be built per family, and SHALL classify every dynamics failure into the
        dynamics taxonomy.
-R-D08  THE CI recomputation SHALL recount the dynamics rates from the dynamics ledger.
-R-D09  THE site SHALL hold the family in the URL, and every page SHALL read that family's artifacts.
-R-D10  THE browser integrator SHALL agree with the bake's trajectories to 1e-6 relative on every case.
-R-D11  THE dynamics workbench SHALL draw every method on every case with no empty panel.
-R-D12  WHEN an attempt carries a candidate document, THE Candidates method SHALL draw its trajectory
+R-208  THE CI recomputation SHALL recount the dynamics rates from the dynamics ledger.
+R-209  THE site SHALL hold the family in the URL, and every page SHALL read that family's artifacts.
+R-210  THE browser integrator SHALL agree with the bake's trajectories to 1e-6 relative on every case.
+R-211  THE dynamics workbench SHALL draw every method on every case with no empty panel.
+R-212  WHEN an attempt carries a candidate document, THE Candidates method SHALL draw its trajectory
        over the reference's.
-R-D13  THE docs SHALL carry a dynamics methodology page naming every case, its closed form or its
+R-213  THE docs SHALL carry a dynamics methodology page naming every case, its closed form or its
        convergence check, and the oracle's equations.
 ```

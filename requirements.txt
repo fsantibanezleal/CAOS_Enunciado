@@ -5,13 +5,15 @@
 # nothing. A newer `copela` breaking that check is the correct outcome: it says the artifact needs
 # re-deriving.
 
-planteo==0.1.2
-copela==0.6.0
+planteo==0.2.0
+copela==0.8.1
 
 # The solver lane. `copela[solvers]` would pull these too; they are named here so a clone that only
 # wants to re-run the bake does not have to know that.
 pyomo>=6.7
 highspy>=1.7
+# The dynamics family integrates with SciPy, in the bake and in copela's dynamics layers.
+scipy>=1.11
 
 # The sweep's providers. `anthropic` is only needed to CALL a model; replaying the committed
 # measurement does not need it.
