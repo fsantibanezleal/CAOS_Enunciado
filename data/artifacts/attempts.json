@@ -33,6 +33,37 @@
     ]
    },
    {
+    "cost_usd": 0.072112,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 1326,
+    "latency_ms": 55270.9,
+    "model": "anthropic/claude-sonnet-5",
+    "model_id": "claude-sonnet-5",
+    "model_version": "claude-sonnet-5",
+    "output_tokens": 6946,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.007797,
     "failure_class": "fabricated provenance: words not in the statement",
     "input_tokens": 1032,
@@ -45,6 +76,27 @@
     "provider_fingerprint": "anthropic#no-effort#no-temperature",
     "repeat": 0,
     "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A plant blends ore from two pits. Pit A costs 12 USD per tonne and pit B costs 9 USD per tonne. Together they must deliver at least 100 tonnes. Minimise the total cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_a\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Mass of ore sourced from Pit A\",\n      \"span\": {\"start\": 31, \"end\": 36, \"text\": \"Pit A\"}\n    },\n    {\n      \"name\": \"x_b\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Mass of ore sourced from Pit B\",\n      \"span\": {\"start\": 54, \"end\": 59, \"text\": \"Pit B\"}\n    },\n    {\n      \"name\": \"c_a\n[... 1862 characters omitted ...]\n    \"comparator\": \"==\",\n      \"right\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"c_a\"}, {\"tag\": \"ref\", \"name\": \"x_a\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"c_b\"}, {\"tag\": \"ref\", \"name\": \"x_b\"}]}\n        ]\n      },\n      \"name\": \"total_cost_definition\",\n      \"span\": {\"inferred_reason\": \"definition of objective quantity\"}\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\"tag\": \"ref\", \"name\": \"total_cost\"},\n      \"name\": \"minimise_cost\",\n      \"span\": {\"start\": 160, \"end\": 177, \"text\": \"Minimise the total cost\"}\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"Are there upper bounds on the amount of ore that can be sourced from each pit?\",\n      \"span\": {\"inferred_reason\": \"not stated in problem\"},\n      \"resolution\": \"Assumed no upper bounds; variables are unbounded above.\",\n      \"affects\": [\"x_a\", \"x_b\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains 'Pit B', and it does not",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.007707,
+    "failure_class": "fabricated provenance: words not in the statement",
+    "input_tokens": 1032,
+    "latency_ms": 6197.7,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 1335,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A plant blends ore from two pits. Pit A costs 12 USD per tonne and pit B costs 9 USD per tonne. Together they must deliver at least 100 tonnes. Minimise the total cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_a\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Amount of ore from Pit A\",\n      \"span\": {\"start\": 26, \"end\": 31, \"text\": \"Pit A\"}\n    },\n    {\n      \"name\": \"x_b\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Amount of ore from Pit B\",\n      \"span\": {\"start\": 55, \"end\": 60, \"text\": \"Pit B\"}\n    },\n    {\n      \"name\": \"c_a\",\n      \"ro\n[... 1806 characters omitted ...]\n\": \"ref\", \"name\": \"total_cost\"},\n      \"comparator\": \"==\",\n      \"right\": {\"tag\": \"sum\", \"terms\": [{\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"c_a\"}, {\"tag\": \"ref\", \"name\": \"x_a\"}]}, {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"c_b\"}, {\"tag\": \"ref\", \"name\": \"x_b\"}]}]},\n      \"name\": \"define_total_cost\",\n      \"span\": {\"inferred_reason\": \"derived definition from objective\"}\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\"tag\": \"ref\", \"name\": \"total_cost\"},\n      \"name\": \"minimize_cost\",\n      \"span\": {\"start\": 158, \"end\": 173, \"text\": \"Minimise the total cost\"}\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"Are there upper bounds on the amounts that can be extracted from each pit?\",\n      \"span\": {\"inferred_reason\": \"not specified in statement\"},\n      \"resolution\": \"Assumed no upper bounds; variables are non-negative with no explicit maximum\",\n      \"affects\": [\"x_a\", \"x_b\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains 'Pit B', and it does not",
@@ -391,6 +443,37 @@
     ]
    },
    {
+    "cost_usd": 0.030566,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 1338,
+    "latency_ms": 20939.4,
+    "model": "anthropic/claude-sonnet-5",
+    "model_id": "claude-sonnet-5",
+    "model_version": "claude-sonnet-5",
+    "output_tokens": 2789,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.008591,
     "failure_class": "a quantity declared derived and never defined",
     "input_tokens": 1036,
@@ -408,6 +491,37 @@
       "detail": "error: determinacy [total_value]: is derived but no relation defines it (under-determined)",
       "layer": "executable",
       "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.008646,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 1036,
+    "latency_ms": 12098.4,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 1522,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
      }
     ]
    },
@@ -799,6 +913,37 @@
     ]
    },
    {
+    "cost_usd": 0.032148,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 1349,
+    "latency_ms": 22438.6,
+    "model": "anthropic/claude-sonnet-5",
+    "model_id": "claude-sonnet-5",
+    "model_version": "claude-sonnet-5",
+    "output_tokens": 2945,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms are equal",
+      "layer": "structural",
+      "outcome": "pass"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.008352,
     "failure_class": "a quantity declared derived and never defined",
     "input_tokens": 1052,
@@ -816,6 +961,37 @@
       "detail": "error: determinacy [total_earnings]: is derived but no relation defines it (under-determined)",
       "layer": "executable",
       "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.008367,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 1052,
+    "latency_ms": 11067.5,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 1463,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
      }
     ]
    },
@@ -1187,6 +1363,37 @@
     ]
    },
    {
+    "cost_usd": 0.03908,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 1345,
+    "latency_ms": 31516.0,
+    "model": "anthropic/claude-sonnet-5",
+    "model_id": "claude-sonnet-5",
+    "model_version": "claude-sonnet-5",
+    "output_tokens": 3639,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.007575,
     "failure_class": "ran and survived every check",
     "input_tokens": 1040,
@@ -1214,6 +1421,27 @@
       "detail": "2 relation(s) held",
       "layer": "property",
       "outcome": "pass"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.007975,
+    "failure_class": "a constant with no unit",
+    "input_tokens": 1040,
+    "latency_ms": 6372.6,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 1387,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"Two warehouses can supply a site. The north warehouse charges 15 USD per tonne delivered and the south charges 22 USD per tonne. The site needs 40 tonnes. The north warehouse can send no more than 25 tonnes. Minimise delivery cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_north\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": 25.0,\n      \"value\": null,\n      \"description\": \"tonnes delivered from north warehouse\",\n      \"span\": {\"start\": 4, \"end\": 25, \"text\": \"north warehouse\"}\n    },\n    {\n      \"name\": \"x_south\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"tonnes delivered from south wareh\n[... 2212 characters omitted ...]\nectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\"tag\": \"ref\", \"name\": \"c_north\"},\n              {\"tag\": \"ref\", \"name\": \"x_north\"}\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\"tag\": \"ref\", \"name\": \"c_south\"},\n              {\"tag\": \"ref\", \"name\": \"x_south\"}\n            ]\n          }\n        ]\n      },\n      \"name\": \"total_cost\",\n      \"span\": {\"start\": 169, \"end\": 192, \"text\": \"Minimise delivery cost\"}\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"Is the south warehouse capacity unconstrained?\",\n      \"resolution\": \"The problem statement only specifies a capacity limit for the north warehouse (25 tonnes). No upper bound is stated for the south warehouse, so it is assumed to have unlimited capacity.\",\n      \"affects\": [\"x_south\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['dimension', 'tag', 'value']",
+      "layer": "executable",
+      "outcome": "fail"
      }
     ]
    },
@@ -1545,6 +1773,37 @@
     ]
    },
    {
+    "cost_usd": 0.06715,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 1355,
+    "latency_ms": 55182.9,
+    "model": "anthropic/claude-sonnet-5",
+    "model_id": "claude-sonnet-5",
+    "model_version": "claude-sonnet-5",
+    "output_tokens": 6444,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.007504,
     "failure_class": "ran and survived every check",
     "input_tokens": 1049,
@@ -1572,6 +1831,27 @@
       "detail": "2 relation(s) held",
       "layer": "property",
       "outcome": "pass"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.008454,
+    "failure_class": "a constant with no unit",
+    "input_tokens": 1049,
+    "latency_ms": 11526.4,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 1481,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A lab buys reagent from two suppliers. Supplier A charges 4.50 USD per kilogram and supplier B charges 4200 USD per tonne. The lab needs 3 tonnes this month. Supplier A can deliver at most 1200 kilograms. Minimise the purchase cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_a\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"kg\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"description\": \"Amount of reagent purchased from Supplier A\",\n      \"span\": {\"inferred_reason\": \"decision variable not explicitly named in statement\"}\n    },\n    {\n      \"name\": \"x_b\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"description\": \"Amount of reagent purchased from Supplier B\",\n     \n[... 2513 characters omitted ...]\n \"name\": \"capacity_a\"},\n      \"name\": \"supplier_a_capacity\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\"tag\": \"ref\", \"name\": \"price_a\"},\n              {\"tag\": \"ref\", \"name\": \"x_a\"}\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\"tag\": \"ref\", \"name\": \"price_b\"},\n              {\"tag\": \"ref\", \"name\": \"x_b\"}\n            ]\n          }\n        ]\n      },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"Are fractional quantities of reagent allowed, or must purchases be in whole units?\",\n      \"span\": {\"inferred_reason\": \"problem does not specify integrality constraints\"},\n      \"resolution\": \"Assumed continuous real-valued domains for both decision variables\",\n      \"affects\": [\"x_a\", \"x_b\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['dimension', 'tag', 'value']",
+      "layer": "executable",
+      "outcome": "fail"
      }
     ]
    },
@@ -1923,6 +2203,37 @@
     ]
    },
    {
+    "cost_usd": 0.029234,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 1357,
+    "latency_ms": 19912.8,
+    "model": "anthropic/claude-sonnet-5",
+    "model_id": "claude-sonnet-5",
+    "model_version": "claude-sonnet-5",
+    "output_tokens": 2652,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.008888,
     "failure_class": "ran, then REFUTED: solves to the reference's whole-number optimum",
     "input_tokens": 1058,
@@ -1935,6 +2246,37 @@
     "provider_fingerprint": "anthropic#no-effort#no-temperature",
     "repeat": 0,
     "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A contractor hires two crews. The day crew costs 1800 USD per shift and the night crew costs 2400 USD per shift. Together they must complete at least 30 shifts of work this month. The total wage bill must not exceed 64000 USD. Maximise the number of night shifts, because they free the site during the day.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"c_day\",\n      \"role\": \"parameter\",\n      \"dimension\": {\n        \"symbol\": \"USD/shift\",\n        \"exponents\": {\n          \"currency\": \"1\",\n          \"count\": \"-1\"\n        }\n      },\n      \"domain\": \"real\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 1800.0,\n      \"description\": \"Cost per shift for day crew\",\n      \"span\": {\n        \"start\": 44,\n        \"end\": 54,\n        \"text\": \"1800 USD\"\n      }\n    },\n    {\n      \"name\": \"c_night\",\n      \"role\": \"parameter\",\n      \"dimension\": {\n        \"\n[... 2929 characters omitted ...]\n      \"name\": \"x_day\"\n              }\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\n                \"tag\": \"ref\",\n                \"name\": \"c_night\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"x_night\"\n              }\n            ]\n          }\n        ]\n      },\n      \"comparator\": \"<=\",\n      \"right\": {\n        \"tag\": \"ref\",\n        \"name\": \"budget\"\n      },\n      \"name\": \"wage_bill_limit\",\n      \"span\": {\n        \"start\": 165,\n        \"end\": 197,\n        \"text\": \"The total wage bill must not exceed 64000 USD\"\n      }\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"maximise\",\n      \"expression\": {\n        \"tag\": \"ref\",\n        \"name\": \"x_night\"\n      },\n      \"name\": \"maximize_night_shifts\",\n      \"span\": {\n        \"start\": 199,\n        \"end\": 228,\n        \"text\": \"Maximise the number of night shifts\"\n      }\n    }\n  ],\n  \"open_questions\": [],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "solves to 16 where the reference solves to 16.6667; the same case cannot have two optima, so these are different models",
+      "layer": "structural",
+      "outcome": "fail"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.008923,
+    "failure_class": "ran, then REFUTED: solves to the reference's whole-number optimum",
+    "input_tokens": 1058,
+    "latency_ms": 11861.2,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 1573,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A contractor hires two crews. The day crew costs 1800 USD per shift and the night crew costs 2400 USD per shift. Together they must complete at least 30 shifts of work this month. The total wage bill must not exceed 64000 USD. Maximise the number of night shifts, because they free the site during the day.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"c_day\",\n      \"role\": \"parameter\",\n      \"dimension\": {\n        \"symbol\": \"USD/shift\",\n        \"exponents\": {\n          \"currency\": \"1\",\n          \"count\": \"-1\"\n        }\n      },\n      \"domain\": \"real\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 1800.0,\n      \"description\": \"Cost of day crew per shift\",\n      \"span\": {\n        \"start\": 52,\n        \"end\": 62,\n        \"text\": \"1800 USD\"\n      }\n    },\n    {\n      \"name\": \"c_night\",\n      \"role\": \"parameter\",\n      \"dimension\": {\n        \"s\n[... 2919 characters omitted ...]\n: \"x_day\"\n              }\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\n                \"tag\": \"ref\",\n                \"name\": \"c_night\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"x_night\"\n              }\n            ]\n          }\n        ]\n      },\n      \"comparator\": \"<=\",\n      \"right\": {\n        \"tag\": \"ref\",\n        \"name\": \"max_wage_bill\"\n      },\n      \"name\": \"wage_bill_constraint\",\n      \"span\": {\n        \"start\": 209,\n        \"end\": 255,\n        \"text\": \"The total wage bill must not exceed 64000 USD\"\n      }\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"maximise\",\n      \"expression\": {\n        \"tag\": \"ref\",\n        \"name\": \"x_night\"\n      },\n      \"name\": \"maximise_night_shifts\",\n      \"span\": {\n        \"start\": 257,\n        \"end\": 285,\n        \"text\": \"Maximise the number of night shifts\"\n      }\n    }\n  ],\n  \"open_questions\": [],\n  \"feasibility_only\": false\n}\n```",
     "verdicts": [
      {
       "detail": "optimal",
@@ -2291,6 +2633,37 @@
     ]
    },
    {
+    "cost_usd": 0.035082,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 1356,
+    "latency_ms": 24260.2,
+    "model": "anthropic/claude-sonnet-5",
+    "model_id": "claude-sonnet-5",
+    "model_version": "claude-sonnet-5",
+    "output_tokens": 3237,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#effort=high#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.009344,
     "failure_class": "an assumption or open question with no span",
     "input_tokens": 1049,
@@ -2306,6 +2679,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: 'span'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.009669,
+    "failure_class": "an assumption or open question with no span",
+    "input_tokens": 1049,
+    "latency_ms": 8952.0,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 1724,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A quarry ships aggregate by rail and by road. Rail costs 6 USD per tonne, road costs 11 USD per tonne. The quarry employs 34 people. Rail capacity is 500 tonnes per week. The customer wants 700 tonnes this week. Minimise the shipping cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_rail\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"tonnes shipped by rail\",\n      \"span\": {\"start\": 10, \"end\": 14, \"text\": \"rail\"}\n    },\n    {\n      \"name\": \"x_road\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"tonnes shipped by road\",\n      \"span\": {\"start\": 23,\n[... 3326 characters omitted ...]\nal_cost\",\n      \"span\": {\"start\": 201, \"end\": 230, \"text\": \"Minimise the shipping cost\"}\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"What is the role of the 34 employees? The problem states the quarry employs 34 people but does not impose any constraint or objective related to employment.\",\n      \"span\": {\"start\": 84, \"end\": 101, \"text\": \"The quarry employs 34 people\"},\n      \"resolution\": \"Treated as background context with no functional impact on the optimization problem. The figure is recorded as a parameter but is not referenced in any constraint or objective.\",\n      \"affects\": []\n    },\n    {\n      \"question\": \"Is road shipping capacity limited?\",\n      \"inferred_reason\": \"The problem specifies rail capacity but is silent on road capacity constraints.\",\n      \"resolution\": \"Assumed that road shipping has no stated capacity limit. Road shipment is only bounded by the need to meet total demand.\",\n      \"affects\": [\"x_road\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: an open question is missing its 'span' field; got keys ['affects', 'inferred_reason', 'question', 'resolution']",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -2670,6 +3064,27 @@
     ]
    },
    {
+    "cost_usd": 0.014914,
+    "failure_class": "a constant with no unit",
+    "input_tokens": 1079,
+    "latency_ms": 21352.4,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 2767,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A mill processes 900 tonnes of feed a day. Feed sent to the fine circuit recovers 88 per cent of the metal and costs 3 USD per tonne to process. Whatever is not sent to the fine circuit goes to the coarse circuit, which recovers 71 per cent and costs 1.20 USD per tonne. Recovered metal is worth 40 USD per tonne of feed recovered. Maximise the daily margin.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"feed_total\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 900.0,\n      \"description\": \"Total tonnes of feed processed per day\",\n      \"span\": {\"start\": 22, \"end\": 37, \"text\": \"900 tonnes of feed\"}\n    },\n    {\n      \"name\": \"x_fine\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n    \n[... 6300 characters omitted ...]\n\"tag\": \"const\", \"value\": -1, \"dimension\": {\"symbol\": \"1\", \"exponents\": {}}}, {\"tag\": \"ref\", \"name\": \"total_cost\"}]}]},\n      \"name\": \"margin_definition\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"maximise\",\n      \"expression\": {\"tag\": \"ref\", \"name\": \"daily_margin\"},\n      \"name\": \"maximise_margin\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"What is the composition or nature of the 'metal' being recovered? Does recovery rate apply to mass of feed, or mass of some component within the feed?\",\n      \"span\": {\"start\": 130, \"end\": 148, \"text\": \"recovers 88 per cent\"},\n      \"resolution\": \"Interpreted 'recovers X per cent' as X per cent of the feed mass sent to that circuit is recovered as metal. This is the most natural reading given the problem structure and the statement that recovered metal is worth '40 USD per tonne of feed recovered'.\",\n      \"affects\": [\"metal_recovered_fine\", \"metal_recovered_coarse\", \"total_revenue\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['dimension', 'tag', 'value']",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.03742,
     "failure_class": "no answer: the reasoning used the whole cap",
     "input_tokens": 982,
@@ -3009,6 +3424,27 @@
     "provider_fingerprint": "anthropic#no-effort#no-temperature",
     "repeat": 0,
     "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A depot plans three weeks. It starts with 20 tonnes in store. Each week it may buy at a price that rises: 50 USD per tonne in week one, 58 in week two, 63 in week three. Demand is 30 tonnes in week one, 45 in week two, 25 in week three, and must be met from the store after that week's purchase arrives. The store holds at most 60 tonnes at the end of any week. Minimise the total purchase cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"initial_stock\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": 20.0,\n      \"description\": \"Initial inventory at depot\",\n      \"span\": {\"start\": 39, \"end\": 54, \"text\": \"20 tonnes in store\"}\n    },\n    {\n      \"name\": \"price_week_1\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"USD/\n[... 9243 characters omitted ...]\n{\"tag\": \"ref\", \"name\": \"price_week_3\"},\n              {\"tag\": \"ref\", \"name\": \"buy_week_3\"}\n            ]\n          }\n        ]\n      },\n      \"name\": \"total_cost_calc\",\n      \"description\": \"Total cost is sum of weekly purchases at respective prices\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\"tag\": \"ref\", \"name\": \"total_cost\"},\n      \"name\": \"minimise_cost\",\n      \"span\": {\"start\": 353, \"end\": 379, \"text\": \"Minimise the total purchase cost\"}\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"Does unsold inventory at the end of week three have any salvage value or holding cost, or is the objective purely to minimize purchase expenditure?\",\n      \"span\": {\"inferred_reason\": \"end-of-horizon inventory disposition not specified\"},\n      \"resolution\": \"Interpreting as minimizing only the sum of purchase costs across all weeks; no salvage or holding costs are applied.\",\n      \"affects\": [\"total_cost\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['dimension', 'tag', 'value']",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.021301,
+    "failure_class": "a constant with no unit",
+    "input_tokens": 1096,
+    "latency_ms": 18312.3,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 4041,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A depot plans three weeks. It starts with 20 tonnes in store. Each week it may buy at a price that rises: 50 USD per tonne in week one, 58 in week two, 63 in week three. Demand is 30 tonnes in week one, 45 in week two, 25 in week three, and must be met from the store after that week's purchase arrives. The store holds at most 60 tonnes at the end of any week. Minimise the total purchase cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"initial_stock\",\n      \"role\": \"parameter\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": 20.0,\n      \"description\": \"Initial stock in the depot at the start of week one\",\n      \"span\": {\"start\": 36, \"end\": 47, \"text\": \"20 tonnes\"}\n    },\n    {\n      \"name\": \"price_week_1\",\n      \"role\": \"parameter\",\n      \"dimension\": \n[... 10517 characters omitted ...]\n    },\n    {\n      \"question\": \"Can purchases arrive at any point during a week, or must they arrive before demand is withdrawn?\",\n      \"span\": {\"start\": 263, \"end\": 318, \"text\": \"must be met from the store after that week's purchase arrives\"},\n      \"resolution\": \"Interpreted strictly: purchases in a given week must arrive before that week's demand is met, so the balance equation for week k is: stock_k-1 + buy_k - demand_k = stock_k.\",\n      \"affects\": [\"inventory_balance_week_1\", \"inventory_balance_week_2\", \"inventory_balance_week_3\"]\n    },\n    {\n      \"question\": \"Are purchases constrained by any maximum per week, or only by capacity and demand?\",\n      \"span\": {\"inferred_reason\": \"problem states 'may buy' but places no upper limit\"},\n      \"resolution\": \"Purchases are unconstrained above zero except implicitly by capacity constraint; there is no stated weekly purchase limit.\",\n      \"affects\": [\"buy_week_1\", \"buy_week_2\", \"buy_week_3\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['dimension', 'tag', 'value']",
@@ -3376,6 +3812,27 @@
     ]
    },
    {
+    "cost_usd": 0.009592,
+    "failure_class": "unparseable output",
+    "input_tokens": 1067,
+    "latency_ms": 13438.8,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 1705,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A smelter blends two concentrates. Concentrate X assays 28 per cent copper and costs 210 USD per tonne. Concentrate Y assays 19 per cent and costs 140 USD per tonne. The furnace needs 500 tonnes of blend, and the blend must assay at least 24 per cent copper. Minimise the cost of the blend.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_X\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"description\": \"Tonnes of Concentrate X in the blend\",\n      \"span\": {\"start\": 29, \"end\": 40, \"text\": \"Concentrate X\"}\n    },\n    {\n      \"name\": \"x_Y\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"description\": \"Tonnes of Concentrate Y in\n[... 2742 characters omitted ...]\n\": \"ref\", \"name\": \"blend_required\"},\n      \"name\": \"total_blend_mass\"\n    },\n    {\n      \"tag\": \"compare\",\n      \"left\": {\"tag\": \"sum\", \"terms\": [\n        {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"copper_assay_X\"}, {\"tag\": \"ref\", \"name\": \"x_X\"}]},\n        {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"copper_assay_Y\"}, {\"tag\": \"ref\", \"name\": \"x_Y\"}]}\n      ]},\n      \"comparator\": \">=\",\n      \"right\": {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"min_assay_blend\"}, {\"tag\": \"ref\", \"name\": \"blend_required\"}]},\n      \"name\": \"min_copper_assay\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\"tag\": \"sum\", \"terms\": [\n        {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"cost_X\"}, {\"tag\": \"ref\", \"name\": \"x_X\"}]},\n        {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"cost_Y\"}, {\"tag\": \"ref\", \"name\": \"x_Y\"}]}\n      ]},\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: Expecting property name enclosed in double quotes: line 53 column 5 (char 1773)",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.037396,
     "failure_class": "no answer: the reasoning used the whole cap",
     "input_tokens": 965,
@@ -3724,6 +4181,37 @@
     "provider": "anthropic",
     "provider_fingerprint": "anthropic#no-effort#no-temperature",
     "repeat": 0,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.012449,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 1069,
+    "latency_ms": 9158.0,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 2276,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 1,
     "response_excerpt": "",
     "verdicts": [
      {
@@ -4112,6 +4600,37 @@
     ]
    },
    {
+    "cost_usd": 0.012757,
+    "failure_class": "ran, then REFUTED: solves to the reference's whole-number optimum",
+    "input_tokens": 1072,
+    "latency_ms": 17539.5,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 2337,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A workshop has 120 hours of machining and 90 hours of finishing available this month. A pump takes 4 hours machining and 2 hours finishing, and sells for a margin of 260 USD. A valve takes 2 hours machining and 3 hours finishing, with a margin of 180 USD. No more than 20 pumps can be sold. Maximise the margin.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"pumps_produced\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Number of pumps produced\",\n      \"span\": {\"start\": 48, \"end\": 52, \"text\": \"pump\"}\n    },\n    {\n      \"name\": \"valves_produced\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n[... 5023 characters omitted ...]\n\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"pump_margin\"}, {\"tag\": \"ref\", \"name\": \"pumps_produced\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"valve_margin\"}, {\"tag\": \"ref\", \"name\": \"valves_produced\"}]}\n        ]\n      },\n      \"comparator\": \"==\",\n      \"right\": {\"tag\": \"ref\", \"name\": \"total_margin\"},\n      \"name\": \"margin_definition\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"maximise\",\n      \"expression\": {\"tag\": \"ref\", \"name\": \"total_margin\"},\n      \"name\": \"maximize_margin\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"Whether fractional pumps and valves are permitted\",\n      \"span\": {\"start\": 48, \"end\": 52, \"text\": \"pump\"},\n      \"resolution\": \"Interpreted as integer domain since these are discrete physical products and typical workshop context implies whole units. If fractional production is intended, domain should be 'real'.\",\n      \"affects\": [\"pumps_produced\", \"valves_produced\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "solves to 8080 where the reference solves to 8200; the same case cannot have two optima, so these are different models",
+      "layer": "structural",
+      "outcome": "fail"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.036108,
     "failure_class": "dimensional mismatch",
     "input_tokens": 969,
@@ -4460,6 +4979,37 @@
     "provider": "anthropic",
     "provider_fingerprint": "anthropic#no-effort#no-temperature",
     "repeat": 0,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.00701,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 1035,
+    "latency_ms": 9428.6,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 1195,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 1,
     "response_excerpt": "",
     "verdicts": [
      {
@@ -4848,6 +5398,27 @@
     ]
    },
    {
+    "cost_usd": 0.010959,
+    "failure_class": "fabricated provenance: words not in the statement",
+    "input_tokens": 1069,
+    "latency_ms": 9328.0,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 1978,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A contractor may open a temporary crushing station. Opening it costs 40000 USD for the season regardless of use, after which crushing costs 3 USD per tonne there, up to 9000 tonnes. The existing plant charges 9 USD per tonne with no fixed cost and can take at most 6000 tonnes. The season's tonnage is 15000. Minimise the total cost.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"open_station\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"boolean\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Whether the temporary crushing station is opened\",\n      \"span\": {\"inferred_reason\": \"decision variable inferred from 'may open'\"}\n    },\n    {\n      \"name\": \"x_station\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\n[... 4134 characters omitted ...]\n,\n            \"factors\": [{\"tag\": \"ref\", \"name\": \"open_station\"}, {\"tag\": \"ref\", \"name\": \"fixed_cost_station\"}]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [{\"tag\": \"ref\", \"name\": \"x_station\"}, {\"tag\": \"ref\", \"name\": \"variable_cost_station\"}]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [{\"tag\": \"ref\", \"name\": \"x_plant\"}, {\"tag\": \"ref\", \"name\": \"variable_cost_plant\"}]\n          }\n        ]\n      },\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"Must all demand be met, or is 15000 tonnes an upper bound?\",\n      \"span\": {\"start\": 220, \"end\": 241, \"text\": \"The season's tonnage is 15000\"},\n      \"resolution\": \"Interpreted as exact demand to be met (equality constraint), since minimisation context suggests all available material should be processed at least cost. Alternative: 15000 could be maximum available.\",\n      \"affects\": [\"meet_demand\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: fabricated provenance: a span claims the narrative contains '15000 tonnes', and it does not",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.031113,
     "failure_class": "ran and survived every check",
     "input_tokens": 975,
@@ -5196,6 +5767,27 @@
     ]
    },
    {
+    "cost_usd": 0.011614,
+    "failure_class": "a constant with no unit",
+    "input_tokens": 1064,
+    "latency_ms": 11877.5,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 2110,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A kiln can be run or left idle. If it is run at all it must process at least 200 tonnes, and it cannot exceed 500 tonnes. Running it earns 24 USD per tonne but costs 4000 USD to fire up. Only 150 tonnes of feed are available. Decide whether to run the kiln so as to maximise the margin.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"run\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"boolean\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Binary variable indicating whether the kiln is run\",\n      \"span\": {\"inferred_reason\": \"concept introduced in opening clause\"}\n    },\n    {\n      \"name\": \"x\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"t\", \"exponents\": {\"mass\": \"1\"}},\n      \"domain\": \"real\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": n\n[... 4531 characters omitted ...]\n},\n      \"resolution\": \"Interpreted the 500-tonne maximum as a hard physical capacity constraint, separate from the 150-tonne feed constraint. The problem becomes infeasible if the kiln runs (requiring \u2265200 tonnes but only 150 available). The solver will choose not to run.\",\n      \"affects\": [\"x\", \"run\"]\n    },\n    {\n      \"question\": \"Should the kiln be prevented from running if insufficient feed is available, or should we allow infeasibility?\",\n      \"span\": {\"inferred_reason\": \"logical consequence of stated constraints conflicting\"},\n      \"resolution\": \"Added a constraint that x \u2264 max_capacity \u00d7 run to enforce that the kiln either runs at [min_batch, min(max_capacity, feed_available)] or does not run at all (x=0). Given feed_available=150 < min_batch=200, the optimal solution is run=false, x=0, margin=-4000 if fired or 0 if not run. Interpreted 'margin' as only incurring fixed cost when run=true.\",\n      \"affects\": [\"run\", \"x\", \"margin\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['dimension', 'tag', 'value']",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.03513,
     "failure_class": "a constant with no unit",
     "input_tokens": 968,
@@ -5534,6 +6126,27 @@
     ]
    },
    {
+    "cost_usd": 0.0189,
+    "failure_class": "unparseable output",
+    "input_tokens": 1070,
+    "latency_ms": 24932.4,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 3566,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"Three drills must be assigned to three benches, one drill to each bench and one bench to each drill. The hours each drill needs on each bench are: drill one takes 9, 12 and 7 hours on benches A, B and C; drill two takes 11, 8 and 10; drill three takes 6, 13 and 12. Minimise the total hours.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_1a\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"boolean\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Binary variable: 1 if drill one is assigned to bench A, 0 otherwise\",\n      \"span\": {\"start\": 6, \"end\": 11, \"text\": \"drills\"}\n    },\n    {\n      \"name\": \"x_1b\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"boolean\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": \n[... 7734 characters omitted ...]\ng\": \"ref\", \"name\": \"x_1a\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_1b\"}, {\"tag\": \"ref\", \"name\": \"x_1b\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_1c\"}, {\"tag\": \"ref\", \"name\": \"x_1c\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_2a\"}, {\"tag\": \"ref\", \"name\": \"x_2a\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_2b\"}, {\"tag\": \"ref\", \"name\": \"x_2b\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_2c\"}, {\"tag\": \"ref\", \"name\": \"x_2c\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_3a\"}, {\"tag\": \"ref\", \"name\": \"x_3a\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_3b\"}, {\"tag\": \"ref\", \"name\": \"x_3b\"}]},\n          {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"h_3c\"}, {\"tag\": \"ref\", \"name\": \"x_3c\"}]}\n        ]\n      },\n      \"name\": \"total_hours\"\n    }\n  ],\n  \"open_questions\": [],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: Expecting ',' delimiter: line 41 column 40 (char 1481)",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.037408,
     "failure_class": "no answer: the reasoning used the whole cap",
     "input_tokens": 974,
@@ -5863,6 +6476,27 @@
     "provider_fingerprint": "anthropic#no-effort#no-temperature",
     "repeat": 0,
     "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A depot stocks bolts and nuts. It must hold at least twice as many bolts as nuts. Bolts cost 3 USD each and nuts cost 1 USD each, and the depot must hold at least 600 items in total. Minimise the cost of the holding.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"bolts\",\n      \"role\": \"variable\",\n      \"dimension\": {\n        \"symbol\": \"1\",\n        \"exponents\": {\n          \"count\": \"1\"\n        }\n      },\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"number of bolts held at the depot\",\n      \"span\": {\n        \"start\": 14,\n        \"end\": 19,\n        \"text\": \"bolts\"\n      }\n    },\n    {\n      \"name\": \"nuts\",\n      \"role\": \"variable\",\n      \"dimension\": {\n        \"symbol\": \"1\",\n        \"exponents\": {\n          \"count\": \"1\"\n        }\n      },\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n  \n[... 2899 characters omitted ...]\n\"tag\": \"ref\",\n        \"name\": \"total_cost\"\n      },\n      \"name\": \"minimize_cost\"\n    }\n  ],\n  \"derived_relations\": [\n    {\n      \"tag\": \"compare\",\n      \"left\": {\n        \"tag\": \"ref\",\n        \"name\": \"total_cost\"\n      },\n      \"comparator\": \"==\",\n      \"right\": {\n        \"tag\": \"sum\",\n        \"terms\": [\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\n                \"tag\": \"ref\",\n                \"name\": \"cost_bolt\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"bolts\"\n              }\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\n                \"tag\": \"ref\",\n                \"name\": \"cost_nut\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"nuts\"\n              }\n            ]\n          }\n        ]\n      },\n      \"name\": \"define_total_cost\"\n    }\n  ],\n  \"open_questions\": [],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['dimension', 'tag', 'value']",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.009498,
+    "failure_class": "a constant with no unit",
+    "input_tokens": 1043,
+    "latency_ms": 7325.6,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 1691,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A depot stocks bolts and nuts. It must hold at least twice as many bolts as nuts. Bolts cost 3 USD each and nuts cost 1 USD each, and the depot must hold at least 600 items in total. Minimise the cost of the holding.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_bolts\",\n      \"role\": \"variable\",\n      \"dimension\": {\n        \"symbol\": \"1\",\n        \"exponents\": {}\n      },\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Number of bolts held in the depot\",\n      \"span\": {\n        \"start\": 10,\n        \"end\": 15,\n        \"text\": \"bolts\"\n      }\n    },\n    {\n      \"name\": \"x_nuts\",\n      \"role\": \"variable\",\n      \"dimension\": {\n        \"symbol\": \"1\",\n        \"exponents\": {}\n      },\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\":\n[... 3211 characters omitted ...]\n         \"factors\": [\n              {\n                \"tag\": \"ref\",\n                \"name\": \"c_bolts\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"x_bolts\"\n              }\n            ]\n          },\n          {\n            \"tag\": \"product\",\n            \"factors\": [\n              {\n                \"tag\": \"ref\",\n                \"name\": \"c_nuts\"\n              },\n              {\n                \"tag\": \"ref\",\n                \"name\": \"x_nuts\"\n              }\n            ]\n          }\n        ]\n      },\n      \"span\": {\n        \"inferred_reason\": \"derived definition for objective function\"\n      }\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\n        \"tag\": \"ref\",\n        \"name\": \"total_cost\"\n      },\n      \"name\": \"minimize_cost\",\n      \"span\": {\n        \"start\": 175,\n        \"end\": 196,\n        \"text\": \"Minimise the cost of the holding\"\n      }\n    }\n  ],\n  \"open_questions\": [],\n  \"feasibility_only\": false\n}\n```",
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['dimension', 'tag', 'value']",
@@ -6216,6 +6850,37 @@
       "detail": "error: determinacy [total_cost]: is derived but no relation defines it (under-determined)",
       "layer": "executable",
       "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.007158,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 1048,
+    "latency_ms": 9412.2,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 1222,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
      }
     ]
    },
@@ -6588,6 +7253,37 @@
     ]
    },
    {
+    "cost_usd": 0.00855,
+    "failure_class": "infeasible, as the case is",
+    "input_tokens": 1030,
+    "latency_ms": 11854.2,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 1504,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A crew must work at least 40 shifts this month to cover the roster. Overtime rules cap the crew at 32 shifts a month. Each shift costs 900 USD. Minimise the cost of covering the roster.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"shifts\",\n      \"role\": \"variable\",\n      \"dimension\": {\n        \"symbol\": \"1\",\n        \"exponents\": {}\n      },\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"Number of shifts worked by the crew this month\",\n      \"span\": {\n        \"start\": 15,\n        \"end\": 21,\n        \"text\": \"shifts\"\n      }\n    },\n    {\n      \"name\": \"min_shifts\",\n      \"role\": \"parameter\",\n      \"dimension\": {\n        \"symbol\": \"1\",\n        \"exponents\": {}\n      },\n      \"domain\": \"integer\",\n      \"lower\": null,\n      \"upper\": null,\n      \"value\": 40.0,\n      \"description\": \"Minimum sh\n[... 2741 characters omitted ...]\n\",\n      \"expression\": {\n        \"tag\": \"ref\",\n        \"name\": \"total_cost\"\n      },\n      \"name\": \"minimize_cost\",\n      \"span\": {\n        \"start\": 155,\n        \"end\": 175,\n        \"text\": \"Minimise the cost of covering\"\n      }\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"The problem states a minimum of 40 shifts and a maximum of 32 shifts, which is infeasible. Should the minimum be interpreted as the demand (40 shifts required) even though it conflicts with the stated maximum capacity (32 shifts)?\",\n      \"span\": {\n        \"start\": 37,\n        \"end\": 39,\n        \"text\": \"40\"\n      },\n      \"resolution\": \"The problem as stated is infeasible. Interpreted literally: minimum shifts required = 40, maximum shifts allowed = 32. This may indicate a transcription error in the original statement. Proceeding with both constraints as stated, which will result in an infeasible model.\",\n      \"affects\": [\"minimum_coverage\", \"overtime_cap\"]\n    }\n  ],\n  \"feasibility_only\": false\n}\n```",
+    "verdicts": [
+     {
+      "detail": "infeasible",
+      "layer": "executable",
+      "outcome": "fail"
+     },
+     {
+      "detail": "canonical forms differ and both are infeasible, which does not establish equivalence: a wrong model can be infeasible too",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "the candidate is infeasible, so the relations have nothing to compare against",
+      "layer": "property",
+      "outcome": "not-applicable"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.029838,
     "failure_class": "a variable whose lower bound is above its upper",
     "input_tokens": 938,
@@ -6922,6 +7618,37 @@
       "detail": "error: dimensions [def_moved_A]: def_moved_A: left side is 1 but right side is 1/h*h; they cannot be compared; error: dimensions [def_moved_B]: def_moved_B: left side is 1 but right side is 1/h*h; they cannot be compared; error: dimensions [def_total_value]: def_total_value: left side is USD but right side is USD*1; they cannot be compared",
       "layer": "executable",
       "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.012571,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 1051,
+    "latency_ms": 17990.8,
+    "model": "anthropic/claude-haiku-4-5",
+    "model_id": "claude-haiku-4-5",
+    "model_version": "claude-haiku-4-5-20251001",
+    "output_tokens": 2304,
+    "provider": "anthropic",
+    "provider_fingerprint": "anthropic#no-effort#no-temperature",
+    "repeat": 1,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
      }
     ]
    },
