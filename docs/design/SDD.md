@@ -222,13 +222,34 @@ R-036  IF a model has fewer calls than the ledger's cases times its repeats, THE
 
 R-037  THE Benchmark SHALL mark a short row in Table 1 with its count, and SHALL mark no other row.
        Gate: tools/visual-verify/verify.mjs
+
+R-038  WHEN a structural refutation's candidate solves to its reference's optimum with the decisions
+       made integer, and that optimum differs from the reference's own, THE report SHALL class it
+       apart and SHALL publish each model's gap with such refutations read as allowed, and SHALL
+       NOT change the published rates.
+       Gate: tests/test_failure_classes.py::test_a_refutation_on_the_references_whole_number_optimum_is_named_for_it
+
+R-039  THE bake SHALL record each reference's optimum with every real decision variable made integer,
+       and CI SHALL recount the refutations that land on it from the ledger and the bake.
+       Gate: scripts/check_artifacts.py
 ```
 
-R-036 and R-037 came with 0.05.000, which was published while two sweeps were still running. The
-first caveat took its sample size from the smallest row, so a sweep two calls in would have set the
-interval quoted for every model, and Table 1 printed a rate over fifteen cases in the same column as
-rates over twenty with nothing to tell them apart. The corpus is ordered by tier and a sweep takes
-it in order, so a short row is not a sample of the corpus: it is missing the hardest cases.
+R-038 and R-039 came from writing the docs table of refutations for the finished measurement.
+Three models solved opt-012 to 8080 against the reference's 8200, and a matching optimum proves
+nothing, so the case was read: in whole pumps and valves the optimum is 8080, the reference is
+continuous, and the statement never says which. Every reference was then solved with its decisions
+integer and every refutation compared with the result. Four land exactly on a whole-number optimum,
+three in the main ledger and one at the 32768-token cap, and two of them are the Claude models' only
+refutations: Haiku 4.5 on opt-006 (16 night shifts against 16.667) and Sonnet 5 on opt-012. The protocol does not edit a case after its answers were read, so
+the published rates keep them; the report names the class and the effect on each gap, and how to
+score a statement that leaves a decision's domain open is left to a decision.
+
+R-036 and R-037 came with 0.05.000, which was published while a sweep was still running. The first
+caveat took its sample size from the smallest row, so a sweep two calls in would have set the
+interval quoted for every model, and Table 1 would have printed a rate over two cases in the same
+column as rates over twenty with nothing to tell them apart. The corpus is ordered by tier and a
+sweep takes it in order, so a short row is not a sample of the corpus: it is missing the hardest
+cases.
 
 R-031 to R-035 came with the second, many-model measurement. The site had been drawn for two
 Claude models and nothing failed when a third ran: every view iterated the data, so none broke, and
@@ -290,7 +311,7 @@ one question; the decision was recorded as UNDECIDED until the two measurements 
 
 ## 9. Convergence
 
-Recorded 2026-09-22 for the corpus, and 2026-09-23 for the web surface (0.03.000 to 0.05.000).
+Recorded 2026-09-22 for the corpus, and 2026-09-23 for the web surface (0.03.000 to 0.06.000).
 
 | Requirement | Result |
 |---|---|
@@ -300,7 +321,8 @@ Recorded 2026-09-22 for the corpus, and 2026-09-23 for the web surface (0.03.000
 | R-023, R-024 | pass: no control character in 124 tracked files; 17 figures match their components |
 | R-025 to R-028 | pass: the sidebar diagnosis and modal-token checks in the gate; 2 rule tests over all 125 outcome combinations |
 | R-029 to R-037 | pass: 141 tests with 2 skips in the Python suite; R-032 and R-037 in the gate, which compares the marked rows with the report both ways |
-| The UI gate | 191 checks pass against the built site, in dark, light and Spanish (0.05.000) |
+| R-038, R-039 | pass: 146 tests with 2 skips, the class driven end to end through the real sweep and mutation-checked; CI recounts the 3 refutations on a whole-number optimum from the ledger and the bake |
+| The UI gate | 195 checks pass against the built site, in dark, light and Spanish (0.06.000) |
 
 Out of scope and not claimed: the three other target families (mathematical formulation,
 experiment design, machine-learning framing), which are designed and unmeasured, and the judge

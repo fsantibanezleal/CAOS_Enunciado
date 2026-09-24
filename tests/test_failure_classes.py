@@ -196,3 +196,73 @@ def test_an_unbounded_candidate_scored_as_a_run_is_still_classed_unbounded() -> 
         key=SimpleNamespace(case_id="opt-006"),
     )
     assert classify(record) == "the model it produced is unbounded"
+
+
+def _whole_number_answer(case_id: str, margin: float | None = None) -> str:
+    """The case's own reference as a reply, every decision variable made integer.
+
+    ``margin`` rescales the objective's first coefficient, to make a document that is refuted for
+    landing somewhere other than the whole-number optimum.
+    """
+    import json
+
+    from corpus import cases
+
+    document = next(c for c in cases() if c.case_id == case_id).reference.to_json()
+    for quantity in document["quantities"]:
+        if quantity["role"] == "variable":
+            quantity["domain"] = "integer"
+        if margin is not None and quantity["role"] == "parameter" and quantity["name"] == "m_pump":
+            quantity["value"] = margin
+    return json.dumps(document)
+
+
+def _sweep_one(case_id: str, reply: str, tmp_path: Path) -> Ledger:
+    from copela.solvers.highs import make_solver
+
+    ledger = Ledger(tmp_path / f"{case_id}.jsonl")
+    Sweep(
+        ledger=ledger,
+        budget=Budget(limit_usd=1.0),
+        providers={"stub": StubProvider(default=reply)},
+        build_prompt=build_prompt,
+        parse_response=parse_for_case,
+        solve=make_solver(),
+        repeats=1,
+    ).run([c for c in to_harness_cases() if c.case_id == case_id], [Target("stub", "stub-small")])
+    return ledger
+
+
+@pytest.mark.parametrize("case_id", ["opt-006", "opt-012"])
+def test_a_refutation_on_the_references_whole_number_optimum_is_named_for_it(case_id, tmp_path) -> None:
+    """R-038: counting shifts, or pumps and valves, in whole units against a continuous reference
+    whose statement never says is refuted by the structural layer, and the class says where it lands.
+
+    The reply is the reference itself with its decisions made integer, driven through the real
+    sweep, parser, solver and oracle layers.
+    """
+    from report import WHOLE_NUMBER_CLASS, whole_number_readings
+
+    ledger = _sweep_one(case_id, _whole_number_answer(case_id), tmp_path)
+    (record,) = ledger.records()
+    structural = next(v for v in record.verdicts if v["layer"] == "structural")
+    assert structural["outcome"] == "fail", structural
+    assert classify(record) == WHOLE_NUMBER_CLASS
+    readings = whole_number_readings(ledger)
+    (row,) = readings["refutations"]
+    assert row["case_id"] == case_id and row["property_passed"]
+    model = readings["models"]["stub/stub-small"]
+    # One call, refuted: the gap is the whole call, and read as allowed it closes.
+    assert model["refutations"] == 1 and model["gap"] == 1.0 and model["gap_if_allowed"] == 0.0
+
+
+def test_a_refutation_elsewhere_keeps_the_general_class(tmp_path) -> None:
+    """R-038: the class needs the candidate to land ON the whole-number optimum. The same integer
+    document with a pump margin of 250 instead of 260 solves to 7880, not 8080, and is a different
+    optimum like any other."""
+    from report import whole_number_readings
+
+    ledger = _sweep_one("opt-012", _whole_number_answer("opt-012", margin=250.0), tmp_path)
+    (record,) = ledger.records()
+    assert classify(record) == "ran, then REFUTED: solves to a different optimum"
+    assert whole_number_readings(ledger)["refutations"] == []

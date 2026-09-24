@@ -35,6 +35,7 @@ from collections import defaultdict
 from functools import lru_cache
 from pathlib import Path
 
+from copela import __version__ as copela_version
 from copela.ledger import Ledger
 from copela.report import build
 from copela.verdicts import Layer, Outcome, Rate
@@ -120,6 +121,33 @@ PROTOCOL_NOTES = (
     },
 )
 
+#: Which copela scored which rows, for the records that cannot say: copela names itself in a record
+#: only from 0.4.0 (its R-033). Established from when each sweep ran against when each version was
+#: installed: the Claude sweep ran on 2026-09-22 on the code published as 0.2.0 under two hours
+#: later; 0.3.0 was installed at 17:37Z on 2026-09-23 and 0.3.2 at 18:22Z, and a running sweep keeps
+#: the version it started with, so the DeepSeek sweep's first process, stopped by its kill criterion
+#: after 13 calls at 18:28Z, is 0.3.0 and its resume is 0.3.2. Published only when the ledger holds
+#: every model it names, and only while some record carries no version.
+SCORING_NOTE = {
+    "models": ("anthropic/claude-sonnet-5", "zai/glm-5.3", "deepseek/deepseek-v4-pro"),
+    "en": (
+        "Records written before copela 0.4.0 do not name the copela that scored them, so it is "
+        "stated here, from when each sweep ran and when each version was installed: the code "
+        "published as copela 0.2.0 scored the two Claude rows, 0.3.0 scored GLM-5.3 and the first "
+        "13 DeepSeek-V4-Pro calls, and 0.3.2 scored every other record without a version. The rates "
+        "apply one rule to all of them, that of copela {version}, which derives this report, to the "
+        "verdicts each record stored."
+    ),
+    "es": (
+        "Los registros escritos antes de copela 0.4.0 no nombran el copela que los califico, asi "
+        "que se declara aqui, a partir de cuando corrio cada barrido y cuando se instalo cada "
+        "version: el codigo publicado como copela 0.2.0 califico las dos filas de Claude, 0.3.0 "
+        "califico GLM-5.3 y las primeras 13 llamadas de DeepSeek-V4-Pro, y 0.3.2 califico todos los "
+        "demas registros sin version. Las tasas aplican una sola regla a todos, la de copela "
+        "{version}, que deriva este informe, sobre los veredictos que guardo cada registro."
+    ),
+}
+
 #: copela's note, which the page prints, in the second language.
 NOTE_ES = (
     "Las capas se informan por separado a proposito. No hay puntaje combinado: un solo numero "
@@ -134,7 +162,17 @@ def _caveat(en: str, es: str) -> dict[str, str]:
     return {"en": en, "es": es}
 
 
-def caveats(records, models: list[dict[str, object]], failure: dict[str, dict[str, int]]) -> list:
+def _listed(parts: list[str], conjunction: str) -> str:
+    """'a', 'a and b', 'a, b and c': a list read as a sentence."""
+    return parts[0] if len(parts) == 1 else f"{', '.join(parts[:-1])} {conjunction} {parts[-1]}"
+
+
+def caveats(
+    records,
+    models: list[dict[str, object]],
+    failure: dict[str, dict[str, int]],
+    readings: dict[str, object] | None = None,
+) -> list:
     """What the measurement does not support, computed from the records rather than written down.
 
     The first version of this list was prose about two Claude models, and it went on saying so
@@ -171,10 +209,6 @@ def caveats(records, models: list[dict[str, object]], failure: dict[str, dict[st
         )
     )
     if short:
-
-        def listed(parts: list[str], conjunction: str) -> str:
-            return parts[0] if len(parts) == 1 else f"{', '.join(parts[:-1])} {conjunction} {parts[-1]}"
-
         tiers = [int(case.tier) for case in corpus_cases()]
         # Said only when it is true of the corpus: the sweep takes the cases in corpus order, so
         # a short row lacks the hardest ones exactly when the corpus is ordered by tier.
@@ -182,7 +216,7 @@ def caveats(records, models: list[dict[str, object]], failure: dict[str, dict[st
         out.append(
             _caveat(
                 f"{len(short)} row(s) have not reached every case: "
-                + listed([f"{m['key']} has {m['calls']}" for m in short], "and")
+                + _listed([f"{m['key']} has {m['calls']}" for m in short], "and")
                 + f" of the {n} calls. "
                 + (
                     f"A sweep takes the cases in corpus order, and the corpus climbs from tier "
@@ -193,7 +227,7 @@ def caveats(records, models: list[dict[str, object]], failure: dict[str, dict[st
                 + ", and its rates cannot be compared with a complete row's. A resumed sweep "
                 "completes a row in place, because the ledger skips every call it already holds.",
                 f"{len(short)} fila(s) no llegan a todos los casos: "
-                + listed([f"{m['key']} tiene {m['calls']}" for m in short], "y")
+                + _listed([f"{m['key']} tiene {m['calls']}" for m in short], "y")
                 + f" de las {n} llamadas. "
                 + (
                     f"Un barrido recorre los casos en el orden del corpus, y el corpus sube del "
@@ -318,6 +352,14 @@ def caveats(records, models: list[dict[str, object]], failure: dict[str, dict[st
     for note in PROTOCOL_NOTES:
         if note["model"] in keys:
             out.append(_caveat(note["en"], note["es"]))
+    unversioned = any(not getattr(r, "harness", "") for r in records)
+    if unversioned and all(model in keys for model in SCORING_NOTE["models"]):
+        out.append(
+            _caveat(
+                SCORING_NOTE["en"].format(version=copela_version),
+                SCORING_NOTE["es"].format(version=copela_version),
+            )
+        )
     scored_as_run = [
         r
         for r in records
@@ -343,6 +385,72 @@ def caveats(records, models: list[dict[str, object]], failure: dict[str, dict[st
                 "registros conservan los veredictos con que se calificaron, asi que cada uno cuenta "
                 "como corrido y no fiel en su fila; la taxonomia lo clasifica como no acotado. "
                 "copela 0.3.3 lo corrige para los barridos siguientes.",
+            )
+        )
+    # A call the provider failed never reached the model, and copela still counts it as a candidate
+    # that did not run. The ledger keeps it and a resume skips it, so the page says whose rates it
+    # is in rather than leaving an HTTP 500 to read as a formalization failure.
+    call_failures = sorted(
+        (r for r in records if classify(r) == "the call itself failed"),
+        key=lambda r: (model_key(r), r.key.case_id),
+    )
+    if call_failures:
+        out.append(
+            _caveat(
+                f"{len(call_failures)} call(s) failed at the provider and never reached the model ("
+                + ", ".join(f"{model_key(r)} on {r.key.case_id}" for r in call_failures)
+                + "). copela counts a failed call as a candidate that did not run, so it lowers "
+                "that model's rates. The ledger keeps the record, and a resumed sweep does not retry "
+                "it, because the ledger skips every call it already holds.",
+                f"{len(call_failures)} llamada(s) fallaron en el proveedor y nunca llegaron al modelo ("
+                + ", ".join(f"{model_key(r)} en {r.key.case_id}" for r in call_failures)
+                + "). copela cuenta una llamada fallida como un candidato que no se ejecuto, asi que "
+                "baja las tasas de ese modelo. El libro mayor conserva el registro, y un barrido "
+                "reanudado no la reintenta, porque el libro mayor omite cada llamada que ya contiene.",
+            )
+        )
+    if readings and readings["refutations"]:
+        found = readings["refutations"]
+        cases = sorted({r["case_id"] for r in found})
+        effect = readings["models"]
+
+        landed_en = _listed(
+            [f"{r['model']} on {r['case_id']} ({r['candidate']:g} against {r['reference']:g})" for r in found],
+            "and",
+        )
+        landed_es = _listed(
+            [f"{r['model']} en {r['case_id']} ({r['candidate']:g} contra {r['reference']:g})" for r in found],
+            "y",
+        )
+        moves_en = _listed(
+            [f"{key} from {m['gap']:+.3f} to {m['gap_if_allowed']:+.3f}" for key, m in effect.items()],
+            "and",
+        )
+        moves_es = _listed(
+            [f"{key} de {m['gap']:+.3f} a {m['gap_if_allowed']:+.3f}" for key, m in effect.items()],
+            "y",
+        )
+        out.append(
+            _caveat(
+                f"{len(found)} refutation(s) land exactly on the reference's optimum with its "
+                f"decisions made integer: {landed_en}. The statements of {_listed(cases, 'and')} do "
+                "not say whether those decisions are whole numbers, and the references are "
+                "continuous there, so a candidate that counts them in whole units is refuted for a "
+                "reading the statement allows. These candidates land where such a model lands, and "
+                "a matching optimum does not prove a candidate is that model. The published rates "
+                "keep the refutations, because a case is not edited after its answers are read. "
+                f"Read as allowed, the gaps would move: {moves_en}. How a statement that leaves a "
+                "decision's domain open is scored is an open decision.",
+                f"{len(found)} refutacion(es) caen exactamente en el optimo de la referencia con sus "
+                f"decisiones enteras: {landed_es}. Los enunciados de {_listed(cases, 'y')} no dicen "
+                "si esas decisiones son numeros enteros, y las referencias son continuas ahi, asi "
+                "que un candidato que las cuenta en unidades enteras queda refutado por una lectura "
+                "que el enunciado admite. Estos candidatos caen donde cae ese modelo, y un optimo "
+                "coincidente no prueba que el candidato sea ese modelo. Las tasas publicadas "
+                "conservan las refutaciones, porque un caso no se edita despues de leer sus "
+                f"respuestas. Leidas como admitidas, las brechas se moverian: {moves_es}. Como se "
+                "califica un enunciado que deja abierto el dominio de una decision es una decision "
+                "abierta.",
             )
         )
     free = [m for m in models if m["cost_usd"] == 0]
@@ -434,6 +542,61 @@ def _infeasible_cases() -> frozenset[str]:
     cases_json = REPO / "data" / "artifacts" / "cases.json"
     baked = json.loads(cases_json.read_text(encoding="utf-8"))
     return frozenset(c["case_id"] for c in baked if not c["solution"]["feasible"])
+
+
+@lru_cache(maxsize=1)
+def _whole_number_optima() -> dict[str, float]:
+    """Each case whose reference moves optimum when its real decisions are made integer.
+
+    Read from the bake, which solves that copy of every reference. Only the cases where the value
+    moves are kept: elsewhere a candidate that lands on it lands on the reference's own optimum and
+    is not refuted. Three cases today, opt-006, opt-010 and opt-012.
+    """
+    cases_json = REPO / "data" / "artifacts" / "cases.json"
+    out: dict[str, float] = {}
+    for case in json.loads(cases_json.read_text(encoding="utf-8")):
+        whole = case.get("integer_solution") or {}
+        continuous = case["solution"]
+        if not (whole.get("feasible") and continuous.get("feasible")):
+            continue
+        reference, integer = float(continuous["objective"]), float(whole["objective"])
+        if abs(reference - integer) > 1e-6 * max(1.0, abs(reference)):
+            out[case["case_id"]] = integer
+    return out
+
+
+#: copela's refutation detail, which prints both optima with %g: six significant figures. So a
+#: candidate is on a value when it is within half a unit of the sixth figure of it.
+_REFUTED_OPTIMA = re.compile(
+    r"^solves to (?P<candidate>\S+) where the reference solves to (?P<reference>\S+);"
+)
+_SIXTH_FIGURE = 5e-6
+
+WHOLE_NUMBER_CLASS = "ran, then REFUTED: solves to the reference's whole-number optimum"
+
+
+def _refuted_optima(structural) -> tuple[float, float] | None:
+    match = _REFUTED_OPTIMA.match(structural.get("detail", "") if structural else "")
+    if not match:
+        return None
+    try:
+        return float(match.group("candidate")), float(match.group("reference"))
+    except ValueError:
+        return None
+
+
+def _on_the_whole_number_optimum(record, structural) -> bool:
+    """The refuted candidate solves to its reference's optimum with the decisions made integer.
+
+    A statement that does not say whether a decision is a whole number leaves the choice to the
+    reference, and the structural layer refutes the other choice. A matching optimum does not prove
+    the candidate is that model, which is why the class says where it lands and nothing more.
+    """
+    whole = _whole_number_optima().get(record.key.case_id)
+    optima = _refuted_optima(structural)
+    if whole is None or optima is None:
+        return False
+    return abs(optima[0] - whole) <= _SIXTH_FIGURE * max(1.0, abs(whole))
 
 #: A reply that was all reasoning and no answer. copela's providers return one sentence for it on
 #: every lane (copela R-022), and the parser quotes the reply back as "It began: ...", so matching
@@ -547,6 +710,10 @@ def classify(record, cap: int = PROTOCOL_CAP) -> str:
         # contradictory case a candidate that finds a feasible point has no optimum to differ from.
         if structural.get("detail", "").startswith("the reference is infeasible"):
             return "ran, then REFUTED: feasible where the case has no feasible point"
+        # Both Claude models' only refutations were of this kind: shifts, and pumps and valves,
+        # counted in whole units against continuous references whose statements never say.
+        if _on_the_whole_number_optimum(record, structural):
+            return "ran, then REFUTED: solves to the reference's whole-number optimum"
         return "ran, then REFUTED: solves to a different optimum"
 
     # The property layer can refute too, and a candidate on which neither strong layer decided has
@@ -829,6 +996,54 @@ def cap_sensitivity(ledger_path: Path) -> dict[str, object] | None:
     }
 
 
+def whole_number_readings(ledger: Ledger) -> dict[str, object]:
+    """The refutations that land on a reference's whole-number optimum, and what they decide.
+
+    Nothing is re-scored: the published rates keep copela's verdicts, because the protocol does not
+    edit a case after its answers were read. This states which refutations are of this kind and what
+    each model's gap would be if a statement that leaves integrality open were read as allowing it.
+    A refuted candidate would then be faithful only if the property layer passed it.
+    """
+    cells = {f"{c['provider']}/{c['model_id']}": c for c in build(ledger).to_json()["cells"]}
+    rows: list[dict[str, object]] = []
+    refuted: dict[str, int] = defaultdict(int)
+    recovered: dict[str, int] = defaultdict(int)
+    for record in ledger:
+        if classify(record) != WHOLE_NUMBER_CLASS:
+            continue
+        verdicts = {v["layer"]: v for v in record.verdicts}
+        candidate, reference = _refuted_optima(verdicts.get(Layer.STRUCTURAL.value))
+        prop = verdicts.get(Layer.PROPERTY.value)
+        passed = prop is not None and prop["outcome"] == Outcome.PASS.value
+        key = model_key(record)
+        rows.append(
+            {
+                "model": key,
+                "case_id": record.key.case_id,
+                "candidate": candidate,
+                "reference": reference,
+                "whole_number_optimum": _whole_number_optima()[record.key.case_id],
+                "property_passed": passed,
+            }
+        )
+        refuted[key] += 1
+        recovered[key] += int(passed)
+    models = {}
+    for key, count in refuted.items():
+        cell = cells[key]
+        allowed = Rate(cell["faithful"]["passed"] + recovered[key], cell["faithful"]["total"]).to_json()
+        models[key] = {
+            "refutations": count,
+            "gap": round(cell["gap"], 6),
+            "faithful_if_allowed": allowed,
+            "gap_if_allowed": round(cell["ran"]["value"] - allowed["value"], 6),
+        }
+    return {
+        "refutations": sorted(rows, key=lambda r: (r["model"], r["case_id"])),
+        "models": models,
+    }
+
+
 def assemble(ledger_path: Path) -> dict[str, object]:
     ledger = Ledger(ledger_path)
     records = ledger.records()
@@ -843,7 +1058,9 @@ def assemble(ledger_path: Path) -> dict[str, object]:
         cell["model"] = f"{cell['provider']}/{cell['model_id']}"
     report["cells"].sort(key=lambda cell: rank[cell["model"]])
 
-    report["schema"] = "enunciado-gap-report/2.0"
+    # 2.1: whole_number_readings, the refutations that land on a reference's integer optimum.
+    report["schema"] = "enunciado-gap-report/2.1"
+    report["whole_number_readings"] = whole_number_readings(ledger)
     report["models"] = models
     report["measured_from"] = min(record.recorded_at for record in records)[:10]
     report["measured_to"] = max(record.recorded_at for record in records)[:10]
@@ -856,7 +1073,9 @@ def assemble(ledger_path: Path) -> dict[str, object]:
     report["cost_usd"] = round(ledger.total_cost_usd, 4)
     report["protocol_cap"] = PROTOCOL_CAP
     report["call_count"] = len(records)
-    report["caveats"] = caveats(records, models, report["failure_breakdown"])
+    report["caveats"] = caveats(
+        records, models, report["failure_breakdown"], report["whole_number_readings"]
+    )
     report["note_es"] = NOTE_ES
     return report
 

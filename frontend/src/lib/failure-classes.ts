@@ -212,6 +212,16 @@ export const FAILURE_CLASSES: FailureClass[] = [
     ran: true,
   },
   {
+    key: "ran, then REFUTED: solves to the reference's whole-number optimum",
+    es: "corrio, y fue REFUTADA: resuelve al optimo entero de la referencia",
+    ruleEn:
+      "It runs cleanly and solves to the reference's optimum with its decisions made integer, on a case whose reference is continuous there. The statement does not say whether those decisions are whole numbers, so the refutation may be of a reading the statement allows.",
+    ruleEs:
+      "Corre limpio y resuelve al optimo de la referencia con sus decisiones enteras, en un caso cuya referencia es continua ahi. El enunciado no dice si esas decisiones son numeros enteros, asi que la refutacion puede ser de una lectura que el enunciado admite.",
+    layer: "structural",
+    ran: true,
+  },
+  {
     key: "ran, then REFUTED: feasible where the case has no feasible point",
     es: "corrio, y fue REFUTADA: factible donde el caso no tiene punto factible",
     ruleEn:

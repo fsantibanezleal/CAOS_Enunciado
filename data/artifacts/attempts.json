@@ -851,6 +851,27 @@
     ]
    },
    {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 948,
+    "latency_ms": 152390.9,
+    "model": "zai/glm-4.5-flash",
+    "model_id": "glm-4.5-flash",
+    "model_version": "glm-4.5-flash",
+    "output_tokens": 8192,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=model-decides#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 27635 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 27635 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.024545,
     "failure_class": "ran and survived every check",
     "input_tokens": 1036,
@@ -1228,6 +1249,27 @@
     ]
    },
    {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 939,
+    "latency_ms": 198635.9,
+    "model": "zai/glm-4.5-flash",
+    "model_id": "glm-4.5-flash",
+    "model_version": "glm-4.5-flash",
+    "output_tokens": 8192,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=model-decides#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 27229 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 27229 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.033793,
     "failure_class": "no answer: the reasoning used the whole cap",
     "input_tokens": 1025,
@@ -1555,6 +1597,27 @@
     ]
    },
    {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 944,
+    "latency_ms": 221125.0,
+    "model": "zai/glm-4.5-flash",
+    "model_id": "glm-4.5-flash",
+    "model_version": "glm-4.5-flash",
+    "output_tokens": 8192,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=model-decides#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 28326 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 28326 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.033799,
     "failure_class": "no answer: the reasoning used the whole cap",
     "input_tokens": 1029,
@@ -1861,7 +1924,7 @@
    },
    {
     "cost_usd": 0.008888,
-    "failure_class": "ran, then REFUTED: solves to a different optimum",
+    "failure_class": "ran, then REFUTED: solves to the reference's whole-number optimum",
     "input_tokens": 1058,
     "latency_ms": 7017.5,
     "model": "anthropic/claude-haiku-4-5",
@@ -1906,6 +1969,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 28704 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 957,
+    "latency_ms": 276973.8,
+    "model": "zai/glm-4.5-flash",
+    "model_id": "glm-4.5-flash",
+    "model_version": "glm-4.5-flash",
+    "output_tokens": 8192,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=model-decides#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 22542 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 22542 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -2249,6 +2333,27 @@
     ]
    },
    {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 945,
+    "latency_ms": 148801.7,
+    "model": "zai/glm-4.5-flash",
+    "model_id": "glm-4.5-flash",
+    "model_version": "glm-4.5-flash",
+    "output_tokens": 8192,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=model-decides#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 32092 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 32092 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.033801,
     "failure_class": "no answer: the reasoning used the whole cap",
     "input_tokens": 1031,
@@ -2586,6 +2691,27 @@
     ]
    },
    {
+    "cost_usd": 0.0,
+    "failure_class": "the call itself failed",
+    "input_tokens": 0,
+    "latency_ms": 0.0,
+    "model": "zai/glm-4.5-flash",
+    "model_id": "glm-4.5-flash",
+    "model_version": "unknown",
+    "output_tokens": 0,
+    "provider": "zai",
+    "provider_fingerprint": "none",
+    "repeat": 0,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "the call failed: zai call failed: HTTP 500: {\"error\":{\"code\":\"500\",\"message\":\"Operation failed\"}}",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.033841,
     "failure_class": "no answer: the reasoning used the whole cap",
     "input_tokens": 1061,
@@ -2907,6 +3033,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 29554 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 991,
+    "latency_ms": 428984.5,
+    "model": "zai/glm-4.5-flash",
+    "model_id": "glm-4.5-flash",
+    "model_version": "glm-4.5-flash",
+    "output_tokens": 8192,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=model-decides#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 27061 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 27061 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -3244,6 +3391,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 27525 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 958,
+    "latency_ms": 255345.2,
+    "model": "zai/glm-4.5-flash",
+    "model_id": "glm-4.5-flash",
+    "model_version": "glm-4.5-flash",
+    "output_tokens": 8192,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=model-decides#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 29537 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 29537 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -3607,6 +3775,27 @@
     ]
    },
    {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 964,
+    "latency_ms": 301408.8,
+    "model": "zai/glm-4.5-flash",
+    "model_id": "glm-4.5-flash",
+    "model_version": "glm-4.5-flash",
+    "output_tokens": 8192,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=model-decides#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 28431 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 28431 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.033829,
     "failure_class": "no answer: the reasoning used the whole cap",
     "input_tokens": 1052,
@@ -3872,7 +4061,7 @@
   "opt-012": [
    {
     "cost_usd": 0.04722,
-    "failure_class": "ran, then REFUTED: solves to a different optimum",
+    "failure_class": "ran, then REFUTED: solves to the reference's whole-number optimum",
     "input_tokens": 1375,
     "latency_ms": 32434.7,
     "model": "anthropic/claude-sonnet-5",
@@ -3944,6 +4133,27 @@
     ]
    },
    {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 962,
+    "latency_ms": 216021.3,
+    "model": "zai/glm-4.5-flash",
+    "model_id": "glm-4.5-flash",
+    "model_version": "glm-4.5-flash",
+    "output_tokens": 8192,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=model-decides#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 29474 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 29474 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.033828,
     "failure_class": "no answer: the reasoning used the whole cap",
     "input_tokens": 1051,
@@ -3966,7 +4176,7 @@
    },
    {
     "cost_usd": 0.0,
-    "failure_class": "ran, then REFUTED: solves to a different optimum",
+    "failure_class": "ran, then REFUTED: solves to the reference's whole-number optimum",
     "input_tokens": 967,
     "latency_ms": 238386.0,
     "model": "ollama/phi4:latest",
@@ -4287,6 +4497,37 @@
       "detail": "error: dimensions [define_reagent_bought]: define_reagent_bought: left side is kg but right side is kg*drum; they cannot be compared",
       "layer": "executable",
       "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "ran and survived every check",
+    "input_tokens": 930,
+    "latency_ms": 148689.9,
+    "model": "zai/glm-4.5-flash",
+    "model_id": "glm-4.5-flash",
+    "model_version": "glm-4.5-flash",
+    "output_tokens": 7178,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=model-decides#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "",
+    "verdicts": [
+     {
+      "detail": "optimal",
+      "layer": "executable",
+      "outcome": "pass"
+     },
+     {
+      "detail": "canonical forms differ and both solve to the same optimum, which does not establish equivalence: compensating errors reach the right number",
+      "layer": "structural",
+      "outcome": "undecided"
+     },
+     {
+      "detail": "2 relation(s) held",
+      "layer": "property",
+      "outcome": "pass"
      }
     ]
    },
@@ -4638,6 +4879,27 @@
     ]
    },
    {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 968,
+    "latency_ms": 297067.3,
+    "model": "zai/glm-4.5-flash",
+    "model_id": "glm-4.5-flash",
+    "model_version": "glm-4.5-flash",
+    "output_tokens": 8192,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=model-decides#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 33023 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 33023 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.033832,
     "failure_class": "no answer: the reasoning used the whole cap",
     "input_tokens": 1054,
@@ -4949,6 +5211,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['tag', 'value']",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 961,
+    "latency_ms": 215520.2,
+    "model": "zai/glm-4.5-flash",
+    "model_id": "glm-4.5-flash",
+    "model_version": "glm-4.5-flash",
+    "output_tokens": 8192,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=model-decides#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 28300 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 28300 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
       "layer": "executable",
       "outcome": "fail"
      }
@@ -5272,6 +5555,27 @@
     ]
    },
    {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 967,
+    "latency_ms": 306754.9,
+    "model": "zai/glm-4.5-flash",
+    "model_id": "glm-4.5-flash",
+    "model_version": "glm-4.5-flash",
+    "output_tokens": 8192,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=model-decides#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 29962 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 29962 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.033833,
     "failure_class": "truncated output",
     "input_tokens": 1055,
@@ -5580,6 +5884,27 @@
     "provider_fingerprint": "zai#effort=high#do_sample=false#no-seed",
     "repeat": 0,
     "response_excerpt": "{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A depot stocks bolts and nuts. It must hold at least twice as many bolts as nuts. Bolts cost 3 USD each and nuts cost 1 USD each, and the depot must hold at least 600 items in total. Minimise the cost of the holding.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_bolts\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"item\", \"exponents\": {\"count\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"number of bolts the depot holds\",\n      \"span\": {\"start\": 67, \"end\": 72, \"text\": \"bolts\"}\n    },\n    {\n      \"name\": \"x_nuts\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"item\", \"exponents\": {\"count\": \"1\"}},\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"number of nuts the depot holds\",\n      \"span\": {\"start\": 7\n[... 2950 characters omitted ...]\n\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\"tag\": \"ref\", \"name\": \"total_cost\"},\n      \"name\": \"minimise_holding_cost\"\n    }\n  ],\n  \"open_questions\": [\n    {\n      \"question\": \"Whether the numbers of bolts and nuts held may be fractional or must be whole items.\",\n      \"span\": {\"start\": 163, \"end\": 172, \"text\": \"600 items\"},\n      \"resolution\": \"Read as integer counts, since bolts and nuts are discrete items and the total is stated as a count of items.\",\n      \"affects\": [\"x_bolts\", \"x_nuts\"]\n    },\n    {\n      \"question\": \"Whether 'the cost of the holding' includes anything beyond acquiring the stock at the stated unit prices (e.g. storage costs).\",\n      \"span\": {\"start\": 183, \"end\": 216, \"text\": \"Minimise the cost of the holding.\"},\n      \"resolution\": \"Read as the purchase cost alone: 3 USD per bolt plus 1 USD per nut. No other holding or storage costs are given in the statement.\",\n      \"affects\": [\"total_cost\"]\n    }\n  ],\n  \"feasibility_only\": false\n}",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['tag', 'value']",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "a constant with no unit",
+    "input_tokens": 941,
+    "latency_ms": 177842.8,
+    "model": "zai/glm-4.5-flash",
+    "model_id": "glm-4.5-flash",
+    "model_version": "glm-4.5-flash",
+    "output_tokens": 7596,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=model-decides#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A depot stocks bolts and nuts. It must hold at least twice as many bolts as nuts. Bolts cost 3 USD each and nuts cost 1 USD each, and the depot must hold at least 600 items in total. Minimise the cost of the holding.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"bolts\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"number of bolts in the depot\",\n      \"span\": {\"start\": 14, \"end\": 19, \"text\": \"bolts\"}\n    },\n    {\n      \"name\": \"nuts\",\n      \"role\": \"variable\",\n      \"dimension\": {\"symbol\": \"1\", \"exponents\": {}},\n      \"domain\": \"integer\",\n      \"lower\": 0.0,\n      \"upper\": null,\n      \"value\": null,\n      \"description\": \"number of nuts in the depot\",\n      \"span\": {\"start\": 25, \"end\": 29, \"text\": \"nuts\"}\n  \n[... 1048 characters omitted ...]\n600 items in total\"}\n    }\n  ],\n  \"relations\": [\n    {\n      \"tag\": \"compare\",\n      \"left\": {\"tag\": \"ref\", \"name\": \"bolts\"},\n      \"comparator\": \">=\",\n      \"right\": {\"tag\": \"product\", \"factors\": [{\"tag\": \"const\", \"value\": 2.0}, {\"tag\": \"ref\", \"name\": \"nuts\"}]},\n      \"name\": \"twice_as_many_bolts\"\n    },\n    {\n      \"tag\": \"compare\",\n      \"left\": {\"tag\": \"sum\", \"terms\": [{\"tag\": \"ref\", \"name\": \"bolts\"}, {\"tag\": \"ref\", \"name\": \"nuts\"}]},\n      \"comparator\": \">=\",\n      \"right\": {\"tag\": \"ref\", \"name\": \"min_total_items\"},\n      \"name\": \"meet_total_items\"\n    }\n  ],\n  \"objectives\": [\n    {\n      \"sense\": \"minimise\",\n      \"expression\": {\"tag\": \"sum\", \"terms\": [\n        {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"bolts\"}, {\"tag\": \"ref\", \"name\": \"cost_per_bolt\"}]},\n        {\"tag\": \"product\", \"factors\": [{\"tag\": \"ref\", \"name\": \"nuts\"}, {\"tag\": \"ref\", \"name\": \"cost_per_nut\"}]}\n      ]},\n      \"name\": \"total_cost\"\n    }\n  ],\n  \"open_questions\": [],\n  \"feasibility_only\": false\n}\n```",
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: a 'const' node is missing its 'unit' field; got keys ['tag', 'value']",
@@ -5926,6 +6251,27 @@
     ]
    },
    {
+    "cost_usd": 0.0,
+    "failure_class": "truncated output",
+    "input_tokens": 947,
+    "latency_ms": 305267.0,
+    "model": "zai/glm-4.5-flash",
+    "model_id": "glm-4.5-flash",
+    "model_version": "glm-4.5-flash",
+    "output_tokens": 8192,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=model-decides#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A processor can buy ore from a nearby pit at 70 USD per tonne or from a distant pit at 52 USD per tonne. Haulage from the distant pit is quoted separately at 15 USD per tonne. The plant needs 800 tonnes. Minimise what the processor pays.\",\n    \"source\": \"inline\",\n    \"language\": \"en\"\n  },\n  \"quantities\": [\n    {\n      \"name\": \"x_a\",\n      \"role\": \"variable\",\n      \"dimension\": {\n        \"symbol\": \"tonne\",\n        \"exponents\": {\n          \"mass\": \"1\"\n        }\n      },\n      \"",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the JSON object is not closed",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.033803,
     "failure_class": "truncated output",
     "input_tokens": 1032,
@@ -6263,6 +6609,27 @@
     ]
    },
    {
+    "cost_usd": 0.0,
+    "failure_class": "no answer: the reasoning used the whole cap",
+    "input_tokens": 931,
+    "latency_ms": 318104.2,
+    "model": "zai/glm-4.5-flash",
+    "model_id": "glm-4.5-flash",
+    "model_version": "glm-4.5-flash",
+    "output_tokens": 8192,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=model-decides#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "[no answer: the model emitted 29468 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 29468 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
     "cost_usd": 0.033787,
     "failure_class": "truncated output",
     "input_tokens": 1020,
@@ -6574,6 +6941,27 @@
     "verdicts": [
      {
       "detail": "the response did not parse into a problem: the response contains no JSON object. It began: '[no answer: the model emitted 28426 characters of reasoning and stopped before answering (finish_reason length). Raise max_tokens or lower the effort]'",
+      "layer": "executable",
+      "outcome": "fail"
+     }
+    ]
+   },
+   {
+    "cost_usd": 0.0,
+    "failure_class": "truncated output",
+    "input_tokens": 949,
+    "latency_ms": 232179.6,
+    "model": "zai/glm-4.5-flash",
+    "model_id": "glm-4.5-flash",
+    "model_version": "glm-4.5-flash",
+    "output_tokens": 8192,
+    "provider": "zai",
+    "provider_fingerprint": "zai#effort=model-decides#do_sample=false#no-seed",
+    "repeat": 0,
+    "response_excerpt": "```json\n{\n  \"schema_version\": \"1.0\",\n  \"family\": \"optimization\",\n  \"narrative\": {\n    \"text\": \"A pipeline can move 18 of product A or 25 of product B per hour, and runs 10 hours a day. Product A is worth 340 per unit moved and product B is worth 210. A customer contract requires at least 60 of product A each day. Maximise the daily value moved",
+    "verdicts": [
+     {
+      "detail": "the response did not parse into a problem: the JSON object is not closed",
       "layer": "executable",
       "outcome": "fail"
      }

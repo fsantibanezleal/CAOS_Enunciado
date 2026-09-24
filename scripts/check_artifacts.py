@@ -82,8 +82,8 @@ def check_derived(problems: list[str]) -> str:
             f"gap-report.json says {report.get('call_count')} calls, the ledger holds {len(records)}"
         )
 
-    if report.get("schema") != "enunciado-gap-report/2.0":
-        problems.append(f"gap-report.json has schema {report.get('schema')!r}, not 2.0")
+    if report.get("schema") != "enunciado-gap-report/2.1":
+        problems.append(f"gap-report.json has schema {report.get('schema')!r}, not 2.1")
     if attempts.get("schema") != "enunciado-attempts/1.1":
         problems.append(f"attempts.json has schema {attempts.get('schema')!r}, not 1.1")
 
@@ -142,8 +142,56 @@ def check_derived(problems: list[str]) -> str:
     if in_attempts != len(records):
         problems.append(f"attempts.json holds {in_attempts} attempts, the ledger {len(records)}")
 
+    whole = check_whole_number_readings(problems, records, report)
     checked = check_sensitivity(problems, expected)
-    return f", the report and {in_attempts} attempts agree with the ledger{checked}"
+    return f", the report and {in_attempts} attempts agree with the ledger{whole}{checked}"
+
+
+def check_whole_number_readings(problems: list[str], records: list[dict], report: dict) -> str:
+    """The refutations that land on a reference's whole-number optimum, recounted with json alone.
+
+    The bake records each reference's optimum with its decisions made integer; a refutation's
+    detail prints the candidate's optimum to six significant figures. The published list must be
+    exactly the refutations whose candidate lands on a whole-number optimum that differs from the
+    reference's own, so a stale list, or one that dropped a record, fails CI.
+    """
+    import re
+
+    baked = json.loads((ARTIFACTS / "cases.json").read_text(encoding="utf-8"))
+    whole: dict[str, float] = {}
+    for case in baked:
+        integer = case.get("integer_solution")
+        if integer is None:
+            problems.append(f"{case['case_id']}: cases.json carries no integer_solution; re-run the bake")
+            continue
+        continuous = case["solution"]
+        if integer.get("feasible") and continuous.get("feasible"):
+            a, b = float(continuous["objective"]), float(integer["objective"])
+            if abs(a - b) > 1e-6 * max(1.0, abs(a)):
+                whole[case["case_id"]] = b
+    pattern = re.compile(r"^solves to (\S+) where the reference solves to (\S+);")
+    found = []
+    for record in records:
+        verdicts = {v["layer"]: v for v in record.get("verdicts", [])}
+        executable, structural = verdicts.get("executable"), verdicts.get("structural")
+        if not executable or executable["outcome"] != "pass" or executable.get("detail") == "unbounded":
+            continue
+        if not structural or structural["outcome"] != "fail":
+            continue
+        match = pattern.match(structural.get("detail", ""))
+        target = whole.get(record["case_id"])
+        if match and target is not None and abs(float(match.group(1)) - target) <= 5e-6 * max(1.0, abs(target)):
+            found.append((f"{record['provider']}/{record['model_id']}", record["case_id"]))
+    published = [
+        (row.get("model"), row.get("case_id"))
+        for row in (report.get("whole_number_readings") or {}).get("refutations", [])
+    ]
+    if sorted(found) != sorted(published):
+        problems.append(
+            f"whole-number refutations: the report lists {sorted(published)}, the ledger and the bake "
+            f"give {sorted(found)}"
+        )
+    return f", {len(found)} refutation(s) on a whole-number optimum recounted"
 
 
 def check_sensitivity(problems: list[str], main: dict[str, tuple[int, int, int]]) -> str:

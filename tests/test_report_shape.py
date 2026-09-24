@@ -90,6 +90,9 @@ def test_the_caveats_are_computed_from_the_records(built) -> None:
     assert any("local models ran on one laptop GPU" in text for text in english)
     assert not any("two models" in text or "forty" in text for text in english)
     assert not any("have not reached every case" in text for text in english)
+    # The scoring-version note names models this ledger does not hold, so it is absent; no call failed.
+    assert not any("Records written before copela 0.4.0" in text for text in english)
+    assert not any("failed at the provider" in text for text in english)
 
 
 def test_a_short_row_is_named_and_the_sample_size_is_the_complete_rows(tmp_path, monkeypatch) -> None:
@@ -123,6 +126,29 @@ def test_a_short_row_is_named_and_the_sample_size_is_the_complete_rows(tmp_path,
         assert complete not in short_en[0], short_en[0]
 
 
+def test_a_call_the_provider_failed_is_named_as_such(tmp_path, monkeypatch) -> None:
+    """R-035: a failed call is named with its model and case, so it does not read as the model's."""
+    path = tmp_path / "optimization.jsonl"
+    ledger = _ledger(path)
+    failing = _Named("groq", default="unused", pricing=Pricing(), fail_on={"stub-large"})
+    Sweep(
+        ledger=ledger,
+        budget=Budget(limit_usd=10.0),
+        providers={"groq": failing},
+        build_prompt=build_prompt,
+        parse_response=parse_for_case,
+        repeats=1,
+    ).run(to_harness_cases()[:1], [Target("groq", "stub-large")])
+    monkeypatch.setattr(report, "_sensitivity_ledgers", list)
+    assembled = report.assemble(path)
+    assert assembled["failure_breakdown"]["groq/stub-large"] == {"the call itself failed": 1}
+    english = [c["en"] for c in assembled["caveats"] if "failed at the provider" in c["en"]]
+    spanish = [c["es"] for c in assembled["caveats"] if "fallaron en el proveedor" in c["es"]]
+    case = to_harness_cases()[0].case_id
+    assert english == [english[0]] and f"groq/stub-large on {case}" in english[0], english
+    assert spanish == [spanish[0]] and f"groq/stub-large en {case}" in spanish[0], spanish
+
+
 def test_a_protocol_note_is_published_when_its_model_ran(tmp_path, monkeypatch) -> None:
     """R-035: a departure from the protocol reaches the page, not only a commit message."""
     path = tmp_path / "optimization.jsonl"
@@ -135,3 +161,21 @@ def test_a_protocol_note_is_published_when_its_model_ran(tmp_path, monkeypatch) 
     )
     caveats = report.assemble(path)["caveats"]
     assert {"en": "resumed once", "es": "reanudado una vez"} in caveats
+
+
+def test_the_scoring_versions_are_published_while_a_record_cannot_name_its_own(tmp_path, monkeypatch) -> None:
+    """R-035: which copela scored which rows reaches the page while the records cannot say."""
+    path = tmp_path / "optimization.jsonl"
+    _ledger(path)
+    monkeypatch.setattr(report, "_sensitivity_ledgers", list)
+    note = {"models": ("anthropic/stub-small", "deepseek/stub-small"), "en": "scored by x", "es": "calificado por x"}
+    monkeypatch.setattr(report, "SCORING_NOTE", note)
+    caveats = report.assemble(path)["caveats"]
+    # The installed copela writes no version when it predates 0.4.0, and names itself from 0.4.0 on.
+    import copela
+
+    unversioned = tuple(int(part) for part in copela.__version__.split(".")[:2]) < (0, 4)
+    assert ({"en": "scored by x", "es": "calificado por x"} in caveats) is unversioned
+    # A note naming a model the ledger does not hold is not published.
+    monkeypatch.setattr(report, "SCORING_NOTE", {**note, "models": ("zai/absent",)})
+    assert {"en": "scored by x", "es": "calificado por x"} not in report.assemble(path)["caveats"]
