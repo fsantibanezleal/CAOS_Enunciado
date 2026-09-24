@@ -14,6 +14,13 @@ What it verifies, and why each check is here rather than in a test:
 4. **Every property relation holds on the reference.** If a metamorphic relation fails on the
    ANSWER, the relation is wrong, not the candidate, and any later result from it is noise.
 
+It also records one fact about each reference that is not a check: its optimum with every real
+decision variable made integer. A statement that does not say whether a decision is a whole number
+leaves that choice to the reference, and the structural layer then refutes the other choice. Two
+cases' references are continuous where their statements count shifts, pumps and valves, and the
+refutations of candidates that counted them in whole units read as different models until this
+value was recorded beside them (Enunciado F-029).
+
 Usage: ``python data-pipeline/bake.py [--out DIR] [--release]``. It writes to a sandbox by default;
 ``--release`` is required to overwrite the committed artifacts.
 """
@@ -32,8 +39,29 @@ from copela.oracles import properties
 from copela.solvers.highs import SolverUnavailable, make_solver
 from copela.verdicts import Outcome
 from corpus import cases, registry
+from planteo.problem import Problem
 
 TOLERANCE = 1e-6
+
+
+def whole_number_solution(reference: Problem, solve, continuous) -> dict[str, object]:
+    """The reference solved again with every real decision variable made integer.
+
+    This changes no case: the reference is copied, its variables' domain is the only thing edited,
+    and the copy is solved and discarded. ``made_integer`` names the variables it touched, empty
+    when the reference had no real decision, in which case the value is the reference's own.
+    """
+    document = reference.to_json()
+    real = [
+        q["name"] for q in document["quantities"] if q["role"] == "variable" and q["domain"] == "real"
+    ]
+    if not real:
+        return {"feasible": continuous.feasible, "objective": continuous.objective, "made_integer": []}
+    for quantity in document["quantities"]:
+        if quantity["name"] in real:
+            quantity["domain"] = "integer"
+    whole = solve(Problem.from_json(document))
+    return {"feasible": whole.feasible, "objective": whole.objective, "made_integer": real}
 
 
 def bake(out_dir: Path, release: bool) -> int:
@@ -80,6 +108,14 @@ def bake(out_dir: Path, release: bool) -> int:
             "values": solution.values,
             "detail": solution.detail,
         }
+        # Where the reference chose real for a decision its statement may count in whole units,
+        # this is the optimum of the other choice. The report reads it to tell a refutation that
+        # lands on it from one that lands anywhere else.
+        try:
+            record["integer_solution"] = whole_number_solution(case.reference, solve, solution)
+        except Exception as error:  # noqa: BLE001
+            failures.append(f"{case.case_id}: the reference with integer decisions did not solve: {error}")
+            continue
 
         # 3. The claimed optimum, checked rather than trusted.
         if case.known_optimum is not None:
