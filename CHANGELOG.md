@@ -39,9 +39,12 @@ snapshot's commit message says 18 of 20, which was its count when the site was b
 
 - Report schema 2.0: a model is `provider/model_id` everywhere, in one order that every view draws
   (R-031, R-032); `attempts.json` 1.1.
-- The measurement is scored by copela 0.3.2 and planteo 0.1.1, pinned. copela 0.3.3 and 0.4.0 and
-  planteo 0.1.2 are published; the report reads the cap and harness copela 0.4.0 records where a
-  record has them, and shows "unrecorded" otherwise.
+- The report is derived by copela 0.3.2 and planteo 0.1.1, pinned. The records were scored by the
+  copela each sweep ran with: the code published as 0.2.0 for the two Claude rows, 0.3.0 for GLM-5.3
+  and the first 13 DeepSeek-V4-Pro calls, and 0.3.2 for every other record. This line said "scored
+  by copela 0.3.2" when 0.05.000 was released. copela 0.3.3 and 0.4.0 and planteo 0.1.2 are
+  published; the report reads the cap and harness copela 0.4.0 records where a record has them, and
+  shows "unrecorded" otherwise.
 - The sweep runner refuses an unpriced or unbudgeted model before it takes the ledger's lock
   (R-030), and takes `--max-consecutive-failures`.
 
