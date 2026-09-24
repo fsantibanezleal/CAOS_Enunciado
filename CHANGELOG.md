@@ -7,8 +7,10 @@ All notable changes to this product are documented here. The format follows
 ## [0.05.000] - 2026-09-23
 
 The measurement grows from two Claude models to sixteen models from four providers, hosted and
-local, and the site is redrawn for many models. Published while two sweeps were still running: the
-report names both rows and Table 1 marks them.
+local, and the site is redrawn for many models. Published while one sweep was still running:
+GLM-4.5-Flash, the free Z.AI lane, is at 2 of its 20 calls, and the report names the row and Table 1
+and Figure 1 mark it. qwen3:14b completed its last case 43 seconds before the snapshot; the
+snapshot's commit message says 18 of 20, which was its count when the site was built and checked.
 
 ### Added
 
@@ -20,7 +22,8 @@ report names both rows and Table 1 marks them.
 - **A second output cap.** The two reasoning models reran at 32768 tokens in a ledger of their own,
   `data/runs/optimization-cap32768.jsonl`, because the ledger key has no cap in it, and
   `cap-sensitivity.json` publishes the comparison (R-034). DeepSeek-V4-Pro is faithful on 2 of 20
-  at 8192 and on 11 of 20 at 32768; 17 of its 20 calls at 8192 spent the whole cap reasoning.
+  at 8192 and on 11 of 20 at 32768. At 8192, 17 of its 20 calls reached the cap: 14 spent all of it
+  reasoning, and 3 were cut off mid-answer.
 - **Model matrices** for the tier curve, the failure taxonomy, the layer agreement and the traps,
   one row per model, each scrolling inside its own frame. Figure 1 is redrawn for many rows, grouped
   by provider or sorted by the faithful rate.
