@@ -84,6 +84,11 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--max-tokens", type=int, default=8192)
     parser.add_argument(
+        "--no-probe",
+        action="store_true",
+        help="skip the one unrecorded call that checks the provider answers before the sweep starts",
+    )
+    parser.add_argument(
         "--max-consecutive-failures",
         type=int,
         default=10,
@@ -137,6 +142,28 @@ def main(argv: list[str] | None = None) -> int:
         budget.limit_usd = float("inf")
     else:
         budget = Budget(limit_usd=args.budget_usd, max_consecutive_failures=args.max_consecutive_failures)
+
+    # One probe call, before the lock and before anything is recorded. A sweep whose calls cannot
+    # reach the provider writes a row of "the call itself failed" into an append-only ledger, a row
+    # about the harness presented as a row about the model: a key file passed whole instead of its
+    # token did exactly that, nineteen records of an illegal header, discarded before publication.
+    # The probe is not recorded and does not touch the budget; it costs a few tokens.
+    if not args.no_probe:
+        try:
+            provider.complete(
+                "Reply with the single word ok.",
+                model_id=args.model,
+                temperature=0.0,
+                seed=20260922,
+                max_tokens=16,
+            )
+        except ProviderError as error:
+            print(
+                f"the probe call to {args.provider}/{args.model} failed, so the sweep did not start "
+                f"and nothing was recorded: {error}",
+                file=sys.stderr,
+            )
+            return 2
 
     # Exclusive for a writing run. Two sweeps sharing one ledger interleave records from whatever
     # code each happened to start with, and the file stops meaning one thing.
