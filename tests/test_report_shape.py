@@ -212,3 +212,24 @@ def test_a_model_that_repeats_itself_is_named_and_a_missing_pass_is_described(tm
     (short,) = [t for t in english if "have not reached every case at every repeat" in t]
     assert "anthropic/stub-small has 3 (its second repeat not started) of the 6 calls" in short, short
     assert "fewer samples, not easier cases" in short and "hardest cases" not in short
+
+
+def test_the_cap_comparison_counts_the_same_passes_on_both_sides(tmp_path, monkeypatch) -> None:
+    """R-034: the main ledger has two repeats and the second-cap ledger one, so the protocol's side
+    of the comparison counts only the repeat the second cap ran. Forty calls against twenty would
+    change the cap and the sample at once."""
+    main = tmp_path / "optimization.jsonl"
+    second = tmp_path / "optimization-cap32768.jsonl"
+    cases = to_harness_cases()[:3]
+    for path, repeats in ((main, 2), (second, 1)):
+        Sweep(
+            ledger=Ledger(path),
+            budget=Budget(limit_usd=10.0),
+            providers={"ollama": _Named("ollama", default="I cannot formalize this.", pricing=Pricing())},
+            build_prompt=build_prompt,
+            parse_response=parse_for_case,
+            repeats=repeats,
+        ).run(cases, [Target("ollama", "stub-large")])
+    monkeypatch.setattr(report, "_sensitivity_ledgers", lambda: [(32768, second)])
+    (row,) = report.cap_sensitivity(main)["rows"]
+    assert row["by_cap"]["8192"]["calls"] == row["by_cap"]["32768"]["calls"] == 3

@@ -144,7 +144,7 @@ def check_derived(problems: list[str]) -> str:
 
     whole = check_whole_number_readings(problems, records, report)
     whole += check_repeat_agreement(problems, records, report)
-    checked = check_sensitivity(problems, expected)
+    checked = check_sensitivity(problems, records)
     return f", the report and {in_attempts} attempts agree with the ledger{whole}{checked}"
 
 
@@ -232,7 +232,7 @@ def check_whole_number_readings(problems: list[str], records: list[dict], report
     return f", {len(found)} refutation(s) on a whole-number optimum recounted"
 
 
-def check_sensitivity(problems: list[str], main: dict[str, tuple[int, int, int]]) -> str:
+def check_sensitivity(problems: list[str], main_records: list[dict]) -> str:
     """cap-sensitivity.json agrees with its ledgers, one per cap, and with the main ledger's row.
 
     The file compares one protocol at two caps. Each side is recounted from its own ledger here,
@@ -257,6 +257,11 @@ def check_sensitivity(problems: list[str], main: dict[str, tuple[int, int, int]]
     for ledger in ledgers:
         cap = ledger.stem.removeprefix("optimization-cap")
         records = [json.loads(line) for line in ledger.read_text(encoding="utf-8").splitlines() if line.strip()]
+        # The protocol's side is recounted over the same passes the second cap ran, as the report does.
+        passes = {(f"{r['provider']}/{r['model_id']}", int(r["repeat"])) for r in records}
+        main = _ledger_rates(
+            [r for r in main_records if (f"{r['provider']}/{r['model_id']}", int(r["repeat"])) in passes]
+        )
         for model, (ran, faithful, total) in _ledger_rates(records).items():
             for label, expected, entry in (
                 (cap, (ran, faithful, total), (rows.get(model) or {}).get("by_cap", {}).get(cap)),

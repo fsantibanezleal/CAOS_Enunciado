@@ -1022,8 +1022,13 @@ def _sensitivity_ledgers() -> list[tuple[int, Path]]:
     return found
 
 
-def _at_cap(ledger: Ledger, cap: int) -> dict[str, dict[str, object]]:
-    """Each model's rates at one cap, through copela's own rule, with what the cap cost it."""
+def _at_cap(ledger, cap: int) -> dict[str, dict[str, object]]:
+    """Each model's rates at one cap, through copela's own rule, with what the cap cost it.
+
+    ``ledger`` is any iterable of records: copela's ``build`` only iterates, so a filtered list of
+    one ledger's records is summarised exactly as the ledger would be.
+    """
+    ledger = list(ledger)
     cells = {f"{c['provider']}/{c['model_id']}": c for c in build(ledger).to_json()["cells"]}
     records: dict[str, list] = defaultdict(list)
     for record in ledger:
@@ -1058,10 +1063,16 @@ def cap_sensitivity(ledger_path: Path) -> dict[str, object] | None:
     extra = _sensitivity_ledgers()
     if not extra:
         return None
-    main = _at_cap(Ledger(ledger_path), PROTOCOL_CAP)
+    main_records = Ledger(ledger_path).records()
     rows: dict[str, dict[str, object]] = {}
     for cap, path in extra:
-        for key, summary in _at_cap(Ledger(path), cap).items():
+        cap_records = Ledger(path).records()
+        # Like with like: the protocol's side counts only the passes the second cap ran. The main
+        # ledger gained a second repeat that the 32768-token ledger never had, and a comparison of
+        # forty calls against twenty would change two things at once.
+        passes = {(model_key(r), r.key.repeat) for r in cap_records}
+        main = _at_cap([r for r in main_records if (model_key(r), r.key.repeat) in passes], PROTOCOL_CAP)
+        for key, summary in _at_cap(cap_records, cap).items():
             provider, _, model_id = key.partition("/")
             row = rows.setdefault(
                 key, {"model": key, "provider": provider, "model_id": model_id, "by_cap": {}}
