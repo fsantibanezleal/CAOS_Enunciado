@@ -85,7 +85,7 @@
       "an assumption or open question with no span": 2,
       "infeasible, as the case is": 1,
       "ran and survived every check": 11,
-      "ran, then REFUTED: solves to a different optimum": 1
+      "ran, then REFUTED: solves to the reference's whole-number optimum": 1
      },
      "faithful": {
       "confidence": 0.95,
