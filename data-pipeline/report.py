@@ -381,6 +381,28 @@ def caveats(records, models: list[dict[str, object]], failure: dict[str, dict[st
                 "copela 0.3.3 lo corrige para los barridos siguientes.",
             )
         )
+    # A call the provider failed never reached the model, and copela still counts it as a candidate
+    # that did not run. The ledger keeps it and a resume skips it, so the page says whose rates it
+    # is in rather than leaving an HTTP 500 to read as a formalization failure.
+    call_failures = sorted(
+        (r for r in records if classify(r) == "the call itself failed"),
+        key=lambda r: (model_key(r), r.key.case_id),
+    )
+    if call_failures:
+        out.append(
+            _caveat(
+                f"{len(call_failures)} call(s) failed at the provider and never reached the model ("
+                + ", ".join(f"{model_key(r)} on {r.key.case_id}" for r in call_failures)
+                + "). copela counts a failed call as a candidate that did not run, so it lowers "
+                "that model's rates. The ledger keeps the record, and a resumed sweep does not retry "
+                "it, because the ledger skips every call it already holds.",
+                f"{len(call_failures)} llamada(s) fallaron en el proveedor y nunca llegaron al modelo ("
+                + ", ".join(f"{model_key(r)} en {r.key.case_id}" for r in call_failures)
+                + "). copela cuenta una llamada fallida como un candidato que no se ejecuto, asi que "
+                "baja las tasas de ese modelo. El libro mayor conserva el registro, y un barrido "
+                "reanudado no la reintenta, porque el libro mayor omite cada llamada que ya contiene.",
+            )
+        )
     free = [m for m in models if m["cost_usd"] == 0]
     if free:
         out.append(
