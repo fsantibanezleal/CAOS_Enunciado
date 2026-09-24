@@ -209,6 +209,8 @@ export function describeDimension(dimension: Dimension): string {
 
 /** One model's attempt at one case, as `report.py` derives it from the ledger. */
 export interface Attempt {
+  /** provider/model_id: a model is its provider and its id, in every artifact. */
+  model: string;
   model_id: string;
   provider: string;
   repeat: number;
@@ -230,4 +232,100 @@ export interface AttemptsArtifact {
   cases: Record<string, Attempt[]>;
 }
 
-export const ATTEMPTS_SCHEMA = "enunciado-attempts/1.0";
+export const ATTEMPTS_SCHEMA = "enunciado-attempts/1.1";
+
+/* ------------------------------------------------------------ the gap report */
+
+export const GAP_REPORT_SCHEMA = "enunciado-gap-report/2.0";
+
+export interface RateJson {
+  passed: number;
+  total: number;
+  value: number;
+  interval_low: number;
+  interval_high: number;
+  confidence?: number;
+}
+
+/** One model, once, in the order every view draws it. */
+export interface ModelRow {
+  /** provider/model_id */
+  key: string;
+  provider: string;
+  model_id: string;
+  lane: "hosted" | "local";
+  calls: number;
+  cost_usd: number;
+  median_latency_s: number;
+  median_output_tokens: number;
+  /** Calls that billed exactly the protocol's output cap. */
+  at_cap: number;
+  model_versions: string[];
+  fingerprints: string[];
+  /** The copela versions that scored the calls; `unrecorded` before ledger schema 1.1. */
+  harnesses: string[];
+  measured_from: string;
+  measured_to: string;
+}
+
+export interface GapCell {
+  /** provider/model_id */
+  model: string;
+  model_id: string;
+  provider: string;
+  family: string;
+  ran: RateJson;
+  faithful: RateJson;
+  gap: number;
+  gap_is_defined: boolean;
+  unmeasured: number;
+}
+
+export interface Caveat {
+  en: string;
+  es: string;
+}
+
+/** `data/gap-report.json`, written by `data-pipeline/report.py`. Breakdowns are keyed by ModelRow.key. */
+export interface GapReport {
+  schema: string;
+  models: ModelRow[];
+  cells: GapCell[];
+  failure_breakdown: Record<string, Record<string, number>>;
+  by_tier: Record<string, Record<string, RateJson>>;
+  by_trap: Record<string, Record<string, RateJson>>;
+  layer_agreement: Record<string, Record<string, number>>;
+  caveats: Caveat[];
+  note: string;
+  note_es: string;
+  corpus: { family: string; cases: number; tiers: number; repeats: number };
+  call_count: number;
+  cost_usd: number;
+  /** The output cap every call in the main ledger ran at. */
+  protocol_cap: number;
+  measured_from: string;
+  measured_to: string;
+  judge: unknown[];
+}
+
+export const CAP_SENSITIVITY_SCHEMA = "enunciado-cap-sensitivity/1.0";
+
+/** One model's rates at one output cap. */
+export interface AtCap {
+  calls: number;
+  ran: RateJson;
+  faithful: RateJson;
+  gap: number;
+  at_cap: number;
+  /** Calls per failure class at this cap; they add up to `calls`. */
+  failure_breakdown: Record<string, number>;
+  cost_usd: number;
+  median_output_tokens: number;
+}
+
+/** `data/cap-sensitivity.json`: the same protocol at a second cap, for the models that ran at both. */
+export interface CapSensitivity {
+  schema: string;
+  caps: number[];
+  rows: { model: string; provider: string; model_id: string; by_cap: Record<string, AtCap> }[];
+}

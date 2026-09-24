@@ -42,7 +42,7 @@ the same conclusion by a different route.
 
 It costs cases. Twenty is fewer than any set in that table, and the consequence is in the intervals:
 at n = 20 a 95% Wilson interval spans close to half the useful range, and this product therefore
-cannot rank two models.
+cannot rank two models whose intervals overlap.
 
 It buys the only property that makes the measurement mean anything: a reference that was verified
 rather than trusted, whose difficulty is stated, and whose provenance is recorded. It also buys the

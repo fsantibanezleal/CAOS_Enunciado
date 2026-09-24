@@ -541,13 +541,13 @@ function Artifact({ lang }: { lang: "en" | "es" }) {
       <div className="two-col">
         <p>
           {es
-            ? "El horneado escribe dos archivos y la interfaz los lee. Esos dos archivos son un contrato con dos mitades: el esquema del lado de Python y los tipos del lado de TypeScript. Cuando una mitad cambia de forma y la otra no, la carga falla con un mensaje en vez de renderizar una pagina de blancos, que es lo que ocurre cuando una superficie lee la forma de ayer."
-            : "The bake writes two files and the interface reads them. Those two files are a contract with two halves: the schema on the Python side and the types on the TypeScript side. When one half changes shape and the other does not, loading fails with a message rather than rendering a page of blanks, which is what happens when a surface reads yesterday's shape."}
+            ? "Dos pasos del pipeline escriben lo que la interfaz lee: el horneado escribe cases.json y manifest.json, y el informe escribe gap-report.json, attempts.json y, cuando existe un libro mayor a un segundo tope, cap-sensitivity.json. Cada archivo es un contrato con dos mitades: el esquema del lado de Python y los tipos del lado de TypeScript. Cuando una mitad cambia de forma y la otra no, la carga falla con un mensaje en vez de renderizar una pagina de blancos, que es lo que ocurre cuando una superficie lee la forma de ayer."
+            : "Two pipeline steps write what the interface reads: the bake writes cases.json and manifest.json, and the report writes gap-report.json, attempts.json and, when a ledger at a second cap exists, cap-sensitivity.json. Each file is a contract with two halves: the schema on the Python side and the types on the TypeScript side. When one half changes shape and the other does not, loading fails with a message rather than rendering a page of blanks, which is what happens when a surface reads yesterday's shape."}
         </p>
         <p>
           {es
-            ? "La comprobacion es doble y barata. Primero el identificador de esquema del manifiesto contra el que este build espera. Segundo, el numero de casos que el manifiesto cuenta contra los que el archivo contiene; esa segunda comprobacion atrapa un horneado parcial, que es el fallo silencioso mas comun: un artefacto truncado se sirve limpio, pesa menos y no dice nada."
-            : "The check is twofold and cheap. First the manifest's schema identifier against the one this build expects. Second, the case count the manifest states against the number the file holds; that second check catches a partial bake, which is the most common silent failure: a truncated artifact serves clean, weighs less and says nothing."}
+            ? "La comprobacion es doble y barata. Primero el identificador de esquema de cada archivo contra el que este build espera; el informe no lo tenia hasta que se reorganizo por proveedor, y un informe de la forma anterior leido con la nueva habria mostrado cada desglose vacio. Segundo, el numero de casos que el manifiesto cuenta contra los que el archivo contiene; esa segunda comprobacion atrapa un horneado parcial, que es el fallo silencioso mas comun: un artefacto truncado se sirve limpio, pesa menos y no dice nada."
+            : "The check is twofold and cheap. First each file's schema identifier against the one this build expects; the report had none until it was re-keyed by provider, and a report of the old shape read with the new types would have shown every breakdown empty. Second, the case count the manifest states against the number the file holds; that second check catches a partial bake, which is the most common silent failure: a truncated artifact serves clean, weighs less and says nothing."}
         </p>
       </div>
 
@@ -581,8 +581,24 @@ function Artifact({ lang }: { lang: "en" | "es" }) {
           <h4>gap-report.json</h4>
           <p>
             {es
-              ? "Las celdas por modelo con sus dos tasas y sus intervalos, la brecha, los casos no medidos, la distribucion de fallos, el costo en dolares y las salvedades. Lo reconstruye report.py desde el libro mayor."
-              : "The per-model cells with their two rates and intervals, the gap, the unmeasured count, the failure distribution, the dollar cost, and the caveats. Rebuilt by report.py from the ledger."}
+              ? "La lista de modelos en un solo orden, las celdas por proveedor y modelo con sus dos tasas y sus intervalos, la brecha, los casos no medidos, los desgloses por nivel, trampa y clase de fallo, el costo en dolares y las salvedades en ambos idiomas. Lo reconstruye report.py desde el libro mayor."
+              : "The model list in one order, the cells per provider and model with their two rates and intervals, the gap, the unmeasured count, the breakdowns by tier, trap and failure class, the dollar cost, and the caveats in both languages. Rebuilt by report.py from the ledger."}
+          </p>
+        </div>
+        <div className="def">
+          <h4>attempts.json</h4>
+          <p>
+            {es
+              ? "Cada intento de cada modelo sobre cada caso, con sus veredictos, su clase de fallo, su costo y, si fallo, el extracto de la respuesta. Lo leen el diagnostico lateral y las herramientas de Los modelos."
+              : "Every model's attempt at every case, with its verdicts, its failure class, its cost and, when it failed, the excerpt of its response. The sidebar diagnosis and the tools under The models read it."}
+          </p>
+        </div>
+        <div className="def">
+          <h4>cap-sensitivity.json</h4>
+          <p>
+            {es
+              ? "Los modelos que corrieron a un segundo tope, lado a lado con su corrida al tope del protocolo. Sale de un libro mayor propio por tope, porque la clave del libro mayor no incluye el tope."
+              : "The models that ran at a second cap, side by side with their run at the protocol's cap. It comes from a ledger of its own per cap, because the ledger key does not include the cap."}
           </p>
         </div>
       </div>

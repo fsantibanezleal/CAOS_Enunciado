@@ -16,6 +16,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import type { Attempt, AttemptsArtifact, CaseRecord } from "../lib/contract.types";
 import { loadAttempts } from "../lib/data";
+import { className } from "../lib/failure-classes";
 
 interface Mark {
   start: number;
@@ -24,7 +25,7 @@ interface Mark {
 }
 
 /** Every `{...}` object in the text containing `"tag": "const"` and no `"unit"` key. */
-function constantsWithoutUnit(text: string): Mark[] {
+function constantsWithoutUnit(text: string, es: boolean): Mark[] {
   const marks: Mark[] = [];
   const needle = /"tag"\s*:\s*"const"/g;
   let found: RegExpExecArray | null;
@@ -49,7 +50,7 @@ function constantsWithoutUnit(text: string): Mark[] {
     }
     const body = text.slice(open, close + 1);
     if (!/"unit"\s*:/.test(body)) {
-      marks.push({ start: open, end: close + 1, why: "a constant with no unit" });
+      marks.push({ start: open, end: close + 1, why: es ? "una constante sin unidad" : "a constant with no unit" });
     }
   }
   return marks;
@@ -60,7 +61,7 @@ function locate(attempt: Attempt, text: string, es: boolean): { marks: Mark[]; n
   const detail = failing?.detail ?? "";
 
   if (detail.includes("missing its 'unit' field")) {
-    const marks = constantsWithoutUnit(text);
+    const marks = constantsWithoutUnit(text, es);
     return {
       marks,
       note: marks.length
@@ -80,7 +81,11 @@ function locate(attempt: Attempt, text: string, es: boolean): { marks: Mark[]; n
     let found: RegExpExecArray | null;
     while ((found = exponent.exec(text)) !== null) {
       const end = text.indexOf("}", found.index);
-      marks.push({ start: found.index, end: end < 0 ? found.index + 40 : end + 1, why: "an exponent written as an expression" });
+      marks.push({
+        start: found.index,
+        end: end < 0 ? found.index + 40 : end + 1,
+        why: es ? "un exponente escrito como expresion" : "an exponent written as an expression",
+      });
     }
     return {
       marks,
@@ -115,7 +120,7 @@ function locate(attempt: Attempt, text: string, es: boolean): { marks: Mark[]; n
   if (fabricated) {
     const at = text.indexOf(fabricated[1]);
     return {
-      marks: at >= 0 ? [{ start: at, end: at + fabricated[1].length, why: "fabricated provenance" }] : [],
+      marks: at >= 0 ? [{ start: at, end: at + fabricated[1].length, why: es ? "procedencia fabricada" : "fabricated provenance" }] : [],
       note: es
         ? `El span afirma que el enunciado contiene "${fabricated[1]}", y no lo contiene.`
         : `The span claims the statement contains "${fabricated[1]}", and it does not.`,
@@ -124,10 +129,90 @@ function locate(attempt: Attempt, text: string, es: boolean): { marks: Mark[]; n
 
   if (detail.includes("not closed")) {
     return {
-      marks: [{ start: Math.max(0, text.length - 90), end: text.length, why: "cut off here" }],
+      marks: [{ start: Math.max(0, text.length - 90), end: text.length, why: es ? "cortado aqui" : "cut off here" }],
       note: es
         ? "La salida se corto antes de cerrar el objeto JSON: el tope de tokens se alcanzo a mitad del documento."
         : "The output was cut before the JSON object closed: the token cap was reached mid-document.",
+    };
+  }
+
+  const reasoned = text.match(/^\[no answer: the model emitted (\d+) characters of reasoning and stopped before answering(?: \(finish_reason ([a-z_]+)\))?/);
+  if (reasoned) {
+    const cap = reasoned[2] === "length";
+    return {
+      marks: [],
+      note: es
+        ? `El modelo razono ${Number(reasoned[1]).toLocaleString()} caracteres y ${cap ? "agoto el tope" : "se detuvo"} sin escribir una respuesta. No hay documento que abrir: el libro mayor guarda la frase del proveedor que lo dice.`
+        : `The model reasoned for ${Number(reasoned[1]).toLocaleString()} characters and ${cap ? "ran out of cap" : "stopped"} without writing an answer. There is no document to open: the ledger keeps the provider's sentence that says so.`,
+    };
+  }
+
+  // A local model whose template ignores the reasoning switch writes its reasoning into the answer,
+  // and the cap falls before any document begins: the excerpt IS the reasoning.
+  if (attempt.failure_class === "no answer: the reasoning used the whole cap") {
+    const open = text.trimStart().startsWith("<think>");
+    return {
+      marks: [],
+      note: es
+        ? open
+          ? "El modelo abrio un bloque de razonamiento y el tope cayo antes de que lo cerrara: no llego a empezar el documento. El extracto es su razonamiento."
+          : "El modelo seguia razonando cuando cayo el tope, y escribia el razonamiento en la respuesta misma porque su plantilla ignora el interruptor: no llego a empezar el documento. El extracto es su razonamiento."
+        : open
+          ? "The model opened a reasoning block and the cap fell before it closed it: it never began the document. The excerpt is its reasoning."
+          : "The model was still reasoning when the cap fell, and wrote the reasoning into the answer itself because its template ignores the switch: it never began the document. The excerpt is its reasoning.",
+    };
+  }
+
+  const inverted = detail.match(/quantity '([^']+)' has lower ([-\d.e+]+) above upper ([-\d.e+]+)/);
+  if (inverted) {
+    const [, name, lower, upper] = inverted;
+    const pattern = new RegExp(`"name"\\s*:\\s*"${name}"`, "g");
+    const marks: Mark[] = [];
+    let found: RegExpExecArray | null;
+    while ((found = pattern.exec(text)) !== null) {
+      marks.push({ start: found.index, end: found.index + found[0].length, why: name });
+    }
+    return {
+      marks,
+      note: es
+        ? `${name} se declara con cota inferior ${lower} sobre la superior ${upper}, y la representacion lo rechaza. En un caso contradictorio es la contradiccion escrita en una sola variable.`
+        : `${name} is declared with a lower bound of ${lower} above its upper bound of ${upper}, which the representation refuses. On a contradictory case it is the contradiction written into one variable.`,
+    };
+  }
+
+  const bare = detail.match(/did not parse into a problem: '([a-z_]+)'$/);
+  if (bare) {
+    return {
+      marks: [],
+      note:
+        bare[1] === "span"
+          ? es
+            ? "Un supuesto o una pregunta abierta del documento no lleva span hacia el enunciado, asi que nada dice de donde sale. La representacion exige uno, y el analizador lo informo solo con el nombre del campo."
+            : "An assumption or open question in the document carries no span into the statement, so nothing says where it comes from. The representation requires one, and the parser reported it by the field's name alone."
+          : es
+            ? `Al documento le falta el campo obligatorio "${bare[1]}", y el analizador lo informo solo con su nombre.`
+            : `The document lacks the required field "${bare[1]}", and the parser reported it by its name alone.`,
+    };
+  }
+
+  if (detail === "infeasible") {
+    return {
+      marks: [],
+      note:
+        attempt.failure_class === "infeasible, as the case is"
+          ? es
+            ? "El candidato es infactible, como el caso: el estado correcto. Se registra como no ejecutado porque corrio significa alcanzar un optimo factible."
+            : "The candidate is infeasible, as the case is: the right status. It is recorded as not having run, because ran means reaching a feasible optimum."
+          : es
+            ? "El documento valida y no tiene punto factible, sobre un caso que si lo tiene."
+            : "The document validates and has no feasible point, on a case that has one.",
+    };
+  }
+
+  if (detail.startsWith("the call failed")) {
+    return {
+      marks: [],
+      note: es ? `La llamada misma fallo: ${detail.slice(17, 200)}` : `The call itself failed: ${detail.slice(17, 200)}`,
     };
   }
 
@@ -192,19 +277,23 @@ export function FailureAnatomy({ record, lang }: { record: CaseRecord; lang: "en
 
   return (
     <div className="viz">
-      <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", marginBottom: "0.4rem" }}>
-        {failures.map((f, index) => (
-          <button
-            key={`${f.model_id}-${f.repeat}`}
-            type="button"
-            className={`chip${index === pick ? " on" : ""}`}
-            onClick={() => setPick(index)}
-            style={{ cursor: "pointer" }}
-          >
-            {f.model_id} {"·"} {f.failure_class}
-          </button>
-        ))}
-      </div>
+      <label className="small" style={{ display: "flex", gap: "0.5rem", alignItems: "center", marginBottom: "0.4rem" }}>
+        <span className="muted">
+          {failures.length} {es ? "intentos fallidos" : "failed attempts"}
+        </span>
+        <select
+          value={pick}
+          onChange={(event) => setPick(Number(event.target.value))}
+          aria-label={es ? "Intento fallido" : "Failed attempt"}
+          style={{ minWidth: 0, maxWidth: "100%", flex: 1 }}
+        >
+          {failures.map((f, index) => (
+            <option key={`${f.model}-${f.repeat}`} value={index}>
+              {f.model_id} {"·"} {className(f.failure_class, lang)}
+            </option>
+          ))}
+        </select>
+      </label>
 
       <pre className="emitted" style={{ flex: 1, minHeight: 0, overflow: "auto", whiteSpace: "pre-wrap", margin: 0 }}>
         {runs.map((run, index) =>

@@ -9,7 +9,7 @@ is found for free rather than at frontier prices.
 
 Usage:
 
-    python data-pipeline/sweep_run.py --provider ollama --model qwen3.5:4b --repeats 3
+    python data-pipeline/sweep_run.py --provider ollama --model qwen3:8b --repeats 1
     python data-pipeline/sweep_run.py --provider anthropic --model claude-sonnet-5 --budget-usd 2.00
     python data-pipeline/sweep_run.py --report-only
 """
@@ -65,7 +65,7 @@ def parse_for_case(text: str, case: Case):
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run the optimization sweep.")
     parser.add_argument("--provider", default="ollama")
-    parser.add_argument("--model", default="qwen3.5:4b")
+    parser.add_argument("--model", default="qwen3:8b")
     parser.add_argument("--repeats", type=int, default=3)
     parser.add_argument("--budget-usd", type=float, default=None)
     parser.add_argument("--limit-cases", type=int, default=None, help="for a smoke run")
@@ -76,12 +76,24 @@ def main(argv: list[str] | None = None) -> int:
         choices=["on", "off", "default"],
         default="off",
         help=(
-            "reasoning on a local reasoning model. Default off: a small reasoning model spends its "
-            "whole output budget thinking and returns nothing, which reads as a formalization "
-            "failure and is a truncation"
+            "reasoning on a local reasoning model. Default off: qwen3:4b, in a context that held the "
+            "whole cap, reasoned through all 8192 tokens of it and answered nothing. Off is a "
+            "request, honoured only where the model's template implements it (qwen3:8b's does, "
+            "qwen3:4b's does not), and the fingerprint records what was asked"
         ),
     )
     parser.add_argument("--max-tokens", type=int, default=8192)
+    parser.add_argument(
+        "--max-consecutive-failures",
+        type=int,
+        default=10,
+        help=(
+            "the kill criterion. It exists to stop a sweep that a harness fault is failing on every "
+            "call. When the failures ARE the measurement, as when a reasoning model reaches the cap "
+            "on case after case, raising it to the corpus size completes the corpus; the report "
+            "records every sweep that was resumed that way"
+        ),
+    )
     args = parser.parse_args(argv)
 
     if args.report_only:
@@ -94,21 +106,22 @@ def main(argv: list[str] | None = None) -> int:
     think = {"on": True, "off": False, "default": None}[args.think]
     try:
         provider = get(args.provider, think=think) if args.provider == "ollama" else get(args.provider)
+        pricing = provider.models().get(args.model)
     except ProviderError as error:
         print(f"provider unavailable: {error}", file=sys.stderr)
         return 2
 
-    # Exclusive for a writing run. Two sweeps sharing one ledger interleave records from whatever
-    # code each happened to start with, and the file stops meaning one thing. Taken after the
-    # provider check so an unavailable provider does not leave a lock behind.
-    try:
-        ledger = Ledger(args.ledger, exclusive=True)
-    except LedgerBusy as error:
-        print(error, file=sys.stderr)
-        return 3
-
-    pricing = provider.models().get(args.model)
-    free = pricing is None or (pricing.input_per_mtok == 0 and pricing.output_per_mtok == 0)
+    # Every refusal comes before the lock. The lock is a file, and an early return after taking it
+    # left it behind, so the next run failed for a reason that had nothing to do with it.
+    if pricing is None:
+        print(
+            f"{args.provider} has no price for {args.model!r}, so the budget guard cannot bound "
+            "it (copela refuses such a sweep). A hosted model needs a price in the provider's "
+            "table; a local one needs pulling first",
+            file=sys.stderr,
+        )
+        return 2
+    free = pricing.input_per_mtok == 0 and pricing.output_per_mtok == 0
 
     if args.budget_usd is None:
         if not free:
@@ -118,12 +131,20 @@ def main(argv: list[str] | None = None) -> int:
                 file=sys.stderr,
             )
             return 2
-        # A local model costs nothing per token, so the ceiling is nominal. It still exists,
+        # A free model costs nothing per token, so the ceiling is nominal. It still exists,
         # because the kill criterion rides on the same object.
-        budget = Budget(limit_usd=0.0001, max_consecutive_failures=10)
+        budget = Budget(limit_usd=0.0001, max_consecutive_failures=args.max_consecutive_failures)
         budget.limit_usd = float("inf")
     else:
-        budget = Budget(limit_usd=args.budget_usd, max_consecutive_failures=10)
+        budget = Budget(limit_usd=args.budget_usd, max_consecutive_failures=args.max_consecutive_failures)
+
+    # Exclusive for a writing run. Two sweeps sharing one ledger interleave records from whatever
+    # code each happened to start with, and the file stops meaning one thing.
+    try:
+        ledger = Ledger(args.ledger, exclusive=True)
+    except LedgerBusy as error:
+        print(error, file=sys.stderr)
+        return 3
 
     corpus = to_harness_cases()
     if args.limit_cases:
@@ -147,7 +168,8 @@ def main(argv: list[str] | None = None) -> int:
         f"sweeping {len(corpus)} case(s) x 1 model x {args.repeats} repeat(s) "
         f"= {len(corpus) * args.repeats} call(s) at most"
     )
-    print(f"  budget: {'no per-token cost (local)' if free else budget.describe()}")
+    print(f"  budget: {'no per-token cost' if free else budget.describe()}")
+    print(f"  kill criterion: {args.max_consecutive_failures} consecutive failures")
     if args.provider == "ollama":
         print(f"  reasoning: {args.think}, max_tokens {args.max_tokens}")
 
