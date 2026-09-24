@@ -95,18 +95,18 @@
    },
    "2": {
     "confidence": 0.95,
-    "interval_high": 0.39033428790216534,
+    "interval_high": 0.32440756488388023,
     "interval_low": 0.0,
     "passed": 0,
-    "total": 6,
+    "total": 8,
     "value": 0.0
    },
    "3": {
     "confidence": 0.95,
-    "interval_high": 0.4898908364545973,
+    "interval_high": 0.39033428790216534,
     "interval_low": 0.0,
     "passed": 0,
-    "total": 4,
+    "total": 6,
     "value": 0.0
    },
    "4": {
@@ -833,26 +833,26 @@
    },
    "derived-bound": {
     "confidence": 0.95,
-    "interval_high": 0.5614970317550455,
+    "interval_high": 0.4898908364545973,
     "interval_low": 0.0,
     "passed": 0,
-    "total": 3,
+    "total": 4,
     "value": 0.0
    },
    "droppable-constraint": {
+    "confidence": 0.95,
+    "interval_high": 0.39033428790216534,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 6,
+    "value": 0.0
+   },
+   "implicit-quantity": {
     "confidence": 0.95,
     "interval_high": 0.43448246478317476,
     "interval_low": 0.0,
     "passed": 0,
     "total": 5,
-    "value": 0.0
-   },
-   "implicit-quantity": {
-    "confidence": 0.95,
-    "interval_high": 0.5614970317550455,
-    "interval_low": 0.0,
-    "passed": 0,
-    "total": 3,
     "value": 0.0
    },
    "integrality": {
@@ -881,10 +881,10 @@
    },
    "red-herring": {
     "confidence": 0.95,
-    "interval_high": 0.7934506856227626,
+    "interval_high": 0.6576197724933469,
     "interval_low": 0.0,
     "passed": 0,
-    "total": 1,
+    "total": 2,
     "value": 0.0
    },
    "unit-mismatch": {
@@ -1859,15 +1859,15 @@
    }
   }
  },
- "call_count": 366,
+ "call_count": 370,
  "caveats": [
   {
    "en": "Each model with a complete row ran 40 calls, 2 repeats per case, which gives a wide interval: at n = 40 a rate of 0.50 carries a Wilson interval from 0.35 to 0.65. Two models whose intervals overlap cannot be ranked against each other from this run.",
    "es": "Cada modelo con fila completa corrio 40 llamadas, 2 repeticiones por caso, lo que da un intervalo ancho: con n = 40 una tasa de 0.50 lleva un intervalo de Wilson de 0.35 a 0.65. Dos modelos cuyos intervalos se solapan no se pueden ordenar entre si con esta corrida."
   },
   {
-   "en": "14 row(s) have not reached every case at every repeat: zai/glm-5.3 has 20 (its second repeat not started), zai/glm-4.5-flash has 20 (its second repeat not started), deepseek/deepseek-v4-pro has 26 (its second repeat at 6 of 20), ollama/phi4:latest has 20 (its second repeat not started), ollama/deepseek-r1:8b has 20 (its second repeat not started), ollama/qwen3:14b has 20 (its second repeat not started), ollama/qwen2.5-coder:7b has 20 (its second repeat not started), ollama/gemma3:12b has 20 (its second repeat not started), ollama/gemma3:4b has 20 (its second repeat not started), ollama/llama3.1:8b has 20 (its second repeat not started), ollama/mistral:7b has 20 (its second repeat not started), ollama/phi4-mini:latest has 20 (its second repeat not started), ollama/qwen3:4b has 20 (its second repeat not started) and ollama/qwen3:8b has 20 (its second repeat not started) of the 40 calls. A sweep takes the cases in corpus order, and the corpus climbs from tier 1 to tier 5, so a pass it has not finished lacks the hardest cases. A row missing a whole repeat has every case at fewer repeats: its rate is over fewer samples, not easier cases. Its rates cannot be compared with a complete row's. A resumed sweep completes a row in place, because the ledger skips every call it already holds.",
-   "es": "14 fila(s) no llegan a todos los casos en cada repeticion: zai/glm-5.3 tiene 20 (su segunda repeticion sin empezar), zai/glm-4.5-flash tiene 20 (su segunda repeticion sin empezar), deepseek/deepseek-v4-pro tiene 26 (su segunda repeticion en 6 de 20), ollama/phi4:latest tiene 20 (su segunda repeticion sin empezar), ollama/deepseek-r1:8b tiene 20 (su segunda repeticion sin empezar), ollama/qwen3:14b tiene 20 (su segunda repeticion sin empezar), ollama/qwen2.5-coder:7b tiene 20 (su segunda repeticion sin empezar), ollama/gemma3:12b tiene 20 (su segunda repeticion sin empezar), ollama/gemma3:4b tiene 20 (su segunda repeticion sin empezar), ollama/llama3.1:8b tiene 20 (su segunda repeticion sin empezar), ollama/mistral:7b tiene 20 (su segunda repeticion sin empezar), ollama/phi4-mini:latest tiene 20 (su segunda repeticion sin empezar), ollama/qwen3:4b tiene 20 (su segunda repeticion sin empezar) y ollama/qwen3:8b tiene 20 (su segunda repeticion sin empezar) de las 40 llamadas. Un barrido recorre los casos en el orden del corpus, y el corpus sube del nivel 1 al nivel 5, asi que a una pasada sin terminar le faltan los casos mas dificiles. Una fila a la que le falta una repeticion entera tiene todos los casos con menos repeticiones: su tasa es sobre menos muestras, no sobre casos mas faciles. Sus tasas no se pueden comparar con las de una fila completa. Un barrido reanudado completa la fila en su lugar, porque el libro mayor omite cada llamada que ya contiene."
+   "en": "14 row(s) have not reached every case at every repeat: zai/glm-5.3 has 20 (its second repeat not started), zai/glm-4.5-flash has 20 (its second repeat not started), deepseek/deepseek-v4-pro has 30 (its second repeat at 10 of 20), ollama/phi4:latest has 20 (its second repeat not started), ollama/deepseek-r1:8b has 20 (its second repeat not started), ollama/qwen3:14b has 20 (its second repeat not started), ollama/qwen2.5-coder:7b has 20 (its second repeat not started), ollama/gemma3:12b has 20 (its second repeat not started), ollama/gemma3:4b has 20 (its second repeat not started), ollama/llama3.1:8b has 20 (its second repeat not started), ollama/mistral:7b has 20 (its second repeat not started), ollama/phi4-mini:latest has 20 (its second repeat not started), ollama/qwen3:4b has 20 (its second repeat not started) and ollama/qwen3:8b has 20 (its second repeat not started) of the 40 calls. A sweep takes the cases in corpus order, and the corpus climbs from tier 1 to tier 5, so a pass it has not finished lacks the hardest cases. A row missing a whole repeat has every case at fewer repeats: its rate is over fewer samples, not easier cases. Its rates cannot be compared with a complete row's. A resumed sweep completes a row in place, because the ledger skips every call it already holds.",
+   "es": "14 fila(s) no llegan a todos los casos en cada repeticion: zai/glm-5.3 tiene 20 (su segunda repeticion sin empezar), zai/glm-4.5-flash tiene 20 (su segunda repeticion sin empezar), deepseek/deepseek-v4-pro tiene 30 (su segunda repeticion en 10 de 20), ollama/phi4:latest tiene 20 (su segunda repeticion sin empezar), ollama/deepseek-r1:8b tiene 20 (su segunda repeticion sin empezar), ollama/qwen3:14b tiene 20 (su segunda repeticion sin empezar), ollama/qwen2.5-coder:7b tiene 20 (su segunda repeticion sin empezar), ollama/gemma3:12b tiene 20 (su segunda repeticion sin empezar), ollama/gemma3:4b tiene 20 (su segunda repeticion sin empezar), ollama/llama3.1:8b tiene 20 (su segunda repeticion sin empezar), ollama/mistral:7b tiene 20 (su segunda repeticion sin empezar), ollama/phi4-mini:latest tiene 20 (su segunda repeticion sin empezar), ollama/qwen3:4b tiene 20 (su segunda repeticion sin empezar) y ollama/qwen3:8b tiene 20 (su segunda repeticion sin empezar) de las 40 llamadas. Un barrido recorre los casos en el orden del corpus, y el corpus sube del nivel 1 al nivel 5, asi que a una pasada sin terminar le faltan los casos mas dificiles. Una fila a la que le falta una repeticion entera tiene todos los casos con menos repeticiones: su tasa es sobre menos muestras, no sobre casos mas faciles. Sus tasas no se pueden comparar con las de una fila completa. Un barrido reanudado completa la fila en su lugar, porque el libro mayor omite cada llamada que ya contiene."
   },
   {
    "en": "Run-to-run variation is real: an earlier pass of the identical corpus put claude-haiku-4-5 at ran 0.350, and the published pass puts it at 0.250, with nothing changed but the sampling. That is what the interval is for.",
@@ -1882,8 +1882,8 @@
    "es": "Los proveedores exponen controles distintos, y cada registro declara los que fijo: Claude no admite temperatura ni semilla, asi que no se registra ninguna; GLM corre con decodificacion voraz (do_sample false), esfuerzo alto donde el modelo lo admite, y sin semilla; DeepSeek corre con esfuerzo alto; su modo de razonamiento ignora la temperatura y no tiene semilla; el carril local fija temperatura 0 y una semilla, con el razonamiento apagado donde la plantilla del modelo respeta el interruptor."
   },
   {
-   "en": "One output cap for every model, 8192 tokens. It binds on models that write or reason at length: 81 of the 366 calls reached it, counted as 'truncated output' or 'no answer: the reasoning used the whole cap'. A reasoning model spends the cap on reasoning first, so those are failures under this cap, not evidence about how it formalizes.",
-   "es": "Un solo tope de salida para todos los modelos, 8192 tokens. Muerde en los modelos que escriben o razonan en extenso: 81 de las 366 llamadas lo alcanzaron, contadas como 'salida truncada' o 'sin respuesta: el razonamiento agoto el tope'. Un modelo que razona gasta el tope razonando primero, asi que esos son fallos bajo este tope, no evidencia de como formaliza."
+   "en": "One output cap for every model, 8192 tokens. It binds on models that write or reason at length: 85 of the 370 calls reached it, counted as 'truncated output' or 'no answer: the reasoning used the whole cap'. A reasoning model spends the cap on reasoning first, so those are failures under this cap, not evidence about how it formalizes.",
+   "es": "Un solo tope de salida para todos los modelos, 8192 tokens. Muerde en los modelos que escriben o razonan en extenso: 85 de las 370 llamadas lo alcanzaron, contadas como 'salida truncada' o 'sin respuesta: el razonamiento agoto el tope'. Un modelo que razona gasta el tope razonando primero, asi que esos son fallos bajo este tope, no evidencia de como formaliza."
   },
   {
    "en": "The structural layer passes only when the canonical forms are equal, and refutes when the optima differ. A matching optimum never proves equivalence, because compensating errors reach the right number.",
@@ -1926,8 +1926,8 @@
    "es": "6 refutacion(es) caen exactamente en el optimo de la referencia con sus decisiones enteras: anthropic/claude-haiku-4-5 en opt-006 (16 contra 16.6667), anthropic/claude-haiku-4-5 en opt-006 (16 contra 16.6667), anthropic/claude-haiku-4-5 en opt-012 (8080 contra 8200), anthropic/claude-sonnet-5 en opt-012 (8080 contra 8200), anthropic/claude-sonnet-5 en opt-012 (8080 contra 8200) y ollama/phi4:latest en opt-012 (8080 contra 8200). Los enunciados de opt-006 y opt-012 no dicen si esas decisiones son numeros enteros, y las referencias son continuas ahi, asi que un candidato que las cuenta en unidades enteras queda refutado por una lectura que el enunciado admite. Estos candidatos caen donde cae ese modelo, y un optimo coincidente no prueba que el candidato sea ese modelo. Las tasas publicadas conservan las refutaciones, porque un caso no se edita despues de leer sus respuestas. Leidas como admitidas, las brechas se moverian: anthropic/claude-haiku-4-5 de +0.075 a +0.000, anthropic/claude-sonnet-5 de +0.050 a +0.000 y ollama/phi4:latest de +0.100 a +0.050. Como se califica un enunciado que deja abierto el dominio de una decision es una decision abierta."
   },
   {
-   "en": "46 case(s) were run more than once by the same model, and the later repeat reached the same faithful verdict as the first in 35 of them. No model returned the same response on every repeat.",
-   "es": "46 caso(s) fueron corridos mas de una vez por el mismo modelo, y la repeticion posterior llego al mismo veredicto de fidelidad que la primera en 35 de ellos. Ningun modelo devolvio la misma respuesta en cada repeticion."
+   "en": "50 case(s) were run more than once by the same model, and the later repeat reached the same faithful verdict as the first in 39 of them. No model returned the same response on every repeat.",
+   "es": "50 caso(s) fueron corridos mas de una vez por el mismo modelo, y la repeticion posterior llego al mismo veredicto de fidelidad que la primera en 39 de ellos. Ningun modelo devolvio la misma respuesta en cada repeticion."
   },
   {
    "en": "The 12 free models, those with no per-token price, ran with the kill criterion at 20, the corpus size, rather than 10: a free call costs nothing, and a completed corpus keeps their rows comparable with the rest.",
@@ -2042,11 +2042,11 @@
   {
    "faithful": {
     "confidence": 0.95,
-    "interval_high": 0.33531199328213473,
-    "interval_low": 0.061500337235783575,
+    "interval_high": 0.296813266820363,
+    "interval_low": 0.053096554840547455,
     "passed": 4,
-    "total": 26,
-    "value": 0.15384615384615385
+    "total": 30,
+    "value": 0.13333333333333333
    },
    "family": "optimization",
    "gap": 0.0,
@@ -2056,11 +2056,11 @@
    "provider": "deepseek",
    "ran": {
     "confidence": 0.95,
-    "interval_high": 0.33531199328213473,
-    "interval_low": 0.061500337235783575,
+    "interval_high": 0.296813266820363,
+    "interval_low": 0.053096554840547455,
     "passed": 4,
-    "total": 26,
-    "value": 0.15384615384615385
+    "total": 30,
+    "value": 0.13333333333333333
    },
    "unmeasured": 0
   },
@@ -2346,7 +2346,7 @@
   "repeats": 2,
   "tiers": 5
  },
- "cost_usd": 3.8715,
+ "cost_usd": 4.0068,
  "failure_breakdown": {
   "anthropic/claude-haiku-4-5": {
    "a constant with no unit": 11,
@@ -2371,9 +2371,9 @@
   },
   "deepseek/deepseek-v4-pro": {
    "a constant with no unit": 1,
-   "no answer: the reasoning used the whole cap": 17,
+   "no answer: the reasoning used the whole cap": 20,
    "ran and survived every check": 4,
-   "truncated output": 4
+   "truncated output": 5
   },
   "ollama/deepseek-r1:8b": {
    "a name used but never declared": 2,
@@ -2493,7 +2493,7 @@
    "ran/not-faithful": 2
   },
   "deepseek/deepseek-v4-pro": {
-   "did-not-run/not-faithful": 22,
+   "did-not-run/not-faithful": 26,
    "ran/faithful": 4
   },
   "ollama/deepseek-r1:8b": {
@@ -2642,21 +2642,22 @@
    "provider": "zai"
   },
   {
-   "at_cap": 21,
-   "calls": 26,
-   "cost_usd": 0.8504,
+   "at_cap": 24,
+   "calls": 30,
+   "cost_usd": 0.9857,
    "fingerprints": [
     "deepseek#effort=high#temperature-no-effect-in-thinking#no-seed"
    ],
    "harnesses": [
     "copela 0.5.0",
+    "copela 0.6.0",
     "unrecorded (ledger schema 1.0)"
    ],
    "key": "deepseek/deepseek-v4-pro",
    "lane": "hosted",
    "measured_from": "2026-09-23",
    "measured_to": "2026-09-24",
-   "median_latency_s": 98.0,
+   "median_latency_s": 100.3,
    "median_output_tokens": 8192,
    "model_id": "deepseek-v4-pro",
    "model_versions": [
@@ -2925,9 +2926,9 @@
   },
   "deepseek/deepseek-v4-pro": {
    "identical_responses": 0,
-   "pairs": 6,
-   "same_class": 3,
-   "same_faithful": 4
+   "pairs": 10,
+   "same_class": 6,
+   "same_faithful": 8
   }
  },
  "schema": "enunciado-gap-report/2.2",
