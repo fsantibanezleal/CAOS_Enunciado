@@ -7,8 +7,8 @@ Dependency order. Each task lands with its requirement, its gate and its docs in
 | copela 0.7.0: the dynamics layers; 0.8.0: unit-aware comparison; 0.8.1: stated-number groups | copela R-037 to R-043 | done |
 | Corpus schema for two families; dynamics builders; twenty cases with closed forms | R-201, R-203 | done |
 | The bake for dynamics: closed-form and convergence checks, trajectories, responses, eigenvalues | R-202, R-204 | done |
-| The dynamics prompt | R-205 | todo |
-| The runner's `--family` and the dynamics ledger | R-206 | todo |
+| The dynamics prompt | R-205 | done |
+| The runner's `--family` and the dynamics ledger | R-206 | done |
 | The family-aware report and the dynamics taxonomy | R-207 | todo |
 | The CI recount for dynamics | R-208 | todo |
 | The sweep: sixteen models, two repeats | R-206 | todo |

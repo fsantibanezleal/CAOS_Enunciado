@@ -108,8 +108,117 @@ The problem statement to formalize, copied verbatim into narrative.text:
 """
 
 
+# -- dynamics --------------------------------------------------------------------------------
+#
+# The twin of the optimization prompt for statements whose answer is a value on a trajectory. The
+# same shape and the same restraint: the schema, the rules the validator enforces, and nothing that
+# teaches a case. The sketch's example is abstract (a quantity "h" and placeholder words) and no
+# number in it comes from a corpus narrative, which a test checks (R-205).
+
+SCHEMA_SKETCH_DYNAMICS = """{
+  "schema_version": "1.1",
+  "family": "dynamics",
+  "narrative": {"text": "<the problem statement, copied EXACTLY>", "source": "inline", "language": "en"},
+  "quantities": [
+    {
+      "name": "t",
+      "role": "independent",
+      "dimension": {"symbol": "s", "exponents": {"time": "1"}},
+      "domain": "real",
+      "lower": 0.0, "upper": "<the last time the statement asks about>",
+      "description": "the independent variable, usually time"
+    },
+    {
+      "name": "h",
+      "role": "state" | "parameter" | "derived",
+      "dimension": {"symbol": "m", "exponents": {"length": "1"}},
+      "domain": "real",
+      "value": "<a state's value at the start of the range, or a parameter's value>",
+      "description": "what it is",
+      "span": {"start": 0, "end": 0, "text": "<the words of the statement that state it>"}
+    }
+  ],
+  "relations": [
+    {
+      "tag": "rate",
+      "state": "h",
+      "wrt": "t",
+      "expression": {"tag": "product", "factors": [
+        {"tag": "const", "value": -1.0, "unit": {"symbol": "1", "exponents": {}}},
+        {"tag": "ref", "name": "k"}, {"tag": "ref", "name": "h"}]},
+      "name": "what changes h"
+    },
+    {
+      "tag": "compare",
+      "left": {"tag": "ref", "name": "<a derived quantity>"},
+      "comparator": "==",
+      "right": {"tag": "sum", "terms": [{"tag": "ref", "name": "h"}, {"tag": "ref", "name": "h0"}]},
+      "name": "its definition"
+    }
+  ],
+  "queries": [
+    {
+      "name": "what_is_asked",
+      "expression": {"tag": "ref", "name": "h"},
+      "at": "<the value of the independent variable the statement asks at>",
+      "span": {"start": 0, "end": 0, "text": "<the words of the question>"}
+    }
+  ],
+  "open_questions": [
+    {
+      "question": "what the statement does not determine",
+      "span": {"start": 0, "end": 0, "text": "<the words it concerns>"},
+      "resolution": "the reading you took, and why",
+      "affects": ["what_is_asked"]
+    }
+  ]
+}"""
+
+RULES_DYNAMICS = """Rules that the document is checked against:
+
+1. EVERY quantity carries a dimension. Use the SI base axes: length, mass, time, current,
+   temperature, amount, luminosity, plus currency and count. Exponents are strings. A litre is
+   {"symbol": "L", "exponents": {"length": "3"}}. A rate per hour is
+   {"symbol": "1/h", "exponents": {"time": "-1"}}. Something genuinely dimensionless is
+   {"symbol": "1", "exponents": {}}, stated rather than omitted. The symbol is the unit you mean:
+   the values of every quantity must be in the units their symbols name.
+
+2. Exactly one quantity has the role "independent", usually time. Its "lower" and "upper" are the
+   range to simulate, and every query's "at" lies inside it, in the same unit.
+
+3. A quantity that changes along the independent variable is a "state", and its "value" is its value
+   at "lower". Every state has exactly one "rate" relation, the derivative of that state with respect
+   to the independent variable. The rate's expression must have the state's dimension divided by the
+   independent variable's.
+
+4. A second-order law, such as an acceleration or the current through an inductor, is written as two
+   first-order rates: position and velocity, charge and current.
+
+5. A "parameter" has a value. A "derived" quantity has no value and is defined by exactly one
+   "compare" relation with "==" that has it alone on one side.
+
+6. What the statement asks is a query: an expression evaluated at a value of the independent
+   variable. A query is a value at a time, not a maximum or the time of an event.
+
+7. A span's "text" must be an EXACT substring of THIS problem statement, copied from it character
+   for character. The example above shows the SHAPE of a span; never copy its contents. If a thing
+   you want to point at is not in the statement, use {"inferred_reason": "why"} instead. Offsets are
+   recomputed from your text, so approximate numbers are fine; the text itself is not.
+
+8. Expression nodes are only: const, ref, sum, product, power, bigsum, conditional. Relation nodes
+   are only: rate and compare. There is no unary minus: subtraction is a sum with a term multiplied
+   by a dimensionless -1. There are no functions such as exp, log or sin; the integrator computes the
+   trajectory from the rates.
+
+9. If the statement does not determine something material, record it in open_questions with the
+   reading you took. Do not silently choose."""
+
+
 def build_prompt(case) -> str:
-    """The baseline prompt. One shot, schema stated, no examples from the corpus."""
+    """The baseline prompt. One shot, schema stated, no examples from the corpus. The family's
+    schema and rules; the optimization prompt is unchanged since its first sweep."""
+    if getattr(case, "family", "optimization") == "dynamics":
+        return PROMPT.format(schema=SCHEMA_SKETCH_DYNAMICS, rules=RULES_DYNAMICS, narrative=case.narrative)
     return PROMPT.format(schema=SCHEMA_SKETCH, rules=RULES, narrative=case.narrative)
 
 

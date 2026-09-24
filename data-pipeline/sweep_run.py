@@ -12,6 +12,10 @@ Usage:
     python data-pipeline/sweep_run.py --provider ollama --model qwen3:8b --repeats 1
     python data-pipeline/sweep_run.py --provider anthropic --model claude-sonnet-5 --budget-usd 2.00
     python data-pipeline/sweep_run.py --report-only
+    python data-pipeline/sweep_run.py --family dynamics --provider deepseek --model deepseek-v4-pro         --repeats 2 --budget-usd 1.60
+
+Each family sweeps its own corpus with its own prompt into its own ledger, ``data/runs/<family>.jsonl``,
+under the same refusals: no price, no budget, a failed probe, a busy ledger (R-206).
 """
 
 from __future__ import annotations
@@ -30,21 +34,27 @@ from copela.solvers.highs import make_solver
 from corpus import cases
 from formalize import build_prompt, parse_response, repair_narrative
 
-LEDGER = HERE.parent / "data" / "runs" / "optimization.jsonl"
+RUNS = HERE.parent / "data" / "runs"
+LEDGER = RUNS / "optimization.jsonl"
+FAMILIES = ("optimization", "dynamics")
 
 
-def to_harness_cases() -> list[Case]:
+def ledger_for(family: str) -> Path:
+    return RUNS / f"{family}.jsonl"
+
+
+def to_harness_cases(family: str = "optimization") -> list[Case]:
     """The corpus, in the shape the harness takes, carrying each reference for the structural layer."""
     return [
         Case(
             case_id=case.case_id,
-            family="optimization",
+            family=family,
             narrative=case.narrative,
             reference=case.reference,
             tier=int(case.tier),
             notes=case.why_hard,
         )
-        for case in cases()
+        for case in cases(family)
     ]
 
 
@@ -63,13 +73,14 @@ def parse_for_case(text: str, case: Case):
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Run the optimization sweep.")
+    parser = argparse.ArgumentParser(description="Run a family's sweep.")
+    parser.add_argument("--family", choices=FAMILIES, default="optimization")
     parser.add_argument("--provider", default="ollama")
     parser.add_argument("--model", default="qwen3:8b")
     parser.add_argument("--repeats", type=int, default=3)
     parser.add_argument("--budget-usd", type=float, default=None)
     parser.add_argument("--limit-cases", type=int, default=None, help="for a smoke run")
-    parser.add_argument("--ledger", default=str(LEDGER))
+    parser.add_argument("--ledger", default=None, help="default: data/runs/<family>.jsonl")
     parser.add_argument("--report-only", action="store_true")
     parser.add_argument(
         "--think",
@@ -100,6 +111,8 @@ def main(argv: list[str] | None = None) -> int:
         ),
     )
     args = parser.parse_args(argv)
+    if args.ledger is None:
+        args.ledger = str(ledger_for(args.family))
 
     if args.report_only:
         ledger = Ledger(args.ledger)
@@ -173,7 +186,7 @@ def main(argv: list[str] | None = None) -> int:
         print(error, file=sys.stderr)
         return 3
 
-    corpus = to_harness_cases()
+    corpus = to_harness_cases(args.family)
     if args.limit_cases:
         corpus = corpus[: args.limit_cases]
 
@@ -192,7 +205,7 @@ def main(argv: list[str] | None = None) -> int:
 
     targets = [Target(args.provider, args.model)]
     print(
-        f"sweeping {len(corpus)} case(s) x 1 model x {args.repeats} repeat(s) "
+        f"sweeping {len(corpus)} {args.family} case(s) x 1 model x {args.repeats} repeat(s) "
         f"= {len(corpus) * args.repeats} call(s) at most"
     )
     print(f"  budget: {'no per-token cost' if free else budget.describe()}")
