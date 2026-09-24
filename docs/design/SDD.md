@@ -237,6 +237,11 @@ R-040  IF one probe call to the provider fails, THEN THE sweep runner SHALL NOT 
        nothing and SHALL NOT take the ledger's lock.
        Gate: tests/test_sweep_runner.py::test_a_provider_that_cannot_be_reached_records_nothing
 
+R-042  IF the provider cannot be reached in the middle of a sweep, THEN THE runner SHALL stop with its
+       own exit code, SHALL keep every call recorded before, SHALL record nothing for the failed
+       call, and SHALL leave the ledger unlocked.
+       Gate: tests/test_sweep_runner.py::test_a_connection_lost_mid_sweep_stops_the_runner_and_keeps_what_was_recorded
+
 R-041  WHERE a model ran a case more than once, THE report SHALL compare each later repeat with the
        first by response, class and faithful verdict, and SHALL name every model whose later repeats
        all returned the first response, and a short row SHALL say which pass it lacks.

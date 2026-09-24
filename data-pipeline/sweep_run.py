@@ -25,7 +25,7 @@ sys.path.insert(0, str(HERE))
 
 from copela import Budget, Case, Ledger, Sweep, Target, build
 from copela.ledger import LedgerBusy
-from copela.providers import ProviderError, get
+from copela.providers import ProviderError, ProviderUnreachable, get
 from copela.solvers.highs import make_solver
 from corpus import cases
 from formalize import build_prompt, parse_response, repair_narrative
@@ -202,6 +202,16 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         made = sweep.run(corpus, targets)
+    except ProviderUnreachable as error:
+        # copela 0.6.0 stops a sweep on a call that never reached the model, and records nothing for
+        # it (its R-035): a network that drops mid-sweep would otherwise write a row of call
+        # failures against the model until the kill criterion.
+        print(
+            f"stopped: {error}. That call was not recorded; every call before it was. Run the same "
+            "command again once the connection or the key is fixed, and the sweep resumes there",
+            file=sys.stderr,
+        )
+        return 4
     finally:
         # Released even on an interrupt. A stopped run that left the ledger locked would make the
         # next one fail for a reason that has nothing to do with it.

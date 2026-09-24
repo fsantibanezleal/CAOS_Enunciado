@@ -6,7 +6,7 @@
 # re-deriving.
 
 planteo==0.1.2
-copela==0.5.0
+copela==0.6.0
 
 # The solver lane. `copela[solvers]` would pull these too; they are named here so a clone that only
 # wants to re-run the bake does not have to know that.

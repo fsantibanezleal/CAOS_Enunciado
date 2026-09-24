@@ -38,6 +38,25 @@ def test_a_refused_sweep_leaves_the_ledger_unlocked(args, tmp_path) -> None:
     assert not ledger.exists() or ledger.read_text(encoding="utf-8") == ""
 
 
+def test_a_connection_lost_mid_sweep_stops_the_runner_and_keeps_what_was_recorded(tmp_path, monkeypatch) -> None:
+    """R-042: the connection drops after the probe and two calls. The runner stops with its own exit
+    code, the ledger keeps the two, records nothing for the failed call, and is unlocked."""
+    from copela import StubProvider
+    from copela.providers import Pricing
+
+    dropping = StubProvider(default="I cannot formalize this.", pricing=Pricing(), unreachable_after=3)
+    monkeypatch.setattr(sweep_run, "get", lambda name, **kwargs: dropping)
+    ledger = tmp_path / "ledger.jsonl"
+
+    code = sweep_run.main(["--provider", "stub", "--model", "stub-small", "--repeats", "1", "--ledger", str(ledger)])
+
+    assert code == 4
+    lines = [line for line in ledger.read_text(encoding="utf-8").splitlines() if line.strip()]
+    assert len(lines) == 2, lines
+    assert all("call failed" not in line for line in lines)
+    assert not ledger.with_suffix(".jsonl.lock").exists()
+
+
 def test_a_provider_that_cannot_be_reached_records_nothing(tmp_path, monkeypatch) -> None:
     """R-040: a sweep whose calls fail at the provider does not start, so the ledger gets no row of
     call failures about the harness, and the lock is never taken.
