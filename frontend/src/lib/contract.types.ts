@@ -241,7 +241,7 @@ export const ATTEMPTS_SCHEMA = "enunciado-attempts/1.1";
 
 /* ------------------------------------------------------------ the gap report */
 
-export const GAP_REPORT_SCHEMA = "enunciado-gap-report/2.1";
+export const GAP_REPORT_SCHEMA = "enunciado-gap-report/2.2";
 
 export interface RateJson {
   passed: number;
@@ -313,6 +313,17 @@ export interface GapReport {
   judge: unknown[];
   /** 2.1: the refutations that land on a reference's optimum with its decisions made integer. */
   whole_number_readings: WholeNumberReadings;
+  /** 2.2: per model, each later repeat of a case compared with its first. */
+  repeat_agreement: Record<string, RepeatAgreement>;
+}
+
+export interface RepeatAgreement {
+  /** Later repeats that have a first to compare with. */
+  pairs: number;
+  /** The same response, byte for byte, by digest. */
+  identical_responses: number;
+  same_class: number;
+  same_faithful: number;
 }
 
 /** A refutation whose candidate solves to the reference's whole-number optimum. */

@@ -15,6 +15,7 @@ import { HoldoutDiagram, SamplingDiagram } from "../components/diagrams";
 import { TIER_NAME, TRAP_NAME } from "../lib/contract.types";
 import { useData } from "../lib/data";
 import { FAILURE_CLASSES, className } from "../lib/failure-classes";
+import { wilsonWidth } from "../lib/models";
 import { signed, useMeasurement } from "../lib/useMeasurement";
 
 export function ExperimentsPage() {
@@ -346,7 +347,8 @@ function Corpus({ lang }: { lang: "en" | "es" }) {
 function Protocol({ lang }: { lang: "en" | "es" }) {
   const es = lang === "es";
   const facts = useMeasurement();
-  const full = facts !== null && facts.calls === facts.cases * facts.models;
+  const full = facts !== null && facts.calls === facts.cases * facts.models * facts.repeats;
+  const many = facts !== null && facts.repeats > 1;
   return (
     <section>
       <h2>{es ? "El protocolo, y el atajo que lo arruina" : "The protocol, and the shortcut that ruins it"}</h2>
@@ -372,8 +374,8 @@ function Protocol({ lang }: { lang: "en" | "es" }) {
               ? "Cargando la medicion publicada..."
               : "Loading the published measurement..."
             : es
-              ? `Los parametros exactos de la corrida publicada son estos. ${facts.cases} casos y ${facts.models} modelos de ${facts.providers} proveedores, ${facts.hosted} alojados y ${facts.local} locales, una repeticion por par, un solo tope de salida de ${facts.cap} tokens por llamada para todos los modelos, el presupuesto comprobado antes de cada llamada contra lo maximo que la llamada puede facturar, y un costo total de ${facts.cost.toFixed(2)} dolares a precio de lista. Cada proveedor expone controles distintos, y la huella de cada registro declara los que fijo; las salvedades de la Comparativa los enumeran. El libro mayor registra las ${facts.calls} llamadas, incluidas las que fallaron.${facts.shortRows ? ` ${facts.shortRows} ${facts.shortRows === 1 ? "fila no llega" : "filas no llegan"} a todos los casos, y la Comparativa ${facts.shortRows === 1 ? "la marca" : "las marca"}.` : ""}`
-              : `The published run's exact parameters are these. ${facts.cases} cases and ${facts.models} models from ${facts.providers} providers, ${facts.hosted} hosted and ${facts.local} local, one repeat per pair, one ${facts.cap}-token output cap per call for every model, the budget checked before each call against the most the call can bill, and a total cost of ${facts.cost.toFixed(2)} dollars at list price. Each provider exposes different controls, and each record's fingerprint states the ones it pinned; the Benchmark's caveats list them. The ledger records all ${facts.calls} calls, including the ones that failed.${facts.shortRows ? ` ${facts.shortRows} ${facts.shortRows === 1 ? "row has" : "rows have"} not reached every case, and the Benchmark marks ${facts.shortRows === 1 ? "it" : "them"}.` : ""}`}
+              ? `Los parametros exactos de la corrida publicada son estos. ${facts.cases} casos y ${facts.models} modelos de ${facts.providers} proveedores, ${facts.hosted} alojados y ${facts.local} locales, ${facts.repeats === 1 ? "una repeticion" : `${facts.repeats} repeticiones`} por par, un solo tope de salida de ${facts.cap} tokens por llamada para todos los modelos, el presupuesto comprobado antes de cada llamada contra lo maximo que la llamada puede facturar, y un costo total de ${facts.cost.toFixed(2)} dolares a precio de lista. Cada proveedor expone controles distintos, y la huella de cada registro declara los que fijo; las salvedades de la Comparativa los enumeran. El libro mayor registra las ${facts.calls} llamadas, incluidas las que fallaron.${facts.shortRows ? ` ${facts.shortRows} ${facts.shortRows === 1 ? "fila no llega" : "filas no llegan"} a todos los casos, y la Comparativa ${facts.shortRows === 1 ? "la marca" : "las marca"}.` : ""}`
+              : `The published run's exact parameters are these. ${facts.cases} cases and ${facts.models} models from ${facts.providers} providers, ${facts.hosted} hosted and ${facts.local} local, ${facts.repeats === 1 ? "one repeat" : `${facts.repeats} repeats`} per pair, one ${facts.cap}-token output cap per call for every model, the budget checked before each call against the most the call can bill, and a total cost of ${facts.cost.toFixed(2)} dollars at list price. Each provider exposes different controls, and each record's fingerprint states the ones it pinned; the Benchmark's caveats list them. The ledger records all ${facts.calls} calls, including the ones that failed.${facts.shortRows ? ` ${facts.shortRows} ${facts.shortRows === 1 ? "row has" : "rows have"} not reached every case, and the Benchmark marks ${facts.shortRows === 1 ? "it" : "them"}.` : ""}`}
         </p>
       </FigureRow>
 
@@ -382,20 +384,24 @@ function Protocol({ lang }: { lang: "en" | "es" }) {
           facts === null
             ? String.raw`|\text{calls}| = |C| \times |M| \times n_{\text{repeats}}`
             : full
-              ? String.raw`|\text{calls}| = |C| \times |M| \times n_{\text{repeats}} = ${facts.cases} \times ${facts.models} \times 1 = ${facts.calls}`
+              ? String.raw`|\text{calls}| = |C| \times |M| \times n_{\text{repeats}} = ${facts.cases} \times ${facts.models} \times ${facts.repeats} = ${facts.calls}`
               : String.raw`|\text{calls}| = \sum_{m \in M} n_m = ${facts.calls}`
         }
         caption={
-          es
-            ? "El tamano del barrido publicado. Una repeticion es el minimo defendible y no el deseable: con n = 1 la variacion entre corridas no se puede separar de la diferencia entre modelos."
-            : "The published sweep's size. One repeat is the defensible minimum and not the desirable one: at n = 1 run-to-run variation cannot be separated from the difference between models."
+          many
+            ? es
+              ? "El tamano del barrido publicado. Cada caso corre mas de una vez por modelo, y la Comparativa compara las pasadas entre si: esa comparacion, no una segunda tasa, es lo que separa la variacion entre corridas de la diferencia entre modelos."
+              : "The published sweep's size. Each case runs more than once per model, and the Benchmark compares the passes with each other: that comparison, not a second rate, is what separates run-to-run variation from the difference between models."
+            : es
+              ? "El tamano del barrido publicado. Una repeticion es el minimo defendible y no el deseable: con n = 1 la variacion entre corridas no se puede separar de la diferencia entre modelos."
+              : "The published sweep's size. One repeat is the defensible minimum and not the desirable one: at n = 1 run-to-run variation cannot be separated from the difference between models."
         }
       />
 
       <p className="measure">
         {es
-          ? "Una repeticion es poco por una razon concreta y medida: dos pasadas sobre el corpus identico, sin cambiar nada salvo el muestreo, situaron a claude-haiku-4-5 en 0,350 y luego en 0,250. La inferencia alojada no es determinista ni con temperatura cero, y la causa dominante no es la coma flotante sino la dependencia del tamano de lote en los nucleos de reduccion, que es una propiedad del servicio y no del modelo."
-          : "One repeat is few for a concrete and measured reason: two passes over the identical corpus, changing nothing but the sampling, put claude-haiku-4-5 at 0.350 and then at 0.250. Hosted inference is not deterministic even at temperature zero, and the dominant cause is not floating point but the batch-size dependence of reduction kernels, which is a property of the service rather than of the model."}
+          ? `${many ? "Una repeticion era poca" : "Una repeticion es poco"} por una razon concreta y medida: dos pasadas sobre el corpus identico, sin cambiar nada salvo el muestreo, situaron a claude-haiku-4-5 en 0,350 y luego en 0,250.${many ? " Por eso cada caso corre ahora mas de una vez, y la tabla Entre corridas de la Comparativa muestra con que frecuencia la segunda pasada de un caso llego al veredicto de la primera." : ""} La inferencia alojada no es determinista ni con temperatura cero, y la causa dominante no es la coma flotante sino la dependencia del tamano de lote en los nucleos de reduccion, que es una propiedad del servicio y no del modelo.`
+          : `One repeat ${many ? "was" : "is"} few for a concrete and measured reason: two passes over the identical corpus, changing nothing but the sampling, put claude-haiku-4-5 at 0.350 and then at 0.250.${many ? " That is why each case now runs more than once, and the Run to run table on the Benchmark shows how often a case's second pass reached the first's verdict." : ""} Hosted inference is not deterministic even at temperature zero, and the dominant cause is not floating point but the batch-size dependence of reduction kernels, which is a property of the service rather than of the model.`}
       </p>
 
       <SamplingDiagram lang={lang} />
@@ -420,6 +426,8 @@ function Protocol({ lang }: { lang: "en" | "es" }) {
 
 function Metrics({ lang }: { lang: "en" | "es" }) {
   const es = lang === "es";
+  const facts = useMeasurement();
+  const n = facts?.perModel ?? 20;
   return (
     <section>
       <h2>{es ? "Las metricas, con sus constantes" : "The metrics, with their constants"}</h2>
@@ -464,8 +472,8 @@ function Metrics({ lang }: { lang: "en" | "es" }) {
         tex={String.raw`\mathrm{CI}_{95}(\hat{p}) = \frac{\hat{p} + \dfrac{z^{2}}{2n} \pm z\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n} + \dfrac{z^{2}}{4n^{2}}}}{1 + \dfrac{z^{2}}{n}}, \qquad z = 1.96,\ n = N - u`}
         caption={
           es
-            ? "El intervalo de Wilson con sus constantes reales. A n = 20 y p = 0,5 mide unos 0,40 de ancho, que es la razon por la que esta pagina solo ordena dos modelos cuando sus intervalos no se solapan."
-            : "The Wilson interval with its real constants. At n = 20 and p = 0.5 it is about 0.40 wide, which is why this page ranks two models only where their intervals do not overlap."
+            ? `El intervalo de Wilson con sus constantes reales. A n = ${n}, las llamadas de una fila completa, y p = 0,5 mide unos ${wilsonWidth(n).toFixed(2).replace(".", ",")} de ancho, que es la razon por la que esta pagina solo ordena dos modelos cuando sus intervalos no se solapan.`
+            : `The Wilson interval with its real constants. At n = ${n}, the calls in a complete row, and p = 0.5 it is about ${wilsonWidth(n).toFixed(2)} wide, which is why this page ranks two models only where their intervals do not overlap.`
         }
       />
 
@@ -594,12 +602,12 @@ function Threats({ lang }: { lang: "en" | "es" }) {
       <h3>{es ? "Validez de conclusion" : "Conclusion validity"}</h3>
       <p className="measure">
         {es
-          ? `N = 20 con una repeticion. Los intervalos de Wilson al 95% ocupan alrededor de 0,40 de ancho${facts ? `, y en ${facts.overlappingPairs} de los ${facts.pairs} pares de modelos los intervalos de fidelidad se solapan` : ""}. La consecuencia esta dicha en todas partes de este sitio: esta medicion puede ver que existe una brecha, y no puede ordenar dos modelos cuyos intervalos se solapan. Una segunda pasada sobre el corpus identico movio a claude-haiku-4-5 de 0,350 a 0,250 sin que cambiara nada salvo el muestreo.`
-          : `N = 20 with one repeat. The 95% Wilson intervals span about 0.40${facts ? `, and ${facts.overlappingPairs} of the ${facts.pairs} pairs of models have faithful intervals that overlap` : ""}. The consequence is stated everywhere on this site: this measurement can see that a gap exists, and it cannot rank two models whose intervals overlap. A second pass over the identical corpus moved claude-haiku-4-5 from 0.350 to 0.250 with nothing changed but the sampling.`}
+          ? `${facts ? `N = ${facts.cases} casos con ${facts.repeats === 1 ? "una repeticion" : `${facts.repeats} repeticiones`}, ${facts.perModel} llamadas por modelo` : "N = 20"}. Los intervalos de Wilson al 95% ocupan alrededor de ${wilsonWidth(facts?.perModel ?? 20).toFixed(2).replace(".", ",")} de ancho${facts ? `, y en ${facts.overlappingPairs} de los ${facts.pairs} pares de modelos los intervalos de fidelidad se solapan` : ""}. La consecuencia esta dicha en todas partes de este sitio: esta medicion puede ver que existe una brecha, y no puede ordenar dos modelos cuyos intervalos se solapan. Una segunda pasada sobre el corpus identico movio a claude-haiku-4-5 de 0,350 a 0,250 sin que cambiara nada salvo el muestreo.`
+          : `${facts ? `N = ${facts.cases} cases at ${facts.repeats === 1 ? "one repeat" : `${facts.repeats} repeats`}, ${facts.perModel} calls per model` : "N = 20"}. The 95% Wilson intervals span about ${wilsonWidth(facts?.perModel ?? 20).toFixed(2)}${facts ? `, and ${facts.overlappingPairs} of the ${facts.pairs} pairs of models have faithful intervals that overlap` : ""}. The consequence is stated everywhere on this site: this measurement can see that a gap exists, and it cannot rank two models whose intervals overlap. A second pass over the identical corpus moved claude-haiku-4-5 from 0.350 to 0.250 with nothing changed but the sampling.`}
       </p>
 
       <Equation
-        tex={String.raw`w_{95}(\hat{p} = 0.5,\ n = 20) \;\approx\; 0.40, \qquad n \ \text{needed for}\ w_{95} \leq 0.10 \;\approx\; 384`}
+        tex={String.raw`w_{95}(\hat{p} = 0.5,\ n = ${facts?.perModel ?? 20}) \;\approx\; ${wilsonWidth(facts?.perModel ?? 20).toFixed(2)}, \qquad n \ \text{needed for}\ w_{95} \leq 0.10 \;\approx\; 384`}
         caption={
           es
             ? "El ancho del intervalo de Wilson a este tamano de muestra, y el tamano que haria falta para reducirlo a diez puntos. Es la razon aritmetica por la que esta pagina no ordena modelos, y tambien el numero que dice cuanto costaria poder hacerlo."
