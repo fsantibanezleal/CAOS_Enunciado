@@ -35,6 +35,7 @@ from collections import defaultdict
 from functools import lru_cache
 from pathlib import Path
 
+from copela import __version__ as copela_version
 from copela.ledger import Ledger
 from copela.report import build
 from copela.verdicts import Layer, Outcome, Rate
@@ -119,6 +120,33 @@ PROTOCOL_NOTES = (
         ),
     },
 )
+
+#: Which copela scored which rows, for the records that cannot say: copela names itself in a record
+#: only from 0.4.0 (its R-033). Established from when each sweep ran against when each version was
+#: installed: the Claude sweep ran on 2026-09-22 on the code published as 0.2.0 under two hours
+#: later; 0.3.0 was installed at 17:37Z on 2026-09-23 and 0.3.2 at 18:22Z, and a running sweep keeps
+#: the version it started with, so the DeepSeek sweep's first process, stopped by its kill criterion
+#: after 13 calls at 18:28Z, is 0.3.0 and its resume is 0.3.2. Published only when the ledger holds
+#: every model it names, and only while some record carries no version.
+SCORING_NOTE = {
+    "models": ("anthropic/claude-sonnet-5", "zai/glm-5.3", "deepseek/deepseek-v4-pro"),
+    "en": (
+        "Records written before copela 0.4.0 do not name the copela that scored them, so it is "
+        "stated here, from when each sweep ran and when each version was installed: the code "
+        "published as copela 0.2.0 scored the two Claude rows, 0.3.0 scored GLM-5.3 and the first "
+        "13 DeepSeek-V4-Pro calls, and 0.3.2 scored every other record without a version. The rates "
+        "apply one rule to all of them, that of copela {version}, which derives this report, to the "
+        "verdicts each record stored."
+    ),
+    "es": (
+        "Los registros escritos antes de copela 0.4.0 no nombran el copela que los califico, asi "
+        "que se declara aqui, a partir de cuando corrio cada barrido y cuando se instalo cada "
+        "version: el codigo publicado como copela 0.2.0 califico las dos filas de Claude, 0.3.0 "
+        "califico GLM-5.3 y las primeras 13 llamadas de DeepSeek-V4-Pro, y 0.3.2 califico todos los "
+        "demas registros sin version. Las tasas aplican una sola regla a todos, la de copela "
+        "{version}, que deriva este informe, sobre los veredictos que guardo cada registro."
+    ),
+}
 
 #: copela's note, which the page prints, in the second language.
 NOTE_ES = (
@@ -318,6 +346,14 @@ def caveats(records, models: list[dict[str, object]], failure: dict[str, dict[st
     for note in PROTOCOL_NOTES:
         if note["model"] in keys:
             out.append(_caveat(note["en"], note["es"]))
+    unversioned = any(not getattr(r, "harness", "") for r in records)
+    if unversioned and all(model in keys for model in SCORING_NOTE["models"]):
+        out.append(
+            _caveat(
+                SCORING_NOTE["en"].format(version=copela_version),
+                SCORING_NOTE["es"].format(version=copela_version),
+            )
+        )
     scored_as_run = [
         r
         for r in records

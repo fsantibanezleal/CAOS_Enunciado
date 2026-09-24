@@ -90,6 +90,8 @@ def test_the_caveats_are_computed_from_the_records(built) -> None:
     assert any("local models ran on one laptop GPU" in text for text in english)
     assert not any("two models" in text or "forty" in text for text in english)
     assert not any("have not reached every case" in text for text in english)
+    # The scoring-version note names models this ledger does not hold, so it is absent.
+    assert not any("Records written before copela 0.4.0" in text for text in english)
 
 
 def test_a_short_row_is_named_and_the_sample_size_is_the_complete_rows(tmp_path, monkeypatch) -> None:
@@ -135,3 +137,21 @@ def test_a_protocol_note_is_published_when_its_model_ran(tmp_path, monkeypatch) 
     )
     caveats = report.assemble(path)["caveats"]
     assert {"en": "resumed once", "es": "reanudado una vez"} in caveats
+
+
+def test_the_scoring_versions_are_published_while_a_record_cannot_name_its_own(tmp_path, monkeypatch) -> None:
+    """R-035: which copela scored which rows reaches the page while the records cannot say."""
+    path = tmp_path / "optimization.jsonl"
+    _ledger(path)
+    monkeypatch.setattr(report, "_sensitivity_ledgers", list)
+    note = {"models": ("anthropic/stub-small", "deepseek/stub-small"), "en": "scored by x", "es": "calificado por x"}
+    monkeypatch.setattr(report, "SCORING_NOTE", note)
+    caveats = report.assemble(path)["caveats"]
+    # The installed copela writes no version when it predates 0.4.0, and names itself from 0.4.0 on.
+    import copela
+
+    unversioned = tuple(int(part) for part in copela.__version__.split(".")[:2]) < (0, 4)
+    assert ({"en": "scored by x", "es": "calificado por x"} in caveats) is unversioned
+    # A note naming a model the ledger does not hold is not published.
+    monkeypatch.setattr(report, "SCORING_NOTE", {**note, "models": ("zai/absent",)})
+    assert {"en": "scored by x", "es": "calificado por x"} not in report.assemble(path)["caveats"]
