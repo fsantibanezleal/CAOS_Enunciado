@@ -4,6 +4,14 @@ All notable changes to this product are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions are `X.XX.XXX` in this file, in
 `VERSION`, in the git tag and in the site footer; CI checks that the last two agree.
 
+## [0.07.001] - 2026-09-26
+
+### Fixed
+
+- The live browser gate counted the cap table's rows by subtracting Table 1 from every
+  `finding-table` row on the page, which the run-to-run table (R-041) broke: 20 rows where 4 were
+  expected. Each cap row now declares its cap (`data-cap`) and the gate counts those rows alone.
+
 ## [0.07.000] - 2026-09-26
 
 The second repeat is complete for every model: 640 calls, sixteen models, twenty cases at two
