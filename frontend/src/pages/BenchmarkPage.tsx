@@ -499,7 +499,7 @@ function CapSection({
                     .map((cap, index) => {
                       const at = row.by_cap[String(cap)];
                       return (
-                        <tr key={`${row.model}-${cap}`} data-model={row.model}>
+                        <tr key={`${row.model}-${cap}`} data-model={row.model} data-cap={cap}>
                           <td className="mono">{index === 0 ? row.model_id : ""}</td>
                           <td className="num">{cap}</td>
                           <td className="num">{describeRate(at.ran)}</td>
