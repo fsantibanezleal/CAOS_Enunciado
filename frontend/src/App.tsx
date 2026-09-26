@@ -21,7 +21,7 @@ import { CITATIONS } from "./data/citations";
 import { useData } from "./lib/data";
 import i18n from "./lib/i18n";
 
-const VERSION = "0.07.000";
+const VERSION = "0.07.001";
 
 export function Layout() {
   const load = useData((state) => state.load);
