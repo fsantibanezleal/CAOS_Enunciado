@@ -76,7 +76,7 @@ export function AttemptsPanel({ record, lang }: { record: CaseRecord; lang: "en"
     return (
       <p className="muted">
         {es
-          ? "Ningun modelo fue medido sobre este caso en el libro mayor versionado."
+          ? "Ningún modelo fue medido sobre este caso en el libro mayor versionado."
           : "No model was measured on this case in the committed ledger."}
       </p>
     );
@@ -90,7 +90,7 @@ export function AttemptsPanel({ record, lang }: { record: CaseRecord; lang: "en"
     <div className="viz">
       <p className="pane-hint" style={{ maxWidth: "84ch", margin: "0 0 0.4rem" }}>
         {es
-          ? "El componente aprendido de este producto es el formalizador. Esta vista lo muestra como herramienta sobre el caso seleccionado: que hizo cada modelo con este mismo enunciado, capa por capa, y donde se detuvo."
+          ? "El componente aprendido de este producto es el formalizador. Esta vista lo muestra como herramienta sobre el caso seleccionado: qué hizo cada modelo con este mismo enunciado, capa por capa, y dónde se detuvo."
           : "The learned component of this product is the formalizer. This view shows it as a tool on the selected case: what each model did with this very statement, layer by layer, and where it stopped."}
       </p>
 
@@ -184,7 +184,7 @@ function RefutationAxis({ mine, theirs, es }: { mine: number; theirs: number; es
 
   return (
     <svg viewBox="0 0 700 64" role="img" style={{ width: "100%", maxWidth: 700, marginTop: "0.4rem" }}
-      aria-label={es ? "Optimo del candidato frente al de referencia" : "Candidate optimum against the reference optimum"}>
+      aria-label={es ? "Óptimo del candidato frente al de referencia" : "Candidate optimum against the reference optimum"}>
       <line x1={30} x2={670} y1={34} y2={34} className="dg-axis" />
       <rect x={Math.min(x(mine), x(theirs))} y={24} width={Math.abs(x(mine) - x(theirs))} height={20} className="dg-fill-warn" />
       <circle cx={x(theirs)} cy={34} r={6} className="dg-bar" />

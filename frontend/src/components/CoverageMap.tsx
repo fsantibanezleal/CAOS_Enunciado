@@ -81,7 +81,7 @@ export function CoverageMap({
                     here.length
                       ? here.map((c) => `${c.case_id} ${c.title}`).join("\n")
                       : es
-                        ? "Nada en el corpus prueba esta combinacion"
+                        ? "Nada en el corpus prueba esta combinación"
                         : "Nothing in the corpus tests this combination"
                   }
                 >

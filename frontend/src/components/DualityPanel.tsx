@@ -122,10 +122,10 @@ export function DualityPanel({
       <p className="muted">
         {stated.status === "infeasible"
           ? es
-            ? "No hay optimo, asi que no hay precios sombra. Un programa infactible se certifica con un rayo de Farkas y no con precios, y la version del solucionador que corre aqui no lo devuelve."
+            ? "No hay óptimo, así que no hay precios sombra. Un programa infactible se certifica con un rayo de Farkas y no con precios, y la versión del solucionador que corre aquí no lo devuelve."
             : "There is no optimum, so there are no shadow prices. An infeasible program is certified by a Farkas ray rather than by prices, and the solver build running here does not return one."
           : es
-            ? "Este caso no es expresable como programa lineal en esta via, asi que no tiene dual que mostrar."
+            ? "Este caso no es expresable como programa lineal en esta vía, así que no tiene dual que mostrar."
             : "This case is not expressible as a linear program in this lane, so it has no dual to show."}
       </p>
     );
@@ -189,7 +189,7 @@ export function DualityPanel({
     <div className="viz">
       <p className="pane-hint" style={{ maxWidth: "92ch", margin: "0 0 0.4rem" }}>
         {es
-          ? "El precio sombra de una restriccion es dz*/db: cuanto cambia el optimo por unidad de su lado derecho, valido mientras la base optima no cambie. Abajo, las cuatro condiciones de optimalidad evaluadas desde los numeros; las cuatro en cero prueban que el par es optimo sin creerle al solucionador."
+          ? "El precio sombra de una restricción es dz*/db: cuánto cambia el óptimo por unidad de su lado derecho, válido mientras la base óptima no cambie. Abajo, las cuatro condiciones de optimalidad evaluadas desde los números; las cuatro en cero prueban que el par es óptimo sin creerle al solucionador."
           : "A constraint's shadow price is dz*/db: how much the optimum moves per unit of its right-hand side, valid while the optimal basis does not change. Below, the four optimality conditions evaluated from the numbers; all four at zero prove the pair optimal without taking the solver's word for it."}
       </p>
 
@@ -203,7 +203,7 @@ export function DualityPanel({
             className={`chip${source === "relaxation" ? " on" : ""}`}
             onClick={() => setSource("relaxation")}
           >
-            {es ? "la relajacion lineal" : "the LP relaxation"}
+            {es ? "la relajación lineal" : "the LP relaxation"}
           </button>
           <button
             type="button"
@@ -224,7 +224,7 @@ export function DualityPanel({
             {!fixing ? (
               es ? (
                 <>
-                  Una resolucion entera no devuelve duales. Estos valoran la relajacion, cuyo optimo{" "}
+                  Una resolución entera no devuelve duales. Estos valoran la relajación, cuyo óptimo{" "}
                   <strong>{num(zPriced, 7)}</strong> acota el entero, <strong>{num(zStated, 7)}</strong>.
                 </>
               ) : (
@@ -235,8 +235,8 @@ export function DualityPanel({
               )
             ) : es ? (
               <>
-                Decisiones enteras fijadas en su optimo; el costo reducido de cada una es el precio que{" "}
-                <Cite id="oneill2005" /> asignan a esa decision. Optimo {num(zPriced, 7)}, igual al entero{" "}
+                Decisiones enteras fijadas en su óptimo; el costo reducido de cada una es el precio que{" "}
+                <Cite id="oneill2005" /> asignan a esa decisión. Óptimo {num(zPriced, 7)}, igual al entero{" "}
                 {num(zStated, 7)}.
               </>
             ) : (
@@ -261,7 +261,7 @@ export function DualityPanel({
         >
           {/* Band 1: the row prices, diverging from zero. */}
           <text x={BAR0} y={16} className="dg-axis-label">
-            {es ? "precio sombra dz*/db por restriccion" : "shadow price dz*/db per constraint"}
+            {es ? "precio sombra dz*/db por restricción" : "shadow price dz*/db per constraint"}
           </text>
           <text x={MID} y={32} textAnchor="middle" className="dg-tick">
             0
@@ -315,7 +315,7 @@ export function DualityPanel({
           <text x={BAR0} y={colHead} className="dg-axis-label">
             {fixing
               ? es
-                ? "costo reducido; en ambar, las decisiones enteras fijadas"
+                ? "costo reducido; en ámbar, las decisiones enteras fijadas"
                 : "reduced cost; in amber, the integer decisions held fixed"
               : es
                 ? "costo reducido, variables en una cota"
@@ -323,7 +323,7 @@ export function DualityPanel({
           </text>
           {columns.length === 0 ? (
             <text x={BAR0} y={colTop + 16} className="dg-box-sub">
-              {es ? "ninguna: toda variable esta estrictamente entre sus cotas" : "none: every variable sits strictly between its bounds"}
+              {es ? "ninguna: toda variable está estrictamente entre sus cotas" : "none: every variable sits strictly between its bounds"}
             </text>
           ) : (
             <line x1={MID} x2={MID} y1={colTop - 2} y2={colTop + columns.length * ROW} className="dg-axis" />
@@ -412,21 +412,21 @@ export function DualityPanel({
               {hover.kind === "row"
                 ? Math.abs(hover.price) > BINDING
                   ? es
-                    ? `subir su lado derecho una unidad ${hover.price > 0 ? "sube" : "baja"} el optimo en ${num(Math.abs(hover.price))}`
+                    ? `subir su lado derecho una unidad ${hover.price > 0 ? "sube" : "baja"} el óptimo en ${num(Math.abs(hover.price))}`
                     : `raising its right-hand side by one ${hover.price > 0 ? "raises" : "lowers"} the optimum by ${num(Math.abs(hover.price))}`
                   : Math.abs(hover.slack ?? Infinity) <= BINDING
                     ? es
-                      ? "activa con precio cero: el optimo es degenerado aqui, y el precio vale solo hacia un lado"
+                      ? "activa con precio cero: el óptimo es degenerado aquí, y el precio vale solo hacia un lado"
                       : "binding at a zero price: the optimum is degenerate here, and the price holds in one direction only"
                     : es
-                      ? "precio cero: mover su cota no mueve el optimo"
+                      ? "precio cero: mover su cota no mueve el óptimo"
                       : "zero price: moving its bound does not move the optimum"
                 : hover.fixed
                   ? es
-                    ? `dz*/d(valor) = ${num(hover.price)}: el valor marginal de la decision, como si pudiera moverse de forma continua`
+                    ? `dz*/d(valor) = ${num(hover.price)}: el valor marginal de la decisión, como si pudiera moverse de forma continua`
                     : `dz*/d(value) = ${num(hover.price)}: the decision's marginal value, as if it could move continuously`
                   : es
-                    ? `costo reducido ${num(hover.price)}: mover su cota una unidad cambia el optimo en esa cantidad`
+                    ? `costo reducido ${num(hover.price)}: mover su cota una unidad cambia el óptimo en esa cantidad`
                     : `reduced cost ${num(hover.price)}: moving its bound by one unit moves the optimum by that much`}
             </span>
           </>
@@ -444,7 +444,7 @@ export function DualityPanel({
             <span className={holds ? "ok" : "bad"}>
               {holds
                 ? es
-                  ? "el certificado se cumple: el par es optimo"
+                  ? "el certificado se cumple: el par es óptimo"
                   : "the certificate holds: the pair is optimal"
                 : es
                   ? "el certificado falla"

@@ -83,7 +83,7 @@ export function ModelGraphPanel({
     return (
       <p className="muted">
         {es
-          ? "Este modelo no es lineal en el sentido de esta via, asi que su grafo no se construye en vez de construir el de otro modelo."
+          ? "Este modelo no es lineal en el sentido de esta vía, así que su grafo no se construye en vez de construir el de otro modelo."
           : "This model is not linear in this lane's sense, so its graph is not built rather than building the graph of a different model."}
       </p>
     );
@@ -237,12 +237,12 @@ export function ModelGraphPanel({
                 ? `estable desde la ronda ${stableAt - 1}:`
                 : `stable from round ${stableAt - 1}:`
               : es
-                ? "todavia separando en la ultima ronda"
+                ? "todavía separando en la última ronda"
                 : "still separating at the last round"}
           </text>
           {stableAt > 0 && (
             <text x={0} y={208} className="dg-note">
-              {es ? "otra ronda no separa nada mas" : "another round separates nothing more"}
+              {es ? "otra ronda no separa nada más" : "another round separates nothing more"}
             </text>
           )}
           <text x={0} y={230} className="dg-note">
@@ -284,9 +284,9 @@ export function ModelGraphPanel({
               <span className="rail-label">{es ? "contra" : "against"}</span>
               <select value={variant} onChange={(e) => setVariant(e.target.value as Variant)}>
                 <option value="permuted">{es ? "el mismo, permutado" : "itself, permuted"}</option>
-                <option value="dropped">{es ? "sin su ultima restriccion" : "its last constraint dropped"}</option>
+                <option value="dropped">{es ? "sin su última restricción" : "its last constraint dropped"}</option>
                 <option value="perturbed">{es ? "un coeficiente un 1% distinto" : "one coefficient off by 1%"}</option>
-                <option value="relaxed">{es ? "su relajacion lineal" : "its LP relaxation"}</option>
+                <option value="relaxed">{es ? "su relajación lineal" : "its LP relaxation"}</option>
               </select>
             </label>
             <span className={distinguished === expected ? "ok" : "bad"}>
