@@ -114,6 +114,14 @@ The problem statement to formalize, copied verbatim into narrative.text:
 # same shape and the same restraint: the schema, the rules the validator enforces, and nothing that
 # teaches a case. The sketch's example is abstract (a quantity "h" and placeholder words) and no
 # number in it comes from a corpus narrative, which a test checks (R-205).
+#
+# Version 2. Version 1 named the expression nodes without their fields, and a dynamics rate divides
+# all the time (a salt over a volume, a voltage over RC), so models guessed the power node's shape:
+# 39 of the 181 calls made with it wrote the exponent as a constant node instead of a number, and
+# failed to parse on a field the prompt never described. That measured the prompt, not the model,
+# so rule 8 now states every node's fields, and the 181 calls are kept, unscored by the report, in
+# data/runs/dynamics-v1-before-prompt-fix.jsonl (R-214). The optimization prompt has the same
+# omission and is left as its published measurement ran it: 2 of its calls failed that way.
 
 SCHEMA_SKETCH_DYNAMICS = """{
   "schema_version": "1.1",
@@ -205,10 +213,20 @@ RULES_DYNAMICS = """Rules that the document is checked against:
    you want to point at is not in the statement, use {"inferred_reason": "why"} instead. Offsets are
    recomputed from your text, so approximate numbers are fine; the text itself is not.
 
-8. Expression nodes are only: const, ref, sum, product, power, bigsum, conditional. Relation nodes
-   are only: rate and compare. There is no unary minus: subtraction is a sum with a term multiplied
-   by a dimensionless -1. There are no functions such as exp, log or sin; the integrator computes the
-   trajectory from the rates.
+8. Expression nodes are only these seven, with exactly these fields:
+   {"tag": "const", "value": <a number>, "unit": <a dimension, as in rule 1>}
+   {"tag": "ref", "name": "<a declared quantity>"}
+   {"tag": "sum", "terms": [<expressions>]}
+   {"tag": "product", "factors": [<expressions>]}
+   {"tag": "power", "base": <an expression>, "exponent": "-1"}, where the exponent is a rational
+   number written as a string, such as "-1", "2" or "1/2", never an expression: x / y is the
+   product of x and y raised to "-1"
+   {"tag": "conditional", "when": <a compare relation>, "then": <an expression>,
+    "otherwise": <an expression>}
+   {"tag": "bigsum", "index": "i", "index_set": "<a quantity with role set>", "body": <an expression>}
+   Relation nodes are only: rate and compare. There is no unary minus: subtraction is a sum with a
+   term multiplied by a dimensionless -1. There are no functions such as exp, log or sin; the
+   integrator computes the trajectory from the rates.
 
 9. If the statement does not determine something material, record it in open_questions with the
    reading you took. Do not silently choose."""
