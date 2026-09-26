@@ -67,19 +67,19 @@ const WHAT_IT_IS = `<svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg
   <rect class="bx-accent" x="260" y="45" width="170" height="110"/>
   ${bi(276, 72, "A formal document", "Un documento formal")}
   ${bi(276, 90, "typed quantities", "cantidades tipadas", "sub")}
-  ${bi(276, 106, "dimensions on every one", "dimension en cada una", "sub")}
+  ${bi(276, 106, "dimensions on every one", "dimensión en cada una", "sub")}
   ${bi(276, 122, "provenance on every one", "procedencia en cada una", "sub")}
   ${bi(276, 138, "what it could not decide", "lo que no pudo decidir", "sub")}
 
   <path class="arrow" d="M435 80 L520 80"/>
   <rect class="bx" x="525" y="45" width="170" height="50"/>
   ${bi(541, 66, "It runs", "Se ejecuta")}
-  ${bi(541, 84, "the weak claim", "la afirmacion debil", "sub")}
+  ${bi(541, 84, "the weak claim", "la afirmación débil", "sub")}
 
   <path class="arrow-accent" d="M435 125 L520 125"/>
   <rect class="bx-accent" x="525" y="105" width="170" height="60"/>
   ${bi(541, 126, "It is faithful", "Es fiel")}
-  ${bi(541, 144, "the claim that matters", "la afirmacion que importa", "sub")}
+  ${bi(541, 144, "the claim that matters", "la afirmación que importa", "sub")}
   ${bi(541, 160, "measured separately", "medida por separado", "sub")}
 
   <path class="arrow dashed" d="M610 95 L610 105"/>
@@ -92,12 +92,12 @@ const WHAT_IT_IS = `<svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg
 const LANES = `<svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" role="img">
   ${DEFS}
   <rect class="bx" x="20" y="30" width="200" height="250"/>
-  ${bi(36, 55, "OFFLINE, local only", "SIN CONEXION, solo local")}
-  ${bi(36, 74, "the canonical truth", "la verdad canonica", "sub")}
+  ${bi(36, 55, "OFFLINE, local only", "SIN CONEXIÓN, solo local")}
+  ${bi(36, 74, "the canonical truth", "la verdad canónica", "sub")}
   ${mono(36, 100, "python data-pipeline/bake.py")}
   ${bi(36, 122, "solves 20 references", "resuelve 20 referencias", "sub")}
   ${bi(36, 138, "checks every claimed answer", "verifica cada respuesta", "sub")}
-  ${bi(36, 154, "runs every property relation", "corre cada relacion", "sub")}
+  ${bi(36, 154, "runs every property relation", "corre cada relación", "sub")}
   ${mono(36, 180, "python data-pipeline/sweep_run.py")}
   ${bi(36, 202, "calls the models", "llama a los modelos", "sub")}
   ${bi(36, 218, "writes an append-only ledger", "escribe un registro append-only", "sub")}
@@ -112,15 +112,15 @@ const LANES = `<svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" rol
   ${mono(316, 150, "gap-report.json")}
   ${mono(316, 164, "attempts.json")}
   ${bi(316, 182, "1.1 MB, versioned", "1,1 MB, versionados", "sub")}
-  ${bi(316, 197, "the only source of numbers", "unica fuente de numeros", "sub")}
+  ${bi(316, 197, "the only source of numbers", "única fuente de números", "sub")}
 
   <path class="arrow" d="M465 150 L535 150"/>
 
   <rect class="bx" x="540" y="30" width="160" height="115"/>
-  ${bi(556, 55, "REPLAY, in the page", "REPRODUCCION, en la pagina")}
+  ${bi(556, 55, "REPLAY, in the page", "REPRODUCCIÓN, en la página")}
   ${bi(556, 74, "reads the artifacts", "lee los artefactos", "sub")}
   ${bi(556, 90, "computes nothing", "no calcula nada", "sub")}
-  ${bi(556, 106, "every number traceable", "cada numero trazable", "sub")}
+  ${bi(556, 106, "every number traceable", "cada número trazable", "sub")}
   ${bi(556, 122, "to the bake that made it", "al calculo que lo produjo", "sub")}
 
   <rect class="bx" x="540" y="160" width="160" height="120"/>
@@ -135,12 +135,12 @@ const ORACLES = `<svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" r
   ${DEFS}
   <rect class="bx-accent" x="20" y="20" width="150" height="60"/>
   ${bi(36, 45, "A candidate", "Una candidata")}
-  ${bi(36, 63, "from some model", "de algun modelo", "sub")}
+  ${bi(36, 63, "from some model", "de algún modelo", "sub")}
 
   <path class="arrow" d="M175 50 L215 50"/>
   <rect class="bx" x="220" y="20" width="230" height="58"/>
   ${bi(236, 43, "1. Executable", "1. Ejecutable")}
-  ${bi(236, 62, "did it validate and solve", "valido y resolvio", "sub")}
+  ${bi(236, 62, "did it validate and solve", "validó y resolvió", "sub")}
   <rect class="bx" x="470" y="20" width="230" height="58"/>
   ${bi(486, 43, "Necessary. Weak.", "Necesario. Debil.")}
   ${bi(486, 62, "the layer the field reports", "la capa que el campo reporta", "sub")}
@@ -163,19 +163,19 @@ const ORACLES = `<svg viewBox="0 0 720 320" xmlns="http://www.w3.org/2000/svg" r
 
   <rect class="bx-warn" x="220" y="268" width="480" height="42"/>
   ${bi(236, 288, "4. Judge: a labelled screening aggregate, never truth", "4. Juez: un agregado etiquetado, nunca la verdad")}
-  ${bi(236, 304, "its own authors say it is not an equivalence oracle", "sus propios autores dicen que no es un oraculo de equivalencia", "sub")}
+  ${bi(236, 304, "its own authors say it is not an equivalence oracle", "sus propios autores dicen que no es un oráculo de equivalencia", "sub")}
 
   ${bi(30, 130, "They are never", "Nunca se")}
   ${bi(30, 148, "merged into one", "combinan en un", "sub")}
   ${bi(30, 164, "score. A single", "solo puntaje. Un", "sub")}
-  ${bi(30, 180, "number hides the", "numero oculta la", "sub")}
+  ${bi(30, 180, "number hides the", "número oculta la", "sub")}
   ${bi(30, 196, "gap being measured.", "diferencia medida.", "sub")}
 </svg>`;
 
 const WEB_FLOW = `<svg viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg" role="img">
   ${DEFS}
   <rect class="bx" x="20" y="30" width="145" height="70"/>
-  ${bi(36, 55, "Static host", "Alojamiento estatico")}
+  ${bi(36, 55, "Static host", "Alojamiento estático")}
   ${bi(36, 74, "no backend at all", "sin servidor alguno", "sub")}
   ${bi(36, 90, "nothing to attack", "nada que atacar", "sub")}
 
@@ -202,7 +202,7 @@ const WEB_FLOW = `<svg viewBox="0 0 720 280" xmlns="http://www.w3.org/2000/svg" 
   ${bi(441, 192, "fetched when the workbench opens", "se descarga al abrir el banco", "sub")}
 
   <rect class="bx-warn" x="20" y="230" width="680" height="40"/>
-  ${bi(36, 255, "A published number is never computed here: it is replayed from a committed artifact", "Un numero publicado nunca se calcula aqui: se reproduce desde un artefacto versionado")}
+  ${bi(36, 255, "A published number is never computed here: it is replayed from a committed artifact", "Un número publicado nunca se calcula aquí: se reproduce desde un artefacto versionado")}
 </svg>`;
 
 const CONTRACTS = `<svg viewBox="0 0 720 290" xmlns="http://www.w3.org/2000/svg" role="img">
@@ -227,35 +227,35 @@ const CONTRACTS = `<svg viewBox="0 0 720 290" xmlns="http://www.w3.org/2000/svg"
   ${bi(526, 50, "Contract 2: artifact", "Contrato 2: artefacto")}
   ${bi(526, 70, "a TypeScript type mirrors", "un tipo TypeScript refleja", "sub")}
   ${bi(526, 86, "the Python schema", "el esquema de Python", "sub")}
-  ${bi(526, 106, "Drift fails the build", "La deriva rompe la compilacion")}
-  ${bi(526, 122, "rather than the page", "en vez de la pagina", "sub")}
+  ${bi(526, 106, "Drift fails the build", "La deriva rompe la compilación")}
+  ${bi(526, 122, "rather than the page", "en vez de la página", "sub")}
 
   <rect class="bx" x="20" y="150" width="330" height="120"/>
   ${bi(36, 175, "What the validator checks", "Que verifica el validador")}
   ${bi(36, 196, "names, closure, spans", "nombres, cierre, procedencias", "sub")}
   ${bi(36, 212, "dimensions term by term", "dimensiones termino a termino", "sub")}
-  ${bi(36, 228, "determinacy of every quantity", "determinacion de cada cantidad", "sub")}
+  ${bi(36, 228, "determinacy of every quantity", "determinación de cada cantidad", "sub")}
   ${bi(36, 244, "the family's required structure", "la estructura exigida", "sub")}
   ${bi(36, 262, "Every finding names its element", "Cada hallazgo nombra su elemento", "sub")}
 
   <rect class="bx-warn" x="370" y="150" width="330" height="120"/>
-  ${bi(386, 175, "Why dimensions are not optional", "Por que la dimension no es opcional")}
+  ${bi(386, 175, "Why dimensions are not optional", "Por que la dimensión no es opcional")}
   ${bi(386, 196, "Fraction constants once reached", "Constantes fraccionarias llegaron", "sub")}
   ${bi(386, 212, "quantities in MW, TWh and metres", "a cantidades en MW, TWh y metros", "sub")}
-  ${bi(386, 228, "here. Four methods broke.", "aqui. Cuatro metodos fallaron.", "sub")}
+  ${bi(386, 228, "here. Four methods broke.", "aquí. Cuatro métodos fallaron.", "sub")}
   ${bi(386, 244, "Two were already published.", "Dos ya estaban publicados.", "sub")}
-  ${bi(386, 262, "To the code they were all floats.", "Para el codigo eran solo floats.", "sub")}
+  ${bi(386, 262, "To the code they were all floats.", "Para el código eran solo floats.", "sub")}
 </svg>`;
 
 export const ArchitectureTabs: ArchTab[] = [
   {
     id: "what",
     en: "What it is",
-    es: "Que es",
+    es: "Qué es",
     body_en:
       "Enunciado measures one thing: how faithfully a language model turns a problem stated in ordinary words into a formal model that a solver can take.\n\nThe distinction it is built around is that an artifact which RUNS is not the same as an artifact which MEANS what the statement said. Those two come apart, and the distance between them has been measured in several fields. In natural-language to Lean formalization it runs from 3 to 29 percentage points, and the strongest system measured had the largest gap: 89.5 per cent compiling, 60.5 per cent faithful.\n\nThis product does not produce formalizations as its deliverable. It produces a number about them.",
     body_es:
-      "Enunciado mide una sola cosa: con que fidelidad un modelo de lenguaje convierte un problema expresado en palabras comunes en un modelo formal que un solver puede tomar.\n\nLa distincion sobre la que esta construido es que un artefacto que SE EJECUTA no es lo mismo que un artefacto que SIGNIFICA lo que decia el enunciado. Ambas cosas se separan, y la distancia entre ellas ha sido medida en varios campos. En formalizacion de lenguaje natural a Lean va de 3 a 29 puntos porcentuales, y el sistema mas fuerte medido tuvo la mayor brecha: 89,5 por ciento compilando, 60,5 por ciento fiel.\n\nEste producto no entrega formalizaciones. Entrega un numero sobre ellas.",
+      "Enunciado mide una sola cosa: con que fidelidad un modelo de lenguaje convierte un problema expresado en palabras comunes en un modelo formal que un solver puede tomar.\n\nLa distinción sobre la que está construido es que un artefacto que SE EJECUTA no es lo mismo que un artefacto que SIGNIFICA lo que decía el enunciado. Ambas cosas se separan, y la distancia entre ellas ha sido medida en varios campos. En formalización de lenguaje natural a Lean va de 3 a 29 puntos porcentuales, y el sistema más fuerte medido tuvo la mayor brecha: 89,5 por ciento compilando, 60,5 por ciento fiel.\n\nEste producto no entrega formalizaciones. Entrega un número sobre ellas.",
     svg: WHAT_IT_IS,
   },
   {
@@ -265,17 +265,17 @@ export const ArchitectureTabs: ArchTab[] = [
     body_en:
       "Three lanes, and the separation between them is what makes a published number trustworthy.\n\nOFFLINE is the canonical truth. It runs locally, never in continuous integration, and it is the only thing that writes artifacts. It solves every reference, checks every claimed answer against the solver, and runs every property relation against the reference. That last check has already earned its place: three of the twenty claimed optima in this corpus were wrong when first written, and the bake caught all three.\n\nREPLAY is what the page does. It reads committed artifacts and computes nothing, so every number on screen traces back to the bake that produced it.\n\nLIVE explains the answer and publishes nothing. The workbench re-solves the case in your browser with HiGHS compiled to WebAssembly, 3.37 megabytes fetched on first use: across a parameter's range on the landing tab, again on every edit, and for the duality certificate and the integrality gap. It is measured, not assumed: a probe in this repository solves real corpus cases in a real browser.",
     body_es:
-      "Tres carriles, y la separacion entre ellos es lo que hace confiable un numero publicado.\n\nSIN CONEXION es la verdad canonica. Corre localmente, nunca en integracion continua, y es lo unico que escribe artefactos. Resuelve cada referencia, verifica cada respuesta declarada contra el solver, y corre cada relacion de propiedad contra la referencia. Esa ultima verificacion ya se gano su lugar: tres de los veinte optimos declarados en este corpus estaban mal al escribirse, y el calculo los detecto.\n\nREPRODUCCION es lo que hace la pagina. Lee artefactos versionados y no calcula nada, de modo que cada numero en pantalla se remonta al calculo que lo produjo.\n\nEN VIVO explica la respuesta y no publica nada. El banco de trabajo vuelve a resolver el caso en su navegador con HiGHS compilado a WebAssembly, 3,37 megabytes descargados en su primer uso: a lo largo del rango de un parametro en la pestana de entrada, de nuevo en cada edicion, y para el certificado de dualidad y la brecha de integralidad. Esta medido, no supuesto: una sonda en este repositorio resuelve casos reales en un navegador real.",
+      "Tres carriles, y la separación entre ellos es lo que hace confiable un número publicado.\n\nSIN CONEXIÓN es la verdad canónica. Corre localmente, nunca en integración continua, y es lo único que escribe artefactos. Resuelve cada referencia, verifica cada respuesta declarada contra el solver, y corre cada relación de propiedad contra la referencia. Esa última verificación ya se ganó su lugar: tres de los veinte óptimos declarados en este corpus estaban mal al escribirse, y el cálculo los detectó.\n\nREPRODUCCIÓN es lo que hace la página. Lee artefactos versionados y no calcula nada, de modo que cada número en pantalla se remonta al cálculo que lo produjo.\n\nEN VIVO explica la respuesta y no publica nada. El banco de trabajo vuelve a resolver el caso en su navegador con HiGHS compilado a WebAssembly, 3,37 megabytes descargados en su primer uso: a lo largo del rango de un parámetro en la pestaña de entrada, de nuevo en cada edición, y para el certificado de dualidad y la brecha de integralidad. Está medido, no supuesto: una sonda en este repositorio resuelve casos reales en un navegador real.",
     svg: LANES,
   },
   {
     id: "oracles",
     en: "How correctness is decided",
-    es: "Como se decide la correccion",
+    es: "Cómo se decide la corrección",
     body_en:
       "Four layers, reported separately and never merged into one score. A single number would let a high 'it ran' rate conceal a low 'it was right' rate, which is precisely the quantity being measured.\n\nThe EXECUTABLE layer asks whether it validated and solved. Necessary, weak, and the layer the field over-reports.\n\nThe STRUCTURAL layer compares the candidate against the reference, first by canonical form and then by answer. Equal form proves equivalence; unequal form proves nothing, so it is reported as not-proven-equivalent rather than as a difference. When the forms differ both models are solved, and different optima, each read in the minimising sense, prove different models. Matching optima prove nothing, because compensating errors reach the right number. In the two Claude runs this layer decided 2 of the 16 candidates that ran, both by refutation, and passed none; the first passes came with GLM-5.3 and DeepSeek-V4-Pro, which reproduced their references' canonical forms. Both of those Claude refutations land exactly on the reference's optimum with its decisions made integer, in statements that never say whether the decisions are whole numbers, and the Benchmark states what that does to each gap.\n\nThe PROPERTY layer is metamorphic. It does not check an answer, it checks how the answer must CHANGE: scaling the objective cannot move the argmin, tightening a constraint cannot improve the optimum, a redundant row cannot change the feasible set. A candidate that solves and then fails one of these is wrong in a way no solver would have reported.\n\nThe JUDGE layer is what a language model says. It is recorded for comparability with published work, labelled on every record, and never counted towards faithfulness, because the study that calibrated it states plainly that it is a conservative aggregate and not an equivalence oracle.",
     body_es:
-      "Cuatro capas, reportadas por separado y nunca combinadas en un puntaje. Un solo numero permitiria que una alta tasa de 'se ejecuto' ocultara una baja tasa de 'era correcto', que es exactamente la cantidad que se mide.\n\nLa capa EJECUTABLE pregunta si valido y resolvio. Necesaria, debil, y la capa que el campo sobre-reporta.\n\nLa capa ESTRUCTURAL compara la candidata con la referencia, primero por forma canonica y luego por respuesta. Forma igual prueba equivalencia; forma distinta no prueba nada, asi que se reporta como no-probada-equivalente y no como una diferencia. Cuando las formas difieren se resuelven ambos modelos, y optimos distintos, leidos ambos en el sentido de minimizar, prueban modelos distintos. Optimos iguales no prueban nada, porque errores que se compensan llegan al numero correcto. En las dos corridas de Claude esta capa decidio 2 de los 16 candidatos que corrieron, los dos por refutacion, y no aprobo ninguno; los primeros aprobados llegaron con GLM-5.3 y DeepSeek-V4-Pro, que reprodujeron las formas canonicas de sus referencias. Las dos refutaciones de Claude caen exactamente en el optimo de la referencia con sus decisiones enteras, en enunciados que nunca dicen si las decisiones son numeros enteros, y la Comparativa declara lo que eso le hace a cada brecha.\n\nLa capa de PROPIEDAD es metamorfica. No verifica una respuesta, verifica como debe CAMBIAR la respuesta: escalar el objetivo no puede mover el argmin, ajustar una restriccion no puede mejorar el optimo, una fila redundante no puede cambiar el conjunto factible. Una candidata que resuelve y luego falla una de estas esta equivocada de un modo que ningun solver habria reportado.\n\nLa capa JUEZ es lo que dice un modelo de lenguaje. Se registra por comparabilidad con trabajos publicados, se etiqueta en cada registro, y nunca cuenta para la fidelidad, porque el estudio que la calibro afirma que es un agregado conservador y no un oraculo de equivalencia.",
+      "Cuatro capas, reportadas por separado y nunca combinadas en un puntaje. Un solo número permitiría que una alta tasa de 'se ejecutó' ocultara una baja tasa de 'era correcto', que es exactamente la cantidad que se mide.\n\nLa capa EJECUTABLE pregunta si validó y resolvió. Necesaria, débil, y la capa que el campo sobre-reporta.\n\nLa capa ESTRUCTURAL compara la candidata con la referencia, primero por forma canónica y luego por respuesta. Forma igual prueba equivalencia; forma distinta no prueba nada, así que se reporta como no-probada-equivalente y no como una diferencia. Cuando las formas difieren se resuelven ambos modelos, y óptimos distintos, leídos ambos en el sentido de minimizar, prueban modelos distintos. Optimos iguales no prueban nada, porque errores que se compensan llegan al número correcto. En las dos corridas de Claude esta capa decidió 2 de los 16 candidatos que corrieron, los dos por refutación, y no aprobó ninguno; los primeros aprobados llegaron con GLM-5.3 y DeepSeek-V4-Pro, que reprodujeron las formas canónicas de sus referencias. Las dos refutaciones de Claude caen exactamente en el óptimo de la referencia con sus decisiones enteras, en enunciados que nunca dicen si las decisiones son números enteros, y la Comparativa declara lo que eso le hace a cada brecha.\n\nLa capa de PROPIEDAD es metamórfica. No verifica una respuesta, verifica como debe CAMBIAR la respuesta: escalar el objetivo no puede mover el argmin, ajustar una restricción no puede mejorar el óptimo, una fila redundante no puede cambiar el conjunto factible. Una candidata que resuelve y luego falla una de estas está equivocada de un modo que ningún solver habría reportado.\n\nLa capa JUEZ es lo que dice un modelo de lenguaje. Se registra por comparabilidad con trabajos publicados, se etiqueta en cada registro, y nunca cuenta para la fidelidad, porque el estudio que la calibró afirma que es un agregado conservador y no un oráculo de equivalencia.",
     svg: ORACLES,
   },
   {
@@ -285,7 +285,7 @@ export const ArchitectureTabs: ArchTab[] = [
     body_en:
       "A static page with no backend. No published number is computed in the page: the case file is fetched rather than bundled, so the first paint does not wait on 220 kilobytes of JSON, and every rate, interval and verdict shown is replayed from what the bake committed.\n\nThe shell, the header, the footer, the theme and the language toggle all come from a package shared across this line of products, so they are identical by construction and a fix lands once rather than in every app.\n\nThe workbench shows one case at a time, through fourteen methods in four groups: the statement (provenance, open questions, dimensions, coverage), the model (canonical form, the graph and Weisfeiler-Lehman refinement, metamorphic relations), the answer (sensitivity, feasible region, activity, duality, integrality gap) and the models (every attempt, and the anatomy of each failure). A cross-case summary answers 'across all cases' and belongs on Experiments or Benchmark; the workbench answers 'what happened here'.\n\nThe solver is a separate 3.37-megabyte chunk fetched on first use rather than bundled. On the workbench first use is immediate, because the landing tab re-solves the reference across a parameter's range; the five document pages never fetch it. The answer tabs check what it returns rather than display it: the Duality tab evaluates the four optimality conditions from the numbers. The ledger's per-case attempts, attempts.json, load with the workbench, because the sidebar's diagnosis shows how each model fared on the selected case, layer by layer; the two learned-model tabs read the same file.",
     body_es:
-      "Una pagina estatica sin servidor. Ningun numero publicado se calcula en la pagina: el archivo de casos se descarga en vez de empaquetarse, de modo que el primer render no espera 220 kilobytes de JSON, y cada tasa, intervalo y veredicto mostrado se reproduce de lo que el calculo dejo versionado.\n\nEl shell, el encabezado, el pie, el tema y el selector de idioma vienen de un paquete compartido por esta linea de productos, asi que son identicos por construccion y una correccion se aplica una sola vez.\n\nEl banco de trabajo muestra un caso a la vez, con catorce metodos en cuatro grupos: el enunciado (procedencia, preguntas abiertas, dimensiones, cobertura), el modelo (forma canonica, el grafo y el refinamiento de Weisfeiler-Lehman, relaciones metamorficas), la respuesta (sensibilidad, region factible, actividad, dualidad, brecha de integralidad) y los modelos (cada intento, y la anatomia de cada fallo). Un resumen entre casos responde 'en todos los casos' y pertenece a Experimentos o Comparativa; el banco responde 'que paso aqui'.\n\nEl solver es un bloque aparte de 3,37 megabytes que se descarga en su primer uso en vez de empaquetarse. En el banco de trabajo el primer uso es inmediato, porque la pestana de entrada vuelve a resolver la referencia a lo largo del rango de un parametro; las cinco paginas de documentos nunca lo descargan. Las pestanas de la respuesta comprueban lo que devuelve en vez de mostrarlo: la pestana Dualidad evalua las cuatro condiciones de optimalidad desde los numeros. Los intentos por caso del libro mayor, attempts.json, se cargan con el banco de trabajo, porque el diagnostico de la barra lateral muestra como le fue a cada modelo en el caso elegido, capa por capa; las dos pestanas de los modelos aprendidos leen el mismo archivo.",
+      "Una página estática sin servidor. Ningún número publicado se calcula en la página: el archivo de casos se descarga en vez de empaquetarse, de modo que el primer render no espera 220 kilobytes de JSON, y cada tasa, intervalo y veredicto mostrado se reproduce de lo que el cálculo dejó versionado.\n\nEl shell, el encabezado, el pie, el tema y el selector de idioma vienen de un paquete compartido por esta línea de productos, así que son idénticos por construcción y una corrección se aplica una sola vez.\n\nEl banco de trabajo muestra un caso a la vez, con catorce métodos en cuatro grupos: el enunciado (procedencia, preguntas abiertas, dimensiones, cobertura), el modelo (forma canónica, el grafo y el refinamiento de Weisfeiler-Lehman, relaciones metamórficas), la respuesta (sensibilidad, región factible, actividad, dualidad, brecha de integralidad) y los modelos (cada intento, y la anatomía de cada fallo). Un resumen entre casos responde 'en todos los casos' y pertenece a Experimentos o Comparativa; el banco responde 'que paso aquí'.\n\nEl solver es un bloque aparte de 3,37 megabytes que se descarga en su primer uso en vez de empaquetarse. En el banco de trabajo el primer uso es inmediato, porque la pestaña de entrada vuelve a resolver la referencia a lo largo del rango de un parámetro; las cinco páginas de documentos nunca lo descargan. Las pestañas de la respuesta comprueban lo que devuelve en vez de mostrarlo: la pestaña Dualidad evalúa las cuatro condiciones de optimalidad desde los números. Los intentos por caso del libro mayor, attempts.json, se cargan con el banco de trabajo, porque el diagnóstico de la barra lateral muestra cómo le fue a cada modelo en el caso elegido, capa por capa; las dos pestañas de los modelos aprendidos leen el mismo archivo.",
     svg: WEB_FLOW,
   },
   {
@@ -295,7 +295,7 @@ export const ArchitectureTabs: ArchTab[] = [
     body_en:
       "The ingestion contract governs what may become a document. A document is accepted only if it validates: names unique, no free symbol, every span still matching the narrative it points into, dimensions agreeing term by term, every quantity given or chosen or derived exactly once, and the family's required structure present. It rejects; it never coerces.\n\nThe artifact contract governs what reaches this page. A TypeScript type mirrors each Python schema, and every artifact carries a schema identifier the page checks before it renders anything, so a shape change shows an error rather than a page of blanks.\n\nDimensions are not optional in either contract, and that is not fastidiousness. On this account a set of constants expressed as fractions between zero and one were applied to quantities measured in megawatts, terawatt-hours and metres. Four methods broke and two of them had already been published. Nothing in the code looked wrong, because to the code they were all floats.",
     body_es:
-      "El contrato de ingesta rige que puede convertirse en un documento. Un documento se acepta solo si valida: nombres unicos, ningun simbolo libre, cada procedencia coincidiendo aun con el enunciado al que apunta, dimensiones concordando termino a termino, cada cantidad dada o elegida o derivada exactamente una vez, y la estructura exigida por la familia presente. Rechaza; nunca ajusta.\n\nEl contrato de artefacto rige que llega a esta pagina. Un tipo TypeScript refleja cada esquema de Python, y cada artefacto lleva un identificador de esquema que la pagina comprueba antes de renderizar nada, de modo que un cambio de forma muestra un error en lugar de una pagina en blanco.\n\nLas dimensiones no son opcionales en ninguno de los dos contratos, y no es escrupulosidad. En esta cuenta, un conjunto de constantes expresadas como fracciones entre cero y uno se aplicaron a cantidades medidas en megavatios, teravatios-hora y metros. Cuatro metodos fallaron y dos ya estaban publicados. Nada en el codigo parecia mal, porque para el codigo todas eran floats.",
+      "El contrato de ingesta rige que puede convertirse en un documento. Un documento se acepta solo si valida: nombres únicos, ningún símbolo libre, cada procedencia coincidiendo aún con el enunciado al que apunta, dimensiones concordando término a término, cada cantidad dada o elegida o derivada exactamente una vez, y la estructura exigida por la familia presente. Rechaza; nunca ajusta.\n\nEl contrato de artefacto rige que llega a esta página. Un tipo TypeScript refleja cada esquema de Python, y cada artefacto lleva un identificador de esquema que la página comprueba antes de renderizar nada, de modo que un cambio de forma muestra un error en lugar de una página en blanco.\n\nLas dimensiones no son opcionales en ninguno de los dos contratos, y no es escrupulosidad. En esta cuenta, un conjunto de constantes expresadas como fracciones entre cero y uno se aplicaron a cantidades medidas en megavatios, teravatios-hora y metros. Cuatro métodos fallaron y dos ya estaban publicados. Nada en el código parecía mal, porque para el código todas eran floats.",
     svg: CONTRACTS,
   },
 ];

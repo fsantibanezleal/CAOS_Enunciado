@@ -36,7 +36,7 @@ export function AmbiguityPanel({ record, lang }: { record: CaseRecord; lang: "en
       <div className="viz">
         <p className="pane-hint" style={{ maxWidth: "80ch" }}>
           {es
-            ? "La referencia de este caso no registra ninguna pregunta abierta: afirma que el enunciado determina todo lo que el modelo necesita. Es una afirmacion, no un hecho del texto, y es exactamente lo que un segundo formalizador podria disputar. Los casos del nivel 5 son los que llevan preguntas abiertas: opt-017 a opt-020."
+            ? "La referencia de este caso no registra ninguna pregunta abierta: afirma que el enunciado determina todo lo que el modelo necesita. Es una afirmación, no un hecho del texto, y es exactamente lo que un segundo formalizador podría disputar. Los casos del nivel 5 son los que llevan preguntas abiertas: opt-017 a opt-020."
             : "This case's reference records no open question: it claims the statement determines everything the model needs. That is a claim, not a fact about the text, and it is exactly what a second formalizer could dispute. The tier-5 cases carry open questions: opt-017 to opt-020."}
         </p>
         <p className="narrative">{text}</p>
@@ -67,7 +67,7 @@ export function AmbiguityPanel({ record, lang }: { record: CaseRecord; lang: "en
 
       <div className="two-col" style={{ margin: 0, flex: 1, minHeight: 0 }}>
         <section className="split-pane">
-          <h3>{es ? "Donde lo deja abierto el enunciado" : "Where the statement leaves it open"}</h3>
+          <h3>{es ? "Dónde lo deja abierto el enunciado" : "Where the statement leaves it open"}</h3>
           <div className="pane-scroll">
             <p className="narrative">
               {located ? (
@@ -104,13 +104,13 @@ export function AmbiguityPanel({ record, lang }: { record: CaseRecord; lang: "en
             {current.is_open && (
               <p className="q-open">
                 {es
-                  ? "Sin resolver: la referencia la deja abierta a proposito, y una formalizacion que la decide en silencio esta adivinando."
+                  ? "Sin resolver: la referencia la deja abierta a propósito, y una formalización que la decide en silencio está adivinando."
                   : "Unresolved: the reference leaves it open on purpose, and a formalization that decides it silently is guessing."}
               </p>
             )}
 
             <h4 className="rail-label" style={{ margin: "0.9rem 0 0.4rem" }}>
-              {es ? "Cantidades que dependen de esta decision" : "Quantities that depend on this choice"}
+              {es ? "Cantidades que dependen de esta decisión" : "Quantities that depend on this choice"}
             </h4>
             <table className="qty-table">
               <tbody>

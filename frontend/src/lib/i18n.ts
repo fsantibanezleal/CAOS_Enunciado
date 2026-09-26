@@ -11,7 +11,7 @@ import { initReactI18next } from "react-i18next";
 
 const en = {
   nav: {
-    app: "Workbench",
+    app: "App",
     introduction: "Introduction",
     methodology: "Methodology",
     implementation: "Implementation",
@@ -66,10 +66,10 @@ const en = {
 
 const es = {
   nav: {
-    app: "Banco de trabajo",
-    introduction: "Introduccion",
-    methodology: "Metodologia",
-    implementation: "Implementacion",
+    app: "App",
+    introduction: "Introducción",
+    methodology: "Metodología",
+    implementation: "Implementación",
     experiments: "Experimentos",
     benchmark: "Comparativa",
   },
@@ -81,29 +81,29 @@ const es = {
     case: "Caso",
     objective: "Objetivo",
     feasible: "Factible",
-    infeasible: "Infactible, y correctamente asi",
+    infeasible: "Infactible, y correctamente así",
     noAnswer: "Este problema no tiene respuesta",
     claimed: "Declarado",
-    solved: "El solver devolvio",
+    solved: "El solver devolvió",
     agrees: "coincide",
     control: "caso de control, sin trampa",
   },
   workbench: {
     statement: "Enunciado",
-    formalization: "Formalizacion",
-    solution: "Solucion",
+    formalization: "Formalización",
+    solution: "Solución",
     relations: "Relaciones",
     emitted: "Modelo emitido",
     properties: "Relaciones de propiedad",
     openQuestions: "Lo que el enunciado no determina",
-    whyHard: "Que lo hace dificil",
+    whyHard: "Qué lo hace difícil",
     hoverHint: "Pase el cursor sobre una cantidad para resaltar las palabras de donde proviene",
     quantities: "Cantidades",
     role: "Rol",
-    dimension: "Dimension",
+    dimension: "Dimensión",
     value: "Valor",
     provenance: "Del enunciado",
-    inferred: "Inferido, no leido del texto",
+    inferred: "Inferido, no leído del texto",
     noProvenance: "Sin procedencia registrada",
     resolution: "Lectura tomada",
     stillOpen: "Aun abierta",
@@ -115,7 +115,7 @@ const es = {
   intro: {
     title: "Que se ejecute no es que sea fiel",
     lead:
-      "La pregunta no es si un modelo produce algo que se ejecuta. Es si lo que se ejecuta significa lo que decia el enunciado.",
+      "La pregunta no es si un modelo produce algo que se ejecuta. Es si lo que se ejecuta significa lo que decía el enunciado.",
   },
 };
 

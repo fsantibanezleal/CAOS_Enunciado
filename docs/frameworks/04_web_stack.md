@@ -22,9 +22,11 @@ property the imported design system defines.
 
 ## The routes
 
-Six, matching the line's standard: Workbench, Introduction, Methodology, Implementation,
-Experiments, Benchmark. The Workbench is the landing route and is the only one in `fixedRoutes`, so
-it sizes to the viewport and scrolls inside its own container.
+Six, matching the line's standard and in its order: App, Introduction, Methodology, Implementation,
+Experiments, Benchmark. The App (the workbench) is the landing route and is the only one in
+`fixedRoutes`, so it sizes to the viewport and scrolls inside its own container. Its nav label read
+"Workbench" until 0.08.000; the standard names it App on every product. The Benchmark is six tabs
+(ADR-0071 section 5), and the UI gate walks them because the shell renders only the open tab.
 
 Every route is **prerendered to its own document** by `frontend/prerender-routes.mjs`. A static host
 serving `404.html` gives the SPA body with an HTTP 404 status: a human sees the right page and every

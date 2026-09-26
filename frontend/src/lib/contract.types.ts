@@ -156,7 +156,7 @@ export const TIER_NAME: Record<number, { en: string; es: string }> = {
 export const TRAP_NAME: Record<string, { en: string; es: string }> = {
   "unit-mismatch": {
     en: "Units differ across terms",
-    es: "Las unidades diferen entre terminos",
+    es: "Las unidades diferen entre términos",
   },
   "implicit-quantity": {
     en: "A quantity the text implies but never names",
@@ -164,15 +164,15 @@ export const TRAP_NAME: Record<string, { en: string; es: string }> = {
   },
   "objective-sense": {
     en: "The objective is easy to state with the wrong sense",
-    es: "El objetivo se plantea facilmente con el sentido equivocado",
+    es: "El objetivo se plantea fácilmente con el sentido equivocado",
   },
   "droppable-constraint": {
     en: "A constraint that is easy to drop entirely",
-    es: "Una restriccion facil de omitir por completo",
+    es: "Una restricción fácil de omitir por completo",
   },
   integrality: {
     en: "The natural reading needs integers; the relaxation looks fine",
-    es: "La lectura natural requiere enteros; la relajacion parece correcta",
+    es: "La lectura natural requiere enteros; la relajación parece correcta",
   },
   ambiguity: {
     en: "The text does not determine something material",
@@ -180,11 +180,11 @@ export const TRAP_NAME: Record<string, { en: string; es: string }> = {
   },
   "red-herring": {
     en: "A distractor number that belongs to no constraint",
-    es: "Un numero distractor que no pertenece a ninguna restriccion",
+    es: "Un número distractor que no pertenece a ninguna restricción",
   },
   "derived-bound": {
     en: "The bound is on a derived quantity, not a decision variable",
-    es: "La cota esta sobre una cantidad derivada, no sobre una variable",
+    es: "La cota está sobre una cantidad derivada, no sobre una variable",
   },
   none: {
     en: "No trap: a control case",
