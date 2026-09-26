@@ -46,12 +46,12 @@ SCIP changes one string rather than a code path.
 
 | Cost | Figure | Where measured |
 |---|---|---|
-| Artifact payload | 222 KB for the twenty-case bake; 1.1 MB with the measurement, most of it the 806 KB `attempts.json`, which only the workbench loads, gzipped on the wire | `data/artifacts/` |
+| Artifact payload | 222 KB for the twenty-case bake; 2.4 MB with the measurement, most of it the 1.5 MB `attempts.json`, which only the workbench loads, 115 KB gzipped on the wire |
 | HiGHS WASM, lazy | 3.37 MB | `tools/portability/` |
 | HiGHS load time | 44 ms | `tools/portability/` |
 | One solve, corpus-sized | sub-millisecond | the live panel prints it |
 | A 41-point sensitivity sweep | tens of milliseconds | the panel prints it |
-| The published measurement, sixteen models | 2.53 USD at list price, 320 calls; the local and free models cost nothing | `data/runs/optimization.jsonl` |
+| The published measurement, sixteen models | 4.99 USD at list price, 640 calls; the local and free models cost nothing | `data/runs/optimization.jsonl` |
 | The same protocol at a 32768-token cap, two models | 1.78 USD, 40 calls | `data/runs/optimization-cap32768.jsonl` |
 
 ## Version pinning, and why it is exact

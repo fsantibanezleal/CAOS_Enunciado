@@ -4,6 +4,67 @@ All notable changes to this product are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions are `X.XX.XXX` in this file, in
 `VERSION`, in the git tag and in the site footer; CI checks that the last two agree.
 
+## [0.07.000] - 2026-09-26
+
+The second repeat is complete for every model: 640 calls, sixteen models, twenty cases at two
+repeats. The site, the docs and the manuscript print the same measurement, and CI now fails when the
+manuscript's numbers drift from the artifacts. A dynamics vertical, twenty authored cases with their
+bake and a sweep prompt, is under construction and not yet on the site.
+
+### Added
+
+- **The second repeat, complete** (R-041, R-043). Every model ran the twenty cases twice. The report
+  and the site read more than one repeat and compare each later run with the first: of 320 repeated
+  cases, 298 reached the same faithful outcome, 261 the same failure class and 206 returned the same
+  response byte for byte. Eight local models returned their first response on every repeat
+  (gemma3:12b, gemma3:4b, llama3.1:8b, mistral:7b, phi4-mini, qwen2.5-coder:7b, qwen3:14b and
+  qwen3:4b), so their repeats are one sample counted twice.
+- **The sweep runner probes the provider before it starts** and records nothing if the probe fails
+  (R-040), and it stops cleanly when the provider drops mid-sweep (R-042). A key file passed whole,
+  notes and all, had recorded nineteen "the call itself failed" rows against Haiku 4.5 before.
+- **Manuscript 1**, "It Ran Is Not It Was Right: the formalization gap of sixteen language models on
+  authored optimization problems, and what its refutations rest on" (BL-028), under
+  `manuscripts/narrative-to-optimization/`. The text types no measured number: `make_numbers.py`
+  transcribes every one from `data/artifacts/` into `tex/numbers.tex`, the three table bodies and
+  the figure data.
+- `make_numbers.py --check` regenerates those files into a scratch directory and fails when the
+  tracked ones differ; CI and `run.ps1 check` run it (R-044). Its first run found the manuscript
+  printing 370 calls against a 640-call ledger.
+- **The dynamics vertical, under construction** (BL-029; R-201 to R-206, R-214): its design, twenty
+  authored dynamics cases with a bake that verifies each case's answers against its reference, a
+  dynamics prompt, the runner's `--family`, and a prompt v2 that states every node's fields. 264
+  dynamics records so far, from eleven local models, plus the 181 under the v1 prompt kept in
+  `data/runs/dynamics-v1-before-prompt-fix.jsonl`. Not yet on the site.
+- `rescore.py` rescores a ledger under the installed copela and planteo and writes the comparison
+  to `data/artifacts/rescore-optimization.json`: 78 of the 640 records carry a document and rescore
+  identically under copela 0.9.0 and planteo 0.2.1; no outcome and no faithful verdict moved.
+
+### Changed
+
+- Pinned copela 0.9.0 and planteo 0.2.1, through 0.5.0 (new records carry the candidate's document,
+  BL-037) and 0.6.0 on the way.
+- The cap comparison counts the same passes on both sides.
+- The artifacts are re-derived from the complete ledger: 640 calls, 4.99 USD at list price, measured
+  2026-09-22 to 2026-09-25. The structural layer decided 29 of the 92 candidates that ran, 8 by PASS
+  and 21 by refutation; 62 of the 70 faithful verdicts rest on the property layer alone. Eight
+  refutations land on a reference's whole-number optimum: Haiku 4.5 (three), Sonnet 5 (two), phi4
+  (two) and GLM-5.3 (one, on its second pass over opt-006). Read as allowed, Haiku 4.5's, Sonnet 5's
+  and GLM-5.3's gaps are 0.000 and phi4's is +0.025.
+- The docs carry the complete measurement (`02_layers.md`, `05_structural_equivalence.md`, the
+  payload and cost rows of `frameworks.md`), and the manuscript's numbers, tables and figure data
+  are regenerated from it.
+
+### Fixed
+
+- The report and `attempts.json` had been rebuilt at 551 calls while the ledger held 640: the last
+  second-pass records of the local models were committed without re-deriving, and CI's artifact
+  check failed on `develop`. Re-derived; `report.py --check` and `check_artifacts.py` agree with the
+  ledger again.
+- `make_numbers.py` crashed as soon as a model repeated its first response on every case: the list
+  of such models shadowed the dictionary of named models that the cap section reads.
+- `rescore.py` is executable, as its shebang says (ruff EXE001 fires on Linux only), and CI pins ruff
+  0.16.9.
+
 ## [0.06.000] - 2026-09-23
 
 The measurement is complete, and the page says what its headline gaps rest on: both Claude models'
