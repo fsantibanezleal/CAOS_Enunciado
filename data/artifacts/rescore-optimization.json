@@ -1,0 +1,84 @@
+{
+  "changed": [],
+  "faithful_moved": 0,
+  "family": "optimization",
+  "installed": {
+    "copela": "0.9.0",
+    "planteo": "0.2.1"
+  },
+  "ledger": "optimization.jsonl",
+  "per_model": {
+    "anthropic/claude-haiku-4-5": {
+      "rescored": 9,
+      "without_document": 31
+    },
+    "anthropic/claude-sonnet-5": {
+      "rescored": 15,
+      "without_document": 25
+    },
+    "deepseek/deepseek-v4-pro": {
+      "rescored": 4,
+      "without_document": 36
+    },
+    "ollama/deepseek-r1:8b": {
+      "rescored": 7,
+      "without_document": 33
+    },
+    "ollama/gemma3:12b": {
+      "rescored": 6,
+      "without_document": 34
+    },
+    "ollama/gemma3:4b": {
+      "rescored": 3,
+      "without_document": 37
+    },
+    "ollama/llama3.1:8b": {
+      "rescored": 3,
+      "without_document": 37
+    },
+    "ollama/mistral:7b": {
+      "rescored": 3,
+      "without_document": 37
+    },
+    "ollama/phi4-mini:latest": {
+      "rescored": 4,
+      "without_document": 36
+    },
+    "ollama/phi4:latest": {
+      "rescored": 7,
+      "without_document": 33
+    },
+    "ollama/qwen2.5-coder:7b": {
+      "rescored": 3,
+      "without_document": 37
+    },
+    "ollama/qwen3:14b": {
+      "rescored": 6,
+      "without_document": 34
+    },
+    "ollama/qwen3:4b": {
+      "without_document": 40
+    },
+    "ollama/qwen3:8b": {
+      "rescored": 1,
+      "without_document": 39
+    },
+    "zai/glm-4.5-flash": {
+      "without_document": 40
+    },
+    "zai/glm-5.3": {
+      "rescored": 7,
+      "without_document": 33
+    }
+  },
+  "recorded_by": {
+    "copela 0.5.0": 46,
+    "copela 0.6.0": 185,
+    "copela 0.9.0": 89,
+    "unrecorded": 320
+  },
+  "records": 640,
+  "rescored": 78,
+  "schema": "enunciado-rescore/1.0",
+  "without_document": 562
+}

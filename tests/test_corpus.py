@@ -18,7 +18,7 @@ from copela.oracles import properties
 from copela.solvers.highs import SolverUnavailable, make_solver
 from copela.verdicts import Outcome
 from corpus import cases, registry
-from corpus.schema import Tier, Trap
+from corpus.schema import FAMILY_TRAPS, Tier, Trap
 from planteo import validate
 
 solve = make_solver()
@@ -84,7 +84,8 @@ def test_the_corpus_covers_every_tier() -> None:
 
 
 def test_the_corpus_covers_every_trap() -> None:
-    for trap in Trap:
+    # Every optimization trap: the enum also holds the dynamics family's, which R-201 covers.
+    for trap in FAMILY_TRAPS["optimization"]:
         if trap is Trap.NONE:
             continue
         assert registry().by_trap(trap), f"no case exercises {trap.value}"

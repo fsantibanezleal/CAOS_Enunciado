@@ -80,6 +80,9 @@ export interface MeasurementFacts {
   calls: number;
   /** Rows with fewer calls than the corpus times its repeats: sweeps that have not reached every case. */
   shortRows: number;
+  /** Repeats per case, and the calls in a complete row, the n every interval on the site is at. */
+  repeats: number;
+  perModel: number;
   cost: number;
   cap: number;
   positiveGaps: number;
@@ -93,6 +96,12 @@ export interface MeasurementFacts {
   pairs: number;
   /** Model pairs whose faithful intervals overlap, which this run cannot rank. */
   overlappingPairs: number;
+}
+
+/** The width of a 95% Wilson interval at n calls and rate p, the figure the prose quotes. */
+export function wilsonWidth(n: number, p = 0.5): number {
+  const z = 1.96;
+  return (2 * z * Math.sqrt((p * (1 - p)) / n + (z * z) / (4 * n * n))) / (1 + (z * z) / n);
 }
 
 export function measurementFacts(
@@ -128,6 +137,8 @@ export function measurementFacts(
     cases: report.corpus.cases,
     calls: report.call_count,
     shortRows: report.models.filter((m) => m.calls < report.corpus.cases * report.corpus.repeats).length,
+    repeats: report.corpus.repeats,
+    perModel: report.corpus.cases * report.corpus.repeats,
     cost: report.cost_usd,
     cap: report.protocol_cap,
     positiveGaps: gaps.filter((g) => g > 1e-9).length,

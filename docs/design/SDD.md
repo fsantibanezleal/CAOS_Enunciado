@@ -232,7 +232,63 @@ R-038  WHEN a structural refutation's candidate solves to its reference's optimu
 R-039  THE bake SHALL record each reference's optimum with every real decision variable made integer,
        and CI SHALL recount the refutations that land on it from the ledger and the bake.
        Gate: scripts/check_artifacts.py
+
+R-040  IF one probe call to the provider fails, THEN THE sweep runner SHALL NOT start, SHALL record
+       nothing and SHALL NOT take the ledger's lock.
+       Gate: tests/test_sweep_runner.py::test_a_provider_that_cannot_be_reached_records_nothing
+
+R-042  IF the provider cannot be reached in the middle of a sweep, THEN THE runner SHALL stop with its
+       own exit code, SHALL keep every call recorded before, SHALL record nothing for the failed
+       call, and SHALL leave the ledger unlocked.
+       Gate: tests/test_sweep_runner.py::test_a_connection_lost_mid_sweep_stops_the_runner_and_keeps_what_was_recorded
+
+R-041  WHERE a model ran a case more than once, THE report SHALL compare each later repeat with the
+       first by response, class and faithful verdict, and SHALL name every model whose later repeats
+       all returned the first response, and a short row SHALL say which pass it lacks.
+       Gate: tests/test_report_shape.py::test_a_model_that_repeats_itself_is_named_and_a_missing_pass_is_described
+
+R-043  WHEN a new copela or planteo is to score part of a recorded measurement, THE pipeline SHALL
+       first rescore every recorded document under it and count each layer outcome and faithful
+       verdict that would change, and SHALL report a change it finds as well as its absence.
+       Gate: tests/test_rescore.py::test_a_changed_rule_is_counted_and_an_unchanged_one_is_not
+
+R-044  THE manuscript SHALL print no measured number that is not transcribed from the committed
+       artifacts, and CI SHALL fail when the transcribed files differ from what the artifacts give.
+       Gate: manuscripts/narrative-to-optimization/make_numbers.py
 ```
+
+The dynamics family has requirements of its own, R-201 onward, in
+[`features/dynamics/requirements.md`](features/dynamics/requirements.md).
+
+R-043 came from the drive that held the local model store going offline in the middle of the second
+repeat. The Ollama server stayed up and answered HTTP 404, "model not found", which copela 0.6.0
+recorded as the model's failure: nine rows against deepseek-r1:8b before the chain stopped. They
+were moved to `data/runs/discarded-2026-09-24-model-store-offline.jsonl`, and copela 0.8.2 stops a
+sweep on a 404 instead (its R-044). The chain could not resume on the copela it started with, which
+records the same rows again, and the release that fixes it also carries planteo 0.2.1, which folds
+nested products in the canonical form. So the rest of the second repeat was held until the new
+release had rescored what was already recorded: all 58 documents in the ledger gave the outcomes
+they were stored with, and none of the 173 responses that did not parse could have parsed into a
+runnable optimization problem under the new planteo, because what it adds is dynamics only.
+
+R-044 came from the ledger growing from 370 to 640 calls while the manuscript kept printing 370.
+`make_numbers.py` had crashed on a shadowed name as soon as a local model repeated its first response
+on every case, and nothing compared the tracked number files with the artifacts, so the crash cost
+nothing and the drift was invisible. `make_numbers.py --check` regenerates them into a scratch
+directory and compares; CI runs it with the standard library alone.
+
+R-041 came with the second repeat, which BL-037 needed so that new records would carry their
+documents. A repeat is a second sample only if it can differ, and at temperature 0 with a fixed seed
+a local model can return its first response byte for byte; its rate over forty calls would then rest
+on twenty, with an interval narrowed by nothing. The digest in every record says which, so the report
+counts it. A row that has not started its second pass is short in a different way from one cut off
+mid-pass: it has every case at fewer repeats, not fewer of the hard ones.
+
+R-040 came from starting the second repeat. The launcher passed a key file whole, notes and all, as
+the key, which is an illegal HTTP header, so every call failed before it left the machine; the sweep
+recorded nineteen of them as "the call itself failed" against Haiku 4.5 before it was stopped. They
+were never committed, and they were discarded, because they described the launcher and not the
+model. The kill criterion would have stopped the sweep at twenty, after writing twenty.
 
 R-038 and R-039 came from writing the docs table of refutations for the finished measurement.
 Three models solved opt-012 to 8080 against the reference's 8200, and a matching optimum proves

@@ -112,8 +112,8 @@ function Measured({
         <h1>{es ? "Comparativa" : "Benchmark"}</h1>
         <p className="lede">
           {es
-            ? `Una medicion, ${span}: ${models.length} modelos de ${providers.length} proveedores (${lanes}) sobre ${report.corpus.cases} casos de optimizacion escritos a mano en ${report.corpus.tiers} niveles, ${report.corpus.repeats} repeticion por caso. ${report.call_count} llamadas registradas, ${report.cost_usd.toFixed(2)} dolares a precio de lista. Las dos tasas se informan por separado porque un solo numero dejaria que una tasa alta de "se ejecuto" escondiera una baja de "era el modelo pedido", que es exactamente la distancia que esta pagina existe para mostrar.`
-            : `One measurement, ${span}: ${models.length} models from ${providers.length} providers (${lanes}) over ${report.corpus.cases} authored optimization cases in ${report.corpus.tiers} tiers, ${report.corpus.repeats} repeat per case. ${report.call_count} recorded calls, ${report.cost_usd.toFixed(2)} dollars at list price. The two rates are reported separately because a single number would let a high "it ran" rate conceal a low "it was the model asked for" rate, which is exactly the distance this page exists to show.`}
+            ? `Una medicion, ${span}: ${models.length} modelos de ${providers.length} proveedores (${lanes}) sobre ${report.corpus.cases} casos de optimizacion escritos a mano en ${report.corpus.tiers} niveles, ${report.corpus.repeats} ${report.corpus.repeats === 1 ? "repeticion" : "repeticiones"} por caso. ${report.call_count} llamadas registradas, ${report.cost_usd.toFixed(2)} dolares a precio de lista. Las dos tasas se informan por separado porque un solo numero dejaria que una tasa alta de "se ejecuto" escondiera una baja de "era el modelo pedido", que es exactamente la distancia que esta pagina existe para mostrar.`
+            : `One measurement, ${span}: ${models.length} models from ${providers.length} providers (${lanes}) over ${report.corpus.cases} authored optimization cases in ${report.corpus.tiers} tiers, ${report.corpus.repeats} ${report.corpus.repeats === 1 ? "repeat" : "repeats"} per case. ${report.call_count} recorded calls, ${report.cost_usd.toFixed(2)} dollars at list price. The two rates are reported separately because a single number would let a high "it ran" rate conceal a low "it was the model asked for" rate, which is exactly the distance this page exists to show.`}
         </p>
       </div>
 
@@ -191,8 +191,8 @@ function Measured({
           tex={String.raw`\Delta_m = R_{\text{ran}}(m) - R_{\text{faithful}}(m) \qquad ${gaps.length ? String.raw`\min_m \Delta_m = ${fmt(Math.min(...gaps))}, \quad \max_m \Delta_m = ${fmt(Math.max(...gaps))}` : ""}`}
           caption={
             es
-              ? `La brecha por modelo, y su rango sobre los ${gaps.length} modelos con brecha definida. ${positive} son positivas: en esos modelos hubo formalizaciones que se ejecutaron y luego fueron refutadas por una capa de fidelidad. ${zero} son cero: todo lo que se ejecuto sobrevivio a las capas de fidelidad, lo que a una repeticion por caso es un resultado sobre ${report.corpus.cases} casos y no una propiedad del modelo.`
-              : `The gap per model, and its range over the ${gaps.length} models with a defined gap. ${positive} are positive: those models produced formalizations that executed and were then refuted by a faithfulness layer. ${zero} are zero: everything that executed survived the faithfulness layers, which at one repeat per case is a result on ${report.corpus.cases} cases rather than a property of the model.`
+              ? `La brecha por modelo, y su rango sobre los ${gaps.length} modelos con brecha definida. ${positive} son positivas: en esos modelos hubo formalizaciones que se ejecutaron y luego fueron refutadas por una capa de fidelidad. ${zero} son cero: todo lo que se ejecuto sobrevivio a las capas de fidelidad, lo que a ${report.corpus.repeats === 1 ? "una repeticion" : `${report.corpus.repeats} repeticiones`} por caso es un resultado sobre ${report.corpus.cases} casos y no una propiedad del modelo.`
+              : `The gap per model, and its range over the ${gaps.length} models with a defined gap. ${positive} are positive: those models produced formalizations that executed and were then refuted by a faithfulness layer. ${zero} are zero: everything that executed survived the faithfulness layers, which at ${report.corpus.repeats === 1 ? "one repeat" : `${report.corpus.repeats} repeats`} per case is a result on ${report.corpus.cases} cases rather than a property of the model.`
           }
         />
         <WholeNumberNote report={report} lang={lang} />
@@ -200,6 +200,8 @@ function Measured({
       </section>
 
       <CapSection report={report} sensitivity={sensitivity} lang={lang} />
+
+      <RunToRun report={report} lang={lang} />
 
       <TierSection report={report} lang={lang} />
 
@@ -305,6 +307,74 @@ function leadingFailure(breakdown: Record<string, number>, lang: "en" | "es"): s
 function describeRate(rate: RateJson): string {
   if (rate.total === 0) return "–";
   return `${rate.value.toFixed(3)} [${rate.interval_low.toFixed(3)}, ${rate.interval_high.toFixed(3)}]`;
+}
+
+/* --------------------------------------------------------------- run to run */
+
+/**
+ * Each case a model ran more than once, its later runs against its first (R-041).
+ *
+ * A second pass is a second sample only if it can differ. Hosted inference does, even at
+ * temperature zero; a local model at temperature 0 with a fixed seed can return its first response
+ * byte for byte, and then its doubled count is one sample counted twice. The digests say which.
+ */
+function RunToRun({ report, lang }: { report: GapReport; lang: "en" | "es" }) {
+  const es = lang === "es";
+  const agreement = report.repeat_agreement ?? {};
+  const rows = report.models.filter((m) => agreement[m.key]);
+  if (rows.length === 0) return null;
+  const total = rows.reduce((sum, m) => sum + agreement[m.key].pairs, 0);
+  const sameFaithful = rows.reduce((sum, m) => sum + agreement[m.key].same_faithful, 0);
+  const sameClass = rows.reduce((sum, m) => sum + agreement[m.key].same_class, 0);
+  const copies = rows.filter((m) => agreement[m.key].identical_responses === agreement[m.key].pairs).map((m) => m.model_id);
+  const hosted = rows.filter((m) => m.lane === "hosted");
+  const hostedPairs = hosted.reduce((sum, m) => sum + agreement[m.key].pairs, 0);
+  const hostedSame = hosted.reduce((sum, m) => sum + agreement[m.key].same_faithful, 0);
+  const fraction = (a: number, b: number) => `${a}/${b}`;
+  return (
+    <section>
+      <h2>{es ? "Entre corridas" : "Run to run"}</h2>
+      <p className="measure" data-run-to-run-summary>
+        {es
+          ? `Cada caso que un modelo corrio mas de una vez se compara con su primera corrida. De ${total} corridas posteriores, ${sameFaithful} llegaron al mismo veredicto de fidelidad que la primera y ${sameClass} a la misma clase de fallo${hostedPairs ? `; en los modelos alojados, ${hostedSame} de ${hostedPairs}` : ""}. ${copies.length ? `${joined(copies, lang)} ${copies.length === 1 ? "devolvio" : "devolvieron"} la primera respuesta byte por byte cada vez, como puede hacerlo un modelo a temperatura 0 con semilla fija: sus repeticiones son una muestra contada dos veces.` : "Ningun modelo devolvio la misma respuesta en cada repeticion."} Un veredicto que cambia entre dos corridas del mismo caso es la variacion que una sola pasada no puede ver.`
+          : `Each case a model ran more than once is compared with its first run. Of ${total} later runs, ${sameFaithful} reached the same faithful verdict as the first and ${sameClass} the same failure class${hostedPairs ? `; among the hosted models, ${hostedSame} of ${hostedPairs}` : ""}. ${copies.length ? `${joined(copies, lang)} returned the first response byte for byte every time, as a model at temperature 0 with a fixed seed can: ${copies.length === 1 ? "its" : "their"} repeats are one sample counted twice.` : "No model returned the same response on every repeat."} A verdict that changes between two runs of the same case is the variation a single pass cannot see.`}
+      </p>
+      <div className="table-scroll">
+        <table className="finding-table" data-run-to-run={rows.length}>
+          <thead>
+            <tr>
+              <th>{es ? "Modelo" : "Model"}</th>
+              <th>{es ? "Proveedor" : "Provider"}</th>
+              <th className="num">{es ? "Comparadas" : "Compared"}</th>
+              <th className="num">{es ? "Misma respuesta" : "Same response"}</th>
+              <th className="num">{es ? "Misma clase" : "Same class"}</th>
+              <th className="num">{es ? "Mismo veredicto de fidelidad" : "Same faithful verdict"}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((m) => {
+              const a = agreement[m.key];
+              return (
+                <tr key={m.key} data-model={m.key}>
+                  <td className="mono">{m.model_id}</td>
+                  <td>{providerShort(m.provider)}</td>
+                  <td className="num">{a.pairs}</td>
+                  <td className="num">{fraction(a.identical_responses, a.pairs)}</td>
+                  <td className="num">{fraction(a.same_class, a.pairs)}</td>
+                  <td className="num">{fraction(a.same_faithful, a.pairs)}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <p className="figure-caption">
+        {es
+          ? "Tabla 3. Cada repeticion posterior de un caso frente a la primera, por modelo: la misma respuesta segun su digest, la misma clase de fallo, el mismo veredicto de fidelidad. La inferencia alojada varia entre corridas incluso a temperatura cero; el carril local fija temperatura 0 y una semilla."
+          : "Table 3. Each later repeat of a case against the first, per model: the same response by its digest, the same failure class, the same faithful verdict. Hosted inference varies between runs even at temperature zero; the local lane pins temperature 0 and a seed."}
+      </p>
+    </section>
+  );
 }
 
 /* ------------------------------------------------- whole-number refutations */
@@ -849,8 +919,8 @@ function LiveVerification({ lang }: { lang: "en" | "es" }) {
           </table>
           <p className="figure-caption">
             {es
-              ? `Tabla 3. ${agreed} de ${rows.length} coinciden dentro de 1e-6 relativo. Su navegador acaba de comprobar los numeros que esta pagina publica.`
-              : `Table 3. ${agreed} of ${rows.length} agree within 1e-6 relative. Your browser just checked the numbers this page publishes.`}
+              ? `Tabla 4. ${agreed} de ${rows.length} coinciden dentro de 1e-6 relativo. Su navegador acaba de comprobar los numeros que esta pagina publica.`
+              : `Table 4. ${agreed} of ${rows.length} agree within 1e-6 relative. Your browser just checked the numbers this page publishes.`}
           </p>
         </>
       )}

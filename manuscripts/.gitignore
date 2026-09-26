@@ -1,0 +1,9 @@
+# LaTeX build products. The published PDF is committed when it is deposited, not on every build.
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.synctex.gz
+*.toc
+narrative-to-optimization/tex/main.pdf
