@@ -172,6 +172,7 @@ def caveats(
     models: list[dict[str, object]],
     failure: dict[str, dict[str, int]],
     readings: dict[str, object] | None = None,
+    agreement: dict[str, dict[str, int]] | None = None,
 ) -> list:
     """What the measurement does not support, computed from the records rather than written down.
 
@@ -211,32 +212,81 @@ def caveats(
     if short:
         tiers = [int(case.tier) for case in corpus_cases()]
         # Said only when it is true of the corpus: the sweep takes the cases in corpus order, so
-        # a short row lacks the hardest ones exactly when the corpus is ordered by tier.
+        # a pass it has not finished lacks the hardest ones exactly when the corpus is ordered by tier.
         climbs = tiers == sorted(tiers)
+        n_cases = n // repeats
+        per_pass: dict[str, dict[int, int]] = defaultdict(lambda: defaultdict(int))
+        for record in records:
+            per_pass[model_key(record)][record.key.repeat] += 1
+        ordinal = (
+            ("first", "second", "third", "fourth", "fifth"),
+            ("primera", "segunda", "tercera", "cuarta", "quinta"),
+        )
+
+        def where(key: str, lang: int) -> str:
+            """Which pass is short, for a ledger with more than one: a row that lacks a whole pass
+            has every case at fewer repeats, which is not the same as lacking the hardest cases."""
+            parts = []
+            for rep in range(repeats):
+                got = per_pass[key].get(rep, 0)
+                if got >= n_cases:
+                    continue
+                name = ordinal[lang][rep] if rep < 5 else f"#{rep + 1}"
+                if lang == 0:
+                    parts.append(f"its {name} repeat {'not started' if got == 0 else f'at {got} of {n_cases}'}")
+                else:
+                    parts.append(f"su {name} repeticion {'sin empezar' if got == 0 else f'en {got} de {n_cases}'}")
+            return f" ({', '.join(parts)})" if repeats > 1 and parts else ""
+
+        partial = any(0 < per_pass[m["key"]].get(rep, 0) < n_cases for m in short for rep in range(repeats))
+        whole = any(per_pass[m["key"]].get(rep, 0) == 0 for m in short for rep in range(repeats))
+        every = "have not reached every case" + (" at every repeat" if repeats > 1 else "")
+        cada = "no llegan a todos los casos" + (" en cada repeticion" if repeats > 1 else "")
         out.append(
             _caveat(
-                f"{len(short)} row(s) have not reached every case: "
-                + _listed([f"{m['key']} has {m['calls']}" for m in short], "and")
+                f"{len(short)} row(s) {every}: "
+                + _listed([f"{m['key']} has {m['calls']}{where(m['key'], 0)}" for m in short], "and")
                 + f" of the {n} calls. "
                 + (
-                    f"A sweep takes the cases in corpus order, and the corpus climbs from tier "
-                    f"{tiers[0]} to tier {tiers[-1]}, so a short row lacks the hardest cases"
-                    if climbs
-                    else "A short row lacks the cases its sweep had not reached"
+                    (
+                        f"A sweep takes the cases in corpus order, and the corpus climbs from tier "
+                        f"{tiers[0]} to tier {tiers[-1]}, so a pass it has not finished lacks the "
+                        "hardest cases. "
+                        if climbs
+                        else "A pass it has not finished lacks the cases the sweep had not reached. "
+                    )
+                    if partial
+                    else ""
                 )
-                + ", and its rates cannot be compared with a complete row's. A resumed sweep "
-                "completes a row in place, because the ledger skips every call it already holds.",
-                f"{len(short)} fila(s) no llegan a todos los casos: "
-                + _listed([f"{m['key']} tiene {m['calls']}" for m in short], "y")
+                + (
+                    "A row missing a whole repeat has every case at fewer repeats: its rate is over "
+                    "fewer samples, not easier cases. "
+                    if whole and repeats > 1
+                    else ""
+                )
+                + "Its rates cannot be compared with a complete row's. A resumed sweep completes a "
+                "row in place, because the ledger skips every call it already holds.",
+                f"{len(short)} fila(s) {cada}: "
+                + _listed([f"{m['key']} tiene {m['calls']}{where(m['key'], 1)}" for m in short], "y")
                 + f" de las {n} llamadas. "
                 + (
-                    f"Un barrido recorre los casos en el orden del corpus, y el corpus sube del "
-                    f"nivel {tiers[0]} al nivel {tiers[-1]}, asi que a una fila incompleta le faltan "
-                    "los casos mas dificiles"
-                    if climbs
-                    else "A una fila incompleta le faltan los casos que su barrido no alcanzo"
+                    (
+                        f"Un barrido recorre los casos en el orden del corpus, y el corpus sube del "
+                        f"nivel {tiers[0]} al nivel {tiers[-1]}, asi que a una pasada sin terminar le "
+                        "faltan los casos mas dificiles. "
+                        if climbs
+                        else "A una pasada sin terminar le faltan los casos que el barrido no alcanzo. "
+                    )
+                    if partial
+                    else ""
                 )
-                + ", y sus tasas no se pueden comparar con las de una fila completa. Un barrido "
+                + (
+                    "Una fila a la que le falta una repeticion entera tiene todos los casos con "
+                    "menos repeticiones: su tasa es sobre menos muestras, no sobre casos mas faciles. "
+                    if whole and repeats > 1
+                    else ""
+                )
+                + "Sus tasas no se pueden comparar con las de una fila completa. Un barrido "
                 "reanudado completa la fila en su lugar, porque el libro mayor omite cada llamada "
                 "que ya contiene.",
             )
@@ -451,6 +501,37 @@ def caveats(
                 f"respuestas. Leidas como admitidas, las brechas se moverian: {moves_es}. Como se "
                 "califica un enunciado que deja abierto el dominio de una decision es una decision "
                 "abierta.",
+            )
+        )
+    if agreement:
+        # A model whose every later repeat returned the first response byte for byte has taken the
+        # same sample twice. Its rate is unchanged and its interval over the doubled count is not
+        # evidence, so the page says which models those are, from the digests.
+        copies = sorted(key for key, a in agreement.items() if a["pairs"] and a["identical_responses"] == a["pairs"])
+        compared = sum(a["pairs"] for a in agreement.values())
+        same = sum(a["same_faithful"] for a in agreement.values())
+        out.append(
+            _caveat(
+                f"{compared} case(s) were run more than once by the same model, and the later repeat "
+                f"reached the same faithful verdict as the first in {same} of them. "
+                + (
+                    f"For {_listed(copies, 'and')}, every later repeat returned the first response byte "
+                    "for byte, as a model at temperature 0 with a fixed seed can: those repeats are the "
+                    "same sample twice, so their rates rest on half the calls they count, and their "
+                    "intervals are narrower than the evidence."
+                    if copies
+                    else "No model returned the same response on every repeat."
+                ),
+                f"{compared} caso(s) fueron corridos mas de una vez por el mismo modelo, y la repeticion "
+                f"posterior llego al mismo veredicto de fidelidad que la primera en {same} de ellos. "
+                + (
+                    f"Para {_listed(copies, 'y')}, cada repeticion posterior devolvio la primera respuesta "
+                    "byte por byte, como puede hacerlo un modelo a temperatura 0 con semilla fija: esas "
+                    "repeticiones son la misma muestra dos veces, asi que sus tasas descansan en la mitad "
+                    "de las llamadas que cuentan, y sus intervalos son mas estrechos que la evidencia."
+                    if copies
+                    else "Ningun modelo devolvio la misma respuesta en cada repeticion."
+                ),
             )
         )
     free = [m for m in models if m["cost_usd"] == 0]
@@ -941,8 +1022,13 @@ def _sensitivity_ledgers() -> list[tuple[int, Path]]:
     return found
 
 
-def _at_cap(ledger: Ledger, cap: int) -> dict[str, dict[str, object]]:
-    """Each model's rates at one cap, through copela's own rule, with what the cap cost it."""
+def _at_cap(ledger, cap: int) -> dict[str, dict[str, object]]:
+    """Each model's rates at one cap, through copela's own rule, with what the cap cost it.
+
+    ``ledger`` is any iterable of records: copela's ``build`` only iterates, so a filtered list of
+    one ledger's records is summarised exactly as the ledger would be.
+    """
+    ledger = list(ledger)
     cells = {f"{c['provider']}/{c['model_id']}": c for c in build(ledger).to_json()["cells"]}
     records: dict[str, list] = defaultdict(list)
     for record in ledger:
@@ -977,10 +1063,16 @@ def cap_sensitivity(ledger_path: Path) -> dict[str, object] | None:
     extra = _sensitivity_ledgers()
     if not extra:
         return None
-    main = _at_cap(Ledger(ledger_path), PROTOCOL_CAP)
+    main_records = Ledger(ledger_path).records()
     rows: dict[str, dict[str, object]] = {}
     for cap, path in extra:
-        for key, summary in _at_cap(Ledger(path), cap).items():
+        cap_records = Ledger(path).records()
+        # Like with like: the protocol's side counts only the passes the second cap ran. The main
+        # ledger gained a second repeat that the 32768-token ledger never had, and a comparison of
+        # forty calls against twenty would change two things at once.
+        passes = {(model_key(r), r.key.repeat) for r in cap_records}
+        main = _at_cap([r for r in main_records if (model_key(r), r.key.repeat) in passes], PROTOCOL_CAP)
+        for key, summary in _at_cap(cap_records, cap).items():
             provider, _, model_id = key.partition("/")
             row = rows.setdefault(
                 key, {"model": key, "provider": provider, "model_id": model_id, "by_cap": {}}
@@ -994,6 +1086,41 @@ def cap_sensitivity(ledger_path: Path) -> dict[str, object] | None:
         "caps": sorted({PROTOCOL_CAP, *(cap for cap, _ in extra)}),
         "rows": sorted(rows.values(), key=lambda r: (order.get(r["model"], len(order)), r["model"])),
     }
+
+
+def repeat_agreement(ledger: Ledger) -> dict[str, dict[str, int]]:
+    """Each model's later repeats of a case against its first: the same response, the same class,
+    the same faithful verdict.
+
+    A repeat is only a second sample if it can differ. At temperature 0 with a fixed seed a local
+    model can return the first response byte for byte, and then its rate over twice the calls rests
+    on the same evidence, with an interval that narrows for nothing. The response digest says which.
+    """
+    passes: dict[str, dict[str, dict[int, object]]] = defaultdict(lambda: defaultdict(dict))
+    for record in ledger:
+        passes[model_key(record)][record.key.case_id][record.key.repeat] = record
+    out: dict[str, dict[str, int]] = {}
+    for model, cases in passes.items():
+        pairs = identical = same_class = same_faithful = 0
+        for by_repeat in cases.values():
+            first = by_repeat.get(0)
+            if first is None:
+                continue
+            for rep, later in sorted(by_repeat.items()):
+                if rep == 0:
+                    continue
+                pairs += 1
+                identical += int(bool(first.response_digest) and first.response_digest == later.response_digest)
+                same_class += int(classify(first) == classify(later))
+                same_faithful += int(_faithful(first) == _faithful(later))
+        if pairs:
+            out[model] = {
+                "pairs": pairs,
+                "identical_responses": identical,
+                "same_class": same_class,
+                "same_faithful": same_faithful,
+            }
+    return out
 
 
 def whole_number_readings(ledger: Ledger) -> dict[str, object]:
@@ -1059,8 +1186,10 @@ def assemble(ledger_path: Path) -> dict[str, object]:
     report["cells"].sort(key=lambda cell: rank[cell["model"]])
 
     # 2.1: whole_number_readings, the refutations that land on a reference's integer optimum.
-    report["schema"] = "enunciado-gap-report/2.1"
+    # 2.2: repeat_agreement, each model's later repeats of a case against its first.
+    report["schema"] = "enunciado-gap-report/2.2"
     report["whole_number_readings"] = whole_number_readings(ledger)
+    report["repeat_agreement"] = repeat_agreement(ledger)
     report["models"] = models
     report["measured_from"] = min(record.recorded_at for record in records)[:10]
     report["measured_to"] = max(record.recorded_at for record in records)[:10]
@@ -1074,7 +1203,11 @@ def assemble(ledger_path: Path) -> dict[str, object]:
     report["protocol_cap"] = PROTOCOL_CAP
     report["call_count"] = len(records)
     report["caveats"] = caveats(
-        records, models, report["failure_breakdown"], report["whole_number_readings"]
+        records,
+        models,
+        report["failure_breakdown"],
+        report["whole_number_readings"],
+        report["repeat_agreement"],
     )
     report["note_es"] = NOTE_ES
     return report

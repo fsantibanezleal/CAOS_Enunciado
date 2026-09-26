@@ -681,12 +681,20 @@ if (gapReport) {
         wider: f.scrollWidth > f.clientWidth + 1,
       }));
       const note = document.querySelector("[data-whole-number]");
+      const runTable = document.querySelector("table[data-run-to-run]");
+      const runRows = runTable
+        ? [...runTable.querySelectorAll("tr[data-model]")].map((r) => ({
+            model: r.getAttribute("data-model"),
+            cells: [...r.querySelectorAll("td.num")].map((c) => (c.textContent ?? "").trim()),
+          }))
+        : null;
       return {
         figureModels,
         tableModels,
         tableChips,
         figureShort,
         wholeNumber: note ? { count: Number(note.getAttribute("data-whole-number")), text: note.textContent ?? "" } : null,
+        runRows,
         matrices,
         frames,
         pageOverflow: document.documentElement.scrollWidth - window.innerWidth,
@@ -720,6 +728,23 @@ if (gapReport) {
       gapReport.models.every((m) => seen.figureShort[m.key] === m.calls < complete),
       `[${width}px] Figure 1 marks exactly the short rows`,
       `${Object.values(seen.figureShort).filter(Boolean).length} marked, ${shortNames.length} short`,
+    );
+    // R-041. The Run to run table has exactly the models the report compared, in its order, with
+    // the report's counts; and it is absent when nothing ran twice.
+    const agreement = gapReport.repeat_agreement ?? {};
+    const expectedRuns = gapReport.models
+      .filter((m) => agreement[m.key])
+      .map((m) => {
+        const a = agreement[m.key];
+        return {
+          model: m.key,
+          cells: [String(a.pairs), `${a.identical_responses}/${a.pairs}`, `${a.same_class}/${a.pairs}`, `${a.same_faithful}/${a.pairs}`],
+        };
+      });
+    check(
+      expectedRuns.length === 0 ? seen.runRows === null : JSON.stringify(seen.runRows) === JSON.stringify(expectedRuns),
+      `[${width}px] the Run to run table matches the report's repeat agreement`,
+      expectedRuns.length ? `${expectedRuns.length} models compared` : "nothing ran twice, and no table",
     );
     // R-038. The note beside the gaps names every refutation that lands on a reference's
     // whole-number optimum, and it is absent when there is none, so the check cannot pass vacuously

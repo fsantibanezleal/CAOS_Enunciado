@@ -1,0 +1,378 @@
+\documentclass[journal]{IEEEtran}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage{orcidlink}
+\usepackage{pgfplots}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\pgfplotsset{compat=1.18}
+\graphicspath{{../figures/}}
+
+% IEEEtran hard-codes an em-dash after the abstract and index-terms names; the CAOS
+% content standard (ADR-0067) excludes em-dashes, so the separator is a full stop.
+\makeatletter
+\def\abstract{\normalfont
+    \if@twocolumn
+      \@IEEEabskeysecsize\bfseries\textit{\abstractname}.\ \relax
+    \else
+      \bgroup\par\addvspace{0.5\baselineskip}\centering\vspace{-1.78ex}\@IEEEabskeysecsize\textbf{\abstractname}\par\addvspace{0.5\baselineskip}\egroup\quotation\@IEEEabskeysecsize
+    \fi\@IEEEgobbleleadPARNLSP}
+\def\IEEEkeywords{\normalfont
+    \if@twocolumn
+      \@IEEEabskeysecsize\bfseries\textit{\IEEEkeywordsname}.\ \relax
+    \else
+      \bgroup\par\addvspace{0.5\baselineskip}\centering\@IEEEabskeysecsize\textbf{\IEEEkeywordsname}\par\addvspace{0.5\baselineskip}\egroup\quotation\@IEEEabskeysecsize
+    \fi\@IEEEgobbleleadPARNLSP}
+\makeatother
+
+% Page-1 header block (conventions/manuscript-header-standard.md). The four document
+% macros are set by the publishing tool when the version DOI is reserved.
+\newcommand{\doctype}{Preprint}
+\newcommand{\docversion}{v0.01}
+\newcommand{\docdate}{26 September 2026}
+\newcommand{\versiondoi}{10.5281/zenodo.NNNNNNNN}
+\newcommand{\conceptdoi}{10.5281/zenodo.NNNNNNNN}
+\newcommand{\docrepo}{github.com/fsantibanezleal/CAOS\_Enunciado}
+\newcommand{\headerblock}{%
+\begin{center}
+\fbox{\parbox{0.94\textwidth}{\small\raggedright
+\textbf{\doctype} \quad$\cdot$\quad \docversion, \docdate \quad$\cdot$\quad Licence CC BY 4.0\\[2pt]
+CAOS open-research programme \quad$\cdot$\quad Enunciado, narrative-to-formal measurement\\[2pt]
+Version DOI \href{https://doi.org/\versiondoi}{\texttt{\versiondoi}} \quad$\cdot$\quad
+concept DOI (always latest) \href{https://doi.org/\conceptdoi}{\texttt{\conceptdoi}}\\[2pt]
+Not peer reviewed. Source code, data and computational records: \href{https://\docrepo}{\texttt{\docrepo}}
+}}
+\end{center}}
+
+\input{numbers.tex}
+\input{rates-ticks.tex}
+
+\newcommand{\model}[1]{\texttt{#1}}
+% A generated table body is read with the primitive input: LaTeX's \input is not expandable,
+% and inside a tabular it breaks the \noalign that the booktabs rules need.
+\makeatletter\newcommand{\tablebody}[1]{\@@input #1 }\makeatother
+
+\begin{document}
+
+\title{It Ran Is Not It Was Right: The Formalization Gap of \nModels\ Language Models
+on Authored Optimization Problems, and What Its Refutations Rest On}
+
+\author{%
+  Felipe Santib\'a\~nez-Leal~\orcidlink{0000-0002-0150-3246},~\IEEEmembership{Independent Researcher}%
+  \thanks{F.\ Santib\'a\~nez-Leal is with the CAOS open-research programme,
+    Santiago, Chile (e-mail: \texttt{fsantibanezleal@ug.uchile.cl};
+    ORCID: 0000-0002-0150-3246).}%
+  \thanks{The corpus, the per-call records and the derived tables are released at
+    \url{https://github.com/fsantibanezleal/CAOS_Enunciado}; the instrument is released as
+    the Python packages \texttt{planteo} and \texttt{copela} (MIT); an interactive viewer is
+    available at \url{https://enunciado.fasl-work.com}.}%
+}
+
+\markboth{\doctype\ \docversion, 2026 \textperiodcentered\ CAOS open-research programme}{Santib\'a\~nez-Leal:
+The Formalization Gap on Authored Optimization Problems}
+
+\IEEEaftertitletext{\vspace{-0.6\baselineskip}\headerblock\vspace{0.2\baselineskip}}
+
+\IEEEtitleabstractindextext{%
+\begin{abstract}
+Language models that turn a problem statement into an optimization model are evaluated almost
+everywhere by whether the model runs and reaches the reference optimum. That criterion accepts a
+formalization that runs and describes a different problem. We measure the distance between the two
+with an instrument whose layers are reported separately and never merged: an executable layer
+(the typed document validates and the solver reaches an optimum), a structural layer that proves
+equivalence by equal canonical forms and refutes it by optima that differ in the minimising sense,
+and a property layer of metamorphic relations. The gap between the rate at which formalizations ran
+and the rate at which they also survived both strong layers is the quantity reported. On an authored
+corpus of \nCases\ cases in \nTiers\ tiers, with verified references, we ran \nModels\ models from
+\nProviders\ providers (\nHosted\ hosted, \nLocal\ open-weight models on one 8~GB GPU), \nRepeats\
+repeats per case, \nCalls\ calls. Three results qualify the headline rates. First, the output cap
+decides the reasoning models: at \protocolCap\ tokens DeepSeek-V4-Pro was faithful on
+\capFaithfulLowDeepseek\ of the same passes and at \capHigh\ on \capFaithfulHighDeepseek. Second, a
+refutation inherits the reference's choices: \nWholeReadings\ refutations land exactly on the
+reference's optimum with its decisions made integer, in statements that never say whether the
+decisions are whole numbers. Third, a model repeats its own outcome on a case only part of the time.
+The structural layer decided \nStructPass\ plus \nStructFail\ of the \nRanAll\ candidates that ran,
+so most faithful outcomes rest on the property layer alone.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Autoformalization, optimization modelling, large language models, evaluation, metamorphic testing,
+equivalence checking, benchmark validity.
+\end{IEEEkeywords}}
+
+\maketitle
+
+\section{Introduction}
+
+\IEEEPARstart{A}{} model that compiles is not necessarily the model that was asked for. In
+natural-language-to-Lean statement formalization, where this has been measured with care, every one
+of eight systems showed a nonzero gap between compiling and being faithful to the statement, from
+3.0 to 29.0 percentage points over 400 graduate-level statements, and the system that compiled most
+often (89.5\%) was faithful on 60.5\% \cite{lean2026}. The same study concludes that language-model
+judging is a calibrated, conservative aggregate, not an equivalence oracle.
+
+Optimization modelling has the same structure and a weaker practice. Its benchmarks score a
+formalization by whether it runs and reaches the reference optimum \cite{survey2025,nl4opt2023}.
+Two objections apply. A matching optimum does not establish equivalence, because compensating errors
+reach the right number; and the benchmarks themselves carry errors: a recent survey had eleven
+experts re-check seven of them and found error rates from at least 8.13\% to at least 54.0\%
+\cite{survey2025}. Graph-isomorphism tests over the instance graph of a linear or mixed-integer
+program give a stronger equivalence check for that class \cite{orgeval2025}, but they do not reach
+formalizations outside it.
+
+We measure the gap between running and being faithful for optimization, on a corpus written for the
+purpose, across many models, with oracles that are not language models. The contributions are:
+\begin{itemize}
+\item an instrument, released as two packages, whose executable, structural and property layers are
+reported separately, with the gap between them as the output (Section~\ref{sec:instrument});
+\item an authored corpus of \nCases\ cases whose references were solved and checked against their
+claimed optima before any model was run (Section~\ref{sec:corpus});
+\item a measurement of \nModels\ models, hosted and local, at \nRepeats\ repeats
+(Sections~\ref{sec:protocol} and~\ref{sec:results});
+\item three results that qualify what such a measurement can claim: the output cap decides the
+reasoning models' rates, refutations can rest on choices the statement left open, and a model's
+outcome on a case does not always repeat (Section~\ref{sec:results}).
+\end{itemize}
+
+\section{Related work}
+
+Autoformalization evaluation has moved from compilation to faithfulness \cite{lean2026,common2025}.
+In optimization modelling, benchmarks such as NL4Opt \cite{nl4opt2023} and the sets collected by
+\cite{survey2025} use execution accuracy. ORGEval represents a linear or mixed-integer instance as a
+bipartite graph and decides equivalence by a Weisfeiler-Lehman test under a sufficient condition
+\cite{orgeval2025,shervashidze2011}; the refinement cannot separate all non-isomorphic graphs in
+general \cite{cfi1992}. Test oracles and metamorphic relations are established tools where no
+reference output is available \cite{barr2015,segura2016}; we use them as the property layer.
+Experiment design and simulation modelling are being benchmarked with language-model judges
+\cite{scope2026,beams2026}; our layers are deterministic.
+
+\section{The instrument}\label{sec:instrument}
+
+\subsection{A typed representation}
+
+A formalization is a document with quantities, relations and objectives. Each quantity has a role
+(decision variable, parameter or derived), a physical dimension, a domain, bounds, and a span that
+cites the words of the statement it comes from. Validation rejects a document whose relations mix
+dimensions, whose names are used but never declared, whose derived quantities are never defined, or
+whose spans quote words the statement does not contain. A valid document emits to Pyomo
+\cite{pyomo} and is solved with HiGHS \cite{highs}.
+
+\subsection{Three layers, never merged}
+
+The \emph{executable} layer passes a candidate that validates and whose solve reaches an optimum
+(or, for a model with no objective, a feasible point). An unbounded model does not pass.
+
+The \emph{structural} layer compares the candidate $P$ with the case's reference $R$. Equal canonical
+forms prove equivalence and pass. Otherwise both are solved; with $s(P)=+1$ for minimisation and
+$-1$ for maximisation, and $z^*$ the optimal value,
+\begin{equation}
+s(P)\,z^*(P) \neq s(R)\,z^*(R) \;\Rightarrow\; P \text{ and } R \text{ are different models,}
+\end{equation}
+so a differing optimum refutes. A matching optimum decides nothing, because compensating errors reach
+the right number; the layer then reports undecided.
+
+The \emph{property} layer applies metamorphic relations that any correct formalization of the class
+satisfies \cite{segura2016}: scaling the objective does not move the argmin, a redundant constraint
+does not change the feasible set, tightening a constraint cannot improve the optimum, relaxing one
+cannot worsen it, and permuting rows and columns changes nothing. A violated relation refutes.
+
+A candidate is \emph{faithful} when it ran, neither strong layer refuted it, and at least one of them
+passed it. With $R_{\mathrm{ran}}(m)$ and $R_{\mathrm{faithful}}(m)$ the rates of model $m$ over its
+calls, the reported quantity is the gap
+\begin{equation}
+\Delta_m = R_{\mathrm{ran}}(m) - R_{\mathrm{faithful}}(m),
+\end{equation}
+with each rate carried by a 95\% Wilson interval \cite{wilson1927,agresti1998},
+\begin{equation}
+\frac{\hat p + \frac{z^2}{2n} \pm z\sqrt{\frac{\hat p(1-\hat p)}{n} + \frac{z^2}{4n^2}}}{1 + \frac{z^2}{n}}, \qquad z = 1.96 .
+\end{equation}
+A candidate the solver cannot express leaves both denominators and is reported as unmeasured. A
+language-model judge is recorded for comparability with published work and never counted.
+
+\section{The corpus}\label{sec:corpus}
+
+The \nCases\ cases are authored, four per tier: direct statements (the controls), composed ones
+(a unit conversion, a derived quantity, a distractor), structured ones (coupled decisions, balances
+across periods, ratios), discrete ones (integrality, fixed charges, minimum runs, assignments) and
+underspecified ones, where the statement does not determine the model. Each case names the trap it
+was built around. Before any model was run, every reference was validated and solved, every claimed
+optimum was compared with the solver's (three of twenty claims were wrong and were corrected), and
+every metamorphic relation was checked on the reference. The corpus is authored rather than drawn
+from the public sets because of their measured error rates \cite{survey2025} and their licences,
+several of which forbid redistribution.
+
+\section{Protocol}\label{sec:protocol}
+
+Every model received the same statement, the same schema and the same instruction, at an output cap
+of \protocolCap\ tokens, temperature 0 or the provider's greedy switch where one exists, a fixed
+seed, and high reasoning effort where a model accepts the setting. Local models ran through Ollama
+in a context sized to hold the prompt and the whole cap, with reasoning switched off where the
+model's template honours the switch. Each case was run \nRepeats\ times per model, \nCalls\ calls in
+total between \measuredFrom\ and \measuredTo, at a list-price cost of \costUSD\ USD. Every call is
+appended to a per-call record with the model version, fingerprint, prompt digest, the outcome of
+every layer, the scoring software's version and, for later calls, the parsed document. A call that
+never reached the provider (a refused connection or rejected credentials) stops the run and is not
+recorded; a provider's error response is recorded as a failed call. The two reasoning models were
+also run at a \capHigh-token cap, in a separate record so that neither cap could overwrite the other.
+
+\section{Results}\label{sec:results}
+
+\subsection{The two rates and the gap}
+
+Table~\ref{tab:models} and Fig.~\ref{fig:rates} give each model's rates. Over all models,
+\nRanAll\ of \nMeasuredAll\ measured candidates ran and \nFaithfulAll\ were faithful; \nNothingRan\
+models produced no candidate that ran, so their gap is undefined. Of the \nGapDefined\ models with a
+defined gap, \nGapPositive\ are positive. At $n = \nPerModel$ per model a rate of 0.5 carries an
+interval about \wilsonWidth\ wide, so most pairs of models cannot be ranked.
+
+\begin{table*}[t]
+\centering
+\caption{Rates per model, 95\% Wilson intervals, over \nPerModel\ calls per model.
+``At cap'' counts calls that billed exactly the output cap.}
+\label{tab:models}
+\begin{tabular}{llcccc}
+\toprule
+Model & Provider & Ran & Faithful & Gap & At cap \\
+\midrule
+\tablebody{table-models.tex}
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=\columnwidth, height=9.5cm,
+  xmin=0, xmax=1, xlabel={rate},
+  ytick=\rateticks, yticklabels/.expanded=\ratelabels,
+  yticklabel style={font=\scriptsize\ttfamily},
+  xticklabel style={font=\scriptsize}, xlabel style={font=\small},
+  ymin=0.3, ymax=\nModels+0.7, grid=major, grid style={gray!20},
+  legend style={font=\scriptsize, at={(0.98,0.98)}, anchor=north east},
+]
+\addplot+[only marks, mark=*, mark size=1.6pt, black,
+  error bars/.cd, x dir=both, x explicit]
+  table[x=ran, y expr=\thisrow{i}+0.15, x error minus expr=\thisrow{ran}-\thisrow{ranlo},
+        x error plus expr=\thisrow{ranhi}-\thisrow{ran}]{../figures/rates.dat};
+\addlegendentry{ran}
+\addplot+[only marks, mark=square*, mark size=1.6pt, blue!70!black,
+  error bars/.cd, x dir=both, x explicit]
+  table[x=faithful, y expr=\thisrow{i}-0.15, x error minus expr=\thisrow{faithful}-\thisrow{faithfullo},
+        x error plus expr=\thisrow{faithfulhi}-\thisrow{faithful}]{../figures/rates.dat};
+\addlegendentry{faithful}
+\end{axis}
+\end{tikzpicture}
+\caption{Ran and faithful rates per model with 95\% Wilson intervals; the horizontal distance
+between the two marks of a model is its gap.}
+\label{fig:rates}
+\end{figure}
+
+\subsection{Where the calls fail}
+
+The dominant failure of the local models is fabricated provenance: a span that cites words the
+statement does not contain, \nFabricated\ calls in all. The dominant failure of the reasoning models
+is the cap: \nNoAnswerCap\ calls spent all \protocolCap\ tokens reasoning and returned no document,
+and \nTruncated\ more were cut off mid-document. \nNoUnit\ calls left a constant without its unit.
+\callFailedSentence
+
+\subsection{The cap decides the reasoning models}
+
+Table~\ref{tab:cap} compares the two reasoning models at \protocolCap\ and \capHigh\ tokens over the
+same passes. DeepSeek-V4-Pro was faithful on \capFaithfulLowDeepseek\ at the protocol's cap, with
+\capAtLowDeepseek\ calls reaching it, and on \capFaithfulHighDeepseek\ at \capHigh, with none
+reaching it. At the lower cap its failures are about the cap, not about how it formalizes, and a
+single-cap table would rank it among the weakest models for that reason.
+
+\begin{table}[t]
+\centering
+\caption{The same passes at two output caps.}
+\label{tab:cap}
+\begin{tabular}{lrrrrr}
+\toprule
+Model & Cap & Ran & Faithful & At cap & USD \\
+\midrule
+\tablebody{table-cap.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{What the refutations rest on}
+
+The structural layer decided \nStructPass\ candidates by equal canonical forms and \nStructFail\ by
+refutation, of the \nRanAll\ that ran; the other \nStructUndecided\ were undecided, so
+\nFaithfulPropertyOnly\ of the \nFaithfulAll\ faithful outcomes rest on the property layer alone.
+
+A refutation says the candidate and the reference are different models. It does not say the
+candidate misread the statement, because the reference also chose. Re-solving every reference with
+its real decision variables made integer moves the optimum in \nWholeCases\ cases (\wholeCaseList).
+Two of them ask for the most night shifts a wage bill allows and for the best margin on pumps and
+valves; neither statement says whether a shift or a pump comes in whole units, and both references
+are continuous. \nWholeReadings\ refutations land exactly on the reference's whole-number optimum.
+Counting them as readings the statement allows, and faithful where the property layer passed them,
+moves Claude Sonnet~5's gap from \gapSonnet\ to \gapAllowedSonnet\ and Claude Haiku~4.5's from % voice-ok: Claude names models under measurement
+\gapHaiku\ to \gapAllowedHaiku. A matching optimum does not prove the candidate is the integer model;
+the refutation remains in the published rates, and the reading is reported beside it.
+
+\subsection{Run to run}
+
+Table~\ref{tab:runs} compares each model's second pass over a case with its first. Of \nRepeatPairs\
+repeated cases, \nRepeatSameFaithful\ reached the same faithful outcome and \nRepeatSameClass\ the
+same failure class; \nRepeatIdentical\ returned the same response byte for byte. Among the hosted
+models, \nRepeatSameFaithfulHosted\ of \nRepeatPairsHosted\ repeated the faithful outcome. A model
+whose every repeat returns its first response contributes one sample counted twice;
+\repeatCopiesSentence
+
+\begin{table}[t]
+\centering
+\caption{Later repeats of a case compared with the first: identical response, same failure class,
+same faithful outcome.}
+\label{tab:runs}
+\begin{tabular}{lrrrr}
+\toprule
+Model & Pairs & Identical & Class & Faithful \\
+\midrule
+\tablebody{table-runs.tex}
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Limitations}
+
+The statements, the references and the checks were written by one author; a statement and its
+reference share their reading, and a second author formalizing the cases blind would be needed to
+measure how often a reference is one reading among several. The integer results above are two
+instances of that. Twenty cases at two repeats cannot rank most pairs of models, and repeats of a
+case are not independent samples. The structural layer compares the typed document; a stronger
+canonical form over the linear rows exists and was not applied to the recorded candidates. The
+per-call records written before the scoring software began recording its own version were scored by
+three versions of it, whose differences change no recorded outcome but one unbounded candidate,
+which is classified separately. The measurement covers linear and mixed-integer optimization only.
+
+\section{Conclusion}
+
+Execution accuracy overstates what a formalization gets right, and so can a stronger check applied
+without asking what its reference chose. Reported separately, with the cap, the refutations' basis
+and the repeats stated beside the rates, the gap between running and being faithful is measurable
+on a small authored corpus; ranking models by it needs more cases and more repeats than any single
+pass provides.
+
+\section*{Data and code availability}
+
+The corpus, the per-call records, the derived tables and the pipeline that produces them are at
+\url{https://github.com/fsantibanezleal/CAOS_Enunciado}; every number in this paper is transcribed by
+a script from those tables. The instrument is released as \texttt{planteo} and \texttt{copela} on
+PyPI. Reproducing a table requires no model call; reproducing a call requires the provider and is
+not deterministic for hosted models.
+
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+
+\end{document}

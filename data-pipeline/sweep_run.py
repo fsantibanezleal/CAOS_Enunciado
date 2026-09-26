@@ -12,6 +12,10 @@ Usage:
     python data-pipeline/sweep_run.py --provider ollama --model qwen3:8b --repeats 1
     python data-pipeline/sweep_run.py --provider anthropic --model claude-sonnet-5 --budget-usd 2.00
     python data-pipeline/sweep_run.py --report-only
+    python data-pipeline/sweep_run.py --family dynamics --provider deepseek --model deepseek-v4-pro         --repeats 2 --budget-usd 1.60
+
+Each family sweeps its own corpus with its own prompt into its own ledger, ``data/runs/<family>.jsonl``,
+under the same refusals: no price, no budget, a failed probe, a busy ledger (R-206).
 """
 
 from __future__ import annotations
@@ -25,26 +29,32 @@ sys.path.insert(0, str(HERE))
 
 from copela import Budget, Case, Ledger, Sweep, Target, build
 from copela.ledger import LedgerBusy
-from copela.providers import ProviderError, get
+from copela.providers import ProviderError, ProviderUnreachable, get
 from copela.solvers.highs import make_solver
 from corpus import cases
 from formalize import build_prompt, parse_response, repair_narrative
 
-LEDGER = HERE.parent / "data" / "runs" / "optimization.jsonl"
+RUNS = HERE.parent / "data" / "runs"
+LEDGER = RUNS / "optimization.jsonl"
+FAMILIES = ("optimization", "dynamics")
 
 
-def to_harness_cases() -> list[Case]:
+def ledger_for(family: str) -> Path:
+    return RUNS / f"{family}.jsonl"
+
+
+def to_harness_cases(family: str = "optimization") -> list[Case]:
     """The corpus, in the shape the harness takes, carrying each reference for the structural layer."""
     return [
         Case(
             case_id=case.case_id,
-            family="optimization",
+            family=family,
             narrative=case.narrative,
             reference=case.reference,
             tier=int(case.tier),
             notes=case.why_hard,
         )
-        for case in cases()
+        for case in cases(family)
     ]
 
 
@@ -63,13 +73,14 @@ def parse_for_case(text: str, case: Case):
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Run the optimization sweep.")
+    parser = argparse.ArgumentParser(description="Run a family's sweep.")
+    parser.add_argument("--family", choices=FAMILIES, default="optimization")
     parser.add_argument("--provider", default="ollama")
     parser.add_argument("--model", default="qwen3:8b")
     parser.add_argument("--repeats", type=int, default=3)
     parser.add_argument("--budget-usd", type=float, default=None)
     parser.add_argument("--limit-cases", type=int, default=None, help="for a smoke run")
-    parser.add_argument("--ledger", default=str(LEDGER))
+    parser.add_argument("--ledger", default=None, help="default: data/runs/<family>.jsonl")
     parser.add_argument("--report-only", action="store_true")
     parser.add_argument(
         "--think",
@@ -84,6 +95,11 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--max-tokens", type=int, default=8192)
     parser.add_argument(
+        "--no-probe",
+        action="store_true",
+        help="skip the one unrecorded call that checks the provider answers before the sweep starts",
+    )
+    parser.add_argument(
         "--max-consecutive-failures",
         type=int,
         default=10,
@@ -95,6 +111,8 @@ def main(argv: list[str] | None = None) -> int:
         ),
     )
     args = parser.parse_args(argv)
+    if args.ledger is None:
+        args.ledger = str(ledger_for(args.family))
 
     if args.report_only:
         ledger = Ledger(args.ledger)
@@ -138,6 +156,28 @@ def main(argv: list[str] | None = None) -> int:
     else:
         budget = Budget(limit_usd=args.budget_usd, max_consecutive_failures=args.max_consecutive_failures)
 
+    # One probe call, before the lock and before anything is recorded. A sweep whose calls cannot
+    # reach the provider writes a row of "the call itself failed" into an append-only ledger, a row
+    # about the harness presented as a row about the model: a key file passed whole instead of its
+    # token did exactly that, nineteen records of an illegal header, discarded before publication.
+    # The probe is not recorded and does not touch the budget; it costs a few tokens.
+    if not args.no_probe:
+        try:
+            provider.complete(
+                "Reply with the single word ok.",
+                model_id=args.model,
+                temperature=0.0,
+                seed=20260922,
+                max_tokens=16,
+            )
+        except ProviderError as error:
+            print(
+                f"the probe call to {args.provider}/{args.model} failed, so the sweep did not start "
+                f"and nothing was recorded: {error}",
+                file=sys.stderr,
+            )
+            return 2
+
     # Exclusive for a writing run. Two sweeps sharing one ledger interleave records from whatever
     # code each happened to start with, and the file stops meaning one thing.
     try:
@@ -146,7 +186,7 @@ def main(argv: list[str] | None = None) -> int:
         print(error, file=sys.stderr)
         return 3
 
-    corpus = to_harness_cases()
+    corpus = to_harness_cases(args.family)
     if args.limit_cases:
         corpus = corpus[: args.limit_cases]
 
@@ -165,7 +205,7 @@ def main(argv: list[str] | None = None) -> int:
 
     targets = [Target(args.provider, args.model)]
     print(
-        f"sweeping {len(corpus)} case(s) x 1 model x {args.repeats} repeat(s) "
+        f"sweeping {len(corpus)} {args.family} case(s) x 1 model x {args.repeats} repeat(s) "
         f"= {len(corpus) * args.repeats} call(s) at most"
     )
     print(f"  budget: {'no per-token cost' if free else budget.describe()}")
@@ -175,6 +215,16 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         made = sweep.run(corpus, targets)
+    except ProviderUnreachable as error:
+        # copela 0.6.0 stops a sweep on a call that never reached the model, and records nothing for
+        # it (its R-035): a network that drops mid-sweep would otherwise write a row of call
+        # failures against the model until the kill criterion.
+        print(
+            f"stopped: {error}. That call was not recorded; every call before it was. Run the same "
+            "command again once the connection or the key is fixed, and the sweep resumes there",
+            file=sys.stderr,
+        )
+        return 4
     finally:
         # Released even on an interrupt. A stopped run that left the ledger locked would make the
         # next one fail for a reason that has nothing to do with it.

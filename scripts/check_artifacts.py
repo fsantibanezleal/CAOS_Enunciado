@@ -82,8 +82,8 @@ def check_derived(problems: list[str]) -> str:
             f"gap-report.json says {report.get('call_count')} calls, the ledger holds {len(records)}"
         )
 
-    if report.get("schema") != "enunciado-gap-report/2.1":
-        problems.append(f"gap-report.json has schema {report.get('schema')!r}, not 2.1")
+    if report.get("schema") != "enunciado-gap-report/2.2":
+        problems.append(f"gap-report.json has schema {report.get('schema')!r}, not 2.2")
     if attempts.get("schema") != "enunciado-attempts/1.1":
         problems.append(f"attempts.json has schema {attempts.get('schema')!r}, not 1.1")
 
@@ -143,8 +143,46 @@ def check_derived(problems: list[str]) -> str:
         problems.append(f"attempts.json holds {in_attempts} attempts, the ledger {len(records)}")
 
     whole = check_whole_number_readings(problems, records, report)
-    checked = check_sensitivity(problems, expected)
+    whole += check_repeat_agreement(problems, records, report)
+    checked = check_sensitivity(problems, records)
     return f", the report and {in_attempts} attempts agree with the ledger{whole}{checked}"
+
+
+def check_repeat_agreement(problems: list[str], records: list[dict], report: dict) -> str:
+    """Each model's later repeats against its first, recounted with json alone: the pairs, the
+    identical responses and the same faithful verdicts. The class comparison needs the classifier,
+    which is a pipeline script, so CI leaves it to the local check."""
+    def faithful(record: dict) -> bool:
+        v = {x["layer"]: x["outcome"] for x in record.get("verdicts", [])}
+        strong = (v.get("structural"), v.get("property"))
+        return v.get("executable") == "pass" and "fail" not in strong and "pass" in strong
+
+    passes: dict[str, dict[str, dict[int, dict]]] = {}
+    for record in records:
+        key = f"{record['provider']}/{record['model_id']}"
+        passes.setdefault(key, {}).setdefault(record["case_id"], {})[int(record["repeat"])] = record
+    expected: dict[str, tuple[int, int, int]] = {}
+    for model, cases in passes.items():
+        pairs = identical = same = 0
+        for by_repeat in cases.values():
+            first = by_repeat.get(0)
+            if first is None:
+                continue
+            for rep, later in by_repeat.items():
+                if rep == 0:
+                    continue
+                pairs += 1
+                identical += int(bool(first.get("response_digest")) and first.get("response_digest") == later.get("response_digest"))
+                same += int(faithful(first) == faithful(later))
+        if pairs:
+            expected[model] = (pairs, identical, same)
+    published = {
+        model: (a.get("pairs"), a.get("identical_responses"), a.get("same_faithful"))
+        for model, a in (report.get("repeat_agreement") or {}).items()
+    }
+    if published != expected:
+        problems.append(f"repeat agreement: the report publishes {published}, the ledger gives {expected}")
+    return f", {sum(p for p, _, _ in expected.values())} later repeat(s) compared with their first"
 
 
 def check_whole_number_readings(problems: list[str], records: list[dict], report: dict) -> str:
@@ -194,7 +232,7 @@ def check_whole_number_readings(problems: list[str], records: list[dict], report
     return f", {len(found)} refutation(s) on a whole-number optimum recounted"
 
 
-def check_sensitivity(problems: list[str], main: dict[str, tuple[int, int, int]]) -> str:
+def check_sensitivity(problems: list[str], main_records: list[dict]) -> str:
     """cap-sensitivity.json agrees with its ledgers, one per cap, and with the main ledger's row.
 
     The file compares one protocol at two caps. Each side is recounted from its own ledger here,
@@ -219,6 +257,11 @@ def check_sensitivity(problems: list[str], main: dict[str, tuple[int, int, int]]
     for ledger in ledgers:
         cap = ledger.stem.removeprefix("optimization-cap")
         records = [json.loads(line) for line in ledger.read_text(encoding="utf-8").splitlines() if line.strip()]
+        # The protocol's side is recounted over the same passes the second cap ran, as the report does.
+        passes = {(f"{r['provider']}/{r['model_id']}", int(r["repeat"])) for r in records}
+        main = _ledger_rates(
+            [r for r in main_records if (f"{r['provider']}/{r['model_id']}", int(r["repeat"])) in passes]
+        )
         for model, (ran, faithful, total) in _ledger_rates(records).items():
             for label, expected, entry in (
                 (cap, (ran, faithful, total), (rows.get(model) or {}).get("by_cap", {}).get(cap)),

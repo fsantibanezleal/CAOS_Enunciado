@@ -101,6 +101,9 @@ switch ($Task) {
         Invoke-Step 'no em-dash, no emoji (ADR-0067)' { & $python scripts\check_content_standards.py }
         Invoke-Step 'no control character where a backslash was lost' { & $python scripts\check_control_chars.py }
         Invoke-Step 'the docs wiki is complete' { & $python scripts\check_docs.py }
+        Invoke-Step 'the manuscript prints the numbers of the committed artifacts' {
+            & $python manuscripts\narrative-to-optimization\make_numbers.py --check
+        }
         # The structural methods, proved over all twenty cases. Local only: ADR-0074 rule 3 keeps a
         # product's test suite out of CI, and this is the validation of record for those methods.
         Invoke-Step 'the structural and answer methods hold on every case' {
