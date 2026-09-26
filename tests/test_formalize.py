@@ -56,3 +56,45 @@ def test_each_family_gets_its_own_schema() -> None:
     optimization_prompt = formalize.build_prompt(View("optimization"))
     assert '"family": "dynamics"' in dynamics_prompt and '"tag": "rate"' in dynamics_prompt
     assert '"family": "optimization"' in optimization_prompt and '"tag": "rate"' not in optimization_prompt
+
+
+def test_the_dynamics_prompt_states_every_node_s_fields() -> None:
+    """R-214: each expression node the prompt permits is shown with every field planteo reads, so a
+    model is not left to guess a shape and fail on it. Version 1 named the power node without its
+    fields, and 39 of 181 calls wrote the exponent as an expression."""
+    from fractions import Fraction
+
+    from planteo import (
+        BigSum,
+        Comparator,
+        Compare,
+        Conditional,
+        Constant,
+        Dimension,
+        Power,
+        Product,
+        Ref,
+        Sum,
+    )
+
+    x = Ref("x")
+    nodes = [
+        Constant(1.0, Dimension.dimensionless()),
+        x,
+        Sum((x,)),
+        Product((x,)),
+        Power(x, Fraction(-1)),
+        BigSum("i", "S", x),
+        Conditional(Compare(x, Comparator.GE, x), x, x),
+    ]
+    rules = formalize.RULES_DYNAMICS
+    for node in nodes:
+        shape = node.to_json()
+        opening = '{"tag": "' + str(shape["tag"]) + '"'
+        assert opening in rules, f"the prompt does not show the {shape['tag']} node"
+        start = rules.index(opening)
+        following = rules.find('{"tag": "', start + 1)
+        bullet = rules[start : following if following != -1 else len(rules)]
+        for field in shape:
+            assert f'"{field}"' in bullet, f"the {shape['tag']} node is shown without its {field!r} field"
+    assert "never an expression" in rules
