@@ -87,19 +87,19 @@ export function RelaxationPanel({
       {probe && (
         <p className="pane-hint" style={{ maxWidth: "82ch", margin: "0 0 0.35rem", color: "var(--color-warn)" }}>
           {es
-            ? "Este caso es continuo, asi que esta vista corre la sonda de discretizacion: el mismo modelo exigiendo que cada decision sea entera. Es una pregunta hipotetica, marcada como tal: cuanto se moveria el optimo si el enunciado hubiera querido decir unidades enteras."
+            ? "Este caso es continuo, así que esta vista corre la sonda de discretización: el mismo modelo exigiendo que cada decisión sea entera. Es una pregunta hipotetica, marcada como tal: cuanto se movería el óptimo si el enunciado hubiera querido decir unidades enteras."
             : "This case is continuous, so this view runs the discretisation probe: the same model requiring every decision to be whole. It is a hypothetical, labelled as one: how far the optimum would move if the statement had meant whole units."}
         </p>
       )}
       <p className="pane-hint" style={{ maxWidth: "82ch", margin: "0 0 0.5rem" }}>
         {es
-          ? "El mismo modelo resuelto dos veces: con sus requisitos de integralidad y sin ellos. Una formalizacion que declara continuo lo que el enunciado exige entero responde a la pregunta relajada, y la respuesta parece razonable. La distancia entre las dos es cuanto se equivocaria."
+          ? "El mismo modelo resuelto dos veces: con sus requisitos de integralidad y sin ellos. Una formalización que declara continuo lo que el enunciado exige entero responde a la pregunta relajada, y la respuesta parece razonable. La distancia entre las dos es cuanto se equivocaría."
           : "The same model solved twice: with its integrality requirements and without them. A formalization that declares continuous what the statement requires to be whole answers the relaxed question, and the answer looks reasonable. The distance between the two is how wrong it would be."}
       </p>
 
       {bothSolved && (
         <svg className="fig-svg wide" viewBox="0 0 740 150" role="img" style={{ maxWidth: "100%" }}
-          aria-label={es ? "Optimo entero frente a relajado" : "Integer optimum against relaxed optimum"}>
+          aria-label={es ? "Óptimo entero frente a relajado" : "Integer optimum against relaxed optimum"}>
           <line x1={60} x2={680} y1={78} y2={78} className="dg-axis" />
           {[axisLow, (axisLow + axisHigh) / 2, axisHigh].map((tick) => (
             <text key={tick} x={x(tick)} y={104} textAnchor="middle" className="dg-tick">
@@ -115,7 +115,7 @@ export function RelaxationPanel({
           />
           <circle cx={x(relaxed.objective!)} cy={78} r={7} className="dg-node" />
           <text x={x(relaxed.objective!)} y={46} textAnchor="middle" className="dg-edge-label">
-            {probe ? (es ? "continuo, como esta" : "continuous, as written") : es ? "relajado" : "relaxed"}{" "}
+            {probe ? (es ? "continuo, como está" : "continuous, as written") : es ? "relajado" : "relaxed"}{" "}
             {Number(relaxed.objective!.toPrecision(6))}
           </text>
           <circle cx={x(exact.objective!)} cy={78} r={7} className="dg-bar" />
@@ -126,10 +126,10 @@ export function RelaxationPanel({
           <text x={370} y={146} textAnchor="middle" className="dg-note">
             {sense === "minimise"
               ? es
-                ? "Al minimizar, la relajacion nunca es peor: su optimo es una cota inferior del entero."
+                ? "Al minimizar, la relajación nunca es peor: su óptimo es una cota inferior del entero."
                 : "Minimising, the relaxation is never worse: its optimum is a lower bound on the integer one."
               : es
-                ? "Al maximizar, la relajacion nunca es peor: su optimo es una cota superior del entero."
+                ? "Al maximizar, la relajación nunca es peor: su óptimo es una cota superior del entero."
                 : "Maximising, the relaxation is never worse: its optimum is an upper bound on the integer one."}
           </text>
         </svg>
@@ -145,7 +145,7 @@ export function RelaxationPanel({
                 {probe ? (es ? "Forzado a enteros" : "Forced to integers") : es ? "Entero" : "Integer"}
               </th>
               <th className="num">
-                {probe ? (es ? "Como esta" : "As written") : es ? "Relajado" : "Relaxed"}
+                {probe ? (es ? "Como está" : "As written") : es ? "Relajado" : "Relaxed"}
               </th>
             </tr>
           </thead>
@@ -182,7 +182,7 @@ export function RelaxationPanel({
         <span>
           {probe
             ? es
-              ? "sonda de discretizacion, hipotetica"
+              ? "sonda de discretización, hipotetica"
               : "discretisation probe, hypothetical"
             : `${integers.length} ${es ? "variables enteras o binarias" : "integer or binary variables"}`}
         </span>
@@ -193,7 +193,7 @@ export function RelaxationPanel({
             </span>
             {relative !== null && (
               <span>
-                <strong>{(relative * 100).toFixed(2)}%</strong> {es ? "del optimo entero" : "of the integer optimum"}
+                <strong>{(relative * 100).toFixed(2)}%</strong> {es ? "del óptimo entero" : "of the integer optimum"}
               </span>
             )}
             <span className={moved.length ? "bad" : "ok"}>
@@ -202,7 +202,7 @@ export function RelaxationPanel({
           </>
         ) : (
           <span className="bad">
-            {es ? "uno de los dos no tiene solucion" : "one of the two has no solution"}
+            {es ? "uno de los dos no tiene solución" : "one of the two has no solution"}
           </span>
         )}
       </div>

@@ -395,7 +395,7 @@ export function FeasibleRegion({
     return (
       <p className="muted">
         {es
-          ? "Esta vista dibuja casos de dos variables. Este caso tiene otra forma, asi que no se dibuja en vez de mostrar una imagen que no lo representa."
+          ? "Esta vista dibuja casos de dos variables. Este caso tiene otra forma, así que no se dibuja en vez de mostrar una imagen que no lo representa."
           : "This view draws two-variable cases. This one has a different shape, so it is not drawn rather than showing a picture that does not represent it."}
       </p>
     );
@@ -440,15 +440,15 @@ export function FeasibleRegion({
         </span>
         <span>
           <i className="viz-swatch dashed" />
-          {es ? "una restriccion" : "one constraint"}
+          {es ? "una restricción" : "one constraint"}
         </span>
         <span>
           <i className="viz-swatch" />
-          {es ? "contorno del objetivo en el optimo" : "objective contour at the optimum"}
+          {es ? "contorno del objetivo en el óptimo" : "objective contour at the optimum"}
         </span>
         <span>
           <i className="viz-swatch dot" />
-          {es ? "optimo actual" : "current optimum"}
+          {es ? "óptimo actual" : "current optimum"}
         </span>
       </div>
       <div className="viz-readout">

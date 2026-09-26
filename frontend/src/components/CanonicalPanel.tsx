@@ -45,7 +45,7 @@ export function CanonicalPanel({
     return (
       <p className="muted">
         {es
-          ? "Este modelo no es lineal en el sentido de esta via, asi que no se canoniza en vez de canonizar una aproximacion."
+          ? "Este modelo no es lineal en el sentido de esta vía, así que no se canoniza en vez de canonizar una aproximación."
           : "This model is not linear in this lane's sense, so it is not canonicalised rather than canonicalising an approximation."}
       </p>
     );
@@ -59,7 +59,7 @@ export function CanonicalPanel({
     <div className="viz">
       <div className="two-col" style={{ margin: 0, flex: 1, minHeight: 0 }}>
         <section className="split-pane">
-          <h3>{es ? "Como esta escrito" : "As written"}</h3>
+          <h3>{es ? "Como está escrito" : "As written"}</h3>
           <p className="pane-hint">
             {rewrite === "style"
               ? es
@@ -83,7 +83,7 @@ export function CanonicalPanel({
         </section>
 
         <section className="split-pane">
-          <h3>{es ? "Su forma canonica" : "Its canonical form"}</h3>
+          <h3>{es ? "Su forma canónica" : "Its canonical form"}</h3>
           <p className="pane-hint">
             {es
               ? "Minimizar, filas en forma ≤, variables en orden estructural x1..xn."
@@ -131,7 +131,7 @@ export function CanonicalPanel({
         <span className={equal === expected ? "ok" : "bad"}>
           {equal
             ? es
-              ? "EQUIVALENTE: misma forma canonica"
+              ? "EQUIVALENTE: misma forma canónica"
               : "EQUIVALENT: same canonical form"
             : es
               ? "no probado equivalente (no prueba diferencia)"

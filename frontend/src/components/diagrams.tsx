@@ -42,7 +42,7 @@ export function PipelineDiagram({ lang }: { lang: Lang }) {
         { title: "Enunciado", sub: "texto libre" },
         { title: "Documento tipado", sub: "planteo.Problem" },
         { title: "Modelo emitido", sub: "Pyomo / LP" },
-        { title: "Solucion", sub: "HiGHS" },
+        { title: "Solución", sub: "HiGHS" },
       ]
     : [
         { title: "Statement", sub: "free text" },
@@ -123,12 +123,12 @@ export function PipelineDiagram({ lang }: { lang: Lang }) {
 
       <text x={380} y={262} textAnchor="middle" className="dg-note">
         {es
-          ? "Los cuatro veredictos se informan por separado. Nunca se promedian en un solo numero."
+          ? "Los cuatro veredictos se informan por separado. Nunca se promedian en un solo número."
           : "The four verdicts are reported separately. They are never averaged into one number."}
       </text>
       <text x={380} y={280} textAnchor="middle" className="dg-note">
         {es
-          ? "La distancia entre el primero y los otros dos ES la medicion."
+          ? "La distancia entre el primero y los otros dos ES la medición."
           : "The distance between the first and the next two IS the measurement."}
       </text>
     </svg>
@@ -142,10 +142,10 @@ export function OracleLayersDiagram({ lang }: { lang: Lang }) {
   const es = lang === "es";
   const rows = es
     ? [
-        { name: "Ejecutable", can: "corrio, resolvio, compilo", cannot: "no dice nada sobre el significado", tone: "dg-box" },
-        { name: "Estructural", can: "formas canonicas iguales => equivalentes", cannot: "formas distintas no prueban diferencia", tone: "dg-box accent" },
-        { name: "Propiedad", can: "una relacion violada => refutado", cannot: "todas se mantienen no prueba correccion", tone: "dg-box accent" },
-        { name: "Juez", can: "agregado calibrado, para comparar", cannot: "NO es un oraculo de equivalencia", tone: "dg-box" },
+        { name: "Ejecutable", can: "corrió, resolvió, compiló", cannot: "no dice nada sobre el significado", tone: "dg-box" },
+        { name: "Estructural", can: "formas canónicas iguales => equivalentes", cannot: "formas distintas no prueban diferencia", tone: "dg-box accent" },
+        { name: "Propiedad", can: "una relación violada => refutado", cannot: "todas se mantienen no prueba corrección", tone: "dg-box accent" },
+        { name: "Juez", can: "agregado calibrado, para comparar", cannot: "NO es un oráculo de equivalencia", tone: "dg-box" },
       ]
     : [
         { name: "Executable", can: "it ran, it solved, it compiled", cannot: "says nothing about meaning", tone: "dg-box" },
@@ -191,9 +191,9 @@ export function RefutationDiagram({ lang }: { lang: Lang }) {
   const es = lang === "es";
   const cases = es
     ? [
-        { premise: "formas canonicas iguales", verdict: "EQUIVALENTE", good: true },
-        { premise: "optimos distintos", verdict: "REFUTADO", good: true },
-        { premise: "optimos iguales", verdict: "no concluye", good: false },
+        { premise: "formas canónicas iguales", verdict: "EQUIVALENTE", good: true },
+        { premise: "óptimos distintos", verdict: "REFUTADO", good: true },
+        { premise: "óptimos iguales", verdict: "no concluye", good: false },
         { premise: "formas distintas", verdict: "no concluye", good: false },
       ]
     : [
@@ -205,7 +205,7 @@ export function RefutationDiagram({ lang }: { lang: Lang }) {
 
   return (
     <svg className="fig-svg wide" viewBox="0 0 700 240" role="img"
-      aria-label={es ? "Que comparaciones concluyen" : "Which comparisons conclude"}>
+      aria-label={es ? "Qué comparaciones concluyen" : "Which comparisons conclude"}>
       <Arrow id="refute-arrow" />
       {cases.map((item, index) => {
         const y = 20 + index * 54;
@@ -241,7 +241,7 @@ export function RefutationDiagram({ lang }: { lang: Lang }) {
       })}
       <text x={350} y={232} textAnchor="middle" className="dg-note">
         {es
-          ? "Un optimo que coincide nunca asciende un veredicto: errores que se compensan llegan al numero correcto."
+          ? "Un óptimo que coincide nunca asciende un veredicto: errores que se compensan llegan al número correcto."
           : "A matching optimum never promotes a verdict: compensating errors reach the right number."}
       </text>
     </svg>
@@ -282,7 +282,7 @@ export function DimensionDiagram({ lang }: { lang: Lang }) {
 
   return (
     <svg className="fig-svg wide" viewBox="0 0 640 196" role="img"
-      aria-label={es ? "Una dimension como vector de exponentes" : "A dimension as an exponent vector"}>
+      aria-label={es ? "Una dimensión como vector de exponentes" : "A dimension as an exponent vector"}>
       {axes.map((axis, index) => (
         <text key={axis} x={133 + index * 56} y={22} textAnchor="middle" className="dg-tick">
           {axis}
@@ -325,13 +325,13 @@ export function ArchitectureDiagram({ lang }: { lang: Lang }) {
   const es = lang === "es";
   return (
     <svg className="fig-svg wide" viewBox="0 0 760 320" role="img"
-      aria-label={es ? "Donde corre cada parte" : "Where each part runs"}>
+      aria-label={es ? "Dónde corre cada parte" : "Where each part runs"}>
       <Arrow id="arch-arrow" />
 
       {/* Offline */}
       <rect x={8} y={26} width={236} height={186} rx="10" className="dg-box" />
       <text x={126} y={46} textAnchor="middle" className="dg-box-title">
-        {es ? "Sin conexion, pesado" : "Offline, heavy"}
+        {es ? "Sin conexión, pesado" : "Offline, heavy"}
       </text>
       {[
         { t: "planteo", s: es ? "documento tipado" : "typed document" },
@@ -371,7 +371,7 @@ export function ArchitectureDiagram({ lang }: { lang: Lang }) {
       {[
         { t: "React + shell", s: es ? "seis rutas" : "six routes" },
         { t: "highs.wasm", s: es ? "3.37 MB, carga diferida" : "3.37 MB, lazy" },
-        { t: es ? "resolucion en vivo" : "live solve", s: es ? "sub-milisegundo" : "sub-millisecond" },
+        { t: es ? "resolución en vivo" : "live solve", s: es ? "sub-milisegundo" : "sub-millisecond" },
         { t: "uPlot + canvas", s: es ? "lectura en el cursor" : "read-out at the cursor" },
       ].map((item, index) => (
         <g key={item.t}>
@@ -389,16 +389,16 @@ export function ArchitectureDiagram({ lang }: { lang: Lang }) {
       {/* The boundary, stated. */}
       <line x1={262} y1={236} x2={262} y2={266} className="dg-marker" />
       <text x={380} y={252} textAnchor="middle" className="dg-marker-label">
-        {es ? "el limite vivo / precalculado" : "the live / precomputed boundary"}
+        {es ? "el límite vivo / precalculado" : "the live / precomputed boundary"}
       </text>
       <text x={380} y={284} textAnchor="middle" className="dg-note">
         {es
-          ? "Todo numero publicado viene del artefacto. Lo que el navegador calcula explica la respuesta y nunca se publica."
+          ? "Todo número publicado viene del artefacto. Lo que el navegador calcula explica la respuesta y nunca se publica."
           : "Every published number comes from the artifact. What the browser computes explains the answer and is never published."}
       </text>
       <text x={380} y={304} textAnchor="middle" className="dg-note">
         {es
-          ? "Ningun secreto llega al navegador porque ninguna via lo necesita."
+          ? "Ningún secreto llega al navegador porque ninguna vía lo necesita."
           : "No secret reaches the browser, because no lane needs one."}
       </text>
     </svg>
@@ -501,7 +501,7 @@ export function SweepProtocolDiagram({ lang }: { lang: Lang }) {
 
       <text x={380} y={282} textAnchor="middle" className="dg-note">
         {es
-          ? "Cada llamada queda registrada, incluida la que fallo. Un fallo descartado es una tasa inflada en silencio."
+          ? "Cada llamada queda registrada, incluida la que falló. Un fallo descartado es una tasa inflada en silencio."
           : "Every call is recorded, including the one that failed. A discarded failure is a silently inflated rate."}
       </text>
     </svg>
@@ -567,7 +567,7 @@ export function MetamorphicDiagram({ lang }: { lang: Lang }) {
   const es = lang === "es";
   return (
     <svg className="fig-svg wide" viewBox="0 0 700 240" role="img"
-      aria-label={es ? "Una relacion metamorfica" : "A metamorphic relation"}>
+      aria-label={es ? "Una relación metamórfica" : "A metamorphic relation"}>
       <Arrow id="meta-arrow" />
 
       <rect x={20} y={30} width={180} height={50} rx="8" className="dg-box accent" />
@@ -628,11 +628,11 @@ export function DocumentDiagram({ lang }: { lang: Lang }) {
   const es = lang === "es";
   const parts = es
     ? [
-        { t: "quantities", s: "nombre, papel, dimension, dominio, cotas, span" },
+        { t: "quantities", s: "nombre, papel, dimensión, dominio, cotas, span" },
         { t: "relations", s: "compare / logical / forall, con span" },
-        { t: "objectives", s: "sentido + expresion" },
-        { t: "assumptions", s: "lo que se asumio, y de donde" },
-        { t: "open_questions", s: "lo que el texto NO determino" },
+        { t: "objectives", s: "sentido + expresión" },
+        { t: "assumptions", s: "lo que se asumió, y de dónde" },
+        { t: "open_questions", s: "lo que el texto NO determinó" },
         { t: "narrative", s: "texto, idioma, digest" },
       ]
     : [
@@ -646,7 +646,7 @@ export function DocumentDiagram({ lang }: { lang: Lang }) {
 
   return (
     <svg className="fig-svg wide" viewBox="0 0 700 280" role="img"
-      aria-label={es ? "La representacion intermedia" : "The intermediate representation"}>
+      aria-label={es ? "La representación intermedia" : "The intermediate representation"}>
       <rect x={8} y={8} width={684} height={228} rx="10" className="dg-box accent" opacity="0.35" />
       <text x={24} y={30} className="dg-box-title accent">
         planteo.Problem
@@ -672,12 +672,12 @@ export function DocumentDiagram({ lang }: { lang: Lang }) {
 
       <text x={350} y={258} textAnchor="middle" className="dg-note">
         {es
-          ? "open_questions es lo que distingue este documento de un esquema JSON cualquiera: registra lo que el enunciado dejo sin decidir."
+          ? "open_questions es lo que distingue este documento de un esquema JSON cualquiera: registra lo que el enunciado dejó sin decidir."
           : "open_questions is what separates this document from any JSON schema: it records what the statement left undecided."}
       </text>
       <text x={350} y={274} textAnchor="middle" className="dg-note">
         {es
-          ? "Un formalizador que nunca abre una pregunta esta adivinando en silencio."
+          ? "Un formalizador que nunca abre una pregunta está adivinando en silencio."
           : "A formalizer that never opens a question is guessing silently."}
       </text>
     </svg>
@@ -699,7 +699,7 @@ export function CanonicalDiagram({ lang }: { lang: Lang }) {
   const es = lang === "es";
   return (
     <svg className="fig-svg wide" viewBox="0 0 760 330" role="img"
-      aria-label={es ? "El mismo par ante dos formas canonicas" : "One pair under two canonical forms"}>
+      aria-label={es ? "El mismo par ante dos formas canónicas" : "One pair under two canonical forms"}>
       <Arrow id="canon-arrow" />
 
       {/* The pair. */}
@@ -720,7 +720,7 @@ export function CanonicalDiagram({ lang }: { lang: Lang }) {
       <line x1={244} y1={118} x2={290} y2={86} className="dg-edge" markerEnd="url(#canon-arrow)" />
       <rect x={294} y={34} width={250} height={100} rx="8" className="dg-box" />
       <text x={308} y={56} className="dg-box-title">{es ? "planteo: forma del documento" : "planteo: document form"}</text>
-      <text x={308} y={76} className="dg-box-sub">{es ? "renombra por estructura, ordena terminos," : "renames by structure, sorts terms,"}</text>
+      <text x={308} y={76} className="dg-box-sub">{es ? "renombra por estructura, ordena términos," : "renames by structure, sorts terms,"}</text>
       <text x={308} y={93} className="dg-box-sub">{es ? "orienta los lados del comparador;" : "orients comparator sides;"}</text>
       <text x={308} y={110} className="dg-box-sub" style={{ fill: "var(--color-warn)" }}>
         {es ? "conserva el sentido del objetivo" : "keeps the objective sense"}
@@ -736,7 +736,7 @@ export function CanonicalDiagram({ lang }: { lang: Lang }) {
       <rect x={294} y={174} width={250} height={100} rx="8" className="dg-box good" />
       <text x={308} y={196} className="dg-box-title">{es ? "banco: forma lineal" : "workbench: linear form"}</text>
       <text x={308} y={216} className="dg-box-sub">{es ? "fija el sentido en minimizar," : "fixes the sense to minimise,"}</text>
-      <text x={308} y={233} className="dg-box-sub">{es ? "mueve todo termino a la izquierda," : "moves every term left,"}</text>
+      <text x={308} y={233} className="dg-box-sub">{es ? "mueve todo término a la izquierda," : "moves every term left,"}</text>
       <text x={308} y={250} className="dg-box-sub">{es ? "normaliza filas y signo; orden WL" : "normalises rows and sign; WL order"}</text>
       <text x={308} y={266} className="dg-edge-label">{es ? "se muestra, no se publica" : "shown, not published"}</text>
       <line x1={548} y1={224} x2={580} y2={224} className="dg-edge" markerEnd="url(#canon-arrow)" />
@@ -751,7 +751,7 @@ export function CanonicalDiagram({ lang }: { lang: Lang }) {
       </text>
       <text x={380} y={320} textAnchor="middle" className="dg-note">
         {es
-          ? "La mas debil se equivoca solo hacia lo seguro: un NO PROBADO de mas, nunca un EQUIVALENTE falso."
+          ? "La más débil se equivoca solo hacia lo seguro: un NO PROBADO de más, nunca un EQUIVALENTE falso."
           : "The weaker one errs only in the safe direction: an extra NOT PROVEN, never a false EQUIVALENT."}
       </text>
     </svg>
@@ -771,7 +771,7 @@ export function SamplingDiagram({ lang }: { lang: Lang }) {
 
   return (
     <svg className="fig-svg wide" viewBox="0 0 700 190" role="img"
-      aria-label={es ? "Dos pasadas sobre el corpus identico" : "Two passes over the identical corpus"}>
+      aria-label={es ? "Dos pasadas sobre el corpus idéntico" : "Two passes over the identical corpus"}>
       {[0, 0.25, 0.5, 0.75, 1].map((tick) => (
         <g key={tick}>
           <line x1={x(tick)} x2={x(tick)} y1={26} y2={124} className="dg-grid" />
@@ -802,7 +802,7 @@ export function SamplingDiagram({ lang }: { lang: Lang }) {
 
       <text x={350} y={166} textAnchor="middle" className="dg-note">
         {es
-          ? "Nada cambio entre las dos pasadas salvo el muestreo. La diferencia entre 0,350 y 0,250 esta dentro del solape."
+          ? "Nada cambio entre las dos pasadas salvo el muestreo. La diferencia entre 0,350 y 0,250 está dentro del solape."
           : "Nothing changed between the two passes but the sampling. The difference between 0.350 and 0.250 lies inside the overlap."}
       </text>
       <text x={350} y={182} textAnchor="middle" className="dg-note">
@@ -821,7 +821,7 @@ export function JudgeDiagram({ lang }: { lang: Lang }) {
   const es = lang === "es";
   return (
     <svg className="fig-svg wide" viewBox="0 0 700 220" role="img"
-      aria-label={es ? "La posicion del juez" : "The judge's standing"}>
+      aria-label={es ? "La posición del juez" : "The judge's standing"}>
       <Arrow id="judge-arrow" />
 
       <line x1={60} y1={150} x2={640} y2={150} className="dg-axis" />
@@ -832,7 +832,7 @@ export function JudgeDiagram({ lang }: { lang: Lang }) {
       <line x1={60 + 0.897 * 580} x2={60 + 0.897 * 580} y1={52} y2={150} className="dg-curve" />
       <text x={60 + 0.897 * 580} y={44} textAnchor="middle" className="dg-node-label">89.7%</text>
       <text x={60 + 0.897 * 580} y={26} textAnchor="middle" className="dg-axis-label">
-        {es ? "acuerdo con la mayoria humana" : "agreement with human majority"}
+        {es ? "acuerdo con la mayoría humana" : "agreement with human majority"}
       </text>
       <text x={60 + 0.882 * 580} y={186} textAnchor="middle" className="dg-marker-label">
         95% CI 82.1 - 94.3
@@ -845,7 +845,7 @@ export function JudgeDiagram({ lang }: { lang: Lang }) {
 
       <text x={350} y={210} textAnchor="middle" className="dg-note">
         {es
-          ? "Un agregado con 89,7% de acuerdo es util para comparar y no es un oraculo. Los propios autores lo dicen."
+          ? "Un agregado con 89,7% de acuerdo es útil para comparar y no es un oráculo. Los propios autores lo dicen."
           : "An aggregate agreeing 89.7% of the time is useful for comparison and is not an oracle. Its own authors say so."}
       </text>
     </svg>
@@ -874,8 +874,8 @@ export function HoldoutDiagram({ lang }: { lang: Lang }) {
       {[
         { t: es ? "1. Escribir el enunciado" : "1. Author the statement", s: es ? "prosa, con su trampa elegida" : "prose, with its chosen trap" },
         { t: es ? "2. Escribir la referencia" : "2. Author the reference", s: es ? "sin haber visto respuesta alguna" : "having seen no answer at all" },
-        { t: es ? "3. Hornear y verificar" : "3. Bake and verify", s: es ? "resolver, comprobar el optimo, correr propiedades" : "solve, check the optimum, run properties" },
-        { t: es ? "4. Congelar" : "4. Freeze", s: es ? "versionar; despues de esto no se edita" : "commit; after this it is not edited" },
+        { t: es ? "3. Hornear y verificar" : "3. Bake and verify", s: es ? "resolver, comprobar el óptimo, correr propiedades" : "solve, check the optimum, run properties" },
+        { t: es ? "4. Congelar" : "4. Freeze", s: es ? "versionar; después de esto no se edita" : "commit; after this it is not edited" },
         { t: es ? "5. Preguntar a los modelos" : "5. Ask the models", s: es ? "mismo prompt, n repeticiones" : "same prompt, n repeats" },
       ].map((step, index) => {
         const y = 30 + index * 48;
@@ -912,7 +912,7 @@ export function HoldoutDiagram({ lang }: { lang: Lang }) {
 
       <text x={380} y={294} textAnchor="middle" className="dg-note">
         {es
-          ? "Cualquiera de las dos aristas tachadas convierte la medicion en el acuerdo del autor con el modelo."
+          ? "Cualquiera de las dos aristas tachadas convierte la medición en el acuerdo del autor con el modelo."
           : "Either struck-out edge turns the measurement into the author's agreement with the model."}
       </text>
       <text x={380} y={312} textAnchor="middle" className="dg-note">
@@ -936,10 +936,10 @@ export function HoldoutDiagram({ lang }: { lang: Lang }) {
 export function ProviderSeamDiagram({ lang }: { lang: Lang }) {
   const es = lang === "es";
   const pinned = es
-    ? ["identificador del modelo", "version del modelo", "digest del prompt", "tope de tokens", "esfuerzo, si el modelo lo admite"]
+    ? ["identificador del modelo", "versión del modelo", "digest del prompt", "tope de tokens", "esfuerzo, si el modelo lo admite"]
     : ["model id", "model version", "prompt digest", "token cap", "effort, where the model takes it"];
   const unpinned = es
-    ? ["tamano de lote del servicio", "nucleos de reduccion", "precision numerica", "uso de cache", "hardware y software del servidor"]
+    ? ["tamaño de lote del servicio", "núcleos de reducción", "precisión numérica", "uso de caché", "hardware y software del servidor"]
     : ["the service's batch size", "reduction kernels", "numerical precision", "cache use", "server hardware and software"];
 
   return (
@@ -974,12 +974,12 @@ export function ProviderSeamDiagram({ lang }: { lang: Lang }) {
 
       <text x={350} y={262} textAnchor="middle" className="dg-note">
         {es
-          ? "Por eso el registro informa n repeticiones con una banda de tolerancia, en vez de afirmar una reproduccion exacta que no tiene."
+          ? "Por eso el registro informa n repeticiones con una banda de tolerancia, en vez de afirmar una reproducción exacta que no tiene."
           : "That is why the record reports n repeats with a tolerance band, rather than claiming an exact reproduction it does not have."}
       </text>
       <text x={350} y={282} textAnchor="middle" className="dg-note">
         {es
-          ? "Una huella que dijera temperature=0 para un proveedor que no la acepta seria reproducibilidad afirmada y no ejercida."
+          ? "Una huella que dijera temperature=0 para un proveedor que no la acepta sería reproducibilidad afirmada y no ejercida."
           : "A fingerprint claiming temperature=0 for a provider that does not accept it is reproducibility asserted and not exercised."}
       </text>
     </svg>
@@ -1156,7 +1156,7 @@ export function DualityGeometryDiagram({ lang }: { lang: Lang }) {
 
   return (
     <svg className="fig-svg wide" viewBox="0 0 760 330" role="img"
-      aria-label={es ? "La geometria de un optimo lineal y su certificado dual" : "The geometry of an LP optimum and its dual certificate"}>
+      aria-label={es ? "La geometría de un óptimo lineal y su certificado dual" : "The geometry of an LP optimum and its dual certificate"}>
       <Arrow id="dual-arrow" />
       <text x={16} y={16} className="dg-edge-label">
         max 2x + 3y   s.t.   r1: x + y &lt;= 4,   r2: x + 3y &lt;= 6,   r3: x &lt;= 3.5
@@ -1216,7 +1216,7 @@ export function DualityGeometryDiagram({ lang }: { lang: Lang }) {
 
       <text x={380} y={318} textAnchor="middle" className="dg-note">
         {es
-          ? "El optimo es un vertice donde c cae en el cono de las normales activas. Los pesos de esa combinacion son los precios sombra."
+          ? "El óptimo es un vértice donde c cae en el cono de las normales activas. Los pesos de esa combinación son los precios sombra."
           : "The optimum is a vertex where c falls in the cone of the binding normals. The weights of that combination are the shadow prices."}
       </text>
     </svg>
@@ -1253,7 +1253,7 @@ export function IntegralityDiagram({ lang }: { lang: Lang }) {
 
   return (
     <svg className="fig-svg wide" viewBox="0 0 760 330" role="img"
-      aria-label={es ? "Por que la relajacion acota y no resuelve" : "Why the relaxation bounds and does not solve"}>
+      aria-label={es ? "Por qué la relajación acota y no resuelve" : "Why the relaxation bounds and does not solve"}>
       <text x={16} y={16} className="dg-edge-label">
         max y   s.t.   -x + y &lt;= 1,   3x + 2y &lt;= 12,   2x + 3y &lt;= 12,   x, y {es ? "enteros" : "whole"}
       </text>
@@ -1294,7 +1294,7 @@ export function IntegralityDiagram({ lang }: { lang: Lang }) {
         <circle key={x} cx={px(x)} cy={py(2)} r={7} style={{ fill: "var(--color-magenta)" }} />
       ))}
       <text x={px(1.5)} y={py(2) + 22} textAnchor="middle" className="dg-node-label">
-        {es ? "optimos enteros" : "integer optima"}
+        {es ? "óptimos enteros" : "integer optima"}
       </text>
       <line x1={px(2) - 6} y1={py(3) - 6} x2={px(2) + 6} y2={py(3) + 6} stroke="var(--color-bad)" strokeWidth={2} />
       <line x1={px(2) - 6} y1={py(3) + 6} x2={px(2) + 6} y2={py(3) - 6} stroke="var(--color-bad)" strokeWidth={2} />
@@ -1304,17 +1304,17 @@ export function IntegralityDiagram({ lang }: { lang: Lang }) {
 
       <rect x={528} y={60} width={222} height={200} rx="9" className="dg-box" />
       <text x={542} y={84} className="dg-box-title">{es ? "Lo que se lee" : "What it shows"}</text>
-      <text x={542} y={108} className="dg-box-sub">{es ? "relajacion: z = 2.8" : "relaxation: z = 2.8"}</text>
+      <text x={542} y={108} className="dg-box-sub">{es ? "relajación: z = 2.8" : "relaxation: z = 2.8"}</text>
       <text x={542} y={126} className="dg-box-sub">{es ? "enteros: z = 2, en (1, 2) y (2, 2)" : "integers: z = 2, at (1, 2), (2, 2)"}</text>
-      <text x={542} y={150} className="dg-box-sub">{es ? "brecha 0.8: el 40% del optimo" : "gap 0.8: 40% of the optimum"}</text>
-      <text x={542} y={174} className="dg-box-sub">{es ? "ningun optimo entero es" : "no integer optimum is"}</text>
-      <text x={542} y={192} className="dg-box-sub">{es ? "un vertice del poligono" : "a vertex of the polygon"}</text>
+      <text x={542} y={150} className="dg-box-sub">{es ? "brecha 0.8: el 40% del óptimo" : "gap 0.8: 40% of the optimum"}</text>
+      <text x={542} y={174} className="dg-box-sub">{es ? "ningún óptimo entero es" : "no integer optimum is"}</text>
+      <text x={542} y={192} className="dg-box-sub">{es ? "un vértice del polígono" : "a vertex of the polygon"}</text>
       <text x={542} y={216} className="dg-box-sub">{es ? "redondear la respuesta" : "rounding the relaxed answer"}</text>
       <text x={542} y={234} className="dg-box-sub">{es ? "relajada sale del conjunto" : "leaves the feasible set"}</text>
 
       <text x={380} y={318} textAnchor="middle" className="dg-note">
         {es
-          ? "La relajacion acota el optimo entero y no dice donde esta. Un modelo que olvida la integralidad informa la cota como si fuera la respuesta."
+          ? "La relajación acota el óptimo entero y no dice dónde está. Un modelo que olvida la integralidad informa la cota como si fuera la respuesta."
           : "The relaxation bounds the integer optimum and does not say where it is. A model that forgets integrality reports the bound as the answer."}
       </text>
     </svg>

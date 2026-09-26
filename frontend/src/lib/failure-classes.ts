@@ -37,23 +37,23 @@ export const FAILURE_CLASSES: FailureClass[] = [
     key: "truncated output",
     es: "salida truncada",
     ruleEn: "The JSON starts and does not end: the token cap was reached mid-document.",
-    ruleEs: "El JSON empieza y no termina: el tope de tokens se alcanzo a mitad del documento.",
+    ruleEs: "El JSON empieza y no termina: el tope de tokens se alcanzó a mitad del documento.",
     layer: "executable",
     ran: false,
   },
   {
     key: "no answer: the reasoning used the whole cap",
-    es: "sin respuesta: el razonamiento agoto el tope",
+    es: "sin respuesta: el razonamiento agotó el tope",
     ruleEn:
       "The reply reached the token cap while the model was still reasoning and holds no finished document: the reasoning came back in a field of its own, or, where a local model's template ignores the reasoning switch, was written into the answer, or opened a reasoning block the cap never let close. A reasoning model spends the cap on reasoning before it writes anything.",
     ruleEs:
-      "La respuesta alcanzo el tope de tokens mientras el modelo aun razonaba y no contiene un documento terminado: el razonamiento llego en un campo propio, o, donde la plantilla de un modelo local ignora el interruptor, se escribio en la respuesta, o abrio un bloque de razonamiento que el tope no dejo cerrar. Un modelo que razona gasta el tope razonando antes de escribir nada.",
+      "La respuesta alcanzó el tope de tokens mientras el modelo aún razonaba y no contiene un documento terminado: el razonamiento llegó en un campo propio, o, donde la plantilla de un modelo local ignora el interruptor, se escribió en la respuesta, o abrió un bloque de razonamiento que el tope no dejó cerrar. Un modelo que razona gasta el tope razonando antes de escribir nada.",
     layer: "executable",
     ran: false,
   },
   {
     key: "no answer: it reasoned, then stopped",
-    es: "sin respuesta: razono y se detuvo",
+    es: "sin respuesta: razonó y se detuvo",
     ruleEn: "The reply is all reasoning and no answer, and it stopped before the token cap.",
     ruleEs: "La respuesta es solo razonamiento, sin respuesta, y se detuvo antes del tope de tokens.",
     layer: "executable",
@@ -63,7 +63,7 @@ export const FAILURE_CLASSES: FailureClass[] = [
     key: "a constant with no unit",
     es: "una constante sin unidad",
     ruleEn: "A const node with no unit field appears summed with a dimensioned term.",
-    ruleEs: "Un nodo const sin campo unit aparece sumado a un termino con dimension.",
+    ruleEs: "Un nodo const sin campo unit aparece sumado a un término con dimensión.",
     layer: "executable",
     ran: false,
   },
@@ -71,7 +71,7 @@ export const FAILURE_CLASSES: FailureClass[] = [
     key: "a quantity declared derived and never defined",
     es: "una cantidad declarada derivada y nunca definida",
     ruleEn: "A quantity is declared with role derived and no relation defines it.",
-    ruleEs: "Una cantidad se declara con papel derived y ninguna relacion la define.",
+    ruleEs: "Una cantidad se declara con papel derived y ninguna relación la define.",
     layer: "executable",
     ran: false,
   },
@@ -79,7 +79,7 @@ export const FAILURE_CLASSES: FailureClass[] = [
     key: "dimensional mismatch",
     es: "desajuste dimensional",
     ruleEn: "Two things that must share a dimension do not: the two sides of a comparison, or the terms of a sum, carry different exponent vectors.",
-    ruleEs: "Dos cosas que deben compartir dimension no la comparten: los dos lados de una comparacion, o los terminos de una suma, tienen vectores de exponentes distintos.",
+    ruleEs: "Dos cosas que deben compartir dimensión no la comparten: los dos lados de una comparación, o los términos de una suma, tienen vectores de exponentes distintos.",
     layer: "executable",
     ran: false,
   },
@@ -89,7 +89,7 @@ export const FAILURE_CLASSES: FailureClass[] = [
     ruleEn:
       "A variable is declared with its lower bound above its upper, which the representation refuses. On the contradictory case this is the contradiction, written into one variable.",
     ruleEs:
-      "Una variable se declara con la cota inferior sobre la superior, lo que la representacion rechaza. En el caso contradictorio esa es la contradiccion, escrita en una sola variable.",
+      "Una variable se declara con la cota inferior sobre la superior, lo que la representación rechaza. En el caso contradictorio esa es la contradicción, escrita en una sola variable.",
     layer: "executable",
     ran: false,
   },
@@ -99,7 +99,7 @@ export const FAILURE_CLASSES: FailureClass[] = [
     ruleEn:
       "The document records an assumption or an open question with no span into the statement, so nothing says where it comes from. The representation requires one.",
     ruleEs:
-      "El documento registra un supuesto o una pregunta abierta sin span hacia el enunciado, asi que nada dice de donde sale. La representacion exige uno.",
+      "El documento registra un supuesto o una pregunta abierta sin span hacia el enunciado, así que nada dice de dónde sale. La representación exige uno.",
     layer: "executable",
     ran: false,
   },
@@ -109,13 +109,13 @@ export const FAILURE_CLASSES: FailureClass[] = [
     ruleEn:
       "An element of the document lacks a field the representation requires, other than a span or a constant's unit: a logical relation with no connective, a quantity with no name.",
     ruleEs:
-      "Un elemento del documento carece de un campo que la representacion exige, distinto de un span o de la unidad de una constante: una relacion logica sin conectivo, una cantidad sin nombre.",
+      "Un elemento del documento carece de un campo que la representación exige, distinto de un span o de la unidad de una constante: una relación lógica sin conectivo, una cantidad sin nombre.",
     layer: "executable",
     ran: false,
   },
   {
     key: "fabricated provenance: words not in the statement",
-    es: "procedencia fabricada: palabras que no estan en el enunciado",
+    es: "procedencia fabricada: palabras que no están en el enunciado",
     ruleEn: "The text stored in a span does not appear in the statement at those offsets.",
     ruleEs: "El texto guardado en un span no aparece en el enunciado en esos desplazamientos.",
     layer: "executable",
@@ -135,17 +135,17 @@ export const FAILURE_CLASSES: FailureClass[] = [
     ruleEn:
       "The case has no feasible point and the solver proves the candidate has none either: the right status. It is still recorded as not having run, because ran means reaching a feasible optimum, so a contradictory case cannot be passed. Counted apart so the table shows it was right.",
     ruleEs:
-      "El caso no tiene punto factible y el solucionador prueba que el candidato tampoco: el estado correcto. Aun asi queda registrado como no ejecutado, porque corrio significa alcanzar un optimo factible, de modo que un caso contradictorio no se puede aprobar. Se cuenta aparte para que la tabla muestre que acerto.",
+      "El caso no tiene punto factible y el solucionador prueba que el candidato tampoco: el estado correcto. Aun así queda registrado como no ejecutado, porque corrió significa alcanzar un óptimo factible, de modo que un caso contradictorio no se puede aprobar. Se cuenta aparte para que la tabla muestre que acertó.",
     layer: "executable",
     ran: false,
   },
   {
     key: "the model it produced is unbounded",
-    es: "el modelo que produjo no esta acotado",
+    es: "el modelo que produjo no está acotado",
     ruleEn:
       "The solver reports the model unbounded: its objective has no bound in its direction, so there is no optimum. copela 0.3.3 records it as a failure to run; a record scored before that shows it as a run, and the Benchmark's caveats count them.",
     ruleEs:
-      "El solucionador informa el modelo no acotado: su objetivo no tiene cota en su direccion, asi que no hay optimo. copela 0.3.3 lo registra como fallo de ejecucion; un registro calificado antes lo muestra como ejecutado, y las salvedades de la Comparativa los cuentan.",
+      "El solucionador informa el modelo no acotado: su objetivo no tiene cota en su dirección, así que no hay óptimo. copela 0.3.3 lo registra como fallo de ejecución; un registro calificado antes lo muestra como ejecutado, y las salvedades de la Comparativa los cuentan.",
     layer: "executable",
     ran: false,
   },
@@ -155,7 +155,7 @@ export const FAILURE_CLASSES: FailureClass[] = [
     ruleEn:
       "The solver reports the model infeasible or unbounded without deciding which: a contradiction, or an objective with no bound in its direction.",
     ruleEs:
-      "El solucionador informa el modelo infactible o no acotado sin decidir cual: una contradiccion, o un objetivo sin cota en su direccion.",
+      "El solucionador informa el modelo infactible o no acotado sin decidir cuál: una contradicción, o un objetivo sin cota en su dirección.",
     layer: "executable",
     ran: false,
   },
@@ -163,33 +163,33 @@ export const FAILURE_CLASSES: FailureClass[] = [
     key: "a name used but never declared",
     es: "un nombre usado y nunca declarado",
     ruleEn: "An expression refers to a name the document never declares, so the model has a free symbol.",
-    ruleEs: "Una expresion se refiere a un nombre que el documento nunca declara, asi que el modelo tiene un simbolo libre.",
+    ruleEs: "Una expresión se refiere a un nombre que el documento nunca declara, así que el modelo tiene un símbolo libre.",
     layer: "executable",
     ran: false,
   },
   {
     key: "a parameter left without a value",
-    es: "un parametro sin valor",
+    es: "un parámetro sin valor",
     ruleEn:
       "A quantity is declared as a parameter and given no value, so the model cannot be built. It passes the validator and stops the solver.",
     ruleEs:
-      "Una cantidad se declara parametro y no recibe valor, asi que el modelo no se puede construir. Pasa el validador y detiene al solucionador.",
+      "Una cantidad se declara parámetro y no recibe valor, así que el modelo no se puede construir. Pasa el validador y detiene al solucionador.",
     layer: "executable",
     ran: false,
   },
   {
     key: "the solver failed on the model it produced",
-    es: "el solucionador fallo sobre el modelo que produjo",
+    es: "el solucionador falló sobre el modelo que produjo",
     ruleEn: "The document validates and the solver raised instead of returning a status.",
-    ruleEs: "El documento valida y el solucionador lanzo un error en vez de devolver un estado.",
+    ruleEs: "El documento valida y el solucionador lanzó un error en vez de devolver un estado.",
     layer: "executable",
     ran: false,
   },
   {
     key: "the call itself failed",
-    es: "la llamada misma fallo",
+    es: "la llamada misma falló",
     ruleEn: "The provider call failed: a timeout, an HTTP error, a refusal. Nothing was formalized.",
-    ruleEs: "La llamada al proveedor fallo: un tiempo de espera, un error HTTP, un rechazo. No se formalizo nada.",
+    ruleEs: "La llamada al proveedor falló: un tiempo de espera, un error HTTP, un rechazo. No se formalizó nada.",
     layer: "executable",
     ran: false,
   },
@@ -203,51 +203,51 @@ export const FAILURE_CLASSES: FailureClass[] = [
   },
   {
     key: "ran, then REFUTED: solves to a different optimum",
-    es: "corrio, y fue REFUTADA: resuelve a otro optimo",
+    es: "corrió, y fue REFUTADA: resuelve a otro óptimo",
     ruleEn:
       "It runs cleanly and, read in the minimising sense, solves to a value differing from the reference's beyond 1e-6 relative.",
     ruleEs:
-      "Corre limpio y, leido en sentido de minimizacion, resuelve a un valor que difiere del de la referencia mas alla de 1e-6 relativo.",
+      "Corre limpio y, leído en sentido de minimización, resuelve a un valor que difiere del de la referencia más allá de 1e-6 relativo.",
     layer: "structural",
     ran: true,
   },
   {
     key: "ran, then REFUTED: solves to the reference's whole-number optimum",
-    es: "corrio, y fue REFUTADA: resuelve al optimo entero de la referencia",
+    es: "corrió, y fue REFUTADA: resuelve al óptimo entero de la referencia",
     ruleEn:
       "It runs cleanly and solves to the reference's optimum with its decisions made integer, on a case whose reference is continuous there. The statement does not say whether those decisions are whole numbers, so the refutation may be of a reading the statement allows.",
     ruleEs:
-      "Corre limpio y resuelve al optimo de la referencia con sus decisiones enteras, en un caso cuya referencia es continua ahi. El enunciado no dice si esas decisiones son numeros enteros, asi que la refutacion puede ser de una lectura que el enunciado admite.",
+      "Corre limpio y resuelve al óptimo de la referencia con sus decisiones enteras, en un caso cuya referencia es continua ahí. El enunciado no dice si esas decisiones son números enteros, así que la refutación puede ser de una lectura que el enunciado admite.",
     layer: "structural",
     ran: true,
   },
   {
     key: "ran, then REFUTED: feasible where the case has no feasible point",
-    es: "corrio, y fue REFUTADA: factible donde el caso no tiene punto factible",
+    es: "corrió, y fue REFUTADA: factible donde el caso no tiene punto factible",
     ruleEn:
       "It runs cleanly and finds a feasible point on a case whose reference has none: it missed the contradiction the statement was written around.",
     ruleEs:
-      "Corre limpio y encuentra un punto factible en un caso cuya referencia no tiene ninguno: no vio la contradiccion alrededor de la que se escribio el enunciado.",
+      "Corre limpio y encuentra un punto factible en un caso cuya referencia no tiene ninguno: no vio la contradicción alrededor de la que se escribió el enunciado.",
     layer: "structural",
     ran: true,
   },
   {
     key: "ran, then REFUTED: a metamorphic relation failed",
-    es: "corrio, y fue REFUTADA: fallo una relacion metamorfica",
+    es: "corrió, y fue REFUTADA: fallo una relación metamórfica",
     ruleEn:
       "It runs cleanly and a metamorphic relation fails: scaling the objective moved the argmin, a redundant constraint changed the feasible set, or tightening a constraint improved the optimum.",
     ruleEs:
-      "Corre limpio y falla una relacion metamorfica: escalar el objetivo movio el argmin, una restriccion redundante cambio el conjunto factible, o ajustar una restriccion mejoro el optimo.",
+      "Corre limpio y falla una relación metamórfica: escalar el objetivo movió el argmin, una restricción redundante cambio el conjunto factible, o ajustar una restricción mejoró el óptimo.",
     layer: "property",
     ran: true,
   },
   {
     key: "ran, and no layer decided",
-    es: "corrio, y ninguna capa decidio",
+    es: "corrió, y ninguna capa decidió",
     ruleEn:
       "It runs cleanly and neither the structural nor the property layer reached a verdict. It survived nothing, so it is not counted faithful.",
     ruleEs:
-      "Corre limpio y ni la capa estructural ni la de propiedades llegaron a un veredicto. No supero nada, asi que no cuenta como fiel.",
+      "Corre limpio y ni la capa estructural ni la de propiedades llegaron a un veredicto. No superó nada, así que no cuenta como fiel.",
     layer: "none",
     ran: true,
   },
@@ -255,13 +255,13 @@ export const FAILURE_CLASSES: FailureClass[] = [
     key: "not measured: the solver cannot express this model",
     es: "no medido: el solucionador no puede expresar este modelo",
     ruleEn: "The configured solver cannot express the model. A limit of the instrument, excluded from both rates.",
-    ruleEs: "El solucionador configurado no expresa el modelo. Limite del instrumento, excluido de ambas tasas.",
+    ruleEs: "El solucionador configurado no expresa el modelo. Límite del instrumento, excluido de ambas tasas.",
     layer: "none",
     ran: false,
   },
   {
     key: "ran and survived every check",
-    es: "corrio y supero cada comprobacion",
+    es: "corrió y superó cada comprobación",
     ruleEn: "It runs, no strong layer fails, and at least one passes. This is the faithful row, not a failure.",
     ruleEs: "Corre, ninguna capa fuerte falla y al menos una pasa. Es la fila fiel, no un fallo.",
     layer: "all",

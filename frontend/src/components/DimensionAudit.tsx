@@ -274,7 +274,7 @@ export function DimensionAudit({ problem, lang }: { problem: Problem; lang: "en"
             </span>
             <span className="muted">
               {es
-                ? "Una dimension es un vector de exponentes, no una etiqueta."
+                ? "Una dimensión es un vector de exponentes, no una etiqueta."
                 : "A dimension is a vector of exponents, not a label."}
             </span>
           </>

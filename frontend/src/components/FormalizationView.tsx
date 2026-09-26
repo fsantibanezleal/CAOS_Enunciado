@@ -76,7 +76,7 @@ export function renderRelation(node: RelationNode): string {
 }
 
 const ROLE_LABEL: Record<string, { en: string; es: string }> = {
-  variable: { en: "decision", es: "decision" },
+  variable: { en: "decision", es: "decisión" },
   parameter: { en: "given", es: "dado" },
   derived: { en: "derived", es: "derivado" },
   observed: { en: "observed", es: "observado" },

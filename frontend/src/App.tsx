@@ -21,7 +21,7 @@ import { CITATIONS } from "./data/citations";
 import { useData } from "./lib/data";
 import i18n from "./lib/i18n";
 
-const VERSION = "0.07.001";
+const VERSION = "0.08.000";
 
 export function Layout() {
   const load = useData((state) => state.load);
@@ -42,10 +42,10 @@ export function Layout() {
   const config: ShellConfig = {
     product: { name: "Enunciado", mark: <ScanText size={20} /> },
     routes: [
-      { path: "/", en: "Workbench", es: "Banco de trabajo" },
-      { path: "/introduction", en: "Introduction", es: "Introduccion" },
-      { path: "/methodology", en: "Methodology", es: "Metodologia" },
-      { path: "/implementation", en: "Implementation", es: "Implementacion" },
+      { path: "/", en: "App", es: "App" },
+      { path: "/introduction", en: "Introduction", es: "Introducción" },
+      { path: "/methodology", en: "Methodology", es: "Metodología" },
+      { path: "/implementation", en: "Implementation", es: "Implementación" },
       { path: "/experiments", en: "Experiments", es: "Experimentos" },
       { path: "/benchmark", en: "Benchmark", es: "Comparativa" },
     ],
@@ -53,7 +53,7 @@ export function Layout() {
     version: VERSION,
     architecture: {
       title_en: "How Enunciado works",
-      title_es: "Como funciona Enunciado",
+      title_es: "Cómo funciona Enunciado",
       tabs: ArchitectureTabs,
     },
     footer: {
@@ -62,7 +62,7 @@ export function Layout() {
       // are, not a restatement of the header links.
       provenance: {
         en: "Cases authored for this product; solved with HiGHS, offline via Pyomo and in the page as WebAssembly. Engines: HiGHS (MIT), Pyomo (BSD-3).",
-        es: "Casos escritos para este producto; resueltos con HiGHS, sin conexion via Pyomo y en la pagina como WebAssembly. Motores: HiGHS (MIT), Pyomo (BSD-3).",
+        es: "Casos escritos para este producto; resueltos con HiGHS, sin conexión vía Pyomo y en la página como WebAssembly. Motores: HiGHS (MIT), Pyomo (BSD-3).",
       },
       // MiniZinc was listed here as an engine. It appears only in the portability probe under
       // tools/, and nothing the product ships runs it. Both lines are kept to one row at 1440px:
@@ -70,7 +70,7 @@ export function Layout() {
       // instrument its half of the viewport (ADR-0071).
       disclaimer: {
         en: "Published numbers replay a committed local bake. What the workbench solves in your browser explains the answer and is never published.",
-        es: "Los numeros publicados reproducen un calculo local versionado. Lo que el banco resuelve en su navegador explica la respuesta y nunca se publica.",
+        es: "Los números publicados reproducen un cálculo local versionado. Lo que el banco resuelve en su navegador explica la respuesta y nunca se publica.",
       },
     },
     // The workbench IS the viewport: it sizes to the window and scrolls inside its own container

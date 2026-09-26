@@ -151,7 +151,7 @@ export function AppPage() {
             <h3>{t("workbench.formalization")}</h3>
             <p className="pane-hint">
               {es
-                ? "Cada fila declara su papel, su dimension y de que palabras salio."
+                ? "Cada fila declara su papel, su dimensión y de qué palabras salió."
                 : "Every row declares its role, its dimension, and the words it came from."}
             </p>
             <div className="pane-scroll">
@@ -198,7 +198,7 @@ export function AppPage() {
       tabs: [
         {
           id: "canonical",
-          label: es ? "Forma canonica" : "Canonical form",
+          label: es ? "Forma canónica" : "Canonical form",
           content: <CanonicalPanel record={active} overrides={overrides} lang={lang} />,
         },
         {
@@ -208,7 +208,7 @@ export function AppPage() {
         },
         {
           id: "metamorphic",
-          label: es ? "Relaciones metamorficas" : "Metamorphic relations",
+          label: es ? "Relaciones metamórficas" : "Metamorphic relations",
           content: <PropertyLab record={active} overrides={overrides} lang={lang} />,
         },
       ],
@@ -226,7 +226,7 @@ export function AppPage() {
         },
         {
           id: "region",
-          label: es ? "Region factible" : "Feasible region",
+          label: es ? "Región factible" : "Feasible region",
           content: (
             <FeasibleRegion record={active} overrides={overrides} optimum={liveValues} lang={lang} />
           ),
@@ -259,7 +259,7 @@ export function AppPage() {
         },
         {
           id: "anatomy",
-          label: es ? "Anatomia del fallo" : "Failure anatomy",
+          label: es ? "Anatomía del fallo" : "Failure anatomy",
           content: <FailureAnatomy record={active} lang={lang} />,
         },
       ],
@@ -298,7 +298,7 @@ export function AppPage() {
             className={section === "knobs" ? "on" : undefined}
             onClick={() => setSection("knobs")}
           >
-            {es ? `Parametros (${tunables.length})` : `Parameters (${tunables.length})`}
+            {es ? `Parámetros (${tunables.length})` : `Parameters (${tunables.length})`}
           </button>
         </div>
 
@@ -356,8 +356,8 @@ export function AppPage() {
                   // statement would show text that is not the text the models were given, and the
                   // measurement is about that exact text. Saying so beats looking unfinished.
                   <p className="why-hard" style={{ marginTop: "0.5rem", fontSize: "0.76rem", color: "var(--color-fg-faint)" }}>
-                    Los enunciados y sus notas se muestran en ingles: es el texto exacto que se les
-                    dio a los modelos, y traducirlo mostraria algo distinto de lo que se midio.
+                    Los enunciados y sus notas se muestran en inglés: es el texto exacto que se les
+                    dio a los modelos, y traducirlo mostraría algo distinto de lo que se midió.
                   </p>
                 )}
               </div>
@@ -383,13 +383,13 @@ export function AppPage() {
             <>
               <p className="why-hard">
                 {es
-                  ? "Cada control es una entrada real del solucionador. Moverlo vuelve a resolver el caso aqui mismo, y todas las pestanas siguen el cambio."
+                  ? "Cada control es una entrada real del solucionador. Moverlo vuelve a resolver el caso aquí mismo, y todas las pestañas siguen el cambio."
                   : "Every control here is a real solver input. Moving one re-solves the case in this browser, and every tab follows."}
               </p>
               {tunables.length === 0 ? (
                 <p className="muted">
                   {es
-                    ? "Este caso no declara parametros numericos: su dificultad es estructural, no numerica."
+                    ? "Este caso no declara parámetros numéricos: su dificultad es estructural, no numérica."
                     : "This case declares no numeric parameters: its difficulty is structural, not numeric."}
                 </p>
               ) : (
@@ -502,24 +502,24 @@ function LiveReadout({
           <span className="readout-value is-bad">
             {live.status === "infeasible"
               ? es
-                ? "sin solucion"
+                ? "sin solución"
                 : "no solution"
               : live.status === "unbounded"
                 ? es
                   ? "no acotado"
                   : "unbounded"
                 : es
-                  ? "no expresable aqui"
+                  ? "no expresable aquí"
                   : "not expressible here"}
           </span>
         </div>
         <p className="readout-note">
           {live.status === "error"
             ? es
-              ? "Este modelo usa una construccion que el motor del navegador no expresa. El artefacto horneado si lo resolvio, sin conexion, con el mismo documento."
+              ? "Este modelo usa una construcción que el motor del navegador no expresa. El artefacto horneado si lo resolvió, sin conexión, con el mismo documento."
               : "This model uses a construction the browser engine does not express. The baked artifact did solve it, offline, from the same document."
             : es
-              ? "El solucionador respondio; no hay punto que satisfaga todas las restricciones a la vez."
+              ? "El solucionador respondió; no hay punto que satisfaga todas las restricciones a la vez."
               : "The solver answered; no point satisfies every constraint at once."}
         </p>
       </div>
@@ -557,16 +557,16 @@ function LiveReadout({
         )}
         {moved
           ? es
-            ? "Con sus parametros, no los del enunciado."
+            ? "Con sus parámetros, no los del enunciado."
             : "Under your parameters, not the statement's."
           : es
-            ? "Con los parametros del enunciado."
+            ? "Con los parámetros del enunciado."
             : "Under the statement's own parameters."}{" "}
         {live.solveMs > 0 && `${live.solveMs.toFixed(1)} ms`}
       </p>
       {reference !== null && delta !== null && (
         <Gauge
-          title={es ? "cuanto se alejo del optimo del enunciado" : "drift from the statement's optimum"}
+          title={es ? "cuánto se alejó del óptimo del enunciado" : "drift from the statement's optimum"}
           // Relative to the statement's optimum, with a floor of one unit so an optimum of zero
           // does not turn every change into an infinite drift.
           value={(Math.abs(delta) / Math.max(Math.abs(reference), 1)) * 100}
@@ -574,7 +574,7 @@ function LiveReadout({
           format={(v) => `${Number(v.toPrecision(3))}%`}
           zones={[
             { upTo: 1, color: "var(--color-good)", label: es ? "en el enunciado" : "at the statement" },
-            { upTo: 10, color: "var(--color-warn)", label: es ? "se movio" : "moved" },
+            { upTo: 10, color: "var(--color-warn)", label: es ? "se movió" : "moved" },
             { upTo: 25, color: "var(--color-bad)", label: es ? "lejos" : "far" },
           ]}
         />
