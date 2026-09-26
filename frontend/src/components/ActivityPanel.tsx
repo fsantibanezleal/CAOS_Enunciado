@@ -49,10 +49,10 @@ export function ActivityPanel({
       <p className="muted">
         {solution.status === "infeasible"
           ? es
-            ? "Sin punto factible no hay actividad que medir: ninguna asignacion satisface todas las filas a la vez, y eso es exactamente lo que dice este resultado."
+            ? "Sin punto factible no hay actividad que medir: ninguna asignación satisface todas las filas a la vez, y eso es exactamente lo que dice este resultado."
             : "With no feasible point there is no activity to measure: no assignment satisfies every row at once, which is exactly what this result says."
           : es
-            ? "Este caso no tiene restricciones expresables en esta via."
+            ? "Este caso no tiene restricciones expresables en esta vía."
             : "This case has no constraints expressible in this lane."}
       </p>
     );
@@ -65,7 +65,7 @@ export function ActivityPanel({
     <div className="viz">
       <p className="pane-hint" style={{ maxWidth: "84ch", margin: "0 0 0.5rem" }}>
         {es
-          ? "Cada barra es el lado izquierdo de una restriccion evaluado en el optimo; la marca es la cota contra la que esta escrita. Una fila cuya barra llega a su marca esta activa: omitirla cambiaria la respuesta. Una con holgura podria omitirse y nadie lo notaria en el optimo, que es la trampa de la restriccion omitible."
+          ? "Cada barra es el lado izquierdo de una restricción evaluado en el óptimo; la marca es la cota contra la que está escrita. Una fila cuya barra llega a su marca está activa: omitirla cambiaría la respuesta. Una con holgura podría omitirse y nadie lo notaría en el óptimo, que es la trampa de la restricción omitible."
           : "Each bar is a constraint's left-hand side evaluated at the optimum; the tick is the bound it is written against. A row whose bar reaches its tick is active: dropping it would change the answer. One with slack could be dropped and nobody would notice at the optimum, which is the droppable-constraint trap."}
       </p>
 
@@ -77,7 +77,7 @@ export function ActivityPanel({
           viewBox={`0 0 760 ${rows.length * 34 + 30}`}
           role="img"
           style={{ maxWidth: "100%", width: "100%" }}
-          aria-label={es ? "Actividad de cada restriccion en el optimo" : "Each constraint's activity at the optimum"}
+          aria-label={es ? "Actividad de cada restricción en el óptimo" : "Each constraint's activity at the optimum"}
         >
           <text x={200} y={16} className="dg-axis-label">
             {es ? "actividad, escalada a la cota de cada fila" : "activity, scaled to each row's own bound"}
@@ -159,7 +159,7 @@ export function ActivityPanel({
             </span>
             <span className="muted">
               {es
-                ? "Mueva un parametro para ver una restriccion pasar de holgada a activa."
+                ? "Mueva un parámetro para ver una restricción pasar de holgada a activa."
                 : "Move a parameter to watch a constraint go from slack to active."}
             </span>
           </>

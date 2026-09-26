@@ -180,6 +180,18 @@ for (const theme of ["dark", "light"]) {
     `scrollWidth ${fit.scrollWidth} vs innerWidth ${fit.innerWidth}`,
   );
 
+  // The nav in the standard's order (product-quality-bar section 0, ADR-0017): App first, at the root,
+  // then the five documents. Until 0.08.000 the root was labelled "Workbench".
+  const navOrder = await page.evaluate(() =>
+    [...document.querySelectorAll("header nav a[href], header .main-nav a[href]")].map((a) => (a.textContent ?? "").trim()),
+  );
+  const expectedNav = ["App", "Introduction", "Methodology", "Implementation", "Experiments", "Benchmark"];
+  check(
+    JSON.stringify(navOrder.filter((label) => expectedNav.includes(label))) === JSON.stringify(expectedNav),
+    `[${theme}] the nav reads App, Introduction, Methodology, Implementation, Experiments, Benchmark`,
+    navOrder.join(" | "),
+  );
+
   // Every route reachable by CLICKING a link, not by typing a URL.
   const routes = ["Introduction", "Methodology", "Implementation", "Experiments", "Benchmark"];
   for (const label of routes) {
@@ -285,7 +297,7 @@ for (const theme of ["dark", "light"]) {
   }
 
   // Back to the workbench, and exercise its controls rather than only looking at them.
-  await page.getByRole("link", { name: /workbench|banco/i }).first().click();
+  await page.getByRole("link", { name: /^app$/i }).first().click();
   await page.waitForTimeout(600);
 
   const options = await page.locator("#case-select option").count();
@@ -659,7 +671,17 @@ if (gapReport) {
     await page.goto(`${BASE}/benchmark`, { waitUntil: "networkidle" });
     await page.waitForTimeout(1200);
 
-    const seen = await page.evaluate(() => {
+    // Since 0.08.000 the Benchmark is six tabs, and the shell renders only the open one, so everything
+    // below is collected tab by tab and then aggregated. Reading the page once, as this block did when
+    // the page was one scroll, would now see only the first tab and fail on everything else.
+    const benchTabs = page.locator('.benchmark-tabs .tablist [role="tab"]');
+    const benchTabCount = await benchTabs.count();
+    check(
+      benchTabCount >= 5 && benchTabCount <= 6,
+      `[${width}px] the Benchmark is tabbed, at most six peers (ADR-0071 section 5)`,
+      `${benchTabCount} tabs`,
+    );
+    const collectTab = () => page.evaluate(() => {
       const figure = document.querySelector("svg[data-rows]");
       const figureModels = [...(figure?.querySelectorAll("g[data-model]") ?? [])].map((g) => g.getAttribute("data-model"));
       const tableModels = [...document.querySelectorAll(".finding-table tr[data-model]")].map((r) => r.getAttribute("data-model"));
@@ -701,6 +723,31 @@ if (gapReport) {
         pageOverflow: document.documentElement.scrollWidth - window.innerWidth,
       };
     });
+    const parts = [];
+    for (let i = 0; i < benchTabCount; i += 1) {
+      await benchTabs.nth(i).click();
+      await page.waitForTimeout(500);
+      parts.push(await collectTab());
+    }
+    const firstNonEmpty = (key, empty) =>
+      parts.map((part) => part[key]).find((v) => (Array.isArray(v) ? v.length > 0 : v !== null && v !== undefined)) ?? empty;
+    const seen = {
+      figureModels: firstNonEmpty("figureModels", []),
+      tableModels: firstNonEmpty("tableModels", []),
+      capRows: parts.reduce((sum, part) => sum + part.capRows, 0),
+      tableChips: firstNonEmpty("tableChips", []),
+      figureShort: parts.map((part) => part.figureShort).find((o) => Object.keys(o).length > 0) ?? {},
+      wholeNumber: firstNonEmpty("wholeNumber", null),
+      runRows: firstNonEmpty("runRows", null),
+      matrices: parts.flatMap((part) => part.matrices),
+      frames: parts.flatMap((part) => part.frames),
+      pageOverflow: Math.max(...parts.map((part) => part.pageOverflow)),
+    };
+    const openTabHolding = async (key) => {
+      const index = parts.findIndex((part) => (Array.isArray(part[key]) ? part[key].length > 0 : Boolean(part[key])));
+      await benchTabs.nth(Math.max(0, index)).click();
+      await page.waitForTimeout(500);
+    };
 
     const missingFromFigure = models.filter((m) => !seen.figureModels.includes(m));
     check(
@@ -774,6 +821,7 @@ if (gapReport) {
 
     if (width === 1440) {
       // The readouts must answer the pointer, or the figures are pictures of numbers.
+      await openTabHolding("figureModels");
       await page.locator("svg[data-rows] g[data-model]").first().hover();
       await page.waitForTimeout(150);
       const rowReadout = (await page.locator(".viz-readout").first().textContent()) ?? "";
@@ -782,6 +830,7 @@ if (gapReport) {
         "hovering a Figure 1 row reads its counts out",
         rowReadout.slice(0, 120),
       );
+      await openTabHolding("matrices");
       const cell = page.locator("table.matrix td.cell:not(.empty)").first();
       await cell.hover();
       await page.waitForTimeout(150);
@@ -792,6 +841,7 @@ if (gapReport) {
 
       // Sorting by the faithful rate must reorder EVERY row by that rate. Checking only the first
       // row was vacuous on the first data it met: the best model was also first by provider.
+      await openTabHolding("figureModels");
       await page.getByRole("button", { name: /by faithful rate/i }).click();
       await page.waitForTimeout(200);
       const order = await page.locator("svg[data-rows] g[data-model]").evaluateAll((gs) =>
@@ -845,7 +895,7 @@ if (gapReport) {
     ["/implementation", "Implementation"],
     ["/experiments", "Experiments"],
     ["/benchmark", "Benchmark"],
-    ["/", "Workbench"],
+    ["/", "App"],
   ]) {
     await page.goto(`${BASE}${route}`, { waitUntil: "networkidle" });
     await page.waitForTimeout(1200);
@@ -879,7 +929,7 @@ if (gapReport) {
     // store, which the prose followed, and an i18next instance fixed at "en" that nothing told.
     // Half the workbench furniture stayed English beside Spanish paragraphs, and every
     // "does this page render in Spanish" check passed because the prose was the bulk of the text.
-    if (label === "Workbench") {
+    if (label === "App") {
       const leaks = ["WHAT MAKES THIS HARD", "Tier ", "control case", "Statement", ">Case<"].filter(
         (phrase) => text.includes(phrase.replace(/[<>]/g, "")),
       );
@@ -893,6 +943,8 @@ if (gapReport) {
     // The failure classes come from the artifact in English, and the page must translate them: a
     // check on the prose cannot see an English class name inside a Spanish table.
     if (label === "Benchmark" && gapReport) {
+      await page.getByRole("tab", { name: /qué salió mal/i }).click();
+      await page.waitForTimeout(500);
       const keys = new Set(Object.values(gapReport.failure_breakdown).flatMap((counts) => Object.keys(counts)));
       const headers = await page.evaluate(() =>
         [...document.querySelectorAll("table.matrix th.col-head")].map((th) => (th.textContent ?? "").trim()),
@@ -904,6 +956,40 @@ if (gapReport) {
         raw.length ? `untranslated: ${raw.join(", ")}` : `${headers.length} headers checked`,
       );
     }
+
+    // Spanish written with its accents, on every tab of the page, not only the one that opens first.
+    // Every Spanish string of this product shipped without accents until 0.08.000 ("medicion",
+    // "aqui", "Que salio mal"), and every check above passed, because none of them looked. An
+    // unaccented -cion word is always a missing accent (English writes -tion), and the words below are
+    // Spanish-only forms that were measured on this site; the English case statements the App shows
+    // contain none of them.
+    const UNACCENTED = /(?<!\p{L})(\p{L}+cion|aqui|asi|tambien|segun|numero|numeros|pagina|paginas|metodo|metodos|codigo|parametro|parametros|optimo|optimos|optima|unico|unica|ultimo|ultima|analisis|hipotesis|facil|dificil|util|linea|lineas|mas alla|despues|ademas|todavia|podria|seria|habria|tenia|habia|midio|corrio|salio|resolvio|escribio|devolvio|informo|decidio|restriccion|relacion|solucion|medicion|formalizacion|comprobacion|pestana|tamano|diseno|anade|Que salio|Como se)(?!\p{L})/u;
+    const tabTexts = [];
+    // The first tab row of the page, whichever kind it is: the Benchmark uses Tabs (.tablist), the
+    // Methodology, Implementation and Experiments pages a vertical SubTabs rail (.subtablist). The first
+    // version of this walk looked only for .tablist, read one view on those three pages and passed.
+    const topTabs = page.locator('.page-body [role="tablist"]').first().locator('[role="tab"]');
+    const topCount = label === "App" ? 0 : await topTabs.count();
+    if (topCount === 0) tabTexts.push(text);
+    for (let i = 0; i < topCount; i += 1) {
+      await topTabs.nth(i).click();
+      await page.waitForTimeout(350);
+      const subTabs = page.locator('.tabpanel:not([hidden]) .subtablist [role="tab"], .subtabpanel:not([hidden]) .subtablist [role="tab"]');
+      const subCount = await subTabs.count();
+      if (subCount === 0) tabTexts.push((await page.textContent("#root")) ?? "");
+      for (let j = 0; j < subCount; j += 1) {
+        await subTabs.nth(j).click();
+        await page.waitForTimeout(250);
+        tabTexts.push((await page.textContent("#root")) ?? "");
+      }
+    }
+    const bare = [...new Set(tabTexts.flatMap((chunk) => [...chunk.matchAll(new RegExp(UNACCENTED.source, "gu"))].map((m) => m[0])))];
+    const pageHasTabs = label !== "App" && (await page.locator('.page-body [role="tab"]').count()) > 0;
+    check(
+      bare.length === 0 && (!pageHasTabs || tabTexts.length > 1),
+      `[es] ${label}: Spanish carries its accents on every tab (${tabTexts.length} views read)`,
+      bare.length ? `unaccented: ${bare.slice(0, 12).join(", ")}` : "clean",
+    );
 
     await page.screenshot({ path: join(SHOTS, `es-${label.toLowerCase()}.png`) });
   }

@@ -24,15 +24,15 @@ export function IntroductionPage() {
   return (
     <div className="page-body prose">
       <div className="page-head">
-        <h1>{es ? "Introduccion" : "Introduction"}</h1>
+        <h1>{es ? "Introducción" : "Introduction"}</h1>
         <p className="lede">
           {es ? (
             <>
               Enunciado mide la distancia entre dos cosas que el campo suele confundir: que una
-              formalizacion <em>corra</em> y que sea <em>el problema que el texto describio</em>. Esa
+              formalización <em>corra</em> y que sea <em>el problema que el texto describió</em>. Esa
               distancia, <InlineMath tex="\Delta = R_{\text{ran}} - R_{\text{faithful}}" />, es la
-              medicion. No es un banco de pruebas de modelos de lenguaje, no puntua traducciones, y
-              no afirma que una formalizacion sea correcta: afirma, cuando puede, que no lo es.
+              medición. No es un banco de pruebas de modelos de lenguaje, no puntúa traducciones, y
+              no afirma que una formalización sea correcta: afirma, cuando puede, que no lo es.
             </>
           ) : (
             <>
@@ -52,23 +52,23 @@ export function IntroductionPage() {
         <h2>{es ? "1. El problema, en concreto" : "1. The problem, concretely"}</h2>
         <p className="measure">
           {es
-            ? "Una planta concentradora tiene dos lineas. La primera procesa hasta 480 toneladas por hora y recupera el 88% del cobre; la segunda procesa hasta 300 y recupera el 91%, pero su reactivo cuesta 14 dolares por tonelada mas. El contrato exige al menos 6.000 toneladas de concentrado al mes y la planta no puede exceder 540 toneladas por hora en total. Cuanto se envia a cada linea."
+            ? "Una planta concentradora tiene dos líneas. La primera procesa hasta 480 toneladas por hora y recupera el 88% del cobre; la segunda procesa hasta 300 y recupera el 91%, pero su reactivo cuesta 14 dólares por tonelada más. El contrato exige al menos 6.000 toneladas de concentrado al mes y la planta no puede exceder 540 toneladas por hora en total. Cuánto se envía a cada línea."
             : "A concentrator has two lines. The first processes up to 480 tonnes per hour and recovers 88% of the copper; the second processes up to 300 and recovers 91%, but its reagent costs 14 dollars per tonne more. The contract requires at least 6,000 tonnes of concentrate a month, and the plant cannot exceed 540 tonnes per hour in total. How much goes to each line."}
         </p>
         <p className="measure">
           {es
-            ? "Ese parrafo es un enunciado. Para responderlo hay que convertirlo en un objeto formal: variables con dominio y unidad, restricciones que son desigualdades sobre esas variables, un objetivo con un sentido. Ese paso, del texto al objeto, es el que este producto estudia. Se le llama autoformalizacion cuando el objeto es una proposicion matematica, modelado cuando es un programa de optimizacion, y diseno experimental cuando es un protocolo; son el mismo paso con tres nombres."
+            ? "Ese párrafo es un enunciado. Para responderlo hay que convertirlo en un objeto formal: variables con dominio y unidad, restricciones que son desigualdades sobre esas variables, un objetivo con un sentido. Ese paso, del texto al objeto, es el que este producto estudia. Se le llama autoformalización cuando el objeto es una proposición matemática, modelado cuando es un programa de optimización, y diseño experimental cuando es un protocolo; son el mismo paso con tres nombres."
             : "That paragraph is a statement. Answering it means turning it into a formal object: variables with a domain and a unit, constraints that are inequalities over those variables, an objective with a sense. That step, from text to object, is what this product studies. It is called autoformalization when the object is a mathematical proposition, modelling when it is an optimization programme, and experiment design when it is a protocol. They are the same step under three names."}
         </p>
         <p className="measure">
           {es ? (
             <>
-              Un articulo de posicion de 2025 <Cite id="common2025" paren /> sostiene exactamente
-              eso: el termino autoformalizacion ha crecido mas alla de las matematicas y hoy significa
-              traducir una entrada informal a una representacion formal en general, y propone un marco
-              unificado para conectar campos que ya lo hacen sin llamarlo asi. Es un articulo de
-              posicion: argumenta la unificacion y no entrega ni los componentes, ni las etapas, ni
-              una metrica de fidelidad. Esa ausencia es la apertura.
+              Un artículo de posición de 2025 <Cite id="common2025" paren /> sostiene exactamente
+              eso: el término autoformalización ha crecido más allá de las matemáticas y hoy significa
+              traducir una entrada informal a una representación formal en general, y propone un marco
+              unificado para conectar campos que ya lo hacen sin llamarlo así. Es un artículo de
+              posición: argumenta la unificación y no entrega ni los componentes, ni las etapas, ni
+              una métrica de fidelidad. Esa ausencia es la apertura.
             </>
           ) : (
             <>
@@ -88,22 +88,22 @@ export function IntroductionPage() {
       <section>
         <h2>
           {es
-            ? "2. Por que “se ejecuto” es la comprobacion equivocada"
+            ? "2. Por qué “se ejecutó” es la comprobación equivocada"
             : "2. Why “it executed” is the wrong check"}
         </h2>
         <p className="measure">
           {es
-            ? "La forma barata de comprobar una formalizacion es ejecutarla. Si el modelo resuelve, si la proposicion compila, si el plan corre, se cuenta como acierto. El campo informa esa cifra. El problema es que mide otra cosa."
+            ? "La forma barata de comprobar una formalización es ejecutarla. Si el modelo resuelve, si la proposición compila, si el plan corre, se cuenta como acierto. El campo informa esa cifra. El problema es que mide otra cosa."
             : "The cheap way to check a formalization is to run it. If the model solves, if the statement compiles, if the plan executes, it counts. The field reports that number. The problem is that it measures something else."}
         </p>
         <p className="measure">
           {es ? (
             <>
-              En optimizacion, la encuesta ancla del campo <Cite id="survey2025" paren /> lo dice sin
-              rodeos: la correccion del valor objetivo no garantiza un modelo correcto. Una
-              formulacion puede alcanzar el objetivo de referencia por errores que se compensan. Por
-              eso el campo anadio metricas sobre el modelo (forma canonica, distancia de edicion de
-              grafos) junto a las metricas sobre la respuesta, y por eso ORGEval{" "}
+              En optimización, la encuesta ancla del campo <Cite id="survey2025" paren /> lo dice sin
+              rodeos: la corrección del valor objetivo no garantiza un modelo correcto. Una
+              formulación puede alcanzar el objetivo de referencia por errores que se compensan. Por
+              eso el campo anadio métricas sobre el modelo (forma canónica, distancia de edición de
+              grafos) junto a las métricas sobre la respuesta, y por eso ORGEval{" "}
               <Cite id="orgeval2025" paren /> reduce la equivalencia de modelos a isomorfismo de
               grafos con un test de Weisfeiler-Lehman adaptado.
             </>
@@ -121,12 +121,12 @@ export function IntroductionPage() {
         <p className="measure">
           {es ? (
             <>
-              En matematicas la brecha esta <em>medida</em>. Sobre formalizacion de enunciados a Lean{" "}
+              En matemáticas la brecha está <em>medida</em>. Sobre formalización de enunciados a Lean{" "}
               <Cite id="lean2026" paren />, todos los sistemas evaluados muestran una brecha
-              compilacion-fidelidad no nula, de <strong>3,0 a 29,0 puntos porcentuales</strong>, y la
-              brecha mayor corresponde al sistema mas fuerte: un agente GPT-5.2 con herramientas
-              alcanza <strong>89,5% de compilacion</strong> frente a{" "}
-              <strong>60,5% de fidelidad semantica</strong>. Casi treinta puntos de artefactos que
+              compilación-fidelidad no nula, de <strong>3,0 a 29,0 puntos porcentuales</strong>, y la
+              brecha mayor corresponde al sistema más fuerte: un agente GPT-5.2 con herramientas
+              alcanza <strong>89,5% de compilación</strong> frente a{" "}
+              <strong>60,5% de fidelidad semántica</strong>. Casi treinta puntos de artefactos que
               compilan y dicen otra cosa.
             </>
           ) : (
@@ -143,13 +143,13 @@ export function IntroductionPage() {
         <p className="measure">
           {es ? (
             <>
-              En diseno experimental, SCOPE <Cite id="scope2026" paren />, construido sobre 300
-              articulos recientes de 19 dominios en ICML, NeurIPS e ICLR, separa la planificacion de
-              alto nivel de la configuracion de bajo nivel e informa que{" "}
-              <strong>todos los modelos evaluados son debiles en la configuracion</strong> (conjuntos
-              de datos, lineas base, metricas) mientras el plan de alto nivel pasa. En simulacion,
+              En diseño experimental, SCOPE <Cite id="scope2026" paren />, construido sobre 300
+              artículos recientes de 19 dominios en ICML, NeurIPS e ICLR, separa la planificación de
+              alto nivel de la configuración de bajo nivel e informa que{" "}
+              <strong>todos los modelos evaluados son débiles en la configuración</strong> (conjuntos
+              de datos, líneas base, métricas) mientras el plan de alto nivel pasa. En simulación,
               BEAMS <Cite id="beams2026" paren /> informa que las herramientas rinden mejor en
-              discusion y tareas cualitativas basicas que en razonamiento causal y correccion de
+              discusión y tareas cualitativas basicas que en razonamiento causal y corrección de
               errores cuantitativos. La misma forma, cuatro veces: la superficie plausible pasa, la
               capa que obliga falla.
             </>
@@ -169,7 +169,7 @@ export function IntroductionPage() {
 
         <Callout variant="honest" title={es ? "Lo que esto no dice" : "What this does not say"}>
           {es
-            ? "Ninguno de esos resultados dice que los modelos sean inutiles en esta tarea. Dicen que la cifra que el campo informa no es la cifra que importa, y que la diferencia entre ambas es grande y esta medida en al menos dos de los cuatro campos. Este producto mide esa diferencia; no mide capacidad."
+            ? "Ninguno de esos resultados dice que los modelos sean inutiles en esta tarea. Dicen que la cifra que el campo informa no es la cifra que importa, y que la diferencia entre ambas es grande y está medida en al menos dos de los cuatro campos. Este producto mide esa diferencia; no mide capacidad."
             : "None of those results says models are useless at this task. They say the number the field reports is not the number that matters, and that the difference between the two is large and measured in at least two of the four fields. This product measures that difference; it does not measure capability."}
         </Callout>
 
@@ -184,7 +184,7 @@ export function IntroductionPage() {
         <h2>{es ? "3. Las dos tasas, y la brecha" : "3. The two rates, and the gap"}</h2>
         <p className="measure">
           {es
-            ? "La medicion es aritmetica deliberadamente simple. Sobre un corpus de casos y un modelo fijo, se cuentan dos cosas sobre las mismas corridas."
+            ? "La medición es aritmética deliberadamente simple. Sobre un corpus de casos y un modelo fijo, se cuentan dos cosas sobre las mismas corridas."
             : "The measurement is deliberately simple arithmetic. Over a corpus of cases and one fixed model, two things are counted over the same runs."}
         </p>
 
@@ -192,7 +192,7 @@ export function IntroductionPage() {
           tex={String.raw`R_{\text{ran}} = \frac{\bigl|\{\, c \in C : \mathrm{exec}(c) = \textsf{PASS} \,\}\bigr|}{|C| - u}, \qquad R_{\text{faithful}} = \frac{\bigl|\{\, c \in C : \mathrm{exec}(c) = \textsf{PASS} \;\wedge\; \textsf{FAIL} \notin \{\mathrm{struct}(c), \mathrm{prop}(c)\} \;\wedge\; \textsf{PASS} \in \{\mathrm{struct}(c), \mathrm{prop}(c)\} \,\}\bigr|}{|C| - u}`}
           caption={
             es
-              ? "Las dos tasas. Fiel exige que corra, que ninguna capa fuerte falle y que al menos una apruebe. El denominador excluye los u casos no medidos: aquellos donde el instrumento, no el modelo, fue el limite."
+              ? "Las dos tasas. Fiel exige que corra, que ninguna capa fuerte falle y que al menos una apruebe. El denominador excluye los u casos no medidos: aquellos donde el instrumento, no el modelo, fue el límite."
               : "The two rates. Faithful requires that it ran, that no strong layer failed and that at least one passed. The denominator excludes the u unmeasured cases: the ones where the instrument, not the model, was the limit."
           }
         />
@@ -201,7 +201,7 @@ export function IntroductionPage() {
           tex={String.raw`\Delta \;=\; R_{\text{ran}} \;-\; R_{\text{faithful}} \;\geq\; 0`}
           caption={
             es
-              ? "La brecha. Es no negativa por construccion: fiel exige corrio. Un valor positivo cuenta formalizaciones que se ejecutaron y no son el modelo descrito."
+              ? "La brecha. Es no negativa por construcción: fiel exige corrió. Un valor positivo cuenta formalizaciones que se ejecutaron y no son el modelo descrito."
               : "The gap. It is non-negative by construction, because faithful requires ran. A positive value counts formalizations that executed and are not the model described."
           }
         />
@@ -209,11 +209,11 @@ export function IntroductionPage() {
         <p className="measure">
           {es ? (
             <>
-              Con veinte casos, una tasa puntual no dice gran cosa. El intervalo si, y se informa
+              Con veinte casos, una tasa puntual no dice gran cosa. El intervalo sí, y se informa
               siempre: intervalo de Wilson al 95% <Cite id="wilson1927" paren />, preferido al
               intervalo normal porque no se sale de <InlineMath tex="[0,1]" /> ni colapsa a cero
               cuando <InlineMath tex="\hat{p}" /> toca un extremo, que es justo donde caen las tasas
-              pequenas de este corpus <Cite id="agresti1998" paren />.
+              pequeñas de este corpus <Cite id="agresti1998" paren />.
             </>
           ) : (
             <>
@@ -230,12 +230,12 @@ export function IntroductionPage() {
           tex={String.raw`\mathrm{CI}_{1-\alpha}(\hat{p}) \;=\; \frac{\hat{p} + \dfrac{z^{2}}{2n} \;\pm\; z\sqrt{\dfrac{\hat{p}(1-\hat{p})}{n} + \dfrac{z^{2}}{4n^{2}}}}{1 + \dfrac{z^{2}}{n}}`}
           caption={
             es
-              ? "El intervalo de Wilson para una proporcion, con z = 1,96 al 95%. Es el intervalo que acompana cada tasa publicada."
+              ? "El intervalo de Wilson para una proporción, con z = 1,96 al 95%. Es el intervalo que acompana cada tasa publicada."
               : "The Wilson interval for a proportion, with z = 1.96 at 95%. It is the interval printed beside every published rate."
           }
         />
 
-        <h3>{es ? "Los simbolos" : "The symbols"}</h3>
+        <h3>{es ? "Los símbolos" : "The symbols"}</h3>
         <ul className="symbols">
           <li>
             <span className="sym">C</span>
@@ -255,7 +255,7 @@ export function IntroductionPage() {
           </li>
           <li>
             <span className="sym">exec</span>
-            <span>{es ? "capa ejecutable: valido y resoluble" : "executable layer: valid and solvable"}</span>
+            <span>{es ? "capa ejecutable: válido y resoluble" : "executable layer: valid and solvable"}</span>
           </li>
           <li>
             <span className="sym">struct</span>
@@ -265,7 +265,7 @@ export function IntroductionPage() {
           </li>
           <li>
             <span className="sym">prop</span>
-            <span>{es ? "capa de propiedades: relaciones metamorficas" : "property layer: metamorphic relations"}</span>
+            <span>{es ? "capa de propiedades: relaciones metamórficas" : "property layer: metamorphic relations"}</span>
           </li>
           <li>
             <span className="sym">R</span>
@@ -277,11 +277,11 @@ export function IntroductionPage() {
           </li>
           <li>
             <span className="sym">p&#770;</span>
-            <span>{es ? "la proporcion observada" : "the observed proportion"}</span>
+            <span>{es ? "la proporción observada" : "the observed proportion"}</span>
           </li>
           <li>
             <span className="sym">n</span>
-            <span>{es ? "el numero de ensayos que la sostienen" : "the number of trials behind it"}</span>
+            <span>{es ? "el número de ensayos que la sostienen" : "the number of trials behind it"}</span>
           </li>
           <li>
             <span className="sym">z</span>
@@ -290,7 +290,7 @@ export function IntroductionPage() {
           <li>
             <span className="sym">T</span>
             <span>
-              {es ? "una transformacion metamorfica del problema" : "a metamorphic transformation of the problem"}
+              {es ? "una transformación metamórfica del problema" : "a metamorphic transformation of the problem"}
             </span>
           </li>
         </ul>
@@ -304,7 +304,7 @@ export function IntroductionPage() {
         <PipelineDiagram lang={lang} />
         <p className="figure-caption">
           {es
-            ? "Figura 1. Del enunciado a los cuatro veredictos. El documento tipado es el unico punto por el que pasa todo, y es lo que hace que un mismo arnes sirva a cuatro familias."
+            ? "Figura 1. Del enunciado a los cuatro veredictos. El documento tipado es el único punto por el que pasa todo, y es lo que hace que un mismo arnés sirva a cuatro familias."
             : "Figure 1. From statement to four verdicts. The typed document is the single point everything passes through, and it is what lets one harness serve four families."}
         </p>
 
@@ -313,25 +313,25 @@ export function IntroductionPage() {
             <strong>{es ? "Se escribe el caso" : "The case is authored"}</strong>
             {". "}
             {es
-              ? "Un enunciado en prosa y, junto a el, su formalizacion de referencia escrita a mano. La referencia no se extrae de un banco publico: los bancos del campo llevan entre 8 y 54 por ciento de error segun la encuesta ancla, asi que una puntuacion contra ellos tal como se publican es una puntuacion contra ruido."
+              ? "Un enunciado en prosa y, junto a él, su formalización de referencia escrita a mano. La referencia no se extrae de un banco público: los bancos del campo llevan entre 8 y 54 por ciento de error según la encuesta ancla, así que una puntuación contra ellos tal como se publican es una puntuación contra ruido."
               : "A prose statement and, beside it, its reference formalization, authored by hand. The reference is not taken from a public benchmark: the field's benchmarks carry between 8 and 54 percent error by the anchor survey's own audit, so a score against them as published is a score against noise."}
           </li>
           <li>
             <strong>{es ? "Se verifica la referencia" : "The reference is verified"}</strong>
             {". "}
             {es
-              ? "El horneado resuelve cada referencia, compara el optimo con el que el caso declara y ejecuta sus relaciones de propiedad. Tres de los veinte optimos declarados estaban mal la primera vez y el horneado los encontro."
+              ? "El horneado resuelve cada referencia, compara el óptimo con el que el caso declara y ejecuta sus relaciones de propiedad. Tres de los veinte óptimos declarados estaban mal la primera vez y el horneado los encontró."
               : "The bake solves every reference, compares the optimum against the one the case claims, and runs its property relations. Three of the twenty claimed optima were wrong the first time, and the bake caught all three."}
           </li>
           <li>
-            <strong>{es ? "Se pide una formalizacion" : "A formalization is requested"}</strong>
+            <strong>{es ? "Se pide una formalización" : "A formalization is requested"}</strong>
             {". "}
             {es
               ? "El mismo enunciado, el mismo prompt, a cada modelo bajo estudio, con n repeticiones porque la inferencia alojada no es determinista ni a temperatura cero."
               : "The same statement, the same prompt, to each model under study, with n repeats, because hosted inference is not deterministic even at temperature zero."}
           </li>
           <li>
-            <strong>{es ? "Se puntua en capas" : "It is scored in layers"}</strong>
+            <strong>{es ? "Se puntúa en capas" : "It is scored in layers"}</strong>
             {". "}
             {es
               ? "Ejecutable, estructural, propiedad, y un juez etiquetado como agregado. Cada capa se informa por separado."
@@ -341,14 +341,14 @@ export function IntroductionPage() {
             <strong>{es ? "Se registra todo" : "Everything is recorded"}</strong>
             {". "}
             {es
-              ? "Un libro mayor JSONL de solo anexion, con la huella del proveedor, los tokens, el costo y, cuando algo fallo, un extracto acotado de la respuesta. Una corrida descartada es una tasa inflada en silencio."
+              ? "Un libro mayor JSONL de solo anexion, con la huella del proveedor, los tokens, el costo y, cuando algo falló, un extracto acotado de la respuesta. Una corrida descartada es una tasa inflada en silencio."
               : "An append-only JSONL ledger with the provider fingerprint, the tokens, the cost and, when something failed, a bounded excerpt of the response. A discarded run is a silently inflated rate."}
           </li>
           <li>
             <strong>{es ? "Se publican las tasas" : "The rates are published"}</strong>
             {". "}
             {es
-              ? "Con su intervalo, su distribucion de fallos y sus salvedades. Los casos no medidos se excluyen de ambas tasas y se cuentan aparte."
+              ? "Con su intervalo, su distribución de fallos y sus salvedades. Los casos no medidos se excluyen de ambas tasas y se cuentan aparte."
               : "With their interval, their failure distribution and their caveats. Unmeasured cases are excluded from both rates and counted apart."}
           </li>
         </ol>
@@ -356,7 +356,7 @@ export function IntroductionPage() {
         <DocumentDiagram lang={lang} />
         <p className="figure-caption">
           {es
-            ? "Figura 2. La representacion intermedia. Un documento tipado no es un esquema JSON con otro nombre: guarda la procedencia de cada elemento y lo que el enunciado dejo sin decidir."
+            ? "Figura 2. La representación intermedia. Un documento tipado no es un esquema JSON con otro nombre: guarda la procedencia de cada elemento y lo que el enunciado dejó sin decidir."
             : "Figure 2. The intermediate representation. A typed document is not a JSON schema by another name: it stores the provenance of every element and what the statement left undecided."}
         </p>
 
@@ -365,7 +365,7 @@ export function IntroductionPage() {
 
       {/* ------------------------------------------------------------ 5 */}
       <section>
-        <h2>{es ? "5. Que puede concluir cada capa" : "5. What each layer can conclude"}</h2>
+        <h2>{es ? "5. Qué puede concluir cada capa" : "5. What each layer can conclude"}</h2>
         <OracleLayersDiagram lang={lang} />
         <p className="figure-caption">
           {es
@@ -376,13 +376,13 @@ export function IntroductionPage() {
         <p className="measure">
           {es ? (
             <>
-              El juez no es un oraculo de equivalencia, y quien lo dice son los autores del trabajo
-              que mejor lo calibro <Cite id="lean2026" paren />: su comprobacion hibrida alcanza{" "}
-              <strong>89,7% de acuerdo con la mayoria humana</strong> (IC 95%: 82,1 a 94,3) sobre una
+              El juez no es un oráculo de equivalencia, y quien lo dice son los autores del trabajo
+              que mejor lo calibró <Cite id="lean2026" paren />: su comprobación hibrida alcanza{" "}
+              <strong>89,7% de acuerdo con la mayoría humana</strong> (IC 95%: 82,1 a 94,3) sobre una
               muestra auditada de forma independiente, y concluyen expresamente que el juicio por
               modelo sirve como medida agregada conservadora calibrada contra humanos,{" "}
-              <em>no como oraculo de equivalencia</em>. Un diseno que califique formalizaciones con
-              un modelo esta contradiciendo su propia fuente.
+              <em>no como oráculo de equivalencia</em>. Un diseño que califique formalizaciones con
+              un modelo está contradiciendo su propia fuente.
             </>
           ) : (
             <>
@@ -400,13 +400,13 @@ export function IntroductionPage() {
         <RefutationDiagram lang={lang} />
         <p className="figure-caption">
           {es
-            ? "Figura 4. La asimetria. Dos de las cuatro comparaciones concluyen; las otras dos no, y tratarlas como si concluyeran es como una tasa de fidelidad se convierte en un sello de goma."
+            ? "Figura 4. La asimetría. Dos de las cuatro comparaciones concluyen; las otras dos no, y tratarlas como si concluyeran es como una tasa de fidelidad se convierte en un sello de goma."
             : "Figure 4. The asymmetry. Two of the four comparisons conclude; the other two do not, and treating them as if they did is how a faithfulness rate becomes a rubber stamp."}
         </p>
 
         <p className="measure">
           {es
-            ? "La primera version de esta medicion informo una brecha de +0,000. La capa estructural devolvia INDECISO en cada candidato que corria, asi que la tasa de fidelidad entera descansaba sobre invariantes internos que nunca habian fallado nada. Una tasa sostenida por una comprobacion que no puede fallar es un sello de goma con un intervalo impreso encima. La correccion fue la direccion concluyente que faltaba: dos formalizaciones del mismo caso que resuelven a optimos distintos no son el mismo modelo."
+            ? "La primera versión de esta medición informó una brecha de +0,000. La capa estructural devolvía INDECISO en cada candidato que corría, así que la tasa de fidelidad entera descansaba sobre invariantes internos que nunca habían fallado nada. Una tasa sostenida por una comprobación que no puede fallar es un sello de goma con un intervalo impreso encima. La corrección fue la dirección concluyente que faltaba: dos formalizaciones del mismo caso que resuelven a óptimos distintos no son el mismo modelo."
             : "The first version of this measurement reported a gap of +0.000. The structural layer returned UNDECIDED on every candidate that ran, so the whole faithfulness rate rested on internal invariants that had never failed anything. A rate carried by a check that cannot fail is a rubber stamp with an interval printed on it. The fix was the conclusive direction that was missing: two formalizations of the same case that solve to different optima are not the same model."}
         </p>
 
@@ -422,7 +422,7 @@ export function IntroductionPage() {
             <ul className="tick-list">
               <li>
                 {es
-                  ? "Los veinte casos y sus referencias: escritos a mano, versionados, y cada optimo verificado por el horneado."
+                  ? "Los veinte casos y sus referencias: escritos a mano, versionados, y cada óptimo verificado por el horneado."
                   : "The twenty cases and their references: authored, versioned, and every optimum verified by the bake."}
               </li>
               <li>
@@ -432,12 +432,12 @@ export function IntroductionPage() {
               </li>
               <li>
                 {es
-                  ? "La resolucion en vivo de esta pagina: HiGHS compilado a WebAssembly, el mismo motor que el horneado usa sin conexion."
+                  ? "La resolución en vivo de esta página: HiGHS compilado a WebAssembly, el mismo motor que el horneado usa sin conexión."
                   : "The live solve on this page: HiGHS compiled to WebAssembly, the same engine the offline bake uses."}
               </li>
               <li>
                 {es
-                  ? "La comprobacion dimensional: un vector de exponentes racionales, comparado por igualdad de vector."
+                  ? "La comprobación dimensional: un vector de exponentes racionales, comparado por igualdad de vector."
                   : "The dimensional check: a vector of rational exponents, compared by vector equality."}
               </li>
             </ul>
@@ -447,17 +447,17 @@ export function IntroductionPage() {
             <ul className="cross-list">
               <li>
                 {es
-                  ? "Cualquier orden entre dos modelos cuyos intervalos se solapan, que a este tamano de muestra es la mayoria de los pares."
+                  ? "Cualquier orden entre dos modelos cuyos intervalos se solapan, que a este tamaño de muestra es la mayoría de los pares."
                   : "Any ranking between two models whose intervals overlap, which at this sample size is most pairs."}
               </li>
               <li>
                 {es
-                  ? "La distribucion de fallos: informativa, y con conteos de un solo digito en varias filas."
+                  ? "La distribución de fallos: informativa, y con conteos de un solo dígito en varias filas."
                   : "The failure distribution: informative, and with single-digit counts in several rows."}
               </li>
               <li>
                 {es
-                  ? "La generalizacion fuera de la optimizacion lineal y entera mixta: las otras tres familias estan disenadas y no medidas aqui."
+                  ? "La generalización fuera de la optimización lineal y entera mixta: las otras tres familias están diseñadas y no medidas aquí."
                   : "Generalization beyond linear and mixed-integer optimization: the other three families are designed and not measured here."}
               </li>
               <li>
@@ -469,9 +469,9 @@ export function IntroductionPage() {
           </div>
         </div>
 
-        <Callout variant="honest" title={es ? "El tamano de la muestra" : "The sample size"}>
+        <Callout variant="honest" title={es ? "El tamaño de la muestra" : "The sample size"}>
           {es
-            ? `Dos pasadas sobre el corpus identico situaron a claude-haiku-4-5 en 0,350 y luego en 0,250. No cambio nada salvo el muestreo. ${facts ? `${facts.cases} casos con ${facts.repeats === 1 ? "una repeticion" : `${facts.repeats} repeticiones`}` : "Veinte casos"} pueden ver que existe una brecha; no pueden ordenar dos modelos cuyos intervalos se solapan, y esta pagina no lo intenta.`
+            ? `Dos pasadas sobre el corpus idéntico situaron a claude-haiku-4-5 en 0,350 y luego en 0,250. No cambio nada salvo el muestreo. ${facts ? `${facts.cases} casos con ${facts.repeats === 1 ? "una repetición" : `${facts.repeats} repeticiones`}` : "Veinte casos"} pueden ver que existe una brecha; no pueden ordenar dos modelos cuyos intervalos se solapan, y esta página no lo intenta.`
             : `Two passes over the identical corpus put claude-haiku-4-5 at 0.350 and then at 0.250. Nothing changed but the sampling. ${facts ? `${facts.cases} cases at ${facts.repeats === 1 ? "one repeat" : `${facts.repeats} repeats`}` : "Twenty cases"} can see that a gap exists; they cannot rank two models whose intervals overlap, and this page does not try.`}
         </Callout>
 

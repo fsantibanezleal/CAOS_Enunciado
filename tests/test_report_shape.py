@@ -115,7 +115,7 @@ def test_a_short_row_is_named_and_the_sample_size_is_the_complete_rows(tmp_path,
     # The interval quoted is the complete rows' one, not the two-call row's.
     assert english[0].startswith("Each model with a complete row ran 3 calls"), english[0]
     assert "at n = 3 " in english[0]
-    assert spanish[0].startswith("Cada modelo con fila completa corrio 3 llamadas"), spanish[0]
+    assert spanish[0].startswith("Cada modelo con fila completa corrió 3 llamadas"), spanish[0]
     short_en = [t for t in english if "have not reached every case" in t]
     short_es = [t for t in spanish if "no llegan a todos los casos" in t]
     assert len(short_en) == len(short_es) == 1

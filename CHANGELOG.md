@@ -4,6 +4,32 @@ All notable changes to this product are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions are `X.XX.XXX` in this file, in
 `VERSION`, in the git tag and in the site footer; CI checks that the last two agree.
 
+## [0.08.000] - 2026-09-26
+
+The page standard and the Spanish surface, after Felipe's review of the live site.
+
+### Changed
+
+- The root route is labelled App, first in the nav, as the page standard names it on every product
+  (product-quality-bar section 0, ADR-0017); it read "Workbench". The UI gate now checks the nav order.
+- The Benchmark is six tabs, one question each: the gap, the cap and repeats, where it fails, what
+  went wrong, check it here, scope and the judge. It was eleven sections on one scroll, about 4,300
+  words, past ADR-0071's bound of about six peers. The shell renders only the open tab, so the UI gate
+  walks the tabs and aggregates what each holds; every Benchmark check it made before still runs.
+
+### Fixed
+
+- The Spanish surface is written in Spanish. Every Spanish string shipped without accents
+  ("medicion", "formalizacion", "aqui", "Que salio mal"): in the interface, the diagrams, the
+  Architecture modal and the report text `data-pipeline/report.py` writes into
+  `data/artifacts/gap-report.json` (regenerated; its `--check` passes): 1,813 words across 29 source files.
+  The forms that depend on the sentence were decided by reading, not by a word list: está and esta,
+  qué and que, cómo, dónde, cuánto and cuál in direct and indirect questions, sí, él, término,
+  público, aún, validó and valida, fallo (the noun, most of the time) and falló (the verb).
+- The UI gate's Spanish pass now walks every tab of every document page and fails on an unaccented
+  Spanish form; before, no check anywhere looked for accents, and the pass read only the tab that
+  opens first.
+
 ## [0.07.001] - 2026-09-26
 
 ### Fixed

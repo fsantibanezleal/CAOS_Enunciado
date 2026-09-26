@@ -50,7 +50,7 @@ const RELATIONS: Relation[] = [
     transform: { en: "multiply the objective by 3", es: "multiplicar el objetivo por 3" },
     expectation: {
       en: "the argmin does not move and the optimal value scales by exactly 3",
-      es: "el argumento optimo no se mueve y el valor optimo se escala exactamente por 3",
+      es: "el argumento óptimo no se mueve y el valor óptimo se escala exactamente por 3",
     },
     build: (problem) => {
       const objective = problem.objectives[0];
@@ -70,11 +70,11 @@ const RELATIONS: Relation[] = [
     name: { en: "Redundant row", es: "Fila redundante" },
     transform: {
       en: "add a constraint restating a bound a variable already carries",
-      es: "anadir una restriccion que reafirma una cota que la variable ya lleva",
+      es: "añadir una restricción que reafirma una cota que la variable ya lleva",
     },
     expectation: {
       en: "the feasible set is unchanged, so the optimum is unchanged",
-      es: "el conjunto factible no cambia, de modo que el optimo tampoco",
+      es: "el conjunto factible no cambia, de modo que el óptimo tampoco",
     },
     build: (problem) => {
       // The row has to BE a constraint. Written as `0 <= 1` it is trivially true and Pyomo rejects
@@ -110,14 +110,14 @@ const RELATIONS: Relation[] = [
   },
   {
     id: "tighten",
-    name: { en: "Tightening", es: "Apretar una restriccion" },
+    name: { en: "Tightening", es: "Apretar una restricción" },
     transform: {
       en: "cut the right-hand side of the first upper-bound constraint by 10%",
-      es: "reducir un 10% el lado derecho de la primera restriccion de cota superior",
+      es: "reducir un 10% el lado derecho de la primera restricción de cota superior",
     },
     expectation: {
       en: "a smaller feasible set cannot contain a better optimum",
-      es: "un conjunto factible menor no puede contener un optimo mejor",
+      es: "un conjunto factible menor no puede contener un óptimo mejor",
     },
     build: (problem) => {
       // The right-hand side has to be POSITIVE for a 10% cut to shrink the feasible set; on a
@@ -152,14 +152,14 @@ const RELATIONS: Relation[] = [
   },
   {
     id: "permute",
-    name: { en: "Permutation", es: "Permutacion" },
+    name: { en: "Permutation", es: "Permutación" },
     transform: {
       en: "reverse the order of the quantities and of the constraints",
       es: "invertir el orden de las cantidades y de las restricciones",
     },
     expectation: {
       en: "order is not part of the model, so nothing about the answer may change",
-      es: "el orden no es parte del modelo, asi que nada de la respuesta puede cambiar",
+      es: "el orden no es parte del modelo, así que nada de la respuesta puede cambiar",
     },
     build: (problem) =>
       withProblem(problem, {
@@ -243,7 +243,7 @@ export function PropertyLab({
     <div className="viz">
       <p className="pane-hint" style={{ maxWidth: "80ch", margin: "0 0 0.5rem" }}>
         {es
-          ? "Una relacion metamorfica no necesita conocer la respuesta correcta: transforma el problema de una manera cuyo efecto sobre la respuesta esta fijado de antemano, y comprueba que ese efecto ocurrio. Cada fila de abajo se calcula aqui: el caso se transforma, los dos modelos se resuelven con HiGHS en su navegador, y se comparan los dos optimos."
+          ? "Una relación metamórfica no necesita conocer la respuesta correcta: transforma el problema de una manera cuyo efecto sobre la respuesta está fijado de antemano, y comprueba que ese efecto ocurrió. Cada fila de abajo se calcula aquí: el caso se transforma, los dos modelos se resuelven con HiGHS en su navegador, y se comparan los dos óptimos."
           : "A metamorphic relation does not need to know the right answer: it transforms the problem in a way whose effect on the answer is fixed in advance, then checks that the effect happened. Every row below is computed here: the case is transformed, both models are solved with HiGHS in your browser, and the two optima are compared."}
       </p>
 
@@ -251,8 +251,8 @@ export function PropertyLab({
         <table className="finding-table">
           <thead>
             <tr>
-              <th>{es ? "Relacion" : "Relation"}</th>
-              <th>{es ? "Transformacion" : "Transform"}</th>
+              <th>{es ? "Relación" : "Relation"}</th>
+              <th>{es ? "Transformación" : "Transform"}</th>
               <th className="num">{es ? "Original" : "Original"}</th>
               <th className="num">{es ? "Transformado" : "Transformed"}</th>
               <th className="num">{es ? "Esperado" : "Expected"}</th>
@@ -332,7 +332,7 @@ export function PropertyLab({
 }
 
 function format(value: number | null | undefined, es: boolean): string {
-  if (value === null || value === undefined) return es ? "sin solucion" : "no solution";
+  if (value === null || value === undefined) return es ? "sin solución" : "no solution";
   return String(Number(value.toPrecision(8)));
 }
 
