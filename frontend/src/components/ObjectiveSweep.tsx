@@ -114,7 +114,7 @@ export function ObjectiveSweep({
     return (
       <p className="muted">
         {es
-          ? "Este caso no tiene parametros numericos que barrer: todo en el enunciado esta fijado por su estructura."
+          ? "Este caso no tiene parámetros numéricos que barrer: todo en el enunciado está fijado por su estructura."
           : "This case has no numeric parameters to sweep: everything the statement fixes, it fixes structurally."}
       </p>
     );
@@ -138,7 +138,7 @@ export function ObjectiveSweep({
           data={data as never}
           series={[
             {
-              label: es ? "optimo" : "optimum",
+              label: es ? "óptimo" : "optimum",
               colour: "accent",
               value: (_self, raw) => (raw === null ? (es ? "infactible" : "infeasible") : raw.toFixed(3)),
             },
@@ -158,7 +158,7 @@ export function ObjectiveSweep({
           <select
             value={axis}
             onChange={(event) => setAxis(event.target.value)}
-            aria-label={es ? "Parametro a barrer" : "Parameter to sweep"}
+            aria-label={es ? "Parámetro a barrer" : "Parameter to sweep"}
           >
             {tunables.map((t) => (
               <option key={t.name} value={t.name}>
@@ -174,7 +174,7 @@ export function ObjectiveSweep({
               <code>{parameter.name}</code> <strong>{cursor.x.toPrecision(5)}</strong>
             </span>
             <span>
-              {es ? "optimo" : "optimum"}{" "}
+              {es ? "óptimo" : "optimum"}{" "}
               <strong>
                 {cursor.values[0] === null
                   ? es
@@ -190,7 +190,7 @@ export function ObjectiveSweep({
         ) : (
           <span className="muted">
             {es
-              ? "Pase el cursor por la curva para leer el optimo en cada valor"
+              ? "Pase el cursor por la curva para leer el óptimo en cada valor"
               : "Hover the curve to read the optimum at each value"}
           </span>
         )}

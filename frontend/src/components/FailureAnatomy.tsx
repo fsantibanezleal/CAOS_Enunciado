@@ -66,7 +66,7 @@ function locate(attempt: Attempt, text: string, es: boolean): { marks: Mark[]; n
       marks,
       note: marks.length
         ? es
-          ? `${marks.length} constante(s) sin campo unit en el extracto. Una suma de terminos con dimension exige que cada constante declare la suya.`
+          ? `${marks.length} constante(s) sin campo unit en el extracto. Una suma de términos con dimensión exige que cada constante declare la suya.`
           : `${marks.length} constant(s) with no unit field in the excerpt. A sum of dimensioned terms requires every constant to declare its own.`
         : es
           ? "La constante sin unidad cae en la parte omitida del extracto."
@@ -84,13 +84,13 @@ function locate(attempt: Attempt, text: string, es: boolean): { marks: Mark[]; n
       marks.push({
         start: found.index,
         end: end < 0 ? found.index + 40 : end + 1,
-        why: es ? "un exponente escrito como expresion" : "an exponent written as an expression",
+        why: es ? "un exponente escrito como expresión" : "an exponent written as an expression",
       });
     }
     return {
       marks,
       note: es
-        ? "Un exponente debe ser una fraccion literal, como \"-1\" o \"1/2\". El modelo escribio un nodo de expresion donde va un numero."
+        ? "Un exponente debe ser una fracción literal, como \"-1\" o \"1/2\". El modelo escribió un nodo de expresión donde va un número."
         : "An exponent must be a literal fraction such as \"-1\" or \"1/2\". The model wrote an expression node where a number belongs.",
     };
   }
@@ -108,7 +108,7 @@ function locate(attempt: Attempt, text: string, es: boolean): { marks: Mark[]; n
       marks,
       note: detail.includes("is derived but")
         ? es
-          ? `${name} se declara derivada y ninguna relacion la define. Queda como una incognita libre.`
+          ? `${name} se declara derivada y ninguna relación la define. Queda como una incognita libre.`
           : `${name} is declared derived and no relation defines it. It is left as a free unknown.`
         : es
           ? `Los dos lados de ${name} llevan dimensiones distintas.`
@@ -129,9 +129,9 @@ function locate(attempt: Attempt, text: string, es: boolean): { marks: Mark[]; n
 
   if (detail.includes("not closed")) {
     return {
-      marks: [{ start: Math.max(0, text.length - 90), end: text.length, why: es ? "cortado aqui" : "cut off here" }],
+      marks: [{ start: Math.max(0, text.length - 90), end: text.length, why: es ? "cortado aquí" : "cut off here" }],
       note: es
-        ? "La salida se corto antes de cerrar el objeto JSON: el tope de tokens se alcanzo a mitad del documento."
+        ? "La salida se corto antes de cerrar el objeto JSON: el tope de tokens se alcanzó a mitad del documento."
         : "The output was cut before the JSON object closed: the token cap was reached mid-document.",
     };
   }
@@ -142,7 +142,7 @@ function locate(attempt: Attempt, text: string, es: boolean): { marks: Mark[]; n
     return {
       marks: [],
       note: es
-        ? `El modelo razono ${Number(reasoned[1]).toLocaleString()} caracteres y ${cap ? "agoto el tope" : "se detuvo"} sin escribir una respuesta. No hay documento que abrir: el libro mayor guarda la frase del proveedor que lo dice.`
+        ? `El modelo razonó ${Number(reasoned[1]).toLocaleString()} caracteres y ${cap ? "agotó el tope" : "se detuvo"} sin escribir una respuesta. No hay documento que abrir: el libro mayor guarda la frase del proveedor que lo dice.`
         : `The model reasoned for ${Number(reasoned[1]).toLocaleString()} characters and ${cap ? "ran out of cap" : "stopped"} without writing an answer. There is no document to open: the ledger keeps the provider's sentence that says so.`,
     };
   }
@@ -155,8 +155,8 @@ function locate(attempt: Attempt, text: string, es: boolean): { marks: Mark[]; n
       marks: [],
       note: es
         ? open
-          ? "El modelo abrio un bloque de razonamiento y el tope cayo antes de que lo cerrara: no llego a empezar el documento. El extracto es su razonamiento."
-          : "El modelo seguia razonando cuando cayo el tope, y escribia el razonamiento en la respuesta misma porque su plantilla ignora el interruptor: no llego a empezar el documento. El extracto es su razonamiento."
+          ? "El modelo abrió un bloque de razonamiento y el tope cayó antes de que lo cerrara: no llegó a empezar el documento. El extracto es su razonamiento."
+          : "El modelo seguía razonando cuando cayó el tope, y escribía el razonamiento en la respuesta misma porque su plantilla ignora el interruptor: no llegó a empezar el documento. El extracto es su razonamiento."
         : open
           ? "The model opened a reasoning block and the cap fell before it closed it: it never began the document. The excerpt is its reasoning."
           : "The model was still reasoning when the cap fell, and wrote the reasoning into the answer itself because its template ignores the switch: it never began the document. The excerpt is its reasoning.",
@@ -175,7 +175,7 @@ function locate(attempt: Attempt, text: string, es: boolean): { marks: Mark[]; n
     return {
       marks,
       note: es
-        ? `${name} se declara con cota inferior ${lower} sobre la superior ${upper}, y la representacion lo rechaza. En un caso contradictorio es la contradiccion escrita en una sola variable.`
+        ? `${name} se declara con cota inferior ${lower} sobre la superior ${upper}, y la representación lo rechaza. En un caso contradictorio es la contradicción escrita en una sola variable.`
         : `${name} is declared with a lower bound of ${lower} above its upper bound of ${upper}, which the representation refuses. On a contradictory case it is the contradiction written into one variable.`,
     };
   }
@@ -187,10 +187,10 @@ function locate(attempt: Attempt, text: string, es: boolean): { marks: Mark[]; n
       note:
         bare[1] === "span"
           ? es
-            ? "Un supuesto o una pregunta abierta del documento no lleva span hacia el enunciado, asi que nada dice de donde sale. La representacion exige uno, y el analizador lo informo solo con el nombre del campo."
+            ? "Un supuesto o una pregunta abierta del documento no lleva span hacia el enunciado, así que nada dice de dónde sale. La representación exige uno, y el analizador lo informó solo con el nombre del campo."
             : "An assumption or open question in the document carries no span into the statement, so nothing says where it comes from. The representation requires one, and the parser reported it by the field's name alone."
           : es
-            ? `Al documento le falta el campo obligatorio "${bare[1]}", y el analizador lo informo solo con su nombre.`
+            ? `Al documento le falta el campo obligatorio "${bare[1]}", y el analizador lo informó solo con su nombre.`
             : `The document lacks the required field "${bare[1]}", and the parser reported it by its name alone.`,
     };
   }
@@ -201,7 +201,7 @@ function locate(attempt: Attempt, text: string, es: boolean): { marks: Mark[]; n
       note:
         attempt.failure_class === "infeasible, as the case is"
           ? es
-            ? "El candidato es infactible, como el caso: el estado correcto. Se registra como no ejecutado porque corrio significa alcanzar un optimo factible."
+            ? "El candidato es infactible, como el caso: el estado correcto. Se registra como no ejecutado porque corrió significa alcanzar un óptimo factible."
             : "The candidate is infeasible, as the case is: the right status. It is recorded as not having run, because ran means reaching a feasible optimum."
           : es
             ? "El documento valida y no tiene punto factible, sobre un caso que si lo tiene."
@@ -212,7 +212,7 @@ function locate(attempt: Attempt, text: string, es: boolean): { marks: Mark[]; n
   if (detail.startsWith("the call failed")) {
     return {
       marks: [],
-      note: es ? `La llamada misma fallo: ${detail.slice(17, 200)}` : `The call itself failed: ${detail.slice(17, 200)}`,
+      note: es ? `La llamada misma falló: ${detail.slice(17, 200)}` : `The call itself failed: ${detail.slice(17, 200)}`,
     };
   }
 
@@ -220,7 +220,7 @@ function locate(attempt: Attempt, text: string, es: boolean): { marks: Mark[]; n
     return {
       marks: [],
       note: es
-        ? "Este documento valido y resolvio al optimo de la referencia con sus decisiones enteras. El enunciado no dice si esas decisiones son numeros enteros y la referencia es continua ahi, asi que la refutacion puede ser de una lectura que el enunciado admite."
+        ? "Este documento validó y resolvió al óptimo de la referencia con sus decisiones enteras. El enunciado no dice si esas decisiones son números enteros y la referencia es continua ahí, así que la refutación puede ser de una lectura que el enunciado admite."
         : "This document validated and solved to the reference's optimum with its decisions made integer. The statement does not say whether those decisions are whole numbers and the reference is continuous there, so the refutation may be of a reading the statement allows.",
     };
   }
@@ -229,7 +229,7 @@ function locate(attempt: Attempt, text: string, es: boolean): { marks: Mark[]; n
     return {
       marks: [],
       note: es
-        ? "Este documento valido y resolvio. Su defecto es semantico: resuelve a otro optimo, y eso no se ve en el texto sino en la respuesta."
+        ? "Este documento validó y resolvió. Su defecto es semántico: resuelve a otro óptimo, y eso no se ve en el texto sino en la respuesta."
         : "This document validated and solved. Its defect is semantic: it solves to a different optimum, and that is not visible in the text but in the answer.",
     };
   }
@@ -260,7 +260,7 @@ export function FailureAnatomy({ record, lang }: { record: CaseRecord; lang: "en
     return (
       <p className="muted">
         {es
-          ? "Ningun intento fallo en este caso, asi que no hay extracto que abrir. El libro mayor solo guarda la respuesta cuando algo fallo."
+          ? "Ningún intento falló en este caso, así que no hay extracto que abrir. El libro mayor solo guarda la respuesta cuando algo falló."
           : "No attempt failed on this case, so there is no excerpt to open. The ledger keeps a response only when something failed."}
       </p>
     );

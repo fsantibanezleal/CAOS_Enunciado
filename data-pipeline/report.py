@@ -66,7 +66,7 @@ LOCAL_PROVIDERS = frozenset({"ollama"})
 CONTROLS = {
     "anthropic": (
         "Claude takes no temperature and no seed, so none is recorded",
-        "Claude no admite temperatura ni semilla, asi que no se registra ninguna",
+        "Claude no admite temperatura ni semilla, así que no se registra ninguna",
     ),
     "zai": (
         (
@@ -74,7 +74,7 @@ CONTROLS = {
             "it, and no seed"
         ),
         (
-            "GLM corre con decodificacion voraz (do_sample false), esfuerzo alto donde el modelo "
+            "GLM corre con decodificación voraz (do_sample false), esfuerzo alto donde el modelo "
             "lo admite, y sin semilla"
         ),
     ),
@@ -113,10 +113,10 @@ PROTOCOL_NOTES = (
             "were the measurement and not a fault of the harness."
         ),
         "es": (
-            "El barrido de deepseek-v4-pro alcanzo su criterio de corte, diez fallos seguidos, tras "
-            "13 llamadas, y cada uno de los diez fue una respuesta que gasto todo el tope "
-            "razonando. Se reanudo con el criterio en 20 para completar el corpus, porque esos "
-            "fallos eran la medicion y no una falla del arnes."
+            "El barrido de deepseek-v4-pro alcanzó su criterio de corte, diez fallos seguidos, tras "
+            "13 llamadas, y cada uno de los diez fue una respuesta que gastó todo el tope "
+            "razonando. Se reanudó con el criterio en 20 para completar el corpus, porque esos "
+            "fallos eran la medición y no una falla del arnés."
         ),
     },
 )
@@ -139,22 +139,22 @@ SCORING_NOTE = {
         "verdicts each record stored."
     ),
     "es": (
-        "Los registros escritos antes de copela 0.4.0 no nombran el copela que los califico, asi "
-        "que se declara aqui, a partir de cuando corrio cada barrido y cuando se instalo cada "
-        "version: el codigo publicado como copela 0.2.0 califico las dos filas de Claude, 0.3.0 "
-        "califico GLM-5.3 y las primeras 13 llamadas de DeepSeek-V4-Pro, y 0.3.2 califico todos los "
-        "demas registros sin version. Las tasas aplican una sola regla a todos, la de copela "
-        "{version}, que deriva este informe, sobre los veredictos que guardo cada registro."
+        "Los registros escritos antes de copela 0.4.0 no nombran el copela que los calificó, así "
+        "que se declara aquí, a partir de cuando corrió cada barrido y cuando se instaló cada "
+        "versión: el código publicado como copela 0.2.0 calificó las dos filas de Claude, 0.3.0 "
+        "calificó GLM-5.3 y las primeras 13 llamadas de DeepSeek-V4-Pro, y 0.3.2 calificó todos los "
+        "demás registros sin versión. Las tasas aplican una sola regla a todos, la de copela "
+        "{version}, que deriva este informe, sobre los veredictos que guardó cada registro."
     ),
 }
 
 #: copela's note, which the page prints, in the second language.
 NOTE_ES = (
-    "Las capas se informan por separado a proposito. No hay puntaje combinado: un solo numero "
-    "dejaria que una tasa alta de 'corrio' oculte una tasa baja de 'fue correcto', que es la "
+    "Las capas se informan por separado a propósito. No hay puntaje combinado: un solo número "
+    "dejaría que una tasa alta de 'corrió' oculte una tasa baja de 'fue correcto', que es la "
     "distancia que este informe existe para mostrar. Las tasas son sobre repeticiones con un "
     "intervalo de Wilson, porque fijar los controles que expone un proveedor no hace determinista "
-    "la inferencia alojada, asi que una corrida sola no es un resultado."
+    "la inferencia alojada, así que una corrida sola no es un resultado."
 )
 
 
@@ -193,7 +193,7 @@ def caveats(
         ("Each model with a complete row", "Cada modelo con fila completa") if short else ("Each model", "Cada modelo")
     )
     per_case = (
-        ("one repeat per case", "una repeticion por caso")
+        ("one repeat per case", "una repetición por caso")
         if repeats == 1
         else (f"{repeats} repeats per case", f"{repeats} repeticiones por caso")
     )
@@ -203,10 +203,10 @@ def caveats(
             f"which gives a wide interval: at n = {n} a rate of {wilson['value']:.2f} carries a Wilson "
             f"interval from {wilson['interval_low']:.2f} to {wilson['interval_high']:.2f}. Two models "
             "whose intervals overlap cannot be ranked against each other from this run.",
-            f"{quien} corrio {'/'.join(str(c) for c in per_model)} llamadas, {per_case[1]}, "
+            f"{quien} corrió {'/'.join(str(c) for c in per_model)} llamadas, {per_case[1]}, "
             f"lo que da un intervalo ancho: con n = {n} una tasa de {wilson['value']:.2f} "
             f"lleva un intervalo de Wilson de {wilson['interval_low']:.2f} a {wilson['interval_high']:.2f}. "
-            "Dos modelos cuyos intervalos se solapan no se pueden ordenar entre si con esta corrida.",
+            "Dos modelos cuyos intervalos se solapan no se pueden ordenar entre sí con esta corrida.",
         )
     )
     if short:
@@ -235,13 +235,13 @@ def caveats(
                 if lang == 0:
                     parts.append(f"its {name} repeat {'not started' if got == 0 else f'at {got} of {n_cases}'}")
                 else:
-                    parts.append(f"su {name} repeticion {'sin empezar' if got == 0 else f'en {got} de {n_cases}'}")
+                    parts.append(f"su {name} repetición {'sin empezar' if got == 0 else f'en {got} de {n_cases}'}")
             return f" ({', '.join(parts)})" if repeats > 1 and parts else ""
 
         partial = any(0 < per_pass[m["key"]].get(rep, 0) < n_cases for m in short for rep in range(repeats))
         whole = any(per_pass[m["key"]].get(rep, 0) == 0 for m in short for rep in range(repeats))
         every = "have not reached every case" + (" at every repeat" if repeats > 1 else "")
-        cada = "no llegan a todos los casos" + (" en cada repeticion" if repeats > 1 else "")
+        cada = "no llegan a todos los casos" + (" en cada repetición" if repeats > 1 else "")
         out.append(
             _caveat(
                 f"{len(short)} row(s) {every}: "
@@ -272,16 +272,16 @@ def caveats(
                 + (
                     (
                         f"Un barrido recorre los casos en el orden del corpus, y el corpus sube del "
-                        f"nivel {tiers[0]} al nivel {tiers[-1]}, asi que a una pasada sin terminar le "
-                        "faltan los casos mas dificiles. "
+                        f"nivel {tiers[0]} al nivel {tiers[-1]}, así que a una pasada sin terminar le "
+                        "faltan los casos mas difíciles. "
                         if climbs
-                        else "A una pasada sin terminar le faltan los casos que el barrido no alcanzo. "
+                        else "A una pasada sin terminar le faltan los casos que el barrido no alcanzó. "
                     )
                     if partial
                     else ""
                 )
                 + (
-                    "Una fila a la que le falta una repeticion entera tiene todos los casos con "
+                    "Una fila a la que le falta una repetición entera tiene todos los casos con "
                     "menos repeticiones: su tasa es sobre menos muestras, no sobre casos mas faciles. "
                     if whole and repeats > 1
                     else ""
@@ -297,9 +297,9 @@ def caveats(
                 "Run-to-run variation is real: an earlier pass of the identical corpus put "
                 "claude-haiku-4-5 at ran 0.350, and the published pass puts it at 0.250, with "
                 "nothing changed but the sampling. That is what the interval is for.",
-                "La variacion entre corridas es real: una pasada anterior del mismo corpus puso a "
-                "claude-haiku-4-5 en corrio 0.350, y la pasada publicada lo pone en 0.250, sin que "
-                "cambiara nada salvo el muestreo. Para eso esta el intervalo.",
+                "La variación entre corridas es real: una pasada anterior del mismo corpus puso a "
+                "claude-haiku-4-5 en corrió 0.350, y la pasada publicada lo pone en 0.250, sin que "
+                "cambiara nada salvo el muestreo. Para eso está el intervalo.",
             )
         )
     out.append(
@@ -309,7 +309,7 @@ def caveats(
             "the measurement is about formalization rather than transcription.",
             "El enunciado verdadero se sustituye antes de parsear y los desplazamientos de "
             "procedencia se recalculan desde el texto citado. Ambas cosas favorecen al modelo, y "
-            "se declaran porque la medicion es sobre formalizacion y no sobre transcripcion.",
+            "se declaran porque la medición es sobre formalización y no sobre transcripción.",
         )
     )
     present = [p for p in PROVIDER_ORDER if any(m["provider"] == p for m in models)]
@@ -318,7 +318,7 @@ def caveats(
             "Providers expose different controls, and each record states the ones it pinned: "
             + "; ".join(CONTROLS[p][0] for p in present if p in CONTROLS)
             + ".",
-            "Los proveedores exponen controles distintos, y cada registro declara los que fijo: "
+            "Los proveedores exponen controles distintos, y cada registro declara los que fijó: "
             + "; ".join(CONTROLS[p][1] for p in present if p in CONTROLS)
             + ".",
         )
@@ -336,9 +336,9 @@ def caveats(
             "about how it formalizes.",
             f"Un solo tope de salida para todos los modelos, {PROTOCOL_CAP} tokens. Muerde en los "
             f"modelos que escriben o razonan en extenso: {capped} de las {len(records)} llamadas lo "
-            "alcanzaron, contadas como 'salida truncada' o 'sin respuesta: el razonamiento agoto el "
-            "tope'. Un modelo que razona gasta el tope razonando primero, asi que esos son fallos "
-            "bajo este tope, no evidencia de como formaliza.",
+            "alcanzaron, contadas como 'salida truncada' o 'sin respuesta: el razonamiento agotó el "
+            "tope'. Un modelo que razona gasta el tope razonando primero, así que esos son fallos "
+            "bajo este tope, no evidencia de cómo formaliza.",
         )
     )
     out.append(
@@ -346,9 +346,9 @@ def caveats(
             "The structural layer passes only when the canonical forms are equal, and refutes when "
             "the optima differ. A matching optimum never proves equivalence, because compensating "
             "errors reach the right number.",
-            "La capa estructural aprueba solo cuando las formas canonicas son iguales, y refuta "
-            "cuando los optimos difieren. Un optimo coincidente nunca prueba equivalencia, porque "
-            "errores que se compensan llegan al numero correcto.",
+            "La capa estructural aprueba solo cuando las formas canónicas son iguales, y refuta "
+            "cuando los óptimos difieren. Un óptimo coincidente nunca prueba equivalencia, porque "
+            "errores que se compensan llegan al número correcto.",
         )
     )
     infeasible_ok = sum(counts.get("infeasible, as the case is", 0) for counts in failure.values())
@@ -360,11 +360,11 @@ def caveats(
             f"recorded as not having run, and is classed 'infeasible, as the case is'. "
             f"{infeasible_ok} candidate(s) did so. Crediting it needs a structural check that can "
             "pass such a case, and is an open decision because it moves the published rates.",
-            f"{cases} no tiene punto factible por diseno, y corrio significa alcanzar un optimo "
-            "factible, asi que no se puede aprobar: un candidato que prueba que es infactible, la "
+            f"{cases} no tiene punto factible por diseño, y corrió significa alcanzar un óptimo "
+            "factible, así que no se puede aprobar: un candidato que prueba que es infactible, la "
             "respuesta correcta, queda registrado como no ejecutado, y se clasifica 'infactible, "
             f"como el caso'. {infeasible_ok} candidato(s) lo hicieron. Acreditarlo requiere una "
-            "comprobacion estructural capaz de aprobar un caso asi, y es una decision abierta "
+            "comprobación estructural capaz de aprobar un caso así, y es una decisión abierta "
             "porque mueve las tasas publicadas.",
         )
     )
@@ -374,7 +374,7 @@ def caveats(
             "from both rates. Charging a limit of the instrument to the subject is the error this "
             "product exists to expose.",
             "Un candidato que el solucionador configurado no puede expresar se cuenta como no "
-            "medido y se excluye de ambas tasas. Cargarle al sujeto un limite del instrumento es "
+            "medido y se excluye de ambas tasas. Cargarle al sujeto un límite del instrumento es "
             "el error que este producto existe para exponer.",
         )
     )
@@ -383,7 +383,7 @@ def caveats(
             _caveat(
                 "The Z.AI calls were drawn from a GLM Coding Plan quota, so their cost is the "
                 "list-price equivalent of the tokens, not what was billed.",
-                "Las llamadas a Z.AI salieron de la cuota de un GLM Coding Plan, asi que su costo "
+                "Las llamadas a Z.AI salieron de la cuota de un GLM Coding Plan, así que su costo "
                 "es el equivalente a precio de lista de los tokens, no lo facturado.",
             )
         )
@@ -395,7 +395,7 @@ def caveats(
                 "digest of the weights behind each tag.",
                 "Los modelos locales corrieron en una GPU de portatil con 8 GB de memoria, cada uno "
                 "en un contexto que contiene el prompt y el tope completo; sus registros llevan ese "
-                "contexto y el digest de los pesos detras de cada etiqueta.",
+                "contexto y el digest de los pesos detrás de cada etiqueta.",
             )
         )
     keys = {m["key"] for m in models}
@@ -431,9 +431,9 @@ def caveats(
                 "the taxonomy classes it as unbounded. copela 0.3.3 fixes it for later sweeps.",
                 f"{len(scored_as_run)} candidato(s) ({names}) eran no acotados y quedaron "
                 "registrados como ejecutados: copela antes de 0.3.3 aprobaba un modelo no acotado en "
-                "la capa ejecutable, y sus capas siguientes leian mal el optimo ausente. Los "
-                "registros conservan los veredictos con que se calificaron, asi que cada uno cuenta "
-                "como corrido y no fiel en su fila; la taxonomia lo clasifica como no acotado. "
+                "la capa ejecutable, y sus capas siguientes leian mal el óptimo ausente. Los "
+                "registros conservan los veredictos con que se calificaron, así que cada uno cuenta "
+                "como corrido y no fiel en su fila; la taxonomía lo clasifica como no acotado. "
                 "copela 0.3.3 lo corrige para los barridos siguientes.",
             )
         )
@@ -454,7 +454,7 @@ def caveats(
                 "it, because the ledger skips every call it already holds.",
                 f"{len(call_failures)} llamada(s) fallaron en el proveedor y nunca llegaron al modelo ("
                 + ", ".join(f"{model_key(r)} en {r.key.case_id}" for r in call_failures)
-                + "). copela cuenta una llamada fallida como un candidato que no se ejecuto, asi que "
+                + "). copela cuenta una llamada fallida como un candidato que no se ejecutó, así que "
                 "baja las tasas de ese modelo. El libro mayor conserva el registro, y un barrido "
                 "reanudado no la reintenta, porque el libro mayor omite cada llamada que ya contiene.",
             )
@@ -491,15 +491,15 @@ def caveats(
                 "keep the refutations, because a case is not edited after its answers are read. "
                 f"Read as allowed, the gaps would move: {moves_en}. How a statement that leaves a "
                 "decision's domain open is scored is an open decision.",
-                f"{len(found)} refutacion(es) caen exactamente en el optimo de la referencia con sus "
+                f"{len(found)} refutación(es) caen exactamente en el óptimo de la referencia con sus "
                 f"decisiones enteras: {landed_es}. Los enunciados de {_listed(cases, 'y')} no dicen "
-                "si esas decisiones son numeros enteros, y las referencias son continuas ahi, asi "
+                "si esas decisiones son números enteros, y las referencias son continuas ahí, así "
                 "que un candidato que las cuenta en unidades enteras queda refutado por una lectura "
-                "que el enunciado admite. Estos candidatos caen donde cae ese modelo, y un optimo "
+                "que el enunciado admite. Estos candidatos caen donde cae ese modelo, y un óptimo "
                 "coincidente no prueba que el candidato sea ese modelo. Las tasas publicadas "
-                "conservan las refutaciones, porque un caso no se edita despues de leer sus "
-                f"respuestas. Leidas como admitidas, las brechas se moverian: {moves_es}. Como se "
-                "califica un enunciado que deja abierto el dominio de una decision es una decision "
+                "conservan las refutaciones, porque un caso no se edita después de leer sus "
+                f"respuestas. Leídas como admitidas, las brechas se moverían: {moves_es}. Cómo se "
+                "califica un enunciado que deja abierto el dominio de una decisión es una decisión "
                 "abierta.",
             )
         )
@@ -522,15 +522,15 @@ def caveats(
                     if copies
                     else "No model returned the same response on every repeat."
                 ),
-                f"{compared} caso(s) fueron corridos mas de una vez por el mismo modelo, y la repeticion "
-                f"posterior llego al mismo veredicto de fidelidad que la primera en {same} de ellos. "
+                f"{compared} caso(s) fueron corridos mas de una vez por el mismo modelo, y la repetición "
+                f"posterior llegó al mismo veredicto de fidelidad que la primera en {same} de ellos. "
                 + (
-                    f"Para {_listed(copies, 'y')}, cada repeticion posterior devolvio la primera respuesta "
+                    f"Para {_listed(copies, 'y')}, cada repetición posterior devolvió la primera respuesta "
                     "byte por byte, como puede hacerlo un modelo a temperatura 0 con semilla fija: esas "
-                    "repeticiones son la misma muestra dos veces, asi que sus tasas descansan en la mitad "
+                    "repeticiones son la misma muestra dos veces, así que sus tasas descansan en la mitad "
                     "de las llamadas que cuentan, y sus intervalos son mas estrechos que la evidencia."
                     if copies
-                    else "Ningun modelo devolvio la misma respuesta en cada repeticion."
+                    else "Ningún modelo devolvió la misma respuesta en cada repetición."
                 ),
             )
         )
@@ -542,7 +542,7 @@ def caveats(
                 "criterion at 20, the corpus size, rather than 10: a free call costs nothing, and a "
                 "completed corpus keeps their rows comparable with the rest.",
                 f"Los {len(free)} modelos gratuitos, los que no tienen precio por token, corrieron "
-                "con el criterio de corte en 20, el tamano del corpus, y no en 10: una llamada "
+                "con el criterio de corte en 20, el tamaño del corpus, y no en 10: una llamada "
                 "gratuita no cuesta nada, y un corpus completo mantiene sus filas comparables con el "
                 "resto.",
             )
@@ -564,9 +564,9 @@ def caveats(
             "tier or trap.",
             "Las tasas por nivel y por trampa son reagrupaciones de los "
             + (f"registros propios de cada modelo, {n} en una fila completa" if short else f"{n} registros propios de cada modelo")
-            + f", asi que sus denominadores van de {smallest} a {largest}"
+            + f", así que sus denominadores van de {smallest} a {largest}"
             + (", y menos en una fila incompleta" if short else "")
-            + ". Indican donde mirar despues; no sostienen una afirmacion sobre ningun nivel ni "
+            + ". Indican dónde mirar después; no sostienen una afirmación sobre ningún nivel ni "
             "trampa.",
         )
     )

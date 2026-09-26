@@ -244,7 +244,7 @@ export function RateIntervals({
       <div className="viz-legend">
         <span>
           <i className="viz-swatch" style={{ background: "var(--color-fg-subtle)" }} />
-          {es ? "corrio" : "ran"}
+          {es ? "corrió" : "ran"}
         </span>
         <span>
           <i className="viz-swatch" style={{ background: "var(--color-accent)" }} />
@@ -264,7 +264,7 @@ export function RateIntervals({
             </span>
             <span>{providerName(hovered.provider, lang)}</span>
             <span>
-              {es ? "corrio" : "ran"} {hoveredCell.ran.passed}/{hoveredCell.ran.total} ={" "}
+              {es ? "corrió" : "ran"} {hoveredCell.ran.passed}/{hoveredCell.ran.total} ={" "}
               <strong>{hoveredCell.ran.value.toFixed(3)}</strong> [{hoveredCell.ran.interval_low.toFixed(3)},{" "}
               {hoveredCell.ran.interval_high.toFixed(3)}]
             </span>

@@ -74,7 +74,7 @@ export function CaseDiagnosis({ record, lang }: { record: CaseRecord; lang: "en"
     return (
       <div className="diag" data-outcome="none-ran">
         <p className="muted">
-          {es ? "Ningun modelo intento este caso en la medicion publicada." : "No model attempted this case in the published measurement."}
+          {es ? "Ningún modelo intento este caso en la medición publicada." : "No model attempted this case in the published measurement."}
         </p>
       </div>
     );
@@ -160,7 +160,7 @@ export function CaseDiagnosis({ record, lang }: { record: CaseRecord; lang: "en"
 
       <p className="diag-note">
         {es
-          ? "E, S, P: las capas ejecutable, estructural y de propiedad. Una S ambar no decidio nada, y no cuenta como aprobado. El borde de cada fila es su clase; el detalle esta en Los modelos."
+          ? "E, S, P: las capas ejecutable, estructural y de propiedad. Una S ámbar no decidió nada, y no cuenta como aprobado. El borde de cada fila es su clase; el detalle está en Los modelos."
           : "E, S, P: the executable, structural and property layers. An amber S decided nothing, and does not count as a pass. Each row's edge is its class; the detail is under The models."}
       </p>
     </div>
