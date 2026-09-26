@@ -29,7 +29,7 @@ jobs:
         # This is a PRODUCT. Its test suite needs a solver and its bake solves twenty models, so
         # neither runs here: both run locally and their output is committed. CI installs a linter
         # and nothing else.
-        run: python -m pip install --upgrade pip ruff
+        run: python -m pip install --upgrade pip "ruff==0.16.9"
 
       - name: Lint
         # `scripts/` runs in this very workflow and was not linted: two real findings sat
