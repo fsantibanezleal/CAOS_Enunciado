@@ -691,6 +691,7 @@ if (gapReport) {
       return {
         figureModels,
         tableModels,
+        capRows: document.querySelectorAll(".finding-table tr[data-cap]").length,
         tableChips,
         figureShort,
         wholeNumber: note ? { count: Number(note.getAttribute("data-whole-number")), text: note.textContent ?? "" } : null,
@@ -808,7 +809,7 @@ if (gapReport) {
 
       if (capSensitivity) {
         const expected = capSensitivity.rows.reduce((sum, row) => sum + Object.keys(row.by_cap).length, 0);
-        const shown = seen.tableModels.length - models.length;
+        const shown = seen.capRows;
         check(shown === expected, "the cap table shows every model at every cap it ran", `${shown} of ${expected} rows`);
       }
       await page.screenshot({ path: join(SHOTS, "benchmark-many-models.png"), fullPage: true });
