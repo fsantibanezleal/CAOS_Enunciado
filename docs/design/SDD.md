@@ -251,6 +251,10 @@ R-043  WHEN a new copela or planteo is to score part of a recorded measurement, 
        first rescore every recorded document under it and count each layer outcome and faithful
        verdict that would change, and SHALL report a change it finds as well as its absence.
        Gate: tests/test_rescore.py::test_a_changed_rule_is_counted_and_an_unchanged_one_is_not
+
+R-044  THE manuscript SHALL print no measured number that is not transcribed from the committed
+       artifacts, and CI SHALL fail when the transcribed files differ from what the artifacts give.
+       Gate: manuscripts/narrative-to-optimization/make_numbers.py
 ```
 
 The dynamics family has requirements of its own, R-201 onward, in
@@ -266,6 +270,12 @@ nested products in the canonical form. So the rest of the second repeat was held
 release had rescored what was already recorded: all 58 documents in the ledger gave the outcomes
 they were stored with, and none of the 173 responses that did not parse could have parsed into a
 runnable optimization problem under the new planteo, because what it adds is dynamics only.
+
+R-044 came from the ledger growing from 370 to 640 calls while the manuscript kept printing 370.
+`make_numbers.py` had crashed on a shadowed name as soon as a local model repeated its first response
+on every case, and nothing compared the tracked number files with the artifacts, so the crash cost
+nothing and the drift was invisible. `make_numbers.py --check` regenerates them into a scratch
+directory and compares; CI runs it with the standard library alone.
 
 R-041 came with the second repeat, which BL-037 needed so that new records would carry their
 documents. A repeat is a second sample only if it can differ, and at temperature 0 with a fixed seed
