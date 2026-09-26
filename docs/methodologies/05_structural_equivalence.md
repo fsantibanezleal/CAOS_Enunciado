@@ -140,60 +140,71 @@ relaxation test on all four.
 
 ## What the layer decided, measured
 
-In the published measurement (sixteen models, 320 calls at the 8192-token cap) 45 candidates ran.
-The structural layer decided 14 of them: 4 by `PASS` and 10 by refutation.
+In the published measurement (sixteen models, twenty cases at two repeats, 640 calls at the
+8192-token cap) 92 candidates ran. The structural layer decided 29 of them: 8 by `PASS` and 21 by
+refutation.
 
-The four passes are the first this layer has returned. All four came from the two reasoning models,
-which reproduced their references' document form exactly:
+The eight passes came from three models, which reproduced their references' document form exactly.
+A pass is per call, so the third column says which of a model's two passes over the case it came
+from:
 
-| Case | Model |
-|---|---|
-| opt-002 | glm-5.3 |
-| opt-004 | glm-5.3 |
-| opt-018 | glm-5.3 |
-| opt-003 | deepseek-v4-pro |
+| Case | Model | Pass |
+|---|---|---|
+| opt-002 | glm-5.3 | first |
+| opt-003 | claude-sonnet-5 | second |
+| opt-003 | deepseek-v4-pro | both |
+| opt-004 | glm-5.3 | first |
+| opt-013 | deepseek-v4-pro | second |
+| opt-018 | glm-5.3 | both |
 
-The ten refutations, with the reference's optimum when its decisions are made integer beside it:
+The twenty-one refutations, with the reference's optimum when its decisions are made integer beside
+it. A local model at temperature zero returns the same candidate on both passes, so most of its
+refutations count twice:
 
-| Case | Model | Candidate optimum | Reference optimum | Whole-number optimum |
-|---|---|---|---|---|
-| opt-006 | claude-haiku-4-5 | 16 | 16.667 | **16** |
-| opt-012 | claude-sonnet-5 | 8080 | 8200 | **8080** |
-| opt-012 | phi4 | 8080 | 8200 | **8080** |
-| opt-020 | phi4 | 113700 | 61200 | 61200 |
-| opt-010 | deepseek-r1:8b | 103158 | 89444.4 | 89460 |
-| opt-002 | gemma3:12b | 1200 | 1500 | 1500 |
-| opt-005 | gemma3:12b | 0 | 12600 | 12600 |
-| opt-008 | gemma3:12b | 31680 | 28980 | 28980 |
-| opt-005 | qwen3:14b | 13.5 | 12600 | 12600 |
-| opt-009 | qwen3:14b | 1250 | 4080 | 4080 |
+| Case | Model | Pass | Candidate optimum | Reference optimum | Whole-number optimum |
+|---|---|---|---|---|---|
+| opt-002 | gemma3:12b | both | 1200 | 1500 | 1500 |
+| opt-005 | gemma3:12b | both | 0 | 12600 | 12600 |
+| opt-005 | qwen3:14b | both | 13.5 | 12600 | 12600 |
+| opt-006 | claude-haiku-4-5 | both | 16 | 16.667 | **16** |
+| opt-006 | glm-5.3 | second | 16 | 16.667 | **16** |
+| opt-008 | gemma3:12b | both | 31680 | 28980 | 28980 |
+| opt-009 | qwen3:14b | both | 1250 | 4080 | 4080 |
+| opt-010 | deepseek-r1:8b | both | 103158 | 89444.4 | 89460 |
+| opt-012 | claude-haiku-4-5 | second | 8080 | 8200 | **8080** |
+| opt-012 | claude-sonnet-5 | both | 8080 | 8200 | **8080** |
+| opt-012 | phi4 | both | 8080 | 8200 | **8080** |
+| opt-020 | phi4 | first | 113700 | 61200 | 61200 |
 
-Three of the ten land exactly on the whole-number optimum, and two of those three are the only
-refutations either Claude model has. opt-006 asks for the most night shifts a wage bill allows, and
-opt-012 for the best margin on pumps and valves; neither statement says whether a shift or a pump
+Eight of the twenty-one land exactly on the whole-number optimum, and five of those eight are the
+only refutations either Claude model has. opt-006 asks for the most night shifts a wage bill allows,
+and opt-012 for the best margin on pumps and valves; neither statement says whether a shift or a pump
 comes in whole units, and both references are continuous (opt-006's even gives its shifts the
 dimension `count`). The candidates declared the decisions integer and solved to 16 and 8080, which is
 where that model lands. So the refutation is true, the two are different models, and it is not
 evidence that the candidate misread the statement, because the statement allowed its reading. A
 matching optimum does not prove the candidate is the integer model either, which is why the report
-classes these as "solves to the reference's whole-number optimum" and says no more. All three passed
-the property layer, so read as allowed, Haiku 4.5's and Sonnet 5's gaps are 0.000 rather than +0.050,
-and phi4's +0.050 rather than +0.100. The published rates keep the refutations, because a case is
-not edited after its answers were read; the Benchmark states the effect beside the gaps, and how to
-score a statement that leaves a decision's domain open is an open decision.
+classes these as "solves to the reference's whole-number optimum" and says no more. All eight passed
+the property layer, so read as allowed, Haiku 4.5's gap is 0.000 rather than +0.075, Sonnet 5's
+0.000 rather than +0.050, glm-5.3's 0.000 rather than +0.025, and phi4's +0.025 rather than +0.075.
+The published rates keep the refutations, because a case is not edited after its answers were read;
+the Benchmark states the effect beside the gaps, and how to score a statement that leaves a
+decision's domain open is an open decision.
 
 The bake records each reference's whole-number optimum, and it moves in exactly three cases: opt-006,
 opt-010 (89444.4 to 89460, a minimisation) and opt-012. deepseek-r1:8b's refutation on opt-010 lands
-on neither value.
+on neither value, on either pass.
 
-At the 32768-token cap DeepSeek-V4-Pro also solves opt-012 to 8080, a fourth refutation of the kind,
-and passes three more cases by canonical form (opt-002, opt-003 and opt-013).
+At the 32768-token cap DeepSeek-V4-Pro also solves opt-012 to 8080, another refutation of the kind,
+and passes opt-002, opt-003 and opt-013 by canonical form, where the protocol cap gave it opt-003 on
+both passes and opt-013 on the second.
 
-The other 31 candidates that ran are `UNDECIDED`. One of them has not survived anything:
-deepseek-r1:8b's candidate for opt-006 is unbounded, which copela 0.3.2 scored as a run, and its
-structural comparison fell through on the missing optimum; the report classes it as unbounded. So of
-the 34 faithful verdicts, 4 rest on a structural `PASS` and 30 on the property layer alone. That is
-the honest reading of the headline rate, and the Benchmark page states it.
+The other 63 candidates that ran are `UNDECIDED`. One of them has not survived anything:
+deepseek-r1:8b's first candidate for opt-006 is unbounded, which copela 0.3.2 scored as a run, and its
+structural comparison fell through on the missing optimum; the report classes it as unbounded, and
+the second pass produced an unbounded model again, scored as not having run. So of the 70 faithful
+verdicts, 8 rest on a structural `PASS` and 62 on the property layer alone. That is the honest
+reading of the headline rate, and the Benchmark page states it.
 
 ## What this page is not
 

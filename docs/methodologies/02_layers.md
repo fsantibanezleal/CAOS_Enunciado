@@ -38,12 +38,13 @@ keeps the objective sense. The workbench's Canonical form tab computes a stronge
 rows, and it decides nothing. [`05_structural_equivalence.md`](05_structural_equivalence.md) sets
 the two side by side.
 
-**What it decided.** In the published measurement it decided 14 of the 45 candidates that ran: 4 by
-PASS, all from GLM-5.3 and DeepSeek-V4-Pro, and 10 by refutation. Three of the refutations, the only
-two either Claude model has among them, land exactly on the reference's optimum with its decisions
-made integer, in statements that never say whether those decisions are whole numbers
-([`05_structural_equivalence.md`](05_structural_equivalence.md) has the table). Of the 34 faithful
-verdicts, 30 rest on the property layer alone.
+**What it decided.** In the published measurement (twenty cases at two repeats) it decided 29 of
+the 92 candidates that ran: 8 by PASS, from GLM-5.3, DeepSeek-V4-Pro and, on one second pass, Claude
+Sonnet 5, and 21 by refutation. Eight of the refutations, the only five either Claude model has
+among them, land exactly on the reference's optimum with its decisions made integer, in statements
+that never say whether those decisions are whole numbers
+([`05_structural_equivalence.md`](05_structural_equivalence.md) has the table). Of the 70 faithful
+verdicts, 62 rest on the property layer alone.
 
 ## 3. Property
 

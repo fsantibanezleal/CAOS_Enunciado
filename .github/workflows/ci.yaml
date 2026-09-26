@@ -77,6 +77,13 @@ jobs:
         # the report: those are pipeline scripts, and they run locally (`run.ps1 check`).
         run: python scripts/check_artifacts.py
 
+      - name: The manuscript prints the numbers of the committed artifacts
+        # Stdlib only. `make_numbers.py --check` regenerates the macro file, the three table bodies
+        # and the figure data into a scratch directory and compares them with the tracked ones. The
+        # ledger had grown from 370 to 640 calls with the manuscript still printing 370, and nothing
+        # said so until this step existed.
+        run: python manuscripts/narrative-to-optimization/make_numbers.py --check
+
       - name: The CI budget guard (ADR-0074)
         # Copied from the template, where it is the enforcement of record. On its first run here it
         # failed this very workflow: the report re-derivation step ran `data-pipeline/report.py`,
