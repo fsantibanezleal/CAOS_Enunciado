@@ -85,15 +85,15 @@ value is absent, and the reader of the contract must handle absence.
 ## `gap-report.json`
 
 Derived from the ledger and the corpus by `report.py`. `report.py --check` re-derives it locally
-(`run.ps1 check`); CI recomputes each model's `ran` and `faithful` counts from the raw ledger with
+(`run.ps1 check`); CI recomputes each model's `ran`, `faithful` and `proved` counts from the raw ledger with
 the standard library (`scripts/check_artifacts.py`), because ADR-0074 keeps pipeline scripts out
 of CI.
 
 | Field | Meaning |
 |---|---|
-| `schema` | `enunciado-gap-report/2.0`, checked before the page renders anything |
+| `schema` | `enunciado-gap-report/2.3`, checked before the page renders anything |
 | `models[]` | Every model once, in the order every view draws: `key` (`provider/model_id`), `provider`, `model_id`, `lane` (hosted or local), `calls`, `cost_usd`, `median_latency_s`, `median_output_tokens`, `at_cap`, `model_versions`, `fingerprints`, `measured_from`, `measured_to` |
-| `cells[]` | One per provider, model and family, in the `models` order, named by `model`: `ran` and `faithful` rates with Wilson intervals, `gap`, `gap_is_defined`, `unmeasured` |
+| `cells[]` | One per provider, model and family, in the `models` order, named by `model`: `ran`, `faithful` and `proved` rates with Wilson intervals, `gap`, `gap_is_defined`, `unmeasured`. `faithful` (shown as *not refuted*) is copela's rule: it ran, no strong layer failed, one passed. `proved` (2.3) also requires the structural layer to have passed, over the same denominator, so `proved <= faithful <= ran` and `gap = ran - faithful` is a lower bound on the share that ran and was not the model asked for |
 | `gap` | `null` when undefined. Never zero-for-undefined |
 | `by_tier`, `by_trap` | Keyed by `models[].key`. Re-groupings of each model's own records; the denominators are small and every cell carries its own |
 | `layer_agreement` | Keyed by `models[].key`. The four-quadrant counts. `did-not-run/faithful` must be 0 by construction |

@@ -835,6 +835,22 @@ def _faithful(record) -> bool:
     return decided
 
 
+def _proved(record) -> bool:
+    """Faithful, AND the structural layer passed: the formalization was proved to be the reference's
+    model by equal canonical form.
+
+    `_faithful` admits a candidate on the property layer alone, and the methodology says what that
+    layer cannot conclude: metamorphic relations holding does not mean the formalization is the model
+    asked for. On the published ledger 62 of the 70 faithful verdicts rest on that layer alone. The
+    headline called the faithful rate "it was the model asked for" until 0.08.001; this is the rate
+    that earns the phrase, and the faithful rate is reported beside it as "not refuted".
+    """
+    if not _faithful(record):
+        return False
+    structural = next((v for v in record.verdicts if v["layer"] == Layer.STRUCTURAL.value), None)
+    return structural is not None and structural["outcome"] == Outcome.PASS.value
+
+
 def _unmeasured(record) -> bool:
     executable = next((v for v in record.verdicts if v["layer"] == Layer.EXECUTABLE.value), None)
     return executable is not None and executable["outcome"] == Outcome.NOT_APPLICABLE.value
@@ -1185,9 +1201,21 @@ def assemble(ledger_path: Path) -> dict[str, object]:
         cell["model"] = f"{cell['provider']}/{cell['model_id']}"
     report["cells"].sort(key=lambda cell: rank[cell["model"]])
 
+    # 2.3: proved, per cell, over the same denominator as `faithful`: the share the structural layer
+    # proved to be the model asked for. `faithful` stays as copela computes it and is labelled "not
+    # refuted" on the page; proved <= faithful <= ran, so ran - faithful is a lower bound on the share
+    # that ran and was not the model asked for.
+    proved: dict[str, int] = defaultdict(int)
+    for record in records:
+        if _proved(record):
+            proved[model_key(record)] += 1
+    for cell in report["cells"]:
+        cell["proved"] = Rate(proved[cell["model"]], cell["faithful"]["total"]).to_json()
+
     # 2.1: whole_number_readings, the refutations that land on a reference's integer optimum.
     # 2.2: repeat_agreement, each model's later repeats of a case against its first.
-    report["schema"] = "enunciado-gap-report/2.2"
+    # 2.3: proved, see above.
+    report["schema"] = "enunciado-gap-report/2.3"
     report["whole_number_readings"] = whole_number_readings(ledger)
     report["repeat_agreement"] = repeat_agreement(ledger)
     report["models"] = models

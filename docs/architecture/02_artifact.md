@@ -28,7 +28,7 @@ of blanks:
 load  <=>  manifest.schema == SCHEMA_build  and  manifest.case_count == |cases|
 ```
 
-The report and the attempts carry schemas of their own, `enunciado-gap-report/2.0` and
+The report and the attempts carry schemas of their own, `enunciado-gap-report/2.3` and
 `enunciado-attempts/1.1`, checked the same way. The report had none until it was re-keyed by
 provider, and a report of the old shape read with the new types would have rendered every
 breakdown empty without a word.

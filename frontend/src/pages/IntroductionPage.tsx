@@ -181,7 +181,7 @@ export function IntroductionPage() {
 
       {/* ------------------------------------------------------------ 3 */}
       <section>
-        <h2>{es ? "3. Las dos tasas, y la brecha" : "3. The two rates, and the gap"}</h2>
+        <h2>{es ? "3. Las tasas, y la brecha" : "3. The rates, and the gap"}</h2>
         <p className="measure">
           {es
             ? "La medición es aritmética deliberadamente simple. Sobre un corpus de casos y un modelo fijo, se cuentan dos cosas sobre las mismas corridas."
@@ -192,8 +192,17 @@ export function IntroductionPage() {
           tex={String.raw`R_{\text{ran}} = \frac{\bigl|\{\, c \in C : \mathrm{exec}(c) = \textsf{PASS} \,\}\bigr|}{|C| - u}, \qquad R_{\text{faithful}} = \frac{\bigl|\{\, c \in C : \mathrm{exec}(c) = \textsf{PASS} \;\wedge\; \textsf{FAIL} \notin \{\mathrm{struct}(c), \mathrm{prop}(c)\} \;\wedge\; \textsf{PASS} \in \{\mathrm{struct}(c), \mathrm{prop}(c)\} \,\}\bigr|}{|C| - u}`}
           caption={
             es
-              ? "Las dos tasas. Fiel exige que corra, que ninguna capa fuerte falle y que al menos una apruebe. El denominador excluye los u casos no medidos: aquellos donde el instrumento, no el modelo, fue el límite."
-              : "The two rates. Faithful requires that it ran, that no strong layer failed and that at least one passed. The denominator excludes the u unmeasured cases: the ones where the instrument, not the model, was the limit."
+              ? "Las dos tasas. Fiel exige que corra, que ninguna capa fuerte falle y que al menos una apruebe; la Comparativa la muestra como «no refutado». El denominador excluye los u casos no medidos: aquellos donde el instrumento, no el modelo, fue el límite."
+              : "The two rates. Faithful requires that it ran, that no strong layer failed and that at least one passed; the Benchmark shows it as \"not refuted\". The denominator excludes the u unmeasured cases: the ones where the instrument, not the model, was the limit."
+          }
+        />
+
+        <Equation
+          tex={String.raw`R_{\text{proved}} = \frac{\bigl|\{\, c \in C : \mathrm{faithful}(c) \;\wedge\; \mathrm{struct}(c) = \textsf{PASS} \,\}\bigr|}{|C| - u} \;\leq\; R_{\text{faithful}}`}
+          caption={
+            es
+              ? "La lectura estricta. La capa de propiedades puede aprobar una formalización que no es la pedida: que las relaciones metamórficas se cumplan no prueba que sea el modelo correcto. Solo la capa estructural lo prueba, por forma canónica igual. En la medición publicada la mayoría de los veredictos fieles descansa solo en la capa de propiedades (la Comparativa da los conteos), así que la brecha de abajo es una cota inferior."
+              : "The strict reading. The property layer can pass a formalization that is not the one asked for: the metamorphic relations holding does not prove it is the right model. Only the structural layer proves it, by equal canonical form. In the published measurement most faithful verdicts rest on the property layer alone (the Benchmark gives the counts), so the gap below is a lower bound."
           }
         />
 
