@@ -207,11 +207,18 @@ CASES.append(
             ],
             title="Minimum run size",
         ),
+        # Until 0.08.001 this said the floor was the only thing producing the answer and that
+        # dropping it "reports minus 400". Solved without the floor the optimum is still 0: the
+        # fire-up cost alone makes idling optimal, so this case cannot catch a dropped floor
+        # through its optimum.
         why_hard=(
-            "The answer is not to run the kiln at all, and the only thing that produces that answer "
-            "is the minimum-run constraint: 150 tonnes of feed cannot reach the 200-tonne floor. A "
-            "formalization that drops the floor runs the kiln on 150 tonnes for a margin of 3600 "
-            "against a 4000 fire-up cost, reports minus 400, and never notices the run was illegal."
+            "The answer is to leave the kiln idle, and the statement produces that answer twice "
+            "over: 150 tonnes of feed cannot reach the 200-tonne floor, and even without the floor "
+            "150 tonnes earn 3600 against a 4000 fire-up cost. A formalization that drops the floor "
+            "therefore still optimises to 0, and no comparison of optima can catch it: the "
+            "structural layer will not prove that model equal to the reference, but nothing refutes "
+            "it either. The optimum does catch a formalization that lets the kiln process feed "
+            "without firing up, which reports 3600."
         ),
         known_optimum=0.0,
     )

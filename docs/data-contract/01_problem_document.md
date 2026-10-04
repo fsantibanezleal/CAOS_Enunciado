@@ -10,7 +10,7 @@ is about.
 
 ```json
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "family": "optimization",
   "narrative":  { "text": "...", "source": "...", "language": "en", "digest": "..." },
   "quantities": [ ... ],
@@ -19,12 +19,16 @@ is about.
   "assumptions":    [ { "statement": "...", "span": { ... } } ],
   "open_questions": [ { "question": "...", "resolution": "...", "affects": [], "span": { ... } } ],
   "metadata": { "problem_id": "...", "title": "...", "formalizer": "...", "created": "...", "notes": "" },
-  "feasibility_only": false
+  "feasibility_only": false,
+  "queries": []
 }
 ```
 
 `schema_version` is the DOCUMENT's version and is separate from the package's. An old artifact can
-therefore say what shape it was written in rather than rendering blanks.
+therefore say what shape it was written in rather than rendering blanks. `planteo` 0.2.1 writes 1.1,
+which adds `queries` for the dynamics family (empty on every optimization reference, and absent from
+the canonical form when empty, so no structural verdict moves); it reads 1.0, the shape the published
+measurement's candidates were written in. The committed references were rebaked to 1.1 in 0.08.001.
 
 `narrative.digest` is a hash of the text. A document whose digest does not match the narrative it
 claims is a document about a different statement.

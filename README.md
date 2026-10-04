@@ -69,14 +69,20 @@ A fourth **judge** layer is recorded, labelled, and never used as truth, because
 calibrated LLM judging says plainly that it is a conservative aggregate and not an equivalence
 oracle.
 
+The Benchmark reports three rates per model: **ran**, **not refuted** (no layer refuted it, and at
+least one strong layer passed) and **proved** (the structural layer passed). They are not the same
+claim. Across the published measurement, 92 formalizations ran, 70 were not refuted and 8 were
+proved: 62 of the 70 rest on the property layer alone, which cannot conclude that a formalization is
+the model asked for. The gap between ran and not refuted is therefore a lower bound.
+
 ## Run it
 
 ```powershell
 .\run.ps1 setup        # venv, requirements.txt, and npm ci in frontend/ and tools/visual-verify/
 .\run.ps1 check        # lint, every guard, report re-derivation, method tests, figure export
 .\run.ps1 dev          # the site at http://localhost:5904
-.\run.ps1 verify       # build, then 195 browser checks against the built site
-.\run.ps1 live         # the same 195 checks against https://enunciado.fasl-work.com
+.\run.ps1 verify       # build, then 216 browser checks against the built site
+.\run.ps1 live         # the same 216 checks against https://enunciado.fasl-work.com
 .\run.ps1 diagrams     # re-export the wiki's figures from the page components
 ```
 
@@ -118,7 +124,7 @@ Four things, and three of them have caught real defects here:
   build the site ships, each mutation-checked
 - a sidebar that diagnoses the selected case from the ledger, layer by layer, and a gauge of how
   far the reader's parameters have moved the answer from the statement's own
-- 195 browser checks in dark, light and Spanish, which also run against the deployed origin
+- 216 browser checks in dark, light and Spanish, which also run against the deployed origin
 - a docs wiki whose figures are exported from the same components the pages draw
 
 Not built, and not claimed: the three other target families (mathematical formulation, experiment
