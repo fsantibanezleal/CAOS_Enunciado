@@ -142,7 +142,7 @@ def main(argv: list[str] | None = None) -> int:
             f"{change['before']} -> {change['after']}"
         )
     if args.out:
-        Path(args.out).write_text(json.dumps(result, indent=2, sort_keys=True), encoding="utf-8")
+        Path(args.out).write_text(json.dumps(result, indent=2, sort_keys=True), encoding="utf-8", newline="\n")
         print(f"  written to {args.out}")
     return 0
 
