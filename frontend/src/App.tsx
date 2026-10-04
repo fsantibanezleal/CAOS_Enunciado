@@ -21,7 +21,7 @@ import { CITATIONS } from "./data/citations";
 import { useData } from "./lib/data";
 import i18n from "./lib/i18n";
 
-const VERSION = "0.08.000";
+const VERSION = "0.08.001";
 
 export function Layout() {
   const load = useData((state) => state.load);
@@ -35,8 +35,13 @@ export function Layout() {
   // workbench chrome (the case label, the tier word, the control-case chip, the section headings)
   // stayed English on the Spanish page, next to prose that had switched correctly. Two sources of
   // truth for one setting is the defect; this makes the shell's the only one.
+  //
+  // The document's language follows it too. The shell never writes it (CAOS_MANAGE
+  // conventions/shell-known-defects.md, entry 4), so every Spanish page declared the template's
+  // lang="en": a screen reader read it with an English voice and the browser offered to translate it.
   useEffect(() => {
     if (i18n.language !== lang) void i18n.changeLanguage(lang);
+    document.documentElement.lang = lang;
   }, [lang]);
 
   const config: ShellConfig = {
