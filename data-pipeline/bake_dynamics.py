@@ -240,8 +240,8 @@ def bake(out_dir: Path, release: bool) -> int:
         "tolerance": TOLERANCE,
     }
     out_dir.mkdir(parents=True, exist_ok=True)
-    (out_dir / "cases.json").write_text(json.dumps(results, indent=2, sort_keys=True), encoding="utf-8")
-    (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True), encoding="utf-8")
+    (out_dir / "cases.json").write_text(json.dumps(results, indent=2, sort_keys=True), encoding="utf-8", newline="\n")
+    (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True), encoding="utf-8", newline="\n")
 
     print(f"baked {len(results)} dynamics case(s) to {out_dir}")
     print(f"  tiers: {coverage['tier']}")

@@ -1264,11 +1264,11 @@ def main() -> int:
         # The main report's path may be overridden; its companions are written only for the default.
         if path is not args.out and args.out != DEFAULT_OUT:
             continue
-        path.write_text(text, encoding="utf-8")
+        path.write_text(text, encoding="utf-8", newline="\n")
         # Keep the dev server's copies in step, so a local run and the published site show the
         # same numbers. Only for the canonical files; a custom --out is the caller's.
         if args.out == DEFAULT_OUT and dev.parent.exists():
-            dev.write_text(text, encoding="utf-8")
+            dev.write_text(text, encoding="utf-8", newline="\n")
         print(f"wrote {path.name}")
     print(f"from {report['call_count']} record(s) in {args.ledger.name}")
     for cell in report["cells"]:
