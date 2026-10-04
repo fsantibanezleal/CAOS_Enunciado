@@ -31,12 +31,13 @@ REQUIRED_CASE_FIELDS = (
 )
 
 
-def _ledger_rates(records: list[dict]) -> dict[str, tuple[int, int, int]]:
-    """The two headline counts per model, recomputed from the raw ledger with nothing but json.
+def _ledger_rates(records: list[dict]) -> dict[str, tuple[int, int, int, int]]:
+    """The headline counts per model, recomputed from the raw ledger with nothing but json.
 
     ran = the executable layer passed. faithful = it ran AND neither the structural nor the property
-    layer failed AND at least one of them passed. Unmeasured calls (NOT_APPLICABLE at the executable
-    layer) leave both. This is copela's `Verdicts.faithful`, restated so CI can check it without
+    layer failed AND at least one of them passed. proved = faithful AND the structural layer passed,
+    the only verdict that shows the formalization IS the model asked for (the page labels faithful
+    "not refuted"). Unmeasured calls (NOT_APPLICABLE at the executable layer) leave all three. This is copela's `Verdicts.faithful`, restated so CI can check it without
     installing anything or running a pipeline script (ADR-0074 rules 1 and 3). The restatement once
     dropped the "at least one passed" clause and still agreed with every published number, because
     the ledger holds no candidate on which both strong layers were undecided; agreeing on this data
@@ -50,13 +51,15 @@ def _ledger_rates(records: list[dict]) -> dict[str, tuple[int, int, int]]:
         ran = verdicts.get("executable") == "pass"
         strong = (verdicts.get("structural"), verdicts.get("property"))
         faithful = ran and "fail" not in strong and "pass" in strong
+        proved = faithful and strong[0] == "pass"
         # A model is its provider and its id, as in the report: one id served by two providers
         # is two lanes, and keying by the id alone would compare each cell with a merged count.
-        tally = counts.setdefault(f"{record['provider']}/{record['model_id']}", [0, 0, 0])
+        tally = counts.setdefault(f"{record['provider']}/{record['model_id']}", [0, 0, 0, 0])
         tally[0] += int(ran)
         tally[1] += int(faithful)
         tally[2] += 1
-    return {model: (a, b, n) for model, (a, b, n) in counts.items()}
+        tally[3] += int(proved)
+    return {model: (a, b, n, p) for model, (a, b, n, p) in counts.items()}
 
 
 def check_derived(problems: list[str]) -> str:
@@ -82,8 +85,8 @@ def check_derived(problems: list[str]) -> str:
             f"gap-report.json says {report.get('call_count')} calls, the ledger holds {len(records)}"
         )
 
-    if report.get("schema") != "enunciado-gap-report/2.2":
-        problems.append(f"gap-report.json has schema {report.get('schema')!r}, not 2.2")
+    if report.get("schema") != "enunciado-gap-report/2.3":
+        problems.append(f"gap-report.json has schema {report.get('schema')!r}, not 2.3")
     if attempts.get("schema") != "enunciado-attempts/1.1":
         problems.append(f"attempts.json has schema {attempts.get('schema')!r}, not 1.1")
 
@@ -114,7 +117,7 @@ def check_derived(problems: list[str]) -> str:
                 f"{calls.get(model)}"
             )
     for model, quadrants in (report.get("layer_agreement") or {}).items():
-        measured = expected.get(model, (0, 0, 0))[2]
+        measured = expected.get(model, (0, 0, 0, 0))[2]
         if sum(quadrants.values()) != measured:
             problems.append(
                 f"{model}: the layer agreement sums to {sum(quadrants.values())}, the ledger "
@@ -126,7 +129,12 @@ def check_derived(problems: list[str]) -> str:
         if model not in expected:
             problems.append(f"gap-report.json has a cell for {model}, which the ledger never ran")
             continue
-        ran, faithful, total = expected[model]
+        ran, faithful, total, proved = expected[model]
+        published_proved = (cell.get("proved") or {}).get("passed")
+        if published_proved != proved or (cell.get("proved") or {}).get("total") != total:
+            problems.append(
+                f"{model}: the report publishes proved {published_proved}, the ledger gives {proved}/{total}"
+            )
         if (cell["ran"]["passed"], cell["faithful"]["passed"], cell["ran"]["total"]) != (
             ran,
             faithful,
@@ -262,10 +270,11 @@ def check_sensitivity(problems: list[str], main_records: list[dict]) -> str:
         main = _ledger_rates(
             [r for r in main_records if (f"{r['provider']}/{r['model_id']}", int(r["repeat"])) in passes]
         )
-        for model, (ran, faithful, total) in _ledger_rates(records).items():
+        for model, (ran, faithful, total, _proved) in _ledger_rates(records).items():
+            protocol = main.get(model)
             for label, expected, entry in (
                 (cap, (ran, faithful, total), (rows.get(model) or {}).get("by_cap", {}).get(cap)),
-                ("8192", main.get(model), (rows.get(model) or {}).get("by_cap", {}).get("8192")),
+                ("8192", protocol[:3] if protocol else None, (rows.get(model) or {}).get("by_cap", {}).get("8192")),
             ):
                 if expected is None:
                     continue

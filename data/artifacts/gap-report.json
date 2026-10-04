@@ -1949,6 +1949,14 @@
    "gap_is_defined": true,
    "model": "anthropic/claude-sonnet-5",
    "model_id": "claude-sonnet-5",
+   "proved": {
+    "confidence": 0.95,
+    "interval_high": 0.1288136896347409,
+    "interval_low": 0.0044268315026814095,
+    "passed": 1,
+    "total": 40,
+    "value": 0.025
+   },
    "provider": "anthropic",
    "ran": {
     "confidence": 0.95,
@@ -1974,6 +1982,14 @@
    "gap_is_defined": true,
    "model": "anthropic/claude-haiku-4-5",
    "model_id": "claude-haiku-4-5",
+   "proved": {
+    "confidence": 0.95,
+    "interval_high": 0.08762160119728665,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 40,
+    "value": 0.0
+   },
    "provider": "anthropic",
    "ran": {
     "confidence": 0.95,
@@ -1999,6 +2015,14 @@
    "gap_is_defined": true,
    "model": "zai/glm-5.3",
    "model_id": "glm-5.3",
+   "proved": {
+    "confidence": 0.95,
+    "interval_high": 0.230517752275223,
+    "interval_low": 0.03957952868260636,
+    "passed": 4,
+    "total": 40,
+    "value": 0.1
+   },
    "provider": "zai",
    "ran": {
     "confidence": 0.95,
@@ -2024,6 +2048,14 @@
    "gap_is_defined": true,
    "model": "zai/glm-4.5-flash",
    "model_id": "glm-4.5-flash",
+   "proved": {
+    "confidence": 0.95,
+    "interval_high": 0.08762160119728665,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 40,
+    "value": 0.0
+   },
    "provider": "zai",
    "ran": {
     "confidence": 0.95,
@@ -2049,6 +2081,14 @@
    "gap_is_defined": true,
    "model": "deepseek/deepseek-v4-pro",
    "model_id": "deepseek-v4-pro",
+   "proved": {
+    "confidence": 0.95,
+    "interval_high": 0.19864233524310543,
+    "interval_low": 0.025836025774588198,
+    "passed": 3,
+    "total": 40,
+    "value": 0.075
+   },
    "provider": "deepseek",
    "ran": {
     "confidence": 0.95,
@@ -2074,6 +2114,14 @@
    "gap_is_defined": true,
    "model": "ollama/phi4:latest",
    "model_id": "phi4:latest",
+   "proved": {
+    "confidence": 0.95,
+    "interval_high": 0.08762160119728665,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 40,
+    "value": 0.0
+   },
    "provider": "ollama",
    "ran": {
     "confidence": 0.95,
@@ -2099,6 +2147,14 @@
    "gap_is_defined": true,
    "model": "ollama/qwen3:14b",
    "model_id": "qwen3:14b",
+   "proved": {
+    "confidence": 0.95,
+    "interval_high": 0.08762160119728665,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 40,
+    "value": 0.0
+   },
    "provider": "ollama",
    "ran": {
     "confidence": 0.95,
@@ -2124,6 +2180,14 @@
    "gap_is_defined": true,
    "model": "ollama/deepseek-r1:8b",
    "model_id": "deepseek-r1:8b",
+   "proved": {
+    "confidence": 0.95,
+    "interval_high": 0.08762160119728665,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 40,
+    "value": 0.0
+   },
    "provider": "ollama",
    "ran": {
     "confidence": 0.95,
@@ -2149,6 +2213,14 @@
    "gap_is_defined": true,
    "model": "ollama/qwen2.5-coder:7b",
    "model_id": "qwen2.5-coder:7b",
+   "proved": {
+    "confidence": 0.95,
+    "interval_high": 0.08762160119728665,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 40,
+    "value": 0.0
+   },
    "provider": "ollama",
    "ran": {
     "confidence": 0.95,
@@ -2174,6 +2246,14 @@
    "gap_is_defined": true,
    "model": "ollama/gemma3:12b",
    "model_id": "gemma3:12b",
+   "proved": {
+    "confidence": 0.95,
+    "interval_high": 0.09180986822558396,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 38,
+    "value": 0.0
+   },
    "provider": "ollama",
    "ran": {
     "confidence": 0.95,
@@ -2199,6 +2279,14 @@
    "gap_is_defined": false,
    "model": "ollama/gemma3:4b",
    "model_id": "gemma3:4b",
+   "proved": {
+    "confidence": 0.95,
+    "interval_high": 0.08762160119728665,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 40,
+    "value": 0.0
+   },
    "provider": "ollama",
    "ran": {
     "confidence": 0.95,
@@ -2224,6 +2312,14 @@
    "gap_is_defined": false,
    "model": "ollama/llama3.1:8b",
    "model_id": "llama3.1:8b",
+   "proved": {
+    "confidence": 0.95,
+    "interval_high": 0.08762160119728665,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 40,
+    "value": 0.0
+   },
    "provider": "ollama",
    "ran": {
     "confidence": 0.95,
@@ -2249,6 +2345,14 @@
    "gap_is_defined": false,
    "model": "ollama/mistral:7b",
    "model_id": "mistral:7b",
+   "proved": {
+    "confidence": 0.95,
+    "interval_high": 0.08762160119728665,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 40,
+    "value": 0.0
+   },
    "provider": "ollama",
    "ran": {
     "confidence": 0.95,
@@ -2274,6 +2378,14 @@
    "gap_is_defined": false,
    "model": "ollama/phi4-mini:latest",
    "model_id": "phi4-mini:latest",
+   "proved": {
+    "confidence": 0.95,
+    "interval_high": 0.08762160119728665,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 40,
+    "value": 0.0
+   },
    "provider": "ollama",
    "ran": {
     "confidence": 0.95,
@@ -2299,6 +2411,14 @@
    "gap_is_defined": false,
    "model": "ollama/qwen3:4b",
    "model_id": "qwen3:4b",
+   "proved": {
+    "confidence": 0.95,
+    "interval_high": 0.08762160119728665,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 40,
+    "value": 0.0
+   },
    "provider": "ollama",
    "ran": {
     "confidence": 0.95,
@@ -2324,6 +2444,14 @@
    "gap_is_defined": false,
    "model": "ollama/qwen3:8b",
    "model_id": "qwen3:8b",
+   "proved": {
+    "confidence": 0.95,
+    "interval_high": 0.08762160119728665,
+    "interval_low": 0.0,
+    "passed": 0,
+    "total": 40,
+    "value": 0.0
+   },
    "provider": "ollama",
    "ran": {
     "confidence": 0.95,
@@ -3023,7 +3151,7 @@
    "same_faithful": 13
   }
  },
- "schema": "enunciado-gap-report/2.2",
+ "schema": "enunciado-gap-report/2.3",
  "whole_number_readings": {
   "models": {
    "anthropic/claude-haiku-4-5": {

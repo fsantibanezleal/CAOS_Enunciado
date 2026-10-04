@@ -44,7 +44,10 @@ Sonnet 5, and 21 by refutation. Eight of the refutations, the only five either C
 among them, land exactly on the reference's optimum with its decisions made integer, in statements
 that never say whether those decisions are whole numbers
 ([`05_structural_equivalence.md`](05_structural_equivalence.md) has the table). Of the 70 faithful
-verdicts, 62 rest on the property layer alone.
+verdicts, 62 rest on the property layer alone. That is why the Benchmark reports two rates where it
+once reported one: **not refuted** (the 70, copela's faithful rule) and **proved** (the 8, the
+structural layer passed). The gap between ran and not refuted is a lower bound on the share that ran
+and was not the model asked for.
 
 ## 3. Property
 

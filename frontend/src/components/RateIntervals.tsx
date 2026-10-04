@@ -1,9 +1,14 @@
 /**
  * The measured rates, with their intervals, and the gap between them, for every model.
  *
- * Two rates per model: how often a formalization RAN, and how often it was also the model the
- * statement described. The distance between them is this product's whole subject, so the figure
- * draws it as a distance rather than leaving a reader to subtract two numbers in a table.
+ * Two rates per model: how often a formalization RAN, and how often it ran and no faithfulness layer
+ * refuted it. The distance between them is this product's whole subject, so the figure draws it as a
+ * distance rather than leaving a reader to subtract two numbers in a table.
+ *
+ * "Not refuted" is not "the model asked for": most of those verdicts rest on the property layer,
+ * which cannot conclude that. A diamond on the second line marks the share the structural layer
+ * PROVED equal to the reference. Until 0.08.001 the second rate was labelled "faithful" and read as
+ * "it was the model asked for", which 62 of its 70 verdicts could not support.
  *
  * The intervals are Wilson intervals at 95%, computed by the harness and carried in the artifact.
  * They are drawn at the same weight as the point estimate on purpose: at twenty cases they are wide
@@ -97,7 +102,7 @@ export function RateIntervals({
         {(
           [
             ["provider", es ? "Por proveedor" : "By provider"],
-            ["faithful", es ? "Por tasa fiel" : "By faithful rate"],
+            ["faithful", es ? "Por tasa no refutada" : "By not-refuted rate"],
           ] as const
         ).map(([value, label]) => (
           <button
@@ -220,6 +225,19 @@ export function RateIntervals({
                   <circle cx={x(rate.value)} cy={ly} r="4.5" fill={colour} />
                 </g>
               ))}
+              {cell.ran.total > 0 && (
+                // proved <= not refuted, on the same line: the hollow diamond is how much of the blue
+                // point the structural layer actually proved
+                <path
+                  d={`M ${x(cell.proved.value)} ${y + 21} l 6 6 l -6 6 l -6 -6 z`}
+                  fill="none"
+                  stroke="var(--color-good)"
+                  strokeWidth="2"
+                  data-proved={cell.proved.passed}
+                >
+                  <title>{`${es ? "probado" : "proved"} ${cell.proved.passed}/${cell.proved.total}`}</title>
+                </path>
+              )}
 
               <text
                 x={WIDTH - RIGHT + 12}
@@ -248,7 +266,11 @@ export function RateIntervals({
         </span>
         <span>
           <i className="viz-swatch" style={{ background: "var(--color-accent)" }} />
-          {es ? "fiel" : "faithful"}
+          {es ? "no refutado" : "not refuted"}
+        </span>
+        <span>
+          <i className="viz-swatch" style={{ background: "var(--color-surface)", border: "2px solid var(--color-good)", transform: "rotate(45deg) scale(0.8)" }} />
+          {es ? "probado por la capa estructural" : "proved by the structural layer"}
         </span>
         <span>
           <i className="viz-swatch" style={{ background: "var(--color-warn)", opacity: 0.45 }} />
@@ -269,9 +291,14 @@ export function RateIntervals({
               {hoveredCell.ran.interval_high.toFixed(3)}]
             </span>
             <span>
-              {es ? "fiel" : "faithful"} {hoveredCell.faithful.passed}/{hoveredCell.faithful.total} ={" "}
+              {es ? "no refutado" : "not refuted"} {hoveredCell.faithful.passed}/{hoveredCell.faithful.total} ={" "}
               <strong>{hoveredCell.faithful.value.toFixed(3)}</strong> [
               {hoveredCell.faithful.interval_low.toFixed(3)}, {hoveredCell.faithful.interval_high.toFixed(3)}]
+            </span>
+            <span>
+              {es ? "probado" : "proved"} {hoveredCell.proved.passed}/{hoveredCell.proved.total} ={" "}
+              <strong>{hoveredCell.proved.value.toFixed(3)}</strong> [
+              {hoveredCell.proved.interval_low.toFixed(3)}, {hoveredCell.proved.interval_high.toFixed(3)}]
             </span>
             <span>
               {es ? "en el tope" : "at the cap"} <strong>{hovered.at_cap}</strong>

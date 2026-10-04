@@ -21,7 +21,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from check_artifacts import _ledger_rates
 from copela.verdicts import CandidateVerdict, Layer, LayerResult, Outcome
-from report import _faithful
+from report import _faithful, _proved
 
 OUTCOMES = (Outcome.PASS, Outcome.FAIL, Outcome.UNDECIDED, Outcome.NOT_APPLICABLE, None)
 
@@ -62,7 +62,31 @@ def test_the_ci_recomputation_uses_copelas_rule() -> None:
         if combo[0] is Outcome.NOT_APPLICABLE:
             continue  # unmeasured: it leaves both rates, in all three definitions
         rates = _ledger_rates([{"provider": "p", "model_id": "m", "verdicts": verdicts}])
-        _ran, faithful, _n = rates["p/m"]
+        _ran, faithful, _n, _p = rates["p/m"]
         if bool(faithful) != _copela(verdicts):
             wrong.append(combo)
     assert wrong == [], f"check_artifacts disagrees with copela on {wrong}"
+
+
+def _proved_by_definition(verdicts) -> bool:
+    """Faithful by copela's rule, and the structural layer itself passed."""
+    structural = next((v["outcome"] for v in verdicts if v["layer"] == Layer.STRUCTURAL.value), None)
+    return _copela(verdicts) and structural == Outcome.PASS.value
+
+
+def test_proved_is_one_rule_in_the_report_and_in_ci() -> None:
+    """The proved rate (0.08.001) is the strict reading of faithful: the property layer alone never
+    earns it. Compared on every combination, for the same reason as the faithful rule above."""
+    wrong = []
+    for combo, verdicts in _records():
+        expected = _proved_by_definition(verdicts)
+        if _proved(SimpleNamespace(verdicts=verdicts)) != expected:
+            wrong.append(("report", combo))
+        if combo[0] is Outcome.NOT_APPLICABLE:
+            continue
+        _ran, _faithful_count, _n, proved = _ledger_rates(
+            [{"provider": "p", "model_id": "m", "verdicts": verdicts}]
+        )["p/m"]
+        if bool(proved) != expected:
+            wrong.append(("ci", combo))
+    assert wrong == [], f"proved disagrees with its definition on {wrong}"
