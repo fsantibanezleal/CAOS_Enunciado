@@ -165,6 +165,8 @@ for (const theme of ["dark", "light"]) {
       errorish: /Unexpected Application Error|error boundary|cannot read propert/i.test(text),
     };
   });
+  const docLang = await page.evaluate(() => document.documentElement.lang);
+  check(docLang === "en", `[${theme}] the English page declares lang="en"`, `lang="${docLang}"`);
   check(mounted.hasSelector, `[${theme}] the workbench rendered its case selector`);
   check(mounted.cases > 0, `[${theme}] the artifacts loaded`, `${mounted.cases} cases in the selector`);
   check(!mounted.errorish, `[${theme}] no error boundary on screen`);
@@ -826,8 +828,9 @@ if (gapReport) {
       await page.waitForTimeout(150);
       const rowReadout = (await page.locator(".viz-readout").first().textContent()) ?? "";
       check(
-        rowReadout.includes(gapReport.models[0].model_id) && /faithful/.test(rowReadout),
-        "hovering a Figure 1 row reads its counts out",
+        // 0.08.001: the second rate is "not refuted", and the proved count is read out beside it
+        rowReadout.includes(gapReport.models[0].model_id) && /not refuted/.test(rowReadout) && /proved \d+\/\d+/.test(rowReadout),
+        "hovering a Figure 1 row reads its counts out, proved included",
         rowReadout.slice(0, 120),
       );
       await openTabHolding("matrices");
@@ -839,10 +842,10 @@ if (gapReport) {
       );
       check(/ of \d+ calls|\d+\/\d+/.test(cellReadout), "hovering a matrix cell reads its count out", cellReadout.slice(0, 140));
 
-      // Sorting by the faithful rate must reorder EVERY row by that rate. Checking only the first
+      // Sorting by the not-refuted rate must reorder EVERY row by that rate. Checking only the first
       // row was vacuous on the first data it met: the best model was also first by provider.
       await openTabHolding("figureModels");
-      await page.getByRole("button", { name: /by faithful rate/i }).click();
+      await page.getByRole("button", { name: /by not-refuted rate/i }).click();
       await page.waitForTimeout(200);
       const order = await page.locator("svg[data-rows] g[data-model]").evaluateAll((gs) =>
         gs.map((g) => g.getAttribute("data-model")),
@@ -853,7 +856,7 @@ if (gapReport) {
       const sortable = JSON.stringify([...models].sort((a, b) => rate.get(b) - rate.get(a))) !== JSON.stringify(models);
       check(
         descending && (moved || !sortable),
-        "sorting Figure 1 by faithful rate reorders every row by that rate",
+        "sorting Figure 1 by the not-refuted rate reorders every row by that rate",
         `${order.map((m) => `${m.split("/")[1]} ${rate.get(m)?.toFixed(2)}`).join(", ")}`,
       );
 
@@ -862,6 +865,17 @@ if (gapReport) {
         const shown = seen.capRows;
         check(shown === expected, "the cap table shows every model at every cap it ran", `${shown} of ${expected} rows`);
       }
+      // The proved diamonds are the report's own counts: one per row, each carrying its cell's number.
+      const diamonds = await page.locator("svg[data-rows] path[data-proved]").evaluateAll((ps) =>
+        ps.map((p) => Number(p.getAttribute("data-proved"))),
+      );
+      const provedTotal = gapReport.cells.reduce((sum, c) => sum + c.proved.passed, 0);
+      check(
+        diamonds.length === gapReport.cells.filter((c) => c.ran.total > 0).length &&
+          diamonds.reduce((a, b) => a + b, 0) === provedTotal,
+        "Figure 1 marks the proved share on every row",
+        `${diamonds.length} diamonds, ${diamonds.reduce((a, b) => a + b, 0)} of ${provedTotal} proved`,
+      );
       await page.screenshot({ path: join(SHOTS, "benchmark-many-models.png"), fullPage: true });
     }
     await context.close();
@@ -911,6 +925,11 @@ if (gapReport) {
       `[es] ${label} renders in Spanish`,
       `${markers.length}/7 markers, ${text.length} chars`,
     );
+
+    // The document declares the language it is written in. The shell never writes it, and until
+    // 0.08.001 every Spanish page declared the template's lang="en" while its text was Spanish.
+    const docLang = await page.evaluate(() => document.documentElement.lang);
+    check(docLang === "es", `[es] ${label} declares lang="es"`, `lang="${docLang}"`);
 
     // The mirror of the English check: no untranslated equation on the Spanish page.
     const math = await page.evaluate(() =>

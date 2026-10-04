@@ -350,7 +350,7 @@ export function AppPage() {
 
               <div className="rail-meta">
                 <h4>{t("workbench.whyHard")}</h4>
-                <p className="why-hard">{active.why_hard}</p>
+                <p className="why-hard" lang="en">{active.why_hard}</p>
                 {es && (
                   // The chrome is translated and the corpus is not, on purpose. Translating a
                   // statement would show text that is not the text the models were given, and the
@@ -368,10 +368,10 @@ export function AppPage() {
                   <ul className="questions">
                     {active.open_questions.map((question) => (
                       <li key={question.question} className={question.is_open ? "is-open" : undefined}>
-                        <p className="q-text">{question.question}</p>
+                        <p className="q-text" lang="en">{question.question}</p>
                         <p className="q-res">
                           <span className="q-label">{es ? "resuelto como" : "resolved as"}</span>
-                          {question.resolution}
+                          <span lang="en">{question.resolution}</span>
                         </p>
                       </li>
                     ))}
