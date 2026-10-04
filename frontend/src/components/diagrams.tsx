@@ -652,7 +652,7 @@ export function DocumentDiagram({ lang }: { lang: Lang }) {
         planteo.Problem
       </text>
       <text x={676} y={30} textAnchor="end" className="dg-box-sub">
-        schema_version 1.0
+        schema_version 1.1
       </text>
 
       {parts.map((part, index) => {
