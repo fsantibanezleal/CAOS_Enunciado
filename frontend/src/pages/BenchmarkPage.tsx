@@ -105,6 +105,12 @@ function Measured({
   // shorter row lacks the hardest cases, and its rates are marked rather than ranked silently.
   const complete = report.corpus.cases * report.corpus.repeats;
   const shortRows = models.filter((m) => m.calls < complete).length;
+  // The strict reading, summed over every model: what ran, what nothing refuted, and what the
+  // structural layer proved to be the model asked for.
+  const totals = report.cells.reduce(
+    (t, c) => ({ ran: t.ran + c.ran.passed, notRefuted: t.notRefuted + c.faithful.passed, proved: t.proved + c.proved.passed }),
+    { ran: 0, notRefuted: 0, proved: 0 },
+  );
 
   return (
     <div className="page-body wide prose">
@@ -112,8 +118,8 @@ function Measured({
         <h1>{es ? "Comparativa" : "Benchmark"}</h1>
         <p className="lede">
           {es
-            ? `Una medición, ${span}: ${models.length} modelos de ${providers.length} proveedores (${lanes}) sobre ${report.corpus.cases} casos de optimización escritos a mano en ${report.corpus.tiers} niveles, ${report.corpus.repeats} ${report.corpus.repeats === 1 ? "repetición" : "repeticiones"} por caso. ${report.call_count} llamadas registradas, ${report.cost_usd.toFixed(2)} dólares a precio de lista. Las dos tasas se informan por separado porque un solo número dejaría que una tasa alta de "se ejecutó" escondiera una baja de "era el modelo pedido", que es exactamente la distancia que esta página existe para mostrar.`
-            : `One measurement, ${span}: ${models.length} models from ${providers.length} providers (${lanes}) over ${report.corpus.cases} authored optimization cases in ${report.corpus.tiers} tiers, ${report.corpus.repeats} ${report.corpus.repeats === 1 ? "repeat" : "repeats"} per case. ${report.call_count} recorded calls, ${report.cost_usd.toFixed(2)} dollars at list price. The two rates are reported separately because a single number would let a high "it ran" rate conceal a low "it was the model asked for" rate, which is exactly the distance this page exists to show.`}
+            ? `Una medición, ${span}: ${models.length} modelos de ${providers.length} proveedores (${lanes}) sobre ${report.corpus.cases} casos de optimización escritos a mano en ${report.corpus.tiers} niveles, ${report.corpus.repeats} ${report.corpus.repeats === 1 ? "repetición" : "repeticiones"} por caso. ${report.call_count} llamadas registradas, ${report.cost_usd.toFixed(2)} dólares a precio de lista. Las tasas se informan por separado porque un solo número dejaría que una tasa alta de "se ejecutó" escondiera una baja de "era el modelo pedido", que es exactamente la distancia que esta página existe para mostrar. De ${totals.ran} formalizaciones que se ejecutaron, ${totals.notRefuted} no fueron refutadas por ninguna capa y solo ${totals.proved} fueron probadas iguales a la referencia por la capa estructural: "no refutado" no es "era el modelo pedido", así que la brecha medida es una cota inferior.`
+            : `One measurement, ${span}: ${models.length} models from ${providers.length} providers (${lanes}) over ${report.corpus.cases} authored optimization cases in ${report.corpus.tiers} tiers, ${report.corpus.repeats} ${report.corpus.repeats === 1 ? "repeat" : "repeats"} per case. ${report.call_count} recorded calls, ${report.cost_usd.toFixed(2)} dollars at list price. The rates are reported separately because a single number would let a high "it ran" rate conceal a low "it was the model asked for" rate, which is exactly the distance this page exists to show. Of ${totals.ran} formalizations that ran, ${totals.notRefuted} were refuted by no layer and only ${totals.proved} were proved equal to the reference by the structural layer: "not refuted" is not "it was the model asked for", so the measured gap is a lower bound.`}
         </p>
       </div>
 
@@ -131,12 +137,12 @@ function Measured({
               content: (
                 <>
                   <section>
-                    <h2>{es ? "Las dos tasas, y la brecha" : "The two rates, and the gap"}</h2>
+                    <h2>{es ? "Corrió, no refutado, probado, y la brecha" : "Ran, not refuted, proved, and the gap"}</h2>
                     <RateIntervals models={models} cells={report.cells} complete={complete} lang={lang} />
                     <p className="figure-caption">
                       {es
-                        ? "Figura 1. Cada modelo aporta dos barras: con que frecuencia la formalización se ejecutó, y con que frecuencia además sobrevivió a las capas de fidelidad. La banda entre ambas es la brecha, y su valor está en la columna derecha."
-                        : "Figure 1. Each model contributes two bars: how often the formalization ran, and how often it also survived the faithfulness layers. The band between them is the gap, and its value is in the right-hand column."}
+                        ? "Figura 1. Cada modelo aporta dos barras: con qué frecuencia la formalización se ejecutó, y con qué frecuencia además ninguna capa de fidelidad la refutó. La banda entre ambas es la brecha, y su valor está en la columna derecha. El rombo marca la fracción que la capa estructural probó igual a la referencia; el resto de la barra azul descansa en la capa de propiedades, que no puede concluir que sea el modelo pedido."
+                        : "Figure 1. Each model contributes two bars: how often the formalization ran, and how often it also went unrefuted by every faithfulness layer. The band between them is the gap, and its value is in the right-hand column. The diamond marks the share the structural layer proved equal to the reference; the rest of the blue bar rests on the property layer, which cannot conclude that it is the model asked for."}
                     </p>
 
                     <div className="table-scroll">
@@ -146,7 +152,8 @@ function Measured({
                             <th>{es ? "Modelo" : "Model"}</th>
                             <th>{es ? "Proveedor" : "Provider"}</th>
                             <th className="num">{es ? "Corrió" : "Ran"}</th>
-                            <th className="num">{es ? "Fiel" : "Faithful"}</th>
+                            <th className="num" title={es ? "Corrió y ninguna capa de fidelidad lo refutó" : "Ran, and no faithfulness layer refuted it"}>{es ? "No refutado" : "Not refuted"}</th>
+                            <th className="num" title={es ? "La capa estructural lo probó igual a la referencia" : "The structural layer proved it equal to the reference"}>{es ? "Probado" : "Proved"}</th>
                             <th className="num">{es ? "Brecha" : "Gap"}</th>
                             <th className="num">{es ? "En el tope" : "At the cap"}</th>
                             <th className="num">{es ? "Mediana s" : "Median s"}</th>
@@ -180,6 +187,7 @@ function Measured({
                                 <td>{providerShort(model.provider)}</td>
                                 <td className="num">{describeRate(cell.ran)}</td>
                                 <td className="num">{describeRate(cell.faithful)}</td>
+                                <td className="num" data-proved={cell.proved.passed}>{describeRate(cell.proved)}</td>
                                 <td className="num">
                                   <strong>{cell.gap_is_defined ? fmt(cell.gap) : es ? "INDEFINIDA" : "UNDEFINED"}</strong>
                                 </td>
@@ -201,11 +209,11 @@ function Measured({
                     </p>
 
                     <Equation
-                      tex={String.raw`\Delta_m = R_{\text{ran}}(m) - R_{\text{faithful}}(m) \qquad ${gaps.length ? String.raw`\min_m \Delta_m = ${fmt(Math.min(...gaps))}, \quad \max_m \Delta_m = ${fmt(Math.max(...gaps))}` : ""}`}
+                      tex={String.raw`\Delta_m = R_{\text{${es ? "corrió" : "ran"}}}(m) - R_{\text{${es ? "no refutado" : "not refuted"}}}(m) \le R_{\text{${es ? "corrió" : "ran"}}}(m) - R_{\text{${es ? "probado" : "proved"}}}(m) \qquad ${gaps.length ? String.raw`\min_m \Delta_m = ${fmt(Math.min(...gaps))}, \quad \max_m \Delta_m = ${fmt(Math.max(...gaps))}` : ""}`}
                       caption={
                         es
-                          ? `La brecha por modelo, y su rango sobre los ${gaps.length} modelos con brecha definida. ${positive} son positivas: en esos modelos hubo formalizaciones que se ejecutaron y luego fueron refutadas por una capa de fidelidad. ${zero} son cero: todo lo que se ejecutó sobrevivió a las capas de fidelidad, lo que a ${report.corpus.repeats === 1 ? "una repetición" : `${report.corpus.repeats} repeticiones`} por caso es un resultado sobre ${report.corpus.cases} casos y no una propiedad del modelo.`
-                          : `The gap per model, and its range over the ${gaps.length} models with a defined gap. ${positive} are positive: those models produced formalizations that executed and were then refuted by a faithfulness layer. ${zero} are zero: everything that executed survived the faithfulness layers, which at ${report.corpus.repeats === 1 ? "one repeat" : `${report.corpus.repeats} repeats`} per case is a result on ${report.corpus.cases} cases rather than a property of the model.`
+                          ? `La brecha por modelo, y su rango sobre los ${gaps.length} modelos con brecha definida. ${positive} son positivas: en esos modelos hubo formalizaciones que se ejecutaron y luego fueron refutadas por una capa de fidelidad. ${zero} son cero: todo lo que se ejecutó sobrevivió a las capas de fidelidad, lo que a ${report.corpus.repeats === 1 ? "una repetición" : `${report.corpus.repeats} repeticiones`} por caso es un resultado sobre ${report.corpus.cases} casos y no una propiedad del modelo. Como lo no refutado incluye lo que solo la capa de propiedades aceptó, la brecha es una cota inferior de la fracción que corrió y no era el modelo pedido.`
+                          : `The gap per model, and its range over the ${gaps.length} models with a defined gap. ${positive} are positive: those models produced formalizations that executed and were then refuted by a faithfulness layer. ${zero} are zero: everything that executed survived the faithfulness layers, which at ${report.corpus.repeats === 1 ? "one repeat" : `${report.corpus.repeats} repeats`} per case is a result on ${report.corpus.cases} cases rather than a property of the model. Because "not refuted" includes what only the property layer accepted, the gap is a lower bound on the share that ran and was not the model asked for.`
                       }
                     />
                     <WholeNumberNote report={report} lang={lang} />

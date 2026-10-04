@@ -241,7 +241,7 @@ export const ATTEMPTS_SCHEMA = "enunciado-attempts/1.1";
 
 /* ------------------------------------------------------------ the gap report */
 
-export const GAP_REPORT_SCHEMA = "enunciado-gap-report/2.2";
+export const GAP_REPORT_SCHEMA = "enunciado-gap-report/2.3";
 
 export interface RateJson {
   passed: number;
@@ -280,7 +280,13 @@ export interface GapCell {
   provider: string;
   family: string;
   ran: RateJson;
+  /** It ran and no faithfulness layer refuted it; shown as "not refuted". Mostly the property layer
+   *  alone, which cannot conclude that the formalization is the model asked for. */
   faithful: RateJson;
+  /** 2.3: it ran, nothing refuted it, AND the structural layer proved it equal to the reference. The
+   *  only rate that says "it was the model asked for". Same denominator as `faithful`. */
+  proved: RateJson;
+  /** ran - faithful: a lower bound on the share that ran and was not the model asked for. */
   gap: number;
   gap_is_defined: boolean;
   unmeasured: number;

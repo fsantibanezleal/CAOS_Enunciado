@@ -177,10 +177,10 @@ def bake(out_dir: Path, release: bool) -> int:
 
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "cases.json").write_text(
-        json.dumps(results, indent=2, sort_keys=True), encoding="utf-8"
+        json.dumps(results, indent=2, sort_keys=True), encoding="utf-8", newline="\n"
     )
     (out_dir / "manifest.json").write_text(
-        json.dumps(manifest, indent=2, sort_keys=True), encoding="utf-8"
+        json.dumps(manifest, indent=2, sort_keys=True), encoding="utf-8", newline="\n"
     )
 
     print(f"baked {len(results)} case(s) to {out_dir}")

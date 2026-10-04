@@ -220,7 +220,7 @@ const CONTRACTS = `<svg viewBox="0 0 720 290" xmlns="http://www.w3.org/2000/svg"
   ${mono(301, 70, "quantities + dimension")}
   ${mono(301, 86, "relations + spans")}
   ${mono(301, 102, "open_questions")}
-  ${mono(301, 118, "schema_version 1.0")}
+  ${mono(301, 118, "schema_version 1.1")}
 
   <path class="arrow" d="M450 77 L505 77"/>
   <rect class="bx" x="510" y="25" width="190" height="105"/>
