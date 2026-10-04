@@ -4,6 +4,33 @@ All notable changes to this product are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versions are `X.XX.XXX` in this file, in
 `VERSION`, in the git tag and in the site footer; CI checks that the last two agree.
 
+## [0.08.001] - 2026-10-04
+
+Fixes from the 2026-10-02 pre-publication review (#20).
+
+### Changed
+
+- The Benchmark reports three rates per model: ran, **not refuted** (copela's faithful rule, so far
+  labelled "faithful" and introduced as "it was the model asked for") and **proved** (the structural
+  layer passed). Of 92 formalizations that ran, 70 were not refuted and 8 were proved; 62 of the 70
+  rest on the property layer alone, which cannot conclude that a formalization is the model asked
+  for. The page now says so, draws the proved share as a diamond in Figure 1, and states that the gap
+  is a lower bound. The report schema is `enunciado-gap-report/2.3` (`cells[].proved`); CI recounts it
+  from the ledger, and a test holds the rule to its definition on every combination of layer
+  outcomes.
+- The committed references are rebaked with the pinned `planteo` 0.2.1, which writes document schema
+  1.1 (an empty `queries` list on every case; no other field and no canonical form moved).
+
+### Fixed
+
+- opt-015's explanation said only the 200-tonne floor produces the idle answer and that dropping it
+  "reports minus 400". Without the floor the optimum is still 0; the text now says why, and what the
+  optimum can and cannot catch on this case. The case and its optimum are unchanged.
+- `make_numbers.py --check` and the pipeline writers (bake, report, rescore) wrote the platform's line
+  ending, so `run.ps1 check` failed on Windows while CI passed. Every writer emits LF.
+- `<html lang>` follows the interface language (shell known defect 4); the English corpus text on a
+  Spanish page carries `lang="en"`. The browser gate asserts both, and now runs 216 checks.
+
 ## [0.08.000] - 2026-09-26
 
 The page standard and the Spanish surface, after Felipe's review of the live site.
