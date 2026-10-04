@@ -39,7 +39,7 @@ export function AmbiguityPanel({ record, lang }: { record: CaseRecord; lang: "en
             ? "La referencia de este caso no registra ninguna pregunta abierta: afirma que el enunciado determina todo lo que el modelo necesita. Es una afirmación, no un hecho del texto, y es exactamente lo que un segundo formalizador podría disputar. Los casos del nivel 5 son los que llevan preguntas abiertas: opt-017 a opt-020."
             : "This case's reference records no open question: it claims the statement determines everything the model needs. That is a claim, not a fact about the text, and it is exactly what a second formalizer could dispute. The tier-5 cases carry open questions: opt-017 to opt-020."}
         </p>
-        <p className="narrative">{text}</p>
+        <p className="narrative" lang="en">{text}</p>
       </div>
     );
   }
@@ -69,7 +69,7 @@ export function AmbiguityPanel({ record, lang }: { record: CaseRecord; lang: "en
         <section className="split-pane">
           <h3>{es ? "Dónde lo deja abierto el enunciado" : "Where the statement leaves it open"}</h3>
           <div className="pane-scroll">
-            <p className="narrative">
+            <p className="narrative" lang="en">
               {located ? (
                 <>
                   {text.slice(0, located.start)}
@@ -96,10 +96,10 @@ export function AmbiguityPanel({ record, lang }: { record: CaseRecord; lang: "en
         <section className="split-pane">
           <h3>{es ? "Lo que hubo que decidir" : "What had to be decided"}</h3>
           <div className="pane-scroll">
-            <p className="q-text">{current.question}</p>
+            <p className="q-text" lang="en">{current.question}</p>
             <p className="q-res">
               <span className="q-label">{es ? "resuelto como" : "resolved as"}</span>
-              {current.resolution}
+              <span lang="en">{current.resolution}</span>
             </p>
             {current.is_open && (
               <p className="q-open">

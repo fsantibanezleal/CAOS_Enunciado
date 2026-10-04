@@ -99,7 +99,7 @@ export function NarrativeView({
   const segments = useMemo(() => segment(narrative, highlights), [narrative, highlights]);
 
   return (
-    <p className="narrative">
+    <p className="narrative" lang="en">
       {segments.map((seg, index) => {
         if (seg.highlights.length === 0) {
           return <span key={index}>{seg.text}</span>;
