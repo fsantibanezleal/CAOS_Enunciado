@@ -165,6 +165,8 @@ for (const theme of ["dark", "light"]) {
       errorish: /Unexpected Application Error|error boundary|cannot read propert/i.test(text),
     };
   });
+  const docLang = await page.evaluate(() => document.documentElement.lang);
+  check(docLang === "en", `[${theme}] the English page declares lang="en"`, `lang="${docLang}"`);
   check(mounted.hasSelector, `[${theme}] the workbench rendered its case selector`);
   check(mounted.cases > 0, `[${theme}] the artifacts loaded`, `${mounted.cases} cases in the selector`);
   check(!mounted.errorish, `[${theme}] no error boundary on screen`);
@@ -911,6 +913,11 @@ if (gapReport) {
       `[es] ${label} renders in Spanish`,
       `${markers.length}/7 markers, ${text.length} chars`,
     );
+
+    // The document declares the language it is written in. The shell never writes it, and until
+    // 0.08.001 every Spanish page declared the template's lang="en" while its text was Spanish.
+    const docLang = await page.evaluate(() => document.documentElement.lang);
+    check(docLang === "es", `[es] ${label} declares lang="es"`, `lang="${docLang}"`);
 
     // The mirror of the English check: no untranslated equation on the Spanish page.
     const math = await page.evaluate(() =>
